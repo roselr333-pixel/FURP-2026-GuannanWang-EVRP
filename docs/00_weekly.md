@@ -30,20 +30,17 @@
 
 <!-- =================  YOUR ENTRIES BELOW  ================= -->
 
-### Week 1 — YYYY-MM-DD
+### Week 1 — 2026-06-13
 
-**Attended this week's meeting:** Yes / No
+**Attended this week's meeting:Yes
 
 **Progress this week**
 - Set up repository from the FURP template.
-- _..._
-
-**Challenges & blockers**
-- _..._
+- Code and skill learning
 
 **Next steps**
-- _..._
+- Code and skill learning
 
-**Hours spent (optional):**
+**Hours spent (optional):10
 
 **Links (optional):**
