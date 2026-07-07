@@ -46,7 +46,7 @@
 **Next steps**
 - Extend the model with mid-route rendezvous and a drone battery constraint; compare against the OR-Tools classical baseline.
 
-**Hours spent (optional):10h (plus shared catch-up time)
+**Hours spent (optional):** 10h (plus shared catch-up time)
 
 **Links (optional):** `src/experiments/week05_truck_drone.py`, `src/results/week05_truck_drone_output.txt`
 
