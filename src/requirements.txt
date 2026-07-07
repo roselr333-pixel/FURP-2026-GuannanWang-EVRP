@@ -5,3 +5,4 @@
 ortools==9.15.6755
 numpy>=1.26
 pandas>=2.0
+matplotlib>=3.7

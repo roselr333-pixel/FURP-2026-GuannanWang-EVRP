@@ -14,8 +14,11 @@
 - [x] Environment created
       - Isolated venv: `C:\Users\admin\.workbuddy\binaries\python\envs\furp`
       - Python 3.13.14 (managed)
+      - Full record: `docs/env_record.md` (OS, Python, package manager, solver version, exact install/run commands, hardware, solver params)
 - [x] Dependencies installed
       - `ortools==9.15.6755` (installed via `pip install ortools`)
+      - `numpy`, `pandas`, `matplotlib` (for data + route plots)
+      - pinned in `src/requirements.txt`
 - [x] Repo structure understood
       - `/docs` (weekly logs, meeting notes), `/src` (code), root `README.md`
 
@@ -29,6 +32,7 @@
       - **FEASIBLE** — capacity (<=20/vehicle) and time windows both satisfied
 - [x] Evidence attached
       - `src/results/week01_baseline_output.txt`
+      - `src/results/week01_routes.png` (route plot — one plot/route text per Week 1 Lab deliverable)
 
 ## Reflection
 

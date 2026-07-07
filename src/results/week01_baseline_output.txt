@@ -8,7 +8,7 @@ STATUS: FEASIBLE
 ----------------------------------------------------------------
 PHASE A — greedy first solution (PATH_CHEAPEST_ARC)
   Objective (total distance): 108
-  Runtime: 0.0052 s
+  Runtime: 0.0054 s
   Vehicle 0: [0, 4, 5, 3, 0]
   Vehicle 1: [0, 1, 2, 0]
 ----------------------------------------------------------------

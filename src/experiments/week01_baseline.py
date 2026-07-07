@@ -22,8 +22,12 @@ Run:
 
 import time
 import os
+import math
 import importlib.metadata
 from ortools.constraint_solver import pywrapcp, routing_enums_pb2
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
 
 ORTOOLS_VERSION = importlib.metadata.version("ortools")
 
@@ -193,6 +197,35 @@ def main():
         fh.write(text)
     print(text)
     print(f"\n[output saved to {out_path}]")
+
+    # ---- route plot (Week 1 deliverable: one plot/route text) ----
+    plot_path = os.path.join(os.path.dirname(out_path), "week01_routes.png")
+    plot_routes(routes_b, plot_path)
+    print(f"[route plot saved to {plot_path}]")
+
+
+def plot_routes(routes, plot_path):
+    """Circular-layout network plot (no coordinates available: distance matrix)."""
+    n = len(DISTANCE)
+    pos = {i: (math.cos(2 * math.pi * i / n), math.sin(2 * math.pi * i / n)) for i in range(n)}
+    plt.figure(figsize=(6, 6))
+    for i in range(n):
+        color = "black" if i == DEPOT else "lightgray"
+        plt.scatter([pos[i][0]], [pos[i][1]], c=color, s=200 if i == DEPOT else 90,
+                    zorder=3)
+        plt.text(pos[i][0], pos[i][1], str(i), ha="center", va="center",
+                 color="white" if i == DEPOT else "black", fontsize=9, zorder=4)
+    cmap = matplotlib.colormaps["tab10"]
+    for k, (v, r) in enumerate(routes):
+        for a, b in zip(r, r[1:]):
+            x = [pos[a][0], pos[b][0]]
+            y = [pos[a][1], pos[b][1]]
+            plt.plot(x, y, "-", color=cmap(v % 10), linewidth=2, zorder=2)
+    plt.title("Week 1 — VRPTW routes (depot=0, circle layout)")
+    plt.axis("off")
+    plt.tight_layout()
+    plt.savefig(plot_path, dpi=110)
+    plt.close()
 
 
 if __name__ == "__main__":

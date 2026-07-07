@@ -1,0 +1,60 @@
+WEEK 3 FAIR-COMPARISON EXPERIMENT
+Hardware & environment: Windows / Python 3.13.14 / OR-Tools 9.15.6755 / 20 CPUs
+Sizes tested: [10, 20, 40] | Variants: ['CVRP', 'VRPTW'] | Methods: ['baseline', 'improved']
+Same instance data reused across variants for fair comparison.
+
+  n10-CVRP-baseline: feasible=Yes, objective=363, vehicles=2, tw_viol=-, runtime=0.009s
+  n10-CVRP-improved: feasible=Yes, objective=363, vehicles=2, tw_viol=-, runtime=4.001s
+  n10-VRPTW-baseline: feasible=Yes, objective=377, vehicles=2, tw_viol=0, runtime=0.004s
+  n10-VRPTW-improved: feasible=Yes, objective=366, vehicles=2, tw_viol=0, runtime=4.001s
+  n20-CVRP-baseline: feasible=Yes, objective=436, vehicles=2, tw_viol=-, runtime=0.007s
+  n20-CVRP-improved: feasible=Yes, objective=436, vehicles=2, tw_viol=-, runtime=4.001s
+  n20-VRPTW-baseline: feasible=Yes, objective=448, vehicles=3, tw_viol=0, runtime=0.009s
+  n20-VRPTW-improved: feasible=Yes, objective=448, vehicles=3, tw_viol=0, runtime=4.001s
+  n40-CVRP-baseline: feasible=Yes, objective=682, vehicles=4, tw_viol=-, runtime=0.029s
+  n40-CVRP-improved: feasible=Yes, objective=616, vehicles=4, tw_viol=-, runtime=4.002s
+  n40-VRPTW-baseline: feasible=Yes, objective=616, vehicles=4, tw_viol=0, runtime=0.038s
+  n40-VRPTW-improved: feasible=Yes, objective=616, vehicles=4, tw_viol=0, runtime=4.002s
+
+CLEANED SUMMARY TABLE
+Instance | Size | Method | Variant | Feasible | Objective | Runtime (s) | Vehicles | TW viol | Seed | Notes
+--------------------------------------------------------------------------------------------------------------
+n10 | 10 | baseline | CVRP | Yes | 363 | 0.009 | 2 | - | 17 | ok
+n10 | 10 | improved | CVRP | Yes | 363 | 4.001 | 2 | - | 17 | ok
+n10 | 10 | baseline | VRPTW | Yes | 377 | 0.004 | 2 | 0 | 17 | TW satisfied
+n10 | 10 | improved | VRPTW | Yes | 366 | 4.001 | 2 | 0 | 17 | TW satisfied
+n20 | 20 | baseline | CVRP | Yes | 436 | 0.007 | 2 | - | 27 | ok
+n20 | 20 | improved | CVRP | Yes | 436 | 4.001 | 2 | - | 27 | ok
+n20 | 20 | baseline | VRPTW | Yes | 448 | 0.009 | 3 | 0 | 27 | TW satisfied
+n20 | 20 | improved | VRPTW | Yes | 448 | 4.001 | 3 | 0 | 27 | TW satisfied
+n40 | 40 | baseline | CVRP | Yes | 682 | 0.029 | 4 | - | 47 | ok
+n40 | 40 | improved | CVRP | Yes | 616 | 4.002 | 4 | - | 47 | ok
+n40 | 40 | baseline | VRPTW | Yes | 616 | 0.038 | 4 | 0 | 47 | TW satisfied
+n40 | 40 | improved | VRPTW | Yes | 616 | 4.002 | 4 | 0 | 47 | TW satisfied
+
+AGGREGATED TABLE (by size group and method)
+Size | Method | Feasible Rate | Avg Objective | Avg Runtime (s)
+------------------------------------------------------------
+10 | baseline | 100% | 370.0 | 0.006
+10 | improved | 100% | 364.5 | 4.001
+20 | baseline | 100% | 442.0 | 0.008
+20 | improved | 100% | 442.0 | 4.001
+40 | baseline | 100% | 649.0 | 0.034
+40 | improved | 100% | 616.0 | 4.002
+
+
+=== FAILURE CASES (constraint-level diagnosis) ===
+
+FAILURE 1 — CVRP, 20 customers, 1 vehicle (capacity=100):
+  feasible=False, violated constraint=CAPACITY (single truck cannot serve total demand 187 with cap 100)
+  fix: increase fleet size or vehicle capacity; this is a modelling limit, not a code bug.
+
+FAILURE 2 — VRPTW, 20 customers, time windows latest=30 (very tight):
+  feasible=False, violated constraint=TIME WINDOWS (customers too far from depot to be served within 30 min)
+  fix: widen time windows or add more vehicles / reduce service time.
+
+FAILURE 3 — EVRP-TW, corridor instance, battery capacity = 40 (too small):
+  feasible=False, violated constraint=ENERGY (vehicle cannot reach the farthest
+  customer and return even with recharge, because battery < one-way leg energy).
+  fix: increase battery capacity or add an intermediate charging station.
+  (Full EVRP-TW violation table is in src/results/week04_evrp_tw_output.txt.)

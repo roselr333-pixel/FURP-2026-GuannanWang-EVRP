@@ -34,3 +34,6 @@ data/
 .env
 *.key
 secrets.*
+
+# Upstream reference repo (cloned for reading only — not part of this assignment repo)
+VRP-EVRP-Project-Hub/
