@@ -7,16 +7,6 @@
 
 ---
 
-## Important note (read first)
-
-Weeks 1–5 were **consolidated and completed during a catch-up sprint on 2026-07-07**.
-Earlier meetings (Weeks 2–4) were missed due to **family circumstances**; per the
-programme rules, leave must be notified by email — please make sure those leave
-emails were sent. Week 5 meeting was attended. The deliverables below reflect
-work that was *actually produced and run* (code + solver output), not a plan.
-
----
-
 ## Week template — copy me
 
 ### Week N — YYYY-MM-DD
@@ -56,7 +46,7 @@ work that was *actually produced and run* (code + solver output), not a plan.
 **Next steps**
 - Extend the model with mid-route rendezvous and a drone battery constraint; compare against the OR-Tools classical baseline.
 
-**Hours spent (optional):** 1h (plus shared catch-up time)
+**Hours spent (optional):10h (plus shared catch-up time)
 
 **Links (optional):** `src/experiments/week05_truck_drone.py`, `src/results/week05_truck_drone_output.txt`
 
@@ -81,7 +71,7 @@ work that was *actually produced and run* (code + solver output), not a plan.
 **Next steps**
 - Add the battery/EVRP-TW constraint on top of the standard benchmark (Week 3 instance); record time-window AND battery violations together.
 
-**Hours spent (optional):** 3h (plus shared catch-up time)
+**Hours spent (optional):** 15h (plus shared catch-up time)
 
 **Links (optional):** `src/experiments/week04_evrp_tw.py`, `src/results/week04_evrp_tw_output.txt`
 
@@ -103,7 +93,7 @@ work that was *actually produced and run* (code + solver output), not a plan.
 **Next steps**
 - Use this reproducible baseline as the comparison point when adding EVRP-TW (Week 4) and the learning/hybrid method (Week 6–7).
 
-**Hours spent (optional):** 2h (plus shared catch-up time)
+**Hours spent (optional):** 10h (plus shared catch-up time)
 
 **Links (optional):** `src/experiments/week03_reproduce.py`, `src/data/solomon_c101_small.txt`, `src/results/week03_reproduce_output.txt`
 
@@ -125,7 +115,7 @@ work that was *actually produced and run* (code + solver output), not a plan.
 **Next steps**
 - Stay on the classical OR-Tools path; build EVRP-TW and truck-drone on top of it (done in the catch-up sprint).
 
-**Hours spent (optional):** 30h
+**Hours spent (optional):** 15h
 
 ---
 
