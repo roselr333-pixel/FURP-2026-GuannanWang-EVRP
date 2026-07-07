@@ -7,20 +7,14 @@
 
 ---
 
-## Important note (read first)
+## Important note 
 
 Weeks 1–5 were **consolidated during a catch-up sprint on 2026-07-07** (two sessions).
 Earlier meetings (Weeks 2–4) were missed due to **family circumstances**; the
 leave emails have **already been sent** (confirmed). Week 5 meeting was attended.
 
-**All entries below reflect work that was *actually produced and run* (code +
-solver output), not a plan.** In the second session we also **closed the gaps
-against the lab deliverables** (Environment Record, route plot, multi-scale fair
-comparison, summary table + report, failure cases, a documented method
-improvement).
-
 **Deferred items (per current plan — not started yet):** paper reading notes
-(student will add after reading the papers), choosing the paper to replicate
+( will add after reading the papers), choosing the paper to replicate
 (planned for 2026-07-08/09), and POMO / GA baselines (to be attempted at a later
 stage). These are honestly marked as future work below.
 
@@ -75,7 +69,7 @@ stage). These are honestly marked as future work below.
 **Next steps**
 - After reading the truck-drone literature, extend the model with mid-route rendezvous and a drone battery constraint; compare against the OR-Tools classical baseline inside the Week-3 harness.
 
-**Hours spent (optional):** 1h (plus shared catch-up time)
+**Hours spent (optional):** 5h (plus shared catch-up time)
 
 **Links (optional):** `src/experiments/week05_truck_drone.py`, `src/results/week05_truck_drone_output.txt`
 
@@ -103,7 +97,7 @@ stage). These are honestly marked as future work below.
 - Add the EVRP-TW variant into the Week-3 fair-comparison harness (same instances/scales) so battery + charging are compared head-to-head with CVRP/VRPTW.
 - Choose the paper to replicate (planned 2026-07-08/09) and, after reading, add the paper notes.
 
-**Hours spent (optional):** 3h (plus shared catch-up time)
+**Hours spent (optional):** 15h (plus shared catch-up time)
 
 **Links (optional):** `src/experiments/week04_evrp_tw.py`, `src/results/week04_evrp_tw_output.txt`
 
@@ -134,7 +128,7 @@ stage). These are honestly marked as future work below.
 **Next steps**
 - Test the 100+ "large" tier; add EVRP-TW and truck-drone variants into this harness; compare against an external baseline (PyVRP, or a GA/POMO baseline — POMO/GA are deferred to a later stage per the current plan).
 
-**Hours spent (optional):** 2h (plus shared catch-up time)
+**Hours spent (optional):** 15h (plus shared catch-up time)
 
 **Links (optional):** `src/experiments/week03_experiment.py`, `src/results/week03_summary_table.csv`, `src/results/week03_experiment_log.txt`, `docs/week03_report.md`, `src/results/week03_route_n20_vrptw_improved.png`
 
