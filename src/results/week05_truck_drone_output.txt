@@ -1,0 +1,25 @@
+================================================================
+WEEK 5 — TRUCK + DRONE COLLABORATIVE ROUTING (heuristic)
+================================================================
+Customers: 6 | truck speed=1.0, drone speed=2.0
+Synchronization: both start at depot at t=0; operate in parallel.
+
+TRUCK-ONLY:
+  route (depot -> 1 -> 2 -> 5 -> 3 -> 6 -> 4 -> depot)
+  travel distance = 328.6
+  makespan = 388.6
+
+TRUCK + DRONE (parallel):
+  drone serves [3, 5, 6]: route (depot -> 5 -> 3 -> 6 -> depot), travel=290.4
+  truck serves [1, 2, 4]: route (depot -> 1 -> 2 -> 4 -> depot), travel=240.6
+  drone makespan = 175.2
+  truck makespan = 270.6
+  COLLABORATION MAKESPAN = max = 270.6
+
+Improvement vs truck-only: 30.4% shorter makespan
+
+Constraint notes (simplified baseline):
+  - drone launched/recovered at depot (no mid-route rendezvous yet);
+  - synchronization = both depart depot at t=0;
+  - energy/service-time for drone and truck not yet modelled (Week 4 battery
+    idea can be extended to the truck; drone battery is future work).

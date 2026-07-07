@@ -1,0 +1,7 @@
+# Pinned dependencies for the FURP EVRP project (reproducibility)
+# Install with: pip install -r src/requirements.txt
+# Environment: Python 3.13 venv, Windows
+
+ortools==9.15.6755
+numpy>=1.26
+pandas>=2.0

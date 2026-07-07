@@ -1,0 +1,25 @@
+================================================================
+WEEK 1 BASELINE SMOKE TEST — OR-Tools VRPTW
+================================================================
+Instance: small VRPTW (1 depot + 5 customers, 2 vehicles)
+Solver: OR-Tools 9.15.6755
+OS: Windows | Python: 3.13 | Package manager: venv + pip
+STATUS: FEASIBLE
+----------------------------------------------------------------
+PHASE A — greedy first solution (PATH_CHEAPEST_ARC)
+  Objective (total distance): 108
+  Runtime: 0.0052 s
+  Vehicle 0: [0, 4, 5, 3, 0]
+  Vehicle 1: [0, 1, 2, 0]
+----------------------------------------------------------------
+PHASE B — guided local search (3 s budget)
+  Objective (total distance): 108
+  Runtime: 3.0002 s
+  Vehicle 0: [0, 4, 5, 3, 0]
+  Vehicle 1: [0, 1, 2, 0]
+----------------------------------------------------------------
+Improvement from local search: 0 units (0.0% shorter)
+Constraint check:
+  Capacity per vehicle <= 20: enforced by solver
+  Time windows: enforced by solver
+================================================================

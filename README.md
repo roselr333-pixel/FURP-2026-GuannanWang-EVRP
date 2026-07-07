@@ -32,9 +32,9 @@ This is your project home for the FURP programme. **Fork this template**, rename
 | Supervising faculty | FOSE |
 | Project lead |Dr. Tianxiang Cui |
 | Team or individual | individual |
-| Cited paper being replicated | _title + link/DOI_ |
+| Cited paper being replicated | _To be selected — evaluating EVRP-TW-with-Time-Windows baselines (see `docs/sota_demo_references.md`)_ |
 
-**One-line summary:** _What is your project about? (1–2 sentences)_
+**One-line summary:** _Building a reproducible research workflow for Electric Vehicle Routing with Time Windows (EVRP-TW): start from a classical OR-Tools VRPTW baseline, add battery/charging constraints, then test one improvement with fair comparisons against the baseline._
 
 ---
 
