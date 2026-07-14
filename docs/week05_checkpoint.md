@@ -1,6 +1,6 @@
 # Week 5 Project Checkpoint — EVRP-TW with Classical + Truck-Drone Baselines
 
-> Written by Guannan Wang · 2026-07-14 · Track: Research (EVRP)
+> Written by Guannan Wang · 2026-07-14 · Track: Research (EVRP) · survey note added 2026-07-15
 > This is my deliverable for the **Week 5 Lab: Consolidate Progress and Prepare the Next Step**.
 > I reran every experiment on 2026-07-14 and all of them reproduced the same numbers (see Appendix).
 
@@ -29,9 +29,10 @@
 - I get feasible solutions for VRPTW, for EVRP-TW (with charging), and for both truck-drone versions.
 - I have a fair-comparison table, a Solomon-format benchmark suite, and route plots as evidence.
 - **I ran a real standard benchmark** — the official 56-instance Solomon 100-customer VRPTW set, solved with OR-Tools and compared instance-by-instance against published BKS (overall mean gap 7.2%; 56/56 solved) — and **I removed the truck-drone simplification** (v2 launches/lands at any node).
+- **I started my reading set.** On 2026-07-13 I read and noted my first paper — the EVRP survey by Erdelić & Carić (2019) — following the lab note template (see §2.8).
 
 **What I have NOT finished yet** (being honest — these are my real remaining gaps):
-- **I have not written any paper reading notes yet.** I have not read, noted, and uploaded an EVRP-TW / truck-drone paper. This is still the biggest open gap from Week 4 / Week 5.
+- **My reading gap is now partially closed.** I finished and uploaded my first paper note — the EVRP survey by Erdelić & Carić (2019, *Journal of Advanced Transportation*) — on 2026-07-13. Two more notes (Schneider 2014 E-VRPTW; Murray & Chu 2015 FSTSP) are still pending a PDF download.
 - **No external baseline comparison yet.** So far I only compare my own OR-Tools greedy result against my OR-Tools + 2-opt result (and against my own truck-only baseline). I have not added a PyVRP / GA / POMO baseline yet (planned for later).
 
 ---
@@ -147,12 +148,21 @@ The v2 heuristic carries the drone on the truck and launches it at any node `i` 
 
 v2 also beats v1 by **28.8%** — directly removing the "depot-only" simplification. Example drone trips found: `node 1 → customer 5 → node 3`, `depot → customer 2 → node 6`, `node 3 → customer 4 → depot`.
 
+### 2.8 Literature reading — EVRP survey note
+
+On 2026-07-13 I read Erdelić & Carić (2019), *A Survey on the Electric Vehicle Routing Problem: Variants and Solution Approaches* (*Journal of Advanced Transportation*, open access, 48 pp.), and wrote a structured note following the lab template (problem / method / reusable idea / reproducibility / open questions / one-line summary). It is saved in my private study folder and ready to copy into this repo. Three takeaways I connected to my own code:
+- My EVRP-TW recharge (the negative-energy `slack_max` trick) matches the early **full-recharge + linear-charging** assumption in Schneider 2014 — a valid but simplified baseline. The survey flags **partial recharging** and **nonlinear CC-CV charging** as the more realistic next steps.
+- The survey is an EV-only review and does **not** cover truck-drone (FSTSP); my v2 sits outside its taxonomy, so I will read Murray & Chu 2015 separately.
+- It confirmed that my hierarchical objective (min vehicles, then distance) is the standard BEV choice, because BEVs are expensive to buy.
+
+Note file: `learning_guide/papers/01_survey_evrp.md` (to be copied to `docs/papers/` on cleanup).
+
 ---
 
 ## 3. Problems and Limitations I See in My Own Work
 
 - **My OR-Tools baseline is a solid first solve, not an optimiser tuned to BKS.** On R2 / RC2 the gap to BKS is large mostly because my vehicle fixed cost makes me use fewer vehicles than BKS (longer routes). Tuning the cost / objective to match the literature, and adding a stronger meta-heuristic pass or an external solver (PyVRP), are the obvious next improvements.
-- **I have no paper notes yet.** The project outline and the Week-4 lab ask for reading notes; I have not uploaded any. This is the clearest thing for me to fix next.
+- **Reading notes are started but incomplete.** I uploaded my first note (the EVRP survey, 2026-07-13), but two more are still pending (Schneider 2014; Murray & Chu 2015) — so far I only have the survey PDF.
 - **I modelled recharge as a workaround.** OR-Tools dimensions only go one direction (monotonic), so I encoded charging as a *negative* energy cost into the station, with `slack_max` set to the battery capacity. It works and reproduces, but it is not the standard arc-based charging formulation, and I would have to rework it for mid-route vehicle / drone rendezvous under partial recharge.
 - **The truck-drone v2 is still a heuristic.** It allows any-node launch/land and one customer per drone trip, with range + rendezvous checks, but it does not yet model drone battery depletion, multiple customers per trip, or optimality — only a greedy improvement over the truck-only route.
 - **No external baseline.** All my "comparisons" are internal (my greedy vs my +2-opt; my truck-only vs my drone). A real fair comparison needs a PyVRP / GA / POMO baseline.
@@ -161,7 +171,7 @@ v2 also beats v1 by **28.8%** — directly removing the "depot-only" simplificat
 
 ## 4. My Next Steps (for Week 6+)
 
-1. **Close my reading gap (top priority):** read and upload at least 1 EVRP-TW paper note (I am aiming at a recent ECVRPTW / ALNS or hybrid paper), using the lab's note template — problem / method / reusable idea / reproducibility. *I deferred this, and it is now my number-one item.*
+1. **Finish my reading set (in progress):** I completed the EVRP survey note (2026-07-13). Next I will read and note **Schneider, Stenger & Goeke (2014)** E-VRPTW (the ALNS foundation my EVRP-TW recharge model already mirrors) and **Murray & Chu (2015)** FSTSP (the source of my truck-drone v2), then copy all three notes into this repo. *The survey was deferred from earlier weeks and is now done.*
 2. **Tighten the gap to BKS on R2 / RC2:** tune the vehicle fixed cost / objective so my solver uses a vehicle count closer to BKS, and add a stronger meta-heuristic pass; optionally re-run the official Schneider / Montoya E-VRPTW set (now that I can fetch public instances).
 3. **Deepen the truck-drone v2:** add a drone-battery dimension and allow multiple customers per drone trip, then re-measure makespan on a larger instance.
 4. **Pick a paper to replicate + a second baseline:** choose one paper to reproduce and add a GA / POMO baseline so I have a genuine fair comparison (this was deferred from earlier weeks).

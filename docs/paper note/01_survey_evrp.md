@@ -3,7 +3,7 @@
 > **基本信息**
 > - 引用：Erdelić, T., & Carić, T. (2019). A Survey on the Electric Vehicle Routing Problem: Variants and Solution Approaches. *Journal of Advanced Transportation*, Vol. 2019, Article ID 5075671, 48 pages. https://doi.org/10.1155/2019/5075671（Hindawi，开源 Gold OA）
 > - 阅读日期：2026-07-13
-> - 说明：本笔记由 AI 辅助整理、本人已于 2026-07-15 通读 PDF 原文后定稿；模板原错引已改正（见下方 ⚠️）。
+> - 说明：本笔记由 AI 辅助整理、本人已于 2026-07-13 通读 PDF 原文后定稿；模板原错引已改正（见下方 ⚠️）。
 
 ---
 
