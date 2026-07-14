@@ -1,0 +1,23 @@
+========================================================================
+STANDARD E-VRPTW BENCHMARK — Solomon customers + charging stations
+========================================================================
+Solver: OR-Tools 9.15.6755
+Battery model: energy dimension, recharge at stations via negative
+ transit + slack_max = battery (same trick as week04).
+
+instance                   batt  rech  veh     dist   feas    t_s
+------------------------------------------------------------------------
+EVRPTW-C2-25-S2             100     -    -        -     NO    8.0
+EVRPTW-C2-25-S2             300     2    2      578    YES    8.0
+EVRPTW-C2-25-S2             100     -    -        -     NO    8.0
+EVRPTW-C2-50-S3             100     -    -        -     NO    8.0
+EVRPTW-C2-50-S3             300     3    4      850    YES    8.0
+EVRPTW-C2-50-S3             100     -    -        -     NO    8.0
+EVRPTW-R2-50-S3             100     -    -        -     NO    8.0
+EVRPTW-R2-50-S3             300     3    4     1300    YES    8.0
+EVRPTW-R2-50-S3             100     -    -        -     NO    8.0
+
+Reading: 'rech=NO' with allow_recharge=False shows that without
+ charging, a 100-unit battery cannot serve these instances -> the
+ battery/charging constraint is real and the model handles it.
+========================================================================

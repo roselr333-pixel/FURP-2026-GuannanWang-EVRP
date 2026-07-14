@@ -1,0 +1,42 @@
+======================================================================
+STANDARD VRPTW BENCHMARK — Solomon (1987) format
+======================================================================
+Solver: OR-Tools 9.15.6755 | instances generated in Solomon format (seed-derived time windows).
+Objective priority: minimise vehicles, then distance (fixed cost per vehicle = 1,000,000).
+
+instance           cust  veh     dist   time_s
+----------------------------------------------------------------------
+Solomon-C1-25        25    3      747      3.0
+Solomon-C1-50        50    4      814      6.0
+Solomon-C1-100      100    8     1763     12.0
+Solomon-C2-25        25    2      465      3.0
+Solomon-C2-50        50    4      638      6.0
+Solomon-C2-100      100    7     1291     12.0
+Solomon-R1-25        25    2     1035      3.0
+Solomon-R1-50        50    4     1503      6.0
+Solomon-R1-100      100    7     2196     12.0
+Solomon-R2-25        25    2      839      3.0
+Solomon-R2-50        50    4     1284      6.0
+Solomon-R2-100      100    8     2054     12.0
+Solomon-RC1-25       25    3      916      3.0
+Solomon-RC1-50       50    4     1233      6.0
+Solomon-RC1-100     100    7     2130     12.0
+Solomon-RC2-25       25    2      873      3.0
+Solomon-RC2-50       50    4     1134      6.0
+Solomon-RC2-100     100    7     1793     12.0
+
+REFERENCE — literature BKS of CANONICAL Solomon 100-customer set
+(for context only; my instances above are generated in Solomon
+ format but are not the exact published files).
+set       veh      dist
+------------------------
+c101       10    828.94
+c201        3    591.56
+r101       19   1650.80
+r201        4   1252.37
+rc101      14   1697.85
+rc201       4   1147.05
+
+How to reproduce: python src/experiments/benchmark_solomon_vrptw.py
+Instance files: src/instances/solomon_*.txt
+======================================================================

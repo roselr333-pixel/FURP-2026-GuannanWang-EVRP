@@ -38,6 +38,19 @@ This is your project home for the FURP programme. **Fork this template**, rename
 
 ---
 
+## Week 5 checkpoint (current status)
+
+This is a **consolidation week**. The project checkpoint note (required Week 5 deliverable) lives at:
+
+- **English:** [`docs/week05_checkpoint.md`](docs/week05_checkpoint.md)
+- **中文:** [`docs/week05_checkpoint_zh.md`](docs/week05_checkpoint_zh.md)
+
+All experiment scripts under `src/experiments/` reran identically on 2026-07-14 (reproducible). Per-run evidence: `src/results/*.txt`. Environment details: [`docs/env_record.md`](docs/env_record.md).
+
+**Standard benchmarks added (2026-07-14):** the **official 56-instance Solomon 100-customer VRPTW set** was downloaded (with published `.sol` BKS) and solved with OR-Tools — **56/56 feasible, mean gap to BKS = 7.2%** ([`benchmark_official_solomon.py`](src/experiments/benchmark_official_solomon.py), results in `src/results/benchmark_official_solomon_results.csv`, instances cached in `src/instances/official_solomon/`). Also a Solomon-format VRPTW suite ([`benchmark_solomon_vrptw.py`](src/experiments/benchmark_solomon_vrptw.py), 18 instances) and an E-VRPTW benchmark with charging stations + battery ([`benchmark_evrptw.py`](src/experiments/benchmark_evrptw.py)). The truck-drone model was upgraded to any-node launch/land ([`week05_truck_drone_v2.py`](src/experiments/week05_truck_drone_v2.py)).
+
+---
+
 ## Repository structure
 
 This structure is **mandatory** — please keep it intact.

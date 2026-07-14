@@ -1,0 +1,25 @@
+======================================================================
+WEEK 5 (v2) TRUCK + DRONE — flexible launch/land (FSTSP-style)
+======================================================================
+Customers: 6 | truck speed=1.0, drone speed=2.0, drone range=150.0
+
+TRUCK-ONLY makespan        : 552.1
+DEPOT-ONLY DRONE (old)     : 389.5   (drone loop [3, 5, 6] | truck loop [1, 2, 4])
+
+V2 FLEXIBLE DRONE makespan : 277.3
+  truck serves [1, 3, 6] (travel=247.3)
+  drone makespan (last landing) = 210.0
+  drone trips (launch node -> customer -> recover node):
+    node 1 -> customer 5 -> node 3
+    node 0 -> customer 2 -> node 6
+    node 3 -> customer 4 -> node 0
+
+Improvement vs truck-only      : 49.8%
+Improvement vs depot-only drone: 28.8% (shows the limitation is removed)
+
+What changed vs the old model:
+  - drone is no longer confined to a depot loop;
+  - it is carried by the truck and launched/recovered at any node;
+  - each trip must satisfy RANGE and RENDEZVOUS (land by truck ETA);
+  - greedy insertion keeps the truck route feasible and short.
+======================================================================

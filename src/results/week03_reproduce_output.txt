@@ -5,7 +5,7 @@ Instance: Solomon-format VRPTW (src/data/solomon_c101_small.txt)
   nodes=9 (depot + 8 customers), vehicles=3, cap=200
 STATUS: FEASIBLE
 Objective (total distance): 54
-Runtime: 5.0002 s
+Runtime: 5.0004 s
 ----------------------------------------------------------------
 ROUTES:
   Vehicle 2: [0, 3, 4, 1, 2, 6, 5, 8, 7, 0]  (load=100)

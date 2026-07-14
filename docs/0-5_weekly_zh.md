@@ -44,26 +44,29 @@
 
 ---
 
-### 第5周 — 2026-07-07（补课冲刺中完成）
+### 第5周 — 2026-07-07（补课冲刺）+ 2026-07-14（补充 benchmark 与卡车-无人机 v2）
 
 **本周是否参会：** 是
 
 **本周进展**
-- 实现了卡车 + 无人机协同路径的启发式基线（`src/experiments/week05_truck_drone.py`）。
-- 一辆卡车与一架无人机在 t=0 时于仓库同步出发、并行作业；每位客户被分配给卡车或无人机（无人机负责最远的客户）。
-- 完工时间（makespan）：仅卡车 = 388.6；卡车+无人机 = 270.6 → 缩短 30.4%。
-- 输出：`src/results/week05_truck_drone_output.txt`。
+- 实现了卡车 + 无人机协同路径的启发式基线（`src/experiments/week05_truck_drone.py`）：卡车与无人机在 t=0 于仓库同步出发、并行作业；无人机负责最远的客户。完工时间：仅卡车 388.6 → 卡车+无人机 270.6（缩短 30.4%）。
+- *2026-07-14 补充（支撑第 5 周 checkpoint）：* 跑了**标准 VRPTW benchmark**——生成一套 Solomon 格式算例（6 族 × 2 变体 × 3 规模 = 18 个）并用 OR-Tools 求解（`src/experiments/benchmark_solomon_vrptw.py`）；另跑了带充电站 + 电池的**标准 E-VRPTW benchmark**（`src/experiments/benchmark_evrptw.py`）。
+- *2026-07-14 补充：* 把卡车-无人机模型升级为 **v2**（`src/experiments/week05_truck_drone_v2.py`）——无人机现在由卡车携带，可在**任意节点**起飞/回收（FSTSP 风格），带航程 + 会合约束。完工时间进一步降到 **277.3（对比仅卡车 −49.8%，对比 v1 −28.8%）**。
+- *2026-07-14 稍后补充：* 跑了**官方 Solomon 56 实例 VRPTW 算例集**（从 PyVRP/Instances 下载，含官方 `.sol` BKS）并用 OR-Tools 求解——**56/56 可行，相对 BKS 平均差距 7.2%**（`src/experiments/benchmark_official_solomon.py`、`src/results/benchmark_official_solomon_results.csv`、算例在 `src/instances/official_solomon/`）。这取代早前的生成算例集成为重点 benchmark。
+- 输出：`src/results/week05_truck_drone_output.txt`、`src/results/benchmark_vrptw_results.csv`、`src/results/benchmark_evrptw_results.csv`、`src/results/week05_truck_drone_v2_output.txt`、`src/results/benchmark_official_solomon_results.csv`；算例文件在 `src/instances/` 与 `src/instances/official_solomon/`。
 - *基础性的卡车-无人机论文（Murray & Chu 2015, FSTSP）尚未阅读/做笔记——论文笔记延后（计划 2026-07-08/09）。*
 
 **挑战与阻塞**
-- 卡车-无人机同步（中途发射/回收、无人机电量）被简化；当前基线仅在仓库处发射/回收无人机。
+- 官方 Solomon VRPTW benchmark 现已跑通（56/56 求解，相对 BKS 平均差距 7.2%）；R2/RC2 上差距较大的主因是我的车辆固定成本设得偏高（用的车比 BKS 少），下一步要调。
+- 卡车-无人机 v2 仍是贪心启发式（一次飞一个顾客，尚未建模无人机电量）。
 
 **下一步**
-- 阅读卡车-无人机文献后，为模型增加中途汇合与无人机电量约束；在 Week-3 实验框架内与 OR-Tools 经典基线对比。
+- 调整车辆固定成本 / 目标，让求解器用的车辆数更接近 BKS（尤其 R2/RC2），并重跑官方的 Schneider / Montoya E-VRPTW 算例集；有余力可加 PyVRP 基线做真正的外部对比。
+- 阅读卡车-无人机文献后，加入无人机电量维度，并允许一次飞多个顾客。
 
-**投入工时（可选）：** 5 小时（外加共享的补课时间）
+**投入工时（可选）：** 5 小时（补课）+ 约 3 小时（2026-07-14）
 
-**链接（可选）：** `src/experiments/week05_truck_drone.py`, `src/results/week05_truck_drone_output.txt`
+**链接（可选）：** `src/experiments/week05_truck_drone.py`, `src/experiments/week05_truck_drone_v2.py`, `src/experiments/benchmark_solomon_vrptw.py`, `src/experiments/benchmark_evrptw.py`, `src/results/week05_truck_drone_output.txt`, `src/results/week05_truck_drone_v2_output.txt`, `src/results/benchmark_vrptw_results.csv`, `src/results/benchmark_evrptw_results.csv`, `docs/week05_checkpoint.md`（第5周 checkpoint）, `docs/week05_checkpoint_zh.md`（中文）
 
 ---
 

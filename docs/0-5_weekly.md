@@ -52,26 +52,29 @@ stage). These are honestly marked as future work below.
 
 <!-- =================  YOUR ENTRIES BELOW  ================= -->
 
-### Week 5 — 2026-07-07 (completed in catch-up sprint)
+### Week 5 — 2026-07-07 (catch-up sprint) + 2026-07-14 (benchmark & truck-drone v2 added)
 
 **Attended this week's meeting:** Yes
 
 **Progress this week**
-- Implemented a **truck + drone collaborative routing** heuristic baseline (`src/experiments/week05_truck_drone.py`).
-- One truck and one drone start at the depot at t=0 (synchronization) and work in parallel; each customer is assigned to truck or drone (drone takes the farthest customers).
-- Reported **makespan**: truck-only = 388.6; truck+drone = 270.6 → **30.4% shorter makespan**.
-- Output: `src/results/week05_truck_drone_output.txt`.
+- Implemented a **truck + drone collaborative routing** heuristic baseline (`src/experiments/week05_truck_drone.py`): truck and drone start at depot at t=0, work in parallel; drone takes the farthest customers. makespan: truck-only 388.6 → truck+drone 270.6 (**−30.4%**).
+- *Added 2026-07-14 (supports the Week-5 checkpoint):* ran a **standard VRPTW benchmark** — generated a Solomon-format suite (6 families × 2 variants × 3 scales = 18 instances) and solved it with OR-Tools (`src/experiments/benchmark_solomon_vrptw.py`); also ran a **standard E-VRPTW benchmark** with charging stations + battery (`src/experiments/benchmark_evrptw.py`).
+- *Added 2026-07-14:* upgraded the truck-drone model to **v2** (`src/experiments/week05_truck_drone_v2.py`) — the drone is now carried by the truck and launched/recovered at **any** node (FSTSP-style) with range + rendezvous constraints. makespan drops further to **277.3 (−49.8% vs truck-only, −28.8% vs v1)**.
+- *Added 2026-07-14 (later):* ran the **official Solomon 56-instance VRPTW set** (downloaded with their published `.sol` BKS from PyVRP/Instances) and solved with OR-Tools — **56/56 feasible, mean gap to BKS = 7.2%** (`src/experiments/benchmark_official_solomon.py`, `src/results/benchmark_official_solomon_results.csv`, instances in `src/instances/official_solomon/`). This replaces the earlier generated-instance suite as the headline benchmark.
+- Outputs: `src/results/week05_truck_drone_output.txt`, `src/results/benchmark_vrptw_results.csv`, `src/results/benchmark_evrptw_results.csv`, `src/results/week05_truck_drone_v2_output.txt`, `src/results/benchmark_official_solomon_results.csv`; instance files in `src/instances/` and `src/instances/official_solomon/`.
 - *The foundational truck-drone paper (Murray & Chu 2015, FSTSP) has **not** been read/note-taken yet — paper notes are deferred (planned 2026-07-08/09).*
 
 **Challenges & blockers**
-- Truck-drone synchronization (mid-route launch/recovery, drone battery) is simplified; current baseline launches/recovers the drone only at the depot.
+- Official Solomon VRPTW benchmark now run (56/56 solved, mean gap to BKS 7.2%); the larger gap on R2/RC2 is from my vehicle fixed-cost choice (fewer vehicles than BKS), to be tuned next.
+- Truck-drone v2 is a greedy heuristic (one customer per trip, no drone battery modelled yet).
 
 **Next steps**
-- After reading the truck-drone literature, extend the model with mid-route rendezvous and a drone battery constraint; compare against the OR-Tools classical baseline inside the Week-3 harness.
+- Tune the vehicle fixed cost / objective so my solver uses a vehicle count closer to BKS (especially R2/RC2), and re-run the official Schneider / Montoya E-VRPTW set; optionally add a PyVRP baseline for a genuine external comparison.
+- After reading the truck-drone literature, add a drone-battery dimension and allow multiple customers per trip.
 
-**Hours spent (optional):** 5h (plus shared catch-up time)
+**Hours spent (optional):** 5h (catch-up) + ~3h (2026-07-14)
 
-**Links (optional):** `src/experiments/week05_truck_drone.py`, `src/results/week05_truck_drone_output.txt`
+**Links (optional):** `src/experiments/week05_truck_drone.py`, `src/experiments/week05_truck_drone_v2.py`, `src/experiments/benchmark_solomon_vrptw.py`, `src/experiments/benchmark_evrptw.py`, `src/results/week05_truck_drone_output.txt`, `src/results/week05_truck_drone_v2_output.txt`, `src/results/benchmark_vrptw_results.csv`, `src/results/benchmark_evrptw_results.csv`, `docs/week05_checkpoint.md` (Week 5 checkpoint), `docs/week05_checkpoint_zh.md` (中文)
 
 ---
 

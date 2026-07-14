@@ -7,13 +7,13 @@ Energy consumption = 1.0 per distance unit
 BATTERY VIOLATION TABLE (recharge allowed at stations)
  Battery cap |  Feasible |  Recharges | Runtime(s)
 --------------------------------------------------
-         100 |      True |          1 |      4.999
+         100 |      True |          1 |      5.001
          150 |      True |          1 |      5.001
          200 |      True |          1 |      5.001
          250 |      True |          1 |      5.000
 
 Comparison — NO recharge allowed (pure EV):
   battery=100: feasible=False, runtime=0.003s
-  battery=150: feasible=False, runtime=0.005s
+  battery=150: feasible=False, runtime=0.004s
   battery=200: feasible=True, runtime=5.000s
   battery=250: feasible=True, runtime=5.000s
