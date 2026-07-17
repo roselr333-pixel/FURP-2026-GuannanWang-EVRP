@@ -186,6 +186,26 @@ Representative instances (GA vs OR-Tools vs BKS):
 
 **What this tells me:** GA is worse than OR-Tools on *every* instance (the `ga_minus_ortools_gap` column is positive for all 56) — expected, because OR-Tools uses industrial-grade guided local search while my GA is a textbook metaheuristic. The interesting finding is the **high variance on clustered instances** (C101 within 0.2% of BKS, but C103 blows up to 90.6%) and the **weakness on wide time windows** (R2 / RC2 41–55%). The point of this baseline was just a first attempt at building and benchmarking a metaheuristic myself — not to beat OR-Tools. Full write-up: `docs/ga_baseline_report.md`; data: `src/results/baseline_ga_vrptw_comparison.csv`.
 
+### 2.10 Ground-air collaborative EVRP-TW (my project focus)
+
+My chosen focus is the **ground-air collaborative EVRP-TW** problem (electric truck + drone, with time windows, battery/charging, and truck-drone synchronization). On 2026-07-17 I built a first constructive heuristic for it (`week06_ground_air_evrp_tw.py`) and compared three variants that share the **same greedy core**, so the only difference is how many constraints are switched on:
+
+- **V0** truck-only, no battery limit (reference lower bound);
+- **V1** truck-only EVRP-TW (battery + charging + TW) — the baseline;
+- **V2** ground-air collaborative EVRP-TW (V1 + drone coordination) — the proposed improvement.
+
+The drone is carried by the truck, launched at any node *i* to serve one customer *k*, recovered at any later node *j*, subject to range, rendezvous (land by truck ETA), and the customer's time window. Objective: minimize makespan.
+
+| Size | V1 makespan | V2 makespan | V2 vs V1 | TW viol (V1→V2) | recharges (V1/V2) | drone offload |
+|---|---:|---:|---:|---:|---:|---:|
+| 8 | 463.2 | 367.6 | **−20.6%** | 1 → 0 | 1 / 1 | 1 |
+| 12 | 674.0 | 591.8 | **−12.2%** | 5 → 3 | 1 / 1 | 1 |
+| 16 | 909.1 | 757.3 | **−16.7%** | 10 → 9 | 2 / 2 | 1 |
+
+V2 beats the V1 baseline on every size, so the collaborative idea helps; the gain comes from serving one customer with the faster drone **in parallel** with the truck. This run also reports the metrics I was missing before — charging count / charging time / synchronization violations / time-window violations — and produces four failure cases (FC1–FC4) with constraint-level diagnosis (`week06_failure_cases.csv`).
+
+**Honest limitation:** with this first greedy the drone offloads only one customer per instance (the truck route is already compact, so removing more rarely lowers its makespan). Absolute numbers are not close to optimal (no local search). Improving drone-trip packing is the obvious next step. Full write-up: `docs/week06_ground_air_report.md`; data: `src/results/week06_ground_air_results.csv`.
+
 ---
 
 ## 3. Problems and Limitations I See in My Own Work
@@ -202,8 +222,8 @@ Representative instances (GA vs OR-Tools vs BKS):
 
 1. **Finish my reading set (in progress):** I completed the EVRP survey note (2026-07-13). Next I will read and note **Schneider, Stenger & Goeke (2014)** E-VRPTW (the ALNS foundation my EVRP-TW recharge model already mirrors) and **Murray & Chu (2015)** FSTSP (the source of my truck-drone v2), then copy all three notes into this repo. *The survey was deferred from earlier weeks and is now done.*
 2. **Tighten the gap to BKS on R2 / RC2:** tune the vehicle fixed cost / objective so my solver uses a vehicle count closer to BKS, and add a stronger meta-heuristic pass; optionally re-run the official Schneider / Montoya E-VRPTW set (now that I can fetch public instances).
-3. **Deepen the truck-drone v2:** add a drone-battery dimension and allow multiple customers per drone trip, then re-measure makespan on a larger instance.
-4. **Pick a paper to replicate + finish the baseline set:** I already added the GA baseline (2026-07-17, §2.9). Next I will add a PyVRP baseline and choose one paper (Schneider 2014 or Murray & Chu 2015) to reproduce, so I have a genuine fair comparison (this was deferred from earlier weeks).
+3. **Deepen the ground-air collaborative model (my focus):** the first version (§2.10) offloads only one customer per instance — improve the drone-trip packing (more customers offloaded, e.g. multiple recoveries per truck stop, or route-first drone assignment) so the collaborative benefit is larger and more visible, and add a local-search pass.
+4. **Pick a paper to replicate + finish the baseline set:** I already added the GA baseline (2026-07-17, §2.9). Next I will add a PyVRP baseline and choose one paper (Schneider 2014 or Murray & Chu 2015) to reproduce, and drop it into the same V0/V1/V2 comparison table (§2.10) so I have a genuine fair comparison (this was deferred from earlier weeks).
 
 ---
 

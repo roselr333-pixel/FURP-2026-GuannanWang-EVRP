@@ -1,0 +1,37 @@
+==============================================================================
+WEEK 6 v2 — GROUND-AIR COLLABORATIVE EVRP-TW (improved drone allocation)
+==============================================================================
+seed=20260717  truck_speed=1.0  drone_speed=2.0  drone_range=160.0  battery=250  recharge=40s
+variants: V0 truck-only(no EV) | V1 truck EV | V2 ground-air collaborative EV
+
+--- instance size N=8 (customers), 4 stations ---
+  V0: makespan=  417.7  dist=  284.0  feas=True  TWviol=1  rechg=0  syncRej=0  offload=0  0.000s
+  V1: makespan=  463.2  dist=  289.5  feas=True  TWviol=1  rechg=1  syncRej=0  offload=0  0.000s
+  V2: makespan=  278.6  dist=  439.2  feas=True  TWviol=0  rechg=1  syncRej=864  offload=4  0.002s
+  -> V2 improvement vs V1 (makespan): 39.9%
+
+--- instance size N=12 (customers), 4 stations ---
+  V0: makespan=  585.4  dist=  407.3  feas=True  TWviol=5  rechg=0  syncRej=0  offload=0  0.000s
+  V1: makespan=  674.0  dist=  455.9  feas=True  TWviol=5  rechg=1  syncRej=0  offload=0  0.000s
+  V2: makespan=  278.6  dist=  738.2  feas=True  TWviol=0  rechg=1  syncRej=3254  offload=8  0.009s
+  -> V2 improvement vs V1 (makespan): 58.7%
+
+--- instance size N=16 (customers), 4 stations ---
+  V0: makespan=  779.7  dist=  521.9  feas=True  TWviol=10  rechg=0  syncRej=0  offload=0  0.000s
+  V1: makespan=  909.1  dist=  571.2  feas=True  TWviol=10  rechg=2  syncRej=0  offload=0  0.000s
+  V2: makespan=  436.7  dist= 1050.0  feas=True  TWviol=1  rechg=2  syncRej=14822  offload=11  0.034s
+  -> V2 improvement vs V1 (makespan): 52.0%
+
+--- instance size N=20 (customers), 4 stations ---
+  V0: makespan= 1001.1  dist=  794.7  feas=True  TWviol=14  rechg=0  syncRej=0  offload=0  0.000s
+  V1: makespan= 1221.5  dist=  895.0  feas=True  TWviol=14  rechg=3  syncRej=0  offload=0  0.000s
+  V2: makespan=  704.4  dist= 1469.7  feas=True  TWviol=2  rechg=3  syncRej=49869  offload=14  0.078s
+  -> V2 improvement vs V1 (makespan): 42.3%
+
+==============================================================================
+FAILURE CASES (>=3, constraint-level diagnosis)
+==============================================================================
+  FC1 [truck-only EV, recharge OFF, battery=120]: energy violation (cannot cover distance even with one charge). Next: route becomes infeasible; fix: allow recharge at stations or raise battery capacity.
+  FC2 [collaborative, drone_range=40 (tiny)]: only 2 customers offloaded; V2 makespan 588.9 ~ V1, drone contributes little. Next: fix: larger drone range, or accept degraded-to-baseline behaviour.
+  FC3 [truck EV, tight time windows (width=35)]: 10 customers served outside their window. Next: fix: relax windows, add vehicles, or prioritise TW in insertion.
+  FC4 [collaborative, 16 customers]: 14822 drone trips rejected by rendezvous (land-after-truck) constraint. Next: fix: reorder truck route or launch earlier; shows sync is active.
