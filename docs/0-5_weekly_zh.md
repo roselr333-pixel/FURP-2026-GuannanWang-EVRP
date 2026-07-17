@@ -52,7 +52,7 @@
 - 实现了卡车 + 无人机协同路径的启发式基线（`src/experiments/week05_truck_drone.py`）：卡车与无人机在 t=0 于仓库同步出发、并行作业；无人机负责最远的客户。完工时间：仅卡车 388.6 → 卡车+无人机 270.6（缩短 30.4%）。
 - *2026-07-14 补充（支撑第 5 周 checkpoint）：* 跑了**标准 VRPTW benchmark**——生成一套 Solomon 格式算例（6 族 × 2 变体 × 3 规模 = 18 个）并用 OR-Tools 求解（`src/experiments/benchmark_solomon_vrptw.py`）；另跑了带充电站 + 电池的**标准 E-VRPTW benchmark**（`src/experiments/benchmark_evrptw.py`）。
 - *2026-07-14 补充：* 把卡车-无人机模型升级为 **v2**（`src/experiments/week05_truck_drone_v2.py`）——无人机现在由卡车携带，可在**任意节点**起飞/回收（FSTSP 风格），带航程 + 会合约束。完工时间进一步降到 **277.3（对比仅卡车 −49.8%，对比 v1 −28.8%）**。
-- *2026-07-14 稍后补充：* 跑了**官方 Solomon 56 实例 VRPTW 算例集**（从 PyVRP/Instances 下载，含官方 `.sol` BKS）并用 OR-Tools 求解——**56/56 可行，相对 BKS 平均差距 7.2%**（`src/experiments/benchmark_official_solomon.py`、`src/results/benchmark_official_solomon_results.csv`、算例在 `src/instances/official_solomon/`）。这取代早前的生成算例集成为重点 benchmark。
+- *2026-07-14 稍后补充：* 跑了**官方 Solomon 56 实例 VRPTW 算例集**（从 PyVRP/Instances 下载，含官方 `.sol` BKS）并用 OR-Tools 求解——**56/56 可行，相对 BKS 平均差距 7.2%**（`src/experiments/benchmark_official_solomon.py`、`src/results/benchmark_official_solomon_results.csv`、算例在 `src/instances/official_solomon/`）。这现在作为主 benchmark（取代早前的生成算例集）。
 - 输出：`src/results/week05_truck_drone_output.txt`、`src/results/benchmark_vrptw_results.csv`、`src/results/benchmark_evrptw_results.csv`、`src/results/week05_truck_drone_v2_output.txt`、`src/results/benchmark_official_solomon_results.csv`；算例文件在 `src/instances/` 与 `src/instances/official_solomon/`。
 - *基础性的卡车-无人机论文（Murray & Chu 2015, FSTSP）尚未阅读/做笔记——论文笔记延后（计划 2026-07-08/09）。*
 
@@ -102,7 +102,7 @@
 
 **本周是否参会：** 否（家庭变故——请假邮件：已发）
 
-**本周进展——此前最关键缺口已补齐**
+**本周进展——此前最关键缺口已处理**
 - 构建了满足 Week-3 lab 与基准最低标准的公平对比实验框架（`src/experiments/week03_experiment.py`）：
   - 各变体复用同一份算例数据（保证公平对比）。
   - 3 个规模：10 / 20 / 40 个客户（小 / 中）。

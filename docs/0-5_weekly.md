@@ -60,7 +60,7 @@ stage). These are honestly marked as future work below.
 - Implemented a **truck + drone collaborative routing** heuristic baseline (`src/experiments/week05_truck_drone.py`): truck and drone start at depot at t=0, work in parallel; drone takes the farthest customers. makespan: truck-only 388.6 → truck+drone 270.6 (**−30.4%**).
 - *Added 2026-07-14 (supports the Week-5 checkpoint):* ran a **standard VRPTW benchmark** — generated a Solomon-format suite (6 families × 2 variants × 3 scales = 18 instances) and solved it with OR-Tools (`src/experiments/benchmark_solomon_vrptw.py`); also ran a **standard E-VRPTW benchmark** with charging stations + battery (`src/experiments/benchmark_evrptw.py`).
 - *Added 2026-07-14:* upgraded the truck-drone model to **v2** (`src/experiments/week05_truck_drone_v2.py`) — the drone is now carried by the truck and launched/recovered at **any** node (FSTSP-style) with range + rendezvous constraints. makespan drops further to **277.3 (−49.8% vs truck-only, −28.8% vs v1)**.
-- *Added 2026-07-14 (later):* ran the **official Solomon 56-instance VRPTW set** (downloaded with their published `.sol` BKS from PyVRP/Instances) and solved with OR-Tools — **56/56 feasible, mean gap to BKS = 7.2%** (`src/experiments/benchmark_official_solomon.py`, `src/results/benchmark_official_solomon_results.csv`, instances in `src/instances/official_solomon/`). This replaces the earlier generated-instance suite as the headline benchmark.
+- *Added 2026-07-14 (later):* ran the **official Solomon 56-instance VRPTW set** (downloaded with their published `.sol` BKS from PyVRP/Instances) and solved with OR-Tools — **56/56 feasible, mean gap to BKS = 7.2%** (`src/experiments/benchmark_official_solomon.py`, `src/results/benchmark_official_solomon_results.csv`, instances in `src/instances/official_solomon/`). This now serves as the main benchmark (in place of the earlier generated suite).
 - Outputs: `src/results/week05_truck_drone_output.txt`, `src/results/benchmark_vrptw_results.csv`, `src/results/benchmark_evrptw_results.csv`, `src/results/week05_truck_drone_v2_output.txt`, `src/results/benchmark_official_solomon_results.csv`; instance files in `src/instances/` and `src/instances/official_solomon/`.
 - *The foundational truck-drone paper (Murray & Chu 2015, FSTSP) has **not** been read/note-taken yet — paper notes are deferred (planned 2026-07-08/09).*
 
@@ -110,7 +110,7 @@ stage). These are honestly marked as future work below.
 
 **Attended this week's meeting:** No (family circumstances — leave emailed: Yes)
 
-**Progress this week — THE CORE GAP FROM BEFORE IS NOW CLOSED**
+**Progress this week — the core gap from before is now addressed**
 - Built a **fair-comparison experiment harness** (`src/experiments/week03_experiment.py`) that satisfies the Week-3 lab and the benchmark minimum standard:
   - **Same instance data** reused across variants (fair comparison).
   - **3 sizes**: 10 / 20 / 40 customers (small / medium).

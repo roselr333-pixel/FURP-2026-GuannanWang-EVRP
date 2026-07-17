@@ -1,6 +1,6 @@
 # Week 5 Project Checkpoint — EVRP-TW with Classical + Truck-Drone Baselines
 
-> Written by Guannan Wang · 2026-07-14 · Track: Research (EVRP) · survey note added 2026-07-15
+> Written by Guannan Wang · 2026-07-14 · Track: Research (EVRP) · survey note added 2026-07-15 · GA baseline added 2026-07-17
 > This is my deliverable for the **Week 5 Lab: Consolidate Progress and Prepare the Next Step**.
 > I reran every experiment on 2026-07-14 and all of them reproduced the same numbers (see Appendix).
 
@@ -23,17 +23,19 @@
 | 5 | `benchmark_evrptw.py` | **Standard E-VRPTW benchmark**: Solomon customers + charging stations + a battery dimension (the same negative-energy recharge trick from week04), run on benchmark-style instances of several scales. |
 | 5 | `benchmark_official_solomon.py` | **Official Solomon VRPTW benchmark**: I downloaded the canonical 56 Solomon 100-customer instances (+ their official `.sol` BKS) and solved them with OR-Tools, comparing instance-by-instance against published BKS (overall mean gap 7.2%). |
 | 5 | `week05_truck_drone_v2.py` | **Truck + drone (v2)**: the drone is now *carried by the truck* and launched / recovered at **any** node (FSTSP-style), with range + rendezvous constraints — removing the "depot-only" simplification of v1. |
+| 5 | `baseline_ga_vrptw.py` | **External GA baseline**: a Genetic Algorithm I wrote from scratch (Solomon I1 decode, OX crossover, savings-seed warm start, 2-opt + relocate local search), benchmarked on the **same** 56 official Solomon VRPTW instances as OR-Tools (mean gap to BKS 36.2%). |
 
 **What already works** (I confirmed this by rerunning on 2026-07-14):
 - All eight scripts run end-to-end and give the same results as before → my project is **reproducible**.
 - I get feasible solutions for VRPTW, for EVRP-TW (with charging), and for both truck-drone versions.
 - I have a fair-comparison table, a Solomon-format benchmark suite, and route plots as evidence.
-- **I ran a real standard benchmark** — the official 56-instance Solomon 100-customer VRPTW set, solved with OR-Tools and compared instance-by-instance against published BKS (overall mean gap 7.2%; 56/56 solved) — and **I removed the truck-drone simplification** (v2 launches/lands at any node).
+- I ran a standard benchmark — the official 56-instance Solomon 100-customer VRPTW set, solved with OR-Tools and compared instance-by-instance against published BKS (overall mean gap 7.2%; 56/56 solved) — and updated the truck-drone model so it launches/lands at any node (v2).
 - **I started my reading set.** On 2026-07-13 I read and noted my first paper — the EVRP survey by Erdelić & Carić (2019) — following the lab note template (see §2.8).
+- I also added a simple Genetic Algorithm baseline. On 2026-07-17 I implemented a Genetic Algorithm and benchmarked it on the **same** 56 official Solomon instances as OR-Tools, so the GA-vs-OR-Tools-vs-BKS comparison is on identical data (GA mean gap 36.2% vs OR-Tools 7.2%; see §2.9).
 
 **What I have NOT finished yet** (being honest — these are my real remaining gaps):
 - **My reading gap is now partially closed.** I finished and uploaded my first paper note — the EVRP survey by Erdelić & Carić (2019, *Journal of Advanced Transportation*) — on 2026-07-13. Two more notes (Schneider 2014 E-VRPTW; Murray & Chu 2015 FSTSP) are still pending a PDF download.
-- **No external baseline comparison yet.** So far I only compare my own OR-Tools greedy result against my OR-Tools + 2-opt result (and against my own truck-only baseline). I have not added a PyVRP / GA / POMO baseline yet (planned for later).
+- **External baseline is partially done.** I added my own Genetic Algorithm baseline (2026-07-17, see §2.9), but I have not yet added a PyVRP or POMO baseline, and the GA is still far from OR-Tools (36.2% vs 7.2% mean gap to BKS).
 
 ---
 
@@ -117,7 +119,7 @@ Per-family mean gap to BKS:
 
 **Overall: 56 / 56 solved, mean gap to BKS = 7.2%.**
 
-**What this tells me:** on the **C-family** (tight, structured windows) my OR-Tools baseline is essentially at BKS (C2 mean only 0.9%). On **R2 / RC2** (loose windows) the gap is larger — I checked the cause: my model uses a high vehicle fixed cost, so it deploys *fewer* vehicles than BKS (e.g. R201: I use 4 vs BKS 8). Fewer vehicles → longer individual routes → larger total distance. That is a modelling choice (I minimise distance under a vehicle-count penalty), not a solver failure. Matching the exact BKS objective / tuning the vehicle cost is a clear next step.
+**What this tells me:** on the **C-family** (tight, structured windows) my OR-Tools baseline is close to BKS (C2 mean only 0.9%). On **R2 / RC2** (loose windows) the gap is larger — I checked the cause: my model uses a high vehicle fixed cost, so it deploys *fewer* vehicles than BKS (e.g. R201: I use 4 vs BKS 8). Fewer vehicles → longer individual routes → larger total distance. That is a modelling choice (I minimise distance under a vehicle-count penalty), not a solver failure. Matching the exact BKS objective / tuning the vehicle cost is a clear next step.
 
 *(The earlier `benchmark_solomon_vrptw.py` 18-instance generated suite remains as a lightweight self-test; its numbers are no longer the headline.)*
 
@@ -157,15 +159,42 @@ On 2026-07-13 I read Erdelić & Carić (2019), *A Survey on the Electric Vehicle
 
 Note file: `learning_guide/papers/01_survey_evrp.md` (to be copied to `docs/papers/` on cleanup).
 
+### 2.9 External baseline — self-built Genetic Algorithm (GA)
+
+To get a fair comparison I implemented a Genetic Algorithm **from scratch** and ran it on the **same** 56 official Solomon VRPTW instances as OR-Tools, so GA / OR-Tools / BKS are all on identical data. Design: customer-permutation encoding, Solomon I1 insertion decoding, fitness = total distance + bidirectional vehicle-count penalty (+ `force_fleet` split to match BKS fleet size), tournament selection (size 4) + elitism (6), Order Crossover (OX), swap/reverse mutation (rate 0.3), 2-opt + relocate local search, Clarke–Wright savings warm start, pop=40, 8 s/instance, fixed seed 20260717.
+
+**Result: 56/56 solved, GA mean gap to BKS = 36.2%** (OR-Tools on the same set = 7.2%). Per-family mean gap:
+
+| Family | n | mean gap | min | max |
+|---|---:|---:|---:|---:|
+| C1 | 9 | 29.1% | 0.2% | 90.6% |
+| C2 | 8 | 31.5% | 0.4% | 61.9% |
+| R1 | 12 | 31.7% | 15.2% | 45.9% |
+| R2 | 11 | 41.0% | 32.6% | 57.5% |
+| RC1 | 8 | 29.9% | 19.5% | 39.3% |
+| RC2 | 8 | 55.1% | 35.0% | 68.9% |
+
+Representative instances (GA vs OR-Tools vs BKS):
+
+| Instance | BKS | OR-Tools (gap) | GA (gap) |
+|---|---:|---:|---:|
+| C101 | 827.3 / 10 | 828.7 / 10 (+0.2%) | 828.9 / 10 (+0.2%) |
+| C103 | 826.3 / 10 | 853.5 / 10 (+3.3%) | 1574.9 / 10 (+90.6%) |
+| R101 | 1637.7 / 20 | 1634.4 / 19 (−0.2%) | 1887.1 / 21 (+15.2%) |
+| R201 | 1143.2 / 8 | 1298.9 / 4 (+13.6%) | 1800.5 / 8 (+57.5%) |
+| RC201 | 1261.8 / 9 | 1485.2 / 4 (+17.7%) | 2131.4 / 9 (+68.9%) |
+
+**What this tells me:** GA is worse than OR-Tools on *every* instance (the `ga_minus_ortools_gap` column is positive for all 56) — expected, because OR-Tools uses industrial-grade guided local search while my GA is a textbook metaheuristic. The interesting finding is the **high variance on clustered instances** (C101 within 0.2% of BKS, but C103 blows up to 90.6%) and the **weakness on wide time windows** (R2 / RC2 41–55%). The point of this baseline was just a first attempt at building and benchmarking a metaheuristic myself — not to beat OR-Tools. Full write-up: `docs/ga_baseline_report.md`; data: `src/results/baseline_ga_vrptw_comparison.csv`.
+
 ---
 
 ## 3. Problems and Limitations I See in My Own Work
 
-- **My OR-Tools baseline is a solid first solve, not an optimiser tuned to BKS.** On R2 / RC2 the gap to BKS is large mostly because my vehicle fixed cost makes me use fewer vehicles than BKS (longer routes). Tuning the cost / objective to match the literature, and adding a stronger meta-heuristic pass or an external solver (PyVRP), are the obvious next improvements.
+- **My OR-Tools baseline is only a first solve, not an optimiser tuned to BKS.** On R2 / RC2 the gap to BKS is large mostly because my vehicle fixed cost makes me use fewer vehicles than BKS (longer routes). Tuning the cost / objective to match the literature, and adding a stronger meta-heuristic pass or an external solver (PyVRP), are the obvious next improvements.
 - **Reading notes are started but incomplete.** I uploaded my first note (the EVRP survey, 2026-07-13), but two more are still pending (Schneider 2014; Murray & Chu 2015) — so far I only have the survey PDF.
 - **I modelled recharge as a workaround.** OR-Tools dimensions only go one direction (monotonic), so I encoded charging as a *negative* energy cost into the station, with `slack_max` set to the battery capacity. It works and reproduces, but it is not the standard arc-based charging formulation, and I would have to rework it for mid-route vehicle / drone rendezvous under partial recharge.
 - **The truck-drone v2 is still a heuristic.** It allows any-node launch/land and one customer per drone trip, with range + rendezvous checks, but it does not yet model drone battery depletion, multiple customers per trip, or optimality — only a greedy improvement over the truck-only route.
-- **No external baseline.** All my "comparisons" are internal (my greedy vs my +2-opt; my truck-only vs my drone). A real fair comparison needs a PyVRP / GA / POMO baseline.
+- **External baseline is still thin.** I now have a self-built GA (§2.9), but it is far from OR-Tools (36.2% vs 7.2% mean gap to BKS) and I have not yet added a PyVRP or POMO baseline. A genuine fair comparison against published methods still needs the paper-reproduction track.
 
 ---
 
@@ -174,7 +203,7 @@ Note file: `learning_guide/papers/01_survey_evrp.md` (to be copied to `docs/pape
 1. **Finish my reading set (in progress):** I completed the EVRP survey note (2026-07-13). Next I will read and note **Schneider, Stenger & Goeke (2014)** E-VRPTW (the ALNS foundation my EVRP-TW recharge model already mirrors) and **Murray & Chu (2015)** FSTSP (the source of my truck-drone v2), then copy all three notes into this repo. *The survey was deferred from earlier weeks and is now done.*
 2. **Tighten the gap to BKS on R2 / RC2:** tune the vehicle fixed cost / objective so my solver uses a vehicle count closer to BKS, and add a stronger meta-heuristic pass; optionally re-run the official Schneider / Montoya E-VRPTW set (now that I can fetch public instances).
 3. **Deepen the truck-drone v2:** add a drone-battery dimension and allow multiple customers per drone trip, then re-measure makespan on a larger instance.
-4. **Pick a paper to replicate + a second baseline:** choose one paper to reproduce and add a GA / POMO baseline so I have a genuine fair comparison (this was deferred from earlier weeks).
+4. **Pick a paper to replicate + finish the baseline set:** I already added the GA baseline (2026-07-17, §2.9). Next I will add a PyVRP baseline and choose one paper (Schneider 2014 or Murray & Chu 2015) to reproduce, so I have a genuine fair comparison (this was deferred from earlier weeks).
 
 ---
 
