@@ -102,11 +102,19 @@ Source: `docs/failure_cases_master.md`. The most telling: on N=50 dense instance
 
 ## 7. Honest limitations (keep in the report)
 
-- **Greedy without local search**: adding 2-opt to V2 yields only 0–1.76% (peak 1.76% at size 16), showing the gain comes from collaborative structure, not route fine-tuning.
-- **2–3 customers/sortie cap**: a simplification and a boundary; larger multi-customer service needs heavier search.
-- **Synthetic instances ≤ 50**: no real large benchmark (e.g., ESOGU) attached; extrapolation needs caution.
-- **No MILP lower bound replicated**: baselines use BKS (literature optimum), not a self-proven bound; absolute quality is anchored to literature.
-- **Coarse MO front**: weighted-sum greedy, not a full Pareto solver (see §3).
+Grouped by nature; each item gives its "consequence + next step" so it reads as a research-boundary statement, not a weakness list.
+
+**Modeling-scope boundaries**
+- **2–3 customers/sortie cap**: a deliberate simplification and a boundary. Multi-customer drone service is O(n⁴) enumeration, infeasible at scale; supporting more customers needs lighter search (e.g., pre-cluster then assign). Larger multi-customer collaboration is future work.
+- **V2 does not yet re-introduce V1's battery/charging layer**: the truck-drone model (V2) is built on VRPTW and does not re-add the electric-vehicle battery and charging constraints of V1; a truly "electric truck + drone + charging station" joint optimization is a clear next step.
+
+**Algorithmic-scope boundary**
+- **Greedy without local search**: applying intra-route 2-opt to V2's constructed truck route (accept only strict makespan improvement) yields only 0–1.76% (peak 1.76% at N=16; see `week07_fstsp_with_ls.log`). By contrast, 2-opt on a plain OR-Tools route reaches −9.7% on CVRP n40 — showing V2's gain comes from the *collaborative structure* of offloading far-flung customers, not route fine-tuning; it also means V2 is already near the local optimum of its current neighborhood. **How far from global optimum remains unquantified** (unless a MILP bound or larger neighborhoods like 3-opt are added), left for future work.
+
+**Empirical-validation boundaries**
+- **Synthetic instances ≤ 50**: our truck-drone experiments use randomly generated synthetic instances and do not adopt the field's standard large-scale benchmark sets (e.g., the Solomon-derived FSTSP instances of Murray & Chu 2015 — which this project reproduced within their parameter range in W7; or the Masmoudi et al. 2018 instance set). Extrapolation to real large scale needs caution.
+- **No MILP lower bound replicated**: baselines are anchored to BKS (literature optimum), not a self-proven bound. Computing exact bounds for this NP-hard problem is itself a separate research contribution, beyond this project's scope; absolute quality is therefore literature-anchored, not self-certified.
+- **Coarse MO front**: the weighted-sum greedy gives a "partial / inner" front and may miss non-convex Pareto regions; it is not a full Pareto solver (see §3). For a complete front, the natural next step is ε-constraint or NSGA-II (as in peer Xie's P-ACO/NSGA-II).
 
 ---
 
