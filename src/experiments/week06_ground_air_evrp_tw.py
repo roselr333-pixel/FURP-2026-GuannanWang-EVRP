@@ -381,50 +381,121 @@ def run_variant(inst, kind):
             "sync_viol": r["sync_rejected"], "offloaded": r["offloaded"]}
 
 
+def _mean(vals):
+    return sum(vals) / len(vals) if vals else 0.0
+
+
+def _rate(vals):
+    return sum(1 for v in vals if v) / len(vals) if vals else 0.0
+
+
 def main():
     here = os.path.dirname(os.path.dirname(os.path.dirname(
         os.path.abspath(__file__))))
     res_dir = os.path.join(here, "src", "results")
     os.makedirs(res_dir, exist_ok=True)
-    out_csv = os.path.join(res_dir, "week06_ground_air_results.csv")
+    out_raw = os.path.join(res_dir, "week06_ground_air_results.csv")
+    out_summary = os.path.join(res_dir, "week06_ground_air_summary.csv")
     out_txt = os.path.join(res_dir, "week06_ground_air_output.txt")
 
-    random.seed(SEED)
-    sizes = [8, 12, 16, 20]
-    rows = []
+    N_SEEDS = 10
+    SIZES = [8, 12, 16, 20]
+    SEED_BASE = 20260720
+
     L = []
     L.append("=" * 78)
-    L.append("WEEK 6 v2 — GROUND-AIR COLLABORATIVE EVRP-TW (improved drone allocation)")
+    L.append("WEEK 6 v2 — GROUND-AIR COLLABORATIVE EVRP-TW (multi-seed experiment)")
     L.append("=" * 78)
-    L.append(f"seed={SEED}  truck_speed={V_T}  drone_speed={V_D}  "
-             f"drone_range={R_D}  battery={Q_DEFAULT}  recharge={RECHARGE}s")
+    L.append(f"seeds={N_SEEDS} (base {SEED_BASE}..{SEED_BASE + N_SEEDS - 1})  "
+             f"sizes={SIZES}")
+    L.append(f"truck_speed={V_T}  drone_speed={V_D}  drone_range={R_D}  "
+             f"battery={Q_DEFAULT}  recharge={RECHARGE}s")
     L.append("variants: V0 truck-only(no EV) | V1 truck EV | "
              "V2 ground-air collaborative EV")
+    L.append(f"total instances = {N_SEEDS * len(SIZES)} "
+             f"(>=10 instances, 4 scales, multiple seeds)")
     L.append("")
 
-    for n in sizes:
-        inst = make_instance(n, seed=SEED + n)
-        L.append(f"--- instance size N={n} (customers), 4 stations ---")
-        row = {"size": n, "seed": SEED}
-        for kind in ["V0", "V1", "V2"]:
-            t0 = time.perf_counter()
-            res = run_variant(inst, kind)
-            el = time.perf_counter() - t0
-            L.append(
-                f"  {kind}: makespan={res['makespan']:7.1f}  "
-                f"dist={res['total_dist']:7.1f}  feas={res['feasible']}  "
-                f"TWviol={res['tw_viol']}  rechg={res['recharges']}  "
-                f"syncRej={res['sync_viol']}  offload={res['offloaded']}  "
-                f"{el:.3f}s")
-            for k, v in res.items():
-                row[f"{kind}_{k}"] = v
-            row[f"{kind}_runtime"] = round(el, 4)
-        if row["V1_makespan"] > 0:
-            imp = (row["V1_makespan"] - row["V2_makespan"]) / row["V1_makespan"] * 100
-            row["imp_v2_vs_v1_pct"] = round(imp, 2)
-            L.append(f"  -> V2 improvement vs V1 (makespan): {imp:.1f}%")
-        rows.append(row)
+    raw_rows = []
+    # per-size accumulation of variant result dicts
+    acc = {n: {"V0": [], "V1": [], "V2": []} for n in SIZES}
+
+    for n in SIZES:
+        L.append(f"=== size N={n} ===")
+        for s in range(N_SEEDS):
+            seed = SEED_BASE + s
+            inst = make_instance(n, seed=seed)
+            row = {"size": n, "seed": seed}
+            vd = {}
+            for kind in ["V0", "V1", "V2"]:
+                t0 = time.perf_counter()
+                res = run_variant(inst, kind)
+                el = time.perf_counter() - t0
+                res["runtime"] = round(el, 4)
+                vd[kind] = res
+                for k, v in res.items():
+                    row[f"{kind}_{k}"] = v
+            if row["V1_makespan"] > 0:
+                imp = (row["V1_makespan"] - row["V2_makespan"]) / \
+                    row["V1_makespan"] * 100
+                row["imp_v2_vs_v1_pct"] = round(imp, 2)
+                L.append(
+                    f"  seed {seed}: V0={vd['V0']['makespan']:7.1f} "
+                    f"V1={vd['V1']['makespan']:7.1f} "
+                    f"V2={vd['V2']['makespan']:7.1f}  "
+                    f"imp={imp:5.1f}%  off={vd['V2']['offloaded']}/{n}  "
+                    f"feas(V0/V1/V2)="
+                    f"{int(vd['V0']['feasible'])}/"
+                    f"{int(vd['V1']['feasible'])}/"
+                    f"{int(vd['V2']['feasible'])}")
+            else:
+                row["imp_v2_vs_v1_pct"] = 0.0
+            raw_rows.append(row)
+            acc[n]["V0"].append(vd["V0"])
+            acc[n]["V1"].append(vd["V1"])
+            acc[n]["V2"].append(vd["V2"])
         L.append("")
+
+    # ---- aggregation ----
+    L.append("=" * 78)
+    L.append("AGGREGATE (mean over seeds per size)")
+    L.append("=" * 78)
+    summary_rows = []
+    hdr = ("size | n_inst | V0_mk | V1_mk | V2_mk | imp% | "
+           "offload | offload% | V0_feas | V1_feas | V2_feas | "
+           "syncRej | rechg | TWviol | runtime")
+    L.append("  " + hdr)
+    for n in SIZES:
+        v0, v1, v2 = acc[n]["V0"], acc[n]["V1"], acc[n]["V2"]
+        imp = _mean([(r1["makespan"] - r2["makespan"]) / r1["makespan"] * 100
+                     for r1, r2 in zip(v1, v2) if r1["makespan"] > 0])
+        off_rate = _mean([r["offloaded"] / n * 100 for r in v2])
+        srow = {
+            "size": n,
+            "n_instances": N_SEEDS,
+            "V0_makespan": round(_mean([r["makespan"] for r in v0]), 1),
+            "V1_makespan": round(_mean([r["makespan"] for r in v1]), 1),
+            "V2_makespan": round(_mean([r["makespan"] for r in v2]), 1),
+            "imp_v2_vs_v1_pct": round(imp, 1),
+            "V2_offloaded": round(_mean([r["offloaded"] for r in v2]), 1),
+            "V2_offload_rate_pct": round(off_rate, 1),
+            "V0_feas_rate": round(_rate([r["feasible"] for r in v0]), 3),
+            "V1_feas_rate": round(_rate([r["feasible"] for r in v1]), 3),
+            "V2_feas_rate": round(_rate([r["feasible"] for r in v2]), 3),
+            "V2_sync_rej_mean": round(_mean([r["sync_viol"] for r in v2]), 1),
+            "V2_recharges_mean": round(_mean([r["recharges"] for r in v2]), 1),
+            "V2_tw_viol_mean": round(_mean([r["tw_viol"] for r in v2]), 1),
+            "V2_runtime_mean": round(_mean([r["runtime"] for r in v2]), 4),
+        }
+        summary_rows.append(srow)
+        L.append(
+            f"  N={n}: V0={srow['V0_makespan']:7.1f} "
+            f"V1={srow['V1_makespan']:7.1f} V2={srow['V2_makespan']:7.1f}  "
+            f"imp={srow['imp_v2_vs_v1_pct']:5.1f}%  "
+            f"offload={srow['V2_offloaded']:.1f}/{n} "
+            f"({srow['V2_offload_rate_pct']:.1f}%)  "
+            f"V2_feas={srow['V2_feas_rate'] * 100:.0f}%")
+    L.append("")
 
     # ---- failure cases (constraint-level diagnosis) ----
     L.append("=" * 78)
@@ -475,11 +546,18 @@ def main():
     L.append("")
 
     # ---- write csv ----
-    fieldnames = list(rows[0].keys())
-    with open(out_csv, "w", newline="") as f:
+    fieldnames = list(raw_rows[0].keys())
+    with open(out_raw, "w", newline="") as f:
         w = csv.DictWriter(f, fieldnames=fieldnames)
         w.writeheader()
-        for row in rows:
+        for row in raw_rows:
+            w.writerow(row)
+
+    sfields = list(summary_rows[0].keys())
+    with open(out_summary, "w", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=sfields)
+        w.writeheader()
+        for row in summary_rows:
             w.writerow(row)
 
     # failure table csv
@@ -494,7 +572,8 @@ def main():
     with open(out_txt, "w") as f:
         f.write(text)
     print(text)
-    print(f"\n[results -> {out_csv}]")
+    print(f"\n[raw results -> {out_raw}]")
+    print(f"[summary (avg) -> {out_summary}]")
     print(f"[failure cases -> {fc_csv}]")
     print(f"[log -> {out_txt}]")
 

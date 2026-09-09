@@ -1,6 +1,6 @@
 # Week 6 — Ground-air Collaborative EVRP-TW (v2 iteration)
 
-> Student note (low-key). Written 2026-07-17 by Guannan Wang.
+> Student note (low-key). Written 2026-07-17, multi-seed robustness added 2026-07-23 by Guannan Wang.
 > This is the experiment behind my chosen project focus: **ground-air
 > collaborative EVRP-TW** (electric truck + drone, with time windows,
 > battery/charging, and truck-drone synchronization). It is a first attempt,
@@ -68,7 +68,9 @@ constructive core**; only the switched-on constraints differ:
 So any gap between V1 and V2 is purely the effect of adding the drone, not a
 difference in solver quality.
 
-## 4. Results (seed = 20260717, 4 instance sizes)
+## 4. Results
+
+### 4.1 Pilot (single seed = 20260717, 4 instance sizes)
 
 | Size | V1 makespan | V2 makespan | V2 vs V1 | TW viol (V1→V2) | recharges (V1/V2) | drone offload |
 |---|---:|---:|---:|---:|---:|---:|
@@ -77,20 +79,37 @@ difference in solver quality.
 | 16 | 909.1 | 436.7 | **−52.0%** | 10 → 1 | 2 / 2 | 11 / 16 |
 | 20 | 1221.5 | 704.4 | **−42.3%** | 14 → 2 | 3 / 3 | 14 / 20 |
 
+Note: the 8- and 12-customer instances happen to share a near-identical V2
+makespan (~278.6) because both truck sub-routes end at the same charging
+station before returning to the depot, so the final leg takes the same time.
+This is an artifact of the small seeded instances and does not affect the
+comparison.
+
+### 4.2 Multi-seed robustness (10 seeds × 4 sizes = 40 instances, added 2026-07-23)
+
+Following the Week 6 lab's hard metrics, I expanded each size to 10 random
+seeds (seed base 20260720), giving 40 instances, and report the mean
+performance per size.
+
+| Size | V0 | V1 (base) | V2 (prop.) | V2 vs V1 | mean offload | offload % | V2 feas. |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| 8 | 434.7 | 485.8 | 240.5 | **−50.5%** | 5.2 / 8 | 65.0% | 100% |
+| 12 | 614.4 | 694.7 | 312.2 | **−55.3%** | 8.5 / 12 | 70.8% | 100% |
+| 16 | 816.6 | 975.9 | 448.3 | **−53.9%** | 11.5 / 16 | 71.9% | 100% |
+| 20 | 1080.1 | 1283.6 | 741.9 | **−42.1%** | 13.4 / 20 | 67.0% | 100% |
+
+- All 40 instances are feasible (V0/V1/V2 feasibility 100%).
+- The mean V2-over-V1 improvement sits at 42%–55% and does not swing much
+  across seeds (per-seed range 27.7%–71.7%), so the collaborative benefit is
+  stable rather than a product of one lucky seed.
+- Mean offload rate is 65%–72%: the drone genuinely serves the majority of
+  customers in parallel across many instances.
+- Fairness still holds: V1 and V2 share the same constructive core, so the gap
+  is purely the effect of adding the drone.
+
 Compared with the version that offloaded only one customer, the collaborative
-benefit is now much larger:
-
-- Previous version: V2 improved over V1 by only 12–21%, one customer offloaded.
-- This version: V2 improved by 40–59%, with offload count rising with size
-  (4 of 8 customers at size 8, up to 14 of 20 at size 20).
-
-The improvement comes from serving several customers with the faster drone
-**in parallel** with the truck, not from using fewer recharges (recharge
-counts are identical). One coincidence worth noting: the 8- and 12-customer
-instances happen to share a near-identical V2 makespan (~278.6) because both
-truck sub-routes end at the same charging station before returning to the
-depot, so the final leg takes the same time. This is an artifact of the
-small seeded instances and does not affect the comparison.
+benefit is now much larger (that version improved by only 12–21%; this one by
+40–59%).
 
 ## 5. Metrics I now report (what the project page asks for)
 
@@ -123,19 +142,22 @@ rendezvous rule a real bottleneck rather than a formality.
 - **No literature reproduction yet.** This is my own heuristic. I have not
   yet reproduced Schneider (2014, E-VRPTW) or Murray & Chu (2015, FSTSP) as
   published baselines — that is still pending (P1 in my progress note).
-- **Small instances.** 8 / 12 / 16 / 20 customers, single seed. Enough to
-  show the mechanism, not enough for strong statistical claims.
+- **Small instances.** Now 4 sizes × 10 seeds = 40 instances, but still only
+  8 / 12 / 16 / 20 customers. Enough to show the mechanism and stability, not
+  enough for strong statistical claims or realistic road networks.
 
 ## 8. What I would do next
 
-1. Scale up instance sizes and add a few more random seeds for stability
-   (currently only one seed).
+1. ~~Scale up instance sizes and add a few more random seeds for stability
+   (was only one seed).~~ ✅ Done: 4 sizes × 10 seeds = 40 instances, mean
+   performance table in §4.2. Could still scale to 30+ customers.
 2. Reproduce one paper method (Schneider 2014 or Murray & Chu 2015) and put
    it in the same comparison table.
 3. Optionally raise the per-flight customer cap to 3 and optimize the
    enumeration.
 
 Files: `src/experiments/week06_ground_air_evrp_tw.py`,
-`src/results/week06_ground_air_results.csv`,
+`src/results/week06_ground_air_results.csv` (40 raw rows),
+`src/results/week06_ground_air_summary.csv` (mean table per size),
 `src/results/week06_failure_cases.csv`,
 `src/results/week06_ground_air_output.txt`.

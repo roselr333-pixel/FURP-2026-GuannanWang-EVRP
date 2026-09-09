@@ -54,7 +54,9 @@ N_ELITE = 6
 TOURNAMENT = 4
 MUT_RATE = 0.30
 TIME_LIMIT_S = 8           # per-instance search budget (≈ OR-Tools 10s)
-SEED = 20260717
+# 多种子：5 个，跨多年月份以减少"恰好随机到好结果"的运气
+SEEDS = [20260717, 20260801, 20260815, 20260901, 20261001]
+# SEEDS = [20260717]  # 旧单一种子对照
 
 FAMILIES = {
     "C1":  [f"C10{i}" for i in range(1, 10)],
@@ -332,7 +334,10 @@ def tournament(pop, fits):
     return pop[best]
 
 
-def solve_ga(data, time_limit=TIME_LIMIT_S, penalty=1000.0):
+def solve_ga(data, time_limit=TIME_LIMIT_S, penalty=1000.0, seed=None):
+    if seed is not None:
+        # 每次重置一次随机源，让多种子实验"真正"换随机数
+        random.seed(seed)
     n = data["n"] - 1                      # number of customers (depot = 0)
     cust = list(range(1, n + 1))
     # Aim for the BKS vehicle count; extra vehicles are heavily penalised so
@@ -399,7 +404,9 @@ def solve_ga(data, time_limit=TIME_LIMIT_S, penalty=1000.0):
 # Main
 # --------------------------------------------------------------------------- #
 def main():
-    random.seed(SEED)
+    # 注意：不在 main() 顶部 random.seed()。
+    # 旧版这样会污染全局随机源、且与多种子机制冲突；
+    # 现在 `solve_ga(data, seed=...)` 内部会按 seed 重置。
     os.makedirs(RESULTS_DIR, exist_ok=True)
     rows, log = [], []
 
@@ -411,10 +418,10 @@ def main():
     emit("GA BASELINE  —  OFFICIAL SOLOMON VRPTW  (vs OR-Tools vs BKS)")
     emit(f"instances: {len(ALL_INSTANCES)} (classic 100-customer set)")
     emit(f"config: pop={POP_SIZE}, elite={N_ELITE}, tourn={TOURNAMENT}, "
-         f"mut={MUT_RATE}, {TIME_LIMIT_S}s/instance, seed={SEED}")
+         f"mut={MUT_RATE}, {TIME_LIMIT_S}s/instance, seeds={SEEDS}")
     emit("=" * 78)
-    emit(f"{'inst':<9}{'BKS':>9}{'BKSv':>5}{'GA_dist':>10}{'GA_v':>5}"
-         f"{'GA_gap%':>9}{'gens':>7}{'status':>7}")
+    emit(f"{'inst':<9}{'BKS':>9}{'BKSv':>5}{'GA_mean':>10}{'GA_best':>10}"
+         f"{'gap_mean%':>10}{'gap_std%':>9}{'seeds':>6}{'status':>7}")
     emit("-" * 78)
 
     fam_gaps = {}
@@ -425,31 +432,48 @@ def main():
             emit(f"{name:<9}  load failed: {repr(e)[:50]}")
             continue
 
-        (bestkey, gens) = solve_ga(data)
-        ga_veh, ga_dist = bestkey
         bks = data["bks_cost"]
+        seed_dists, seed_vehs = [], []
+        for sd in SEEDS:
+            (ga_veh_s, ga_dist_s), _gens = solve_ga(data, seed=sd)
+            if ga_dist_s < 10 ** 8:
+                seed_dists.append(ga_dist_s)
+                seed_vehs.append(ga_veh_s)
 
-        if ga_dist >= 10 ** 8:
+        if not seed_dists:
             emit(f"{name:<9}{(bks or 0):>9.1f}{data['bks_veh']:>5}"
-                 f"{'-':>10}{'-':>5}{'-':>9}{gens:>7}FAIL")
+                 f"{'-':>10}{'-':>10}{'-':>10}{'-':>9}{0:>6}   FAIL")
             rows.append({"instance": name, "bks_dist": bks,
-                         "bks_vehicles": data["bks_veh"], "ga_dist": None,
-                         "ga_vehicles": None, "ga_gap_pct": None, "status": "FAIL"})
+                         "bks_vehicles": data["bks_veh"], "ga_dist_mean": None,
+                         "ga_dist_best": None, "ga_veh_best": None,
+                         "ga_gap_mean_pct": None, "ga_gap_std_pct": None,
+                         "n_seeds": 0, "status": "FAIL"})
             continue
 
-        ga_dist = round(ga_dist, 1)
-        gap = (ga_dist - bks) / bks * 100.0 if bks else 0.0
+        n = len(seed_dists)
+        dist_mean = sum(seed_dists) / n
+        dist_best = min(seed_dists)
+        veh_best = min(seed_vehs)
+        gaps = ([(d - bks) / bks * 100.0 for d in seed_dists]
+                if bks else [0.0] * n)
+        gap_mean = sum(gaps) / n
+        gap_std = (sum((g - gap_mean) ** 2 for g in gaps) / n) ** 0.5
+
         fam = next(f for f, g in FAMILIES.items() if name in g)
-        fam_gaps.setdefault(fam, []).append(gap)
-        emit(f"{name:<9}{bks:>9.1f}{data['bks_veh']:>5}{ga_dist:>10.1f}"
-             f"{ga_veh:>5}{gap:>9.1f}{gens:>7}OK")
+        fam_gaps.setdefault(fam, []).append(gap_mean)
+        emit(f"{name:<9}{bks:>9.1f}{data['bks_veh']:>5}{dist_mean:>10.1f}"
+             f"{dist_best:>10.1f}{gap_mean:>10.1f}{gap_std:>9.1f}{n:>6}     OK")
         rows.append({"instance": name, "bks_dist": bks,
-                     "bks_vehicles": data["bks_veh"], "ga_dist": ga_dist,
-                     "ga_vehicles": ga_veh, "ga_gap_pct": round(gap, 2),
-                     "status": "OK"})
+                     "bks_vehicles": data["bks_veh"],
+                     "ga_dist_mean": round(dist_mean, 1),
+                     "ga_dist_best": round(dist_best, 1),
+                     "ga_veh_best": veh_best,
+                     "ga_gap_mean_pct": round(gap_mean, 2),
+                     "ga_gap_std_pct": round(gap_std, 2),
+                     "n_seeds": n, "status": "OK"})
 
     emit("-" * 78)
-    emit("PER-FAMILY MEAN GAP (GA vs BKS):")
+    emit("PER-FAMILY MEAN GAP (GA seed-mean vs BKS):")
     for fam in FAMILIES:
         if fam in fam_gaps and fam_gaps[fam]:
             gs = fam_gaps[fam]
@@ -459,13 +483,16 @@ def main():
     if all_gaps:
         emit("-" * 78)
         emit(f"OVERALL: solved {len(all_gaps)}/{len(ALL_INSTANCES)}, "
-             f"GA mean gap to BKS = {sum(all_gaps)/len(all_gaps):.1f}%")
+             f"GA mean gap to BKS = {sum(all_gaps)/len(all_gaps):.1f}% "
+             f"(mean over {len(SEEDS)} seeds per instance)")
     emit("=" * 78)
 
     # GA-only results CSV
     with open(CSV_PATH, "w", newline="", encoding="utf-8") as fh:
         w = csv.DictWriter(fh, fieldnames=["instance", "bks_dist", "bks_vehicles",
-                                           "ga_dist", "ga_vehicles", "ga_gap_pct",
+                                           "ga_dist_mean", "ga_dist_best",
+                                           "ga_veh_best", "ga_gap_mean_pct",
+                                           "ga_gap_std_pct", "n_seeds",
                                            "status"])
         w.writeheader()
         w.writerows(rows)
@@ -479,15 +506,16 @@ def main():
     with open(CMP_PATH, "w", newline="", encoding="utf-8") as fh:
         w = csv.writer(fh)
         w.writerow(["instance", "bks_dist", "bks_veh", "ortools_dist",
-                    "ortools_veh", "ortools_gap", "ga_dist", "ga_veh",
-                    "ga_gap", "ga_minus_ortools_gap"])
+                    "ortools_veh", "ortools_gap", "ga_dist_mean", "ga_gap_mean",
+                    "ga_gap_std", "ga_minus_ortools_gap"])
         for r in rows:
             o = ort.get(r["instance"])
             if o and r["status"] == "OK":
                 w.writerow([r["instance"], r["bks_dist"], r["bks_vehicles"],
                             o["my_dist"], o["my_vehicles"], o["gap_pct"],
-                            r["ga_dist"], r["ga_vehicles"], r["ga_gap_pct"],
-                            round(r["ga_gap_pct"] - float(o["gap_pct"]), 2)])
+                            r["ga_dist_mean"], r["ga_gap_mean_pct"],
+                            r["ga_gap_std_pct"],
+                            round(r["ga_gap_mean_pct"] - float(o["gap_pct"]), 2)])
 
     with open(LOG_PATH, "w", encoding="utf-8") as fh:
         fh.write("\n".join(log) + "\n")

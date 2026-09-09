@@ -1,0 +1,65 @@
+==============================================================================
+WEEK 7 — FSTSP reproduction (Murray & Chu 2015) vs my heuristic
+==============================================================================
+seeds=10 (base 20260720..20260729)  sizes=[8, 12, 16, 20]
+truck_speed=1.0  drone_speed=2.0  drone_range=160.0  service=10
+shared evaluator: FSTSP completion time with ONE serial drone
+  (truck returns to depot, waiting for the drone at recovery;
+   drone sorties are sequential). No battery, no TW.
+total instances = 40
+
+=== size N=8 ===
+  seed 20260720: truck=  376.3  published=  266.7 ( 29.1%)  my=  205.8 ( 45.3%)  my+LS=  198.9 (+3.33%LS)  off pub=2/8 my=4/8  myVsPub= 22.8%
+  seed 20260721: truck=  420.0  published=  345.4 ( 17.8%)  my=  204.3 ( 51.4%)  my+LS=  204.3 (+0.00%LS)  off pub=1/8 my=4/8  myVsPub= 40.9%
+  seed 20260722: truck=  360.4  published=  303.2 ( 15.9%)  my=  235.8 ( 34.6%)  my+LS=  235.8 (+0.00%LS)  off pub=2/8 my=5/8  myVsPub= 22.3%
+  seed 20260723: truck=  424.1  published=  240.8 ( 43.2%)  my=  236.0 ( 44.4%)  my+LS=  236.0 (+0.00%LS)  off pub=3/8 my=4/8  myVsPub=  2.0%
+  seed 20260724: truck=  425.9  published=  320.1 ( 24.8%)  my=  317.8 ( 25.4%)  my+LS=  317.8 (+0.00%LS)  off pub=1/8 my=5/8  myVsPub=  0.7%
+  seed 20260725: truck=  364.0  published=  234.0 ( 35.7%)  my=  208.3 ( 42.8%)  my+LS=  208.3 (+0.00%LS)  off pub=3/8 my=4/8  myVsPub= 11.0%
+  seed 20260726: truck=  472.5  published=  288.9 ( 38.9%)  my=  240.3 ( 49.1%)  my+LS=  240.3 (+0.00%LS)  off pub=5/8 my=6/8  myVsPub= 16.8%
+  seed 20260727: truck=  315.1  published=  243.9 ( 22.6%)  my=  198.4 ( 37.0%)  my+LS=  187.2 (+5.63%LS)  off pub=2/8 my=2/8  myVsPub= 18.7%
+  seed 20260728: truck=  383.7  published=  279.6 ( 27.1%)  my=  252.2 ( 34.3%)  my+LS=  252.2 (+0.00%LS)  off pub=3/8 my=5/8  myVsPub=  9.8%
+  seed 20260729: truck=  371.1  published=  302.0 ( 18.6%)  my=  269.4 ( 27.4%)  my+LS=  269.4 (+0.00%LS)  off pub=2/8 my=2/8  myVsPub= 10.8%
+
+=== size N=12 ===
+  seed 20260720: truck=  630.1  published=  548.7 ( 12.9%)  my=  372.2 ( 40.9%)  my+LS=  372.2 (+0.00%LS)  off pub=2/12 my=7/12  myVsPub= 32.2%
+  seed 20260721: truck=  573.1  published=  473.7 ( 17.3%)  my=  352.4 ( 38.5%)  my+LS=  352.4 (+0.00%LS)  off pub=3/12 my=8/12  myVsPub= 25.6%
+  seed 20260722: truck=  504.3  published=  419.4 ( 16.8%)  my=  394.4 ( 21.8%)  my+LS=  394.4 (+0.00%LS)  off pub=3/12 my=4/12  myVsPub=  6.0%
+  seed 20260723: truck=  672.7  published=  525.0 ( 22.0%)  my=  419.6 ( 37.6%)  my+LS=  419.6 (+0.00%LS)  off pub=2/12 my=8/12  myVsPub= 20.1%
+  seed 20260724: truck=  607.9  published=  487.6 ( 19.8%)  my=  311.7 ( 48.7%)  my+LS=  311.7 (+0.00%LS)  off pub=3/12 my=6/12  myVsPub= 36.1%
+  seed 20260725: truck=  612.1  published=  419.3 ( 31.5%)  my=  342.3 ( 44.1%)  my+LS=  342.3 (+0.00%LS)  off pub=3/12 my=6/12  myVsPub= 18.4%
+  seed 20260726: truck=  622.9  published=  501.5 ( 19.5%)  my=  389.6 ( 37.5%)  my+LS=  389.6 (+0.00%LS)  off pub=1/12 my=6/12  myVsPub= 22.3%
+  seed 20260727: truck=  479.4  published=  384.9 ( 19.7%)  my=  256.1 ( 46.6%)  my+LS=  256.1 (+0.00%LS)  off pub=2/12 my=6/12  myVsPub= 33.5%
+  seed 20260728: truck=  564.3  published=  452.6 ( 19.8%)  my=  460.5 ( 18.4%)  my+LS=  460.5 (+0.00%LS)  off pub=3/12 my=2/12  myVsPub= -1.7%
+  seed 20260729: truck=  527.3  published=  412.5 ( 21.8%)  my=  294.5 ( 44.2%)  my+LS=  294.5 (+0.00%LS)  off pub=1/12 my=6/12  myVsPub= 28.6%
+
+=== size N=16 ===
+  seed 20260720: truck=  878.2  published=  693.4 ( 21.0%)  my=  691.5 ( 21.3%)  my+LS=  662.3 (+4.22%LS)  off pub=4/16 my=8/16  myVsPub=  0.3%
+  seed 20260721: truck=  725.2  published=  561.5 ( 22.6%)  my=  533.7 ( 26.4%)  my+LS=  529.6 (+0.76%LS)  off pub=3/16 my=4/16  myVsPub=  5.0%
+  seed 20260722: truck=  785.7  published=  526.7 ( 33.0%)  my=  572.6 ( 27.1%)  my+LS=  560.0 (+2.21%LS)  off pub=6/16 my=6/16  myVsPub= -8.7%
+  seed 20260723: truck=  715.9  published=  567.2 ( 20.8%)  my=  453.7 ( 36.6%)  my+LS=  453.7 (+0.00%LS)  off pub=4/16 my=8/16  myVsPub= 20.0%
+  seed 20260724: truck=  776.6  published=  580.6 ( 25.2%)  my=  462.3 ( 40.5%)  my+LS=  462.3 (+0.00%LS)  off pub=5/16 my=8/16  myVsPub= 20.4%
+  seed 20260725: truck=  762.7  published=  667.5 ( 12.5%)  my=  520.8 ( 31.7%)  my+LS=  520.8 (+0.00%LS)  off pub=1/16 my=6/16  myVsPub= 22.0%
+  seed 20260726: truck=  792.0  published=  564.6 ( 28.7%)  my=  458.2 ( 42.1%)  my+LS=  458.2 (+0.00%LS)  off pub=4/16 my=8/16  myVsPub= 18.8%
+  seed 20260727: truck=  810.4  published=  540.3 ( 33.3%)  my=  543.3 ( 33.0%)  my+LS=  534.1 (+1.69%LS)  off pub=4/16 my=7/16  myVsPub= -0.5%
+  seed 20260728: truck=  723.1  published=  603.7 ( 16.5%)  my=  451.9 ( 37.5%)  my+LS=  451.9 (+0.00%LS)  off pub=3/16 my=10/16  myVsPub= 25.1%
+  seed 20260729: truck=  778.0  published=  710.4 (  8.7%)  my=  558.4 ( 28.2%)  my+LS=  509.5 (+8.76%LS)  off pub=1/16 my=6/16  myVsPub= 21.4%
+
+=== size N=20 ===
+  seed 20260720: truck=  992.5  published=  705.7 ( 28.9%)  my=  607.3 ( 38.8%)  my+LS=  607.3 (+0.00%LS)  off pub=6/20 my=11/20  myVsPub= 13.9%
+  seed 20260721: truck=  904.7  published=  646.8 ( 28.5%)  my=  555.5 ( 38.6%)  my+LS=  555.5 (+0.00%LS)  off pub=7/20 my=11/20  myVsPub= 14.1%
+  seed 20260722: truck= 1014.5  published=  815.3 ( 19.6%)  my=  746.8 ( 26.4%)  my+LS=  746.8 (+0.00%LS)  off pub=7/20 my=8/20  myVsPub=  8.4%
+  seed 20260723: truck= 1143.6  published=  797.0 ( 30.3%)  my=  778.8 ( 31.9%)  my+LS=  728.3 (+6.49%LS)  off pub=7/20 my=9/20  myVsPub=  2.3%
+  seed 20260724: truck= 1115.6  published=  728.8 ( 34.7%)  my=  702.2 ( 37.1%)  my+LS=  702.2 (+0.00%LS)  off pub=7/20 my=10/20  myVsPub=  3.6%
+  seed 20260725: truck= 1026.7  published=  881.7 ( 14.1%)  my=  617.8 ( 39.8%)  my+LS=  617.8 (+0.00%LS)  off pub=2/20 my=9/20  myVsPub= 29.9%
+  seed 20260726: truck= 1109.8  published=  771.8 ( 30.5%)  my=  762.8 ( 31.3%)  my+LS=  762.8 (+0.00%LS)  off pub=6/20 my=7/20  myVsPub=  1.2%
+  seed 20260727: truck=  984.0  published=  789.5 ( 19.8%)  my=  822.7 ( 16.4%)  my+LS=  799.8 (+2.79%LS)  off pub=4/20 my=4/20  myVsPub= -4.2%
+  seed 20260728: truck= 1024.5  published=  842.2 ( 17.8%)  my=  768.3 ( 25.0%)  my+LS=  768.3 (+0.00%LS)  off pub=5/20 my=12/20  myVsPub=  8.8%
+  seed 20260729: truck=  907.2  published=  825.9 (  9.0%)  my=  778.4 ( 14.2%)  my+LS=  778.4 (+0.00%LS)  off pub=2/20 my=7/20  myVsPub=  5.7%
+
+==============================================================================
+AGGREGATE (mean over seeds per size)
+==============================================================================
+  N=8: truck=  391.3 published=  282.5 ( 27.4%)  my=  236.8 ( 39.2%)  my+LS=  235.0 (+0.90%LS)  myVsPub= 15.6%  off pub=2.4/8 my=4.1/8  2opt-moves=0.3
+  N=12: truck=  579.4 published=  462.5 ( 20.1%)  my=  359.3 ( 37.8%)  my+LS=  359.3 (+0.00%LS)  myVsPub= 22.1%  off pub=2.3/12 my=5.9/12  2opt-moves=0.0
+  N=16: truck=  774.8 published=  601.6 ( 22.2%)  my=  524.6 ( 32.4%)  my+LS=  514.3 (+1.76%LS)  myVsPub= 12.4%  off pub=3.5/16 my=7.1/16  2opt-moves=0.9
+  N=20: truck= 1022.3 published=  780.4 ( 23.3%)  my=  714.1 ( 29.9%)  my+LS=  706.7 (+0.93%LS)  myVsPub=  8.4%  off pub=5.3/20 my=8.8/20  2opt-moves=0.3

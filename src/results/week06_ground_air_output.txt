@@ -1,32 +1,67 @@
 ==============================================================================
-WEEK 6 v2 — GROUND-AIR COLLABORATIVE EVRP-TW (improved drone allocation)
+WEEK 6 v2 — GROUND-AIR COLLABORATIVE EVRP-TW (multi-seed experiment)
 ==============================================================================
-seed=20260717  truck_speed=1.0  drone_speed=2.0  drone_range=160.0  battery=250  recharge=40s
+seeds=10 (base 20260720..20260729)  sizes=[8, 12, 16, 20]
+truck_speed=1.0  drone_speed=2.0  drone_range=160.0  battery=250  recharge=40s
 variants: V0 truck-only(no EV) | V1 truck EV | V2 ground-air collaborative EV
+total instances = 40 (>=10 instances, 4 scales, multiple seeds)
 
---- instance size N=8 (customers), 4 stations ---
-  V0: makespan=  417.7  dist=  284.0  feas=True  TWviol=1  rechg=0  syncRej=0  offload=0  0.000s
-  V1: makespan=  463.2  dist=  289.5  feas=True  TWviol=1  rechg=1  syncRej=0  offload=0  0.000s
-  V2: makespan=  278.6  dist=  439.2  feas=True  TWviol=0  rechg=1  syncRej=864  offload=4  0.002s
-  -> V2 improvement vs V1 (makespan): 39.9%
+=== size N=8 ===
+  seed 20260720: V0=  433.6 V1=  497.9 V2=  218.2  imp= 56.2%  off=4/8  feas(V0/V1/V2)=1/1/1
+  seed 20260721: V0=  420.0 V1=  460.0 V2=  244.8  imp= 46.8%  off=6/8  feas(V0/V1/V2)=1/1/1
+  seed 20260722: V0=  423.1 V1=  488.6 V2=  299.1  imp= 38.8%  off=5/8  feas(V0/V1/V2)=1/1/1
+  seed 20260723: V0=  471.6 V1=  549.1 V2=  237.9  imp= 56.7%  off=6/8  feas(V0/V1/V2)=1/1/1
+  seed 20260724: V0=  477.0 V1=  519.4 V2=  274.3  imp= 47.2%  off=6/8  feas(V0/V1/V2)=1/1/1
+  seed 20260725: V0=  417.7 V1=  463.2 V2=  278.6  imp= 39.9%  off=4/8  feas(V0/V1/V2)=1/1/1
+  seed 20260726: V0=  500.5 V1=  541.5 V2=  233.1  imp= 57.0%  off=5/8  feas(V0/V1/V2)=1/1/1
+  seed 20260727: V0=  387.9 V1=  387.9 V2=  143.2  imp= 63.1%  off=5/8  feas(V0/V1/V2)=1/1/1
+  seed 20260728: V0=  383.7 V1=  454.2 V2=  242.9  imp= 46.5%  off=6/8  feas(V0/V1/V2)=1/1/1
+  seed 20260729: V0=  431.6 V1=  496.6 V2=  233.0  imp= 53.1%  off=5/8  feas(V0/V1/V2)=1/1/1
 
---- instance size N=12 (customers), 4 stations ---
-  V0: makespan=  585.4  dist=  407.3  feas=True  TWviol=5  rechg=0  syncRej=0  offload=0  0.000s
-  V1: makespan=  674.0  dist=  455.9  feas=True  TWviol=5  rechg=1  syncRej=0  offload=0  0.000s
-  V2: makespan=  278.6  dist=  738.2  feas=True  TWviol=0  rechg=1  syncRej=3254  offload=8  0.009s
-  -> V2 improvement vs V1 (makespan): 58.7%
+=== size N=12 ===
+  seed 20260720: V0=  631.2 V1=  673.5 V2=  277.6  imp= 58.8%  off=8/12  feas(V0/V1/V2)=1/1/1
+  seed 20260721: V0=  604.5 V1=  652.6 V2=  394.6  imp= 39.5%  off=7/12  feas(V0/V1/V2)=1/1/1
+  seed 20260722: V0=  541.1 V1=  625.9 V2=  260.6  imp= 58.4%  off=9/12  feas(V0/V1/V2)=1/1/1
+  seed 20260723: V0=  701.0 V1=  799.5 V2=  406.9  imp= 49.1%  off=9/12  feas(V0/V1/V2)=1/1/1
+  seed 20260724: V0=  656.2 V1=  736.2 V2=  329.8  imp= 55.2%  off=8/12  feas(V0/V1/V2)=1/1/1
+  seed 20260725: V0=  673.7 V1=  718.6 V2=  254.1  imp= 64.6%  off=8/12  feas(V0/V1/V2)=1/1/1
+  seed 20260726: V0=  672.1 V1=  788.2 V2=  370.0  imp= 53.1%  off=8/12  feas(V0/V1/V2)=1/1/1
+  seed 20260727: V0=  505.9 V1=  545.9 V2=  197.0  imp= 63.9%  off=10/12  feas(V0/V1/V2)=1/1/1
+  seed 20260728: V0=  573.3 V1=  732.5 V2=  353.0  imp= 51.8%  off=10/12  feas(V0/V1/V2)=1/1/1
+  seed 20260729: V0=  585.4 V1=  674.0 V2=  278.6  imp= 58.7%  off=8/12  feas(V0/V1/V2)=1/1/1
 
---- instance size N=16 (customers), 4 stations ---
-  V0: makespan=  779.7  dist=  521.9  feas=True  TWviol=10  rechg=0  syncRej=0  offload=0  0.000s
-  V1: makespan=  909.1  dist=  571.2  feas=True  TWviol=10  rechg=2  syncRej=0  offload=0  0.000s
-  V2: makespan=  436.7  dist= 1050.0  feas=True  TWviol=1  rechg=2  syncRej=14822  offload=11  0.034s
-  -> V2 improvement vs V1 (makespan): 52.0%
+=== size N=16 ===
+  seed 20260720: V0=  941.0 V1= 1121.4 V2=  505.4  imp= 54.9%  off=12/16  feas(V0/V1/V2)=1/1/1
+  seed 20260721: V0=  773.8 V1=  950.5 V2=  342.5  imp= 64.0%  off=13/16  feas(V0/V1/V2)=1/1/1
+  seed 20260722: V0=  807.1 V1=  944.2 V2=  355.2  imp= 62.4%  off=13/16  feas(V0/V1/V2)=1/1/1
+  seed 20260723: V0=  792.5 V1=  926.6 V2=  473.5  imp= 48.9%  off=11/16  feas(V0/V1/V2)=1/1/1
+  seed 20260724: V0=  802.4 V1=  956.1 V2=  592.6  imp= 38.0%  off=11/16  feas(V0/V1/V2)=1/1/1
+  seed 20260725: V0=  800.4 V1=  974.0 V2=  455.0  imp= 53.3%  off=10/16  feas(V0/V1/V2)=1/1/1
+  seed 20260726: V0=  792.0 V1=  926.3 V2=  545.7  imp= 41.1%  off=10/16  feas(V0/V1/V2)=1/1/1
+  seed 20260727: V0=  873.9 V1= 1011.0 V2=  286.1  imp= 71.7%  off=11/16  feas(V0/V1/V2)=1/1/1
+  seed 20260728: V0=  752.9 V1=  909.5 V2=  425.1  imp= 53.3%  off=12/16  feas(V0/V1/V2)=1/1/1
+  seed 20260729: V0=  830.0 V1= 1039.5 V2=  501.8  imp= 51.7%  off=12/16  feas(V0/V1/V2)=1/1/1
 
---- instance size N=20 (customers), 4 stations ---
-  V0: makespan= 1001.1  dist=  794.7  feas=True  TWviol=14  rechg=0  syncRej=0  offload=0  0.000s
-  V1: makespan= 1221.5  dist=  895.0  feas=True  TWviol=14  rechg=3  syncRej=0  offload=0  0.000s
-  V2: makespan=  704.4  dist= 1469.7  feas=True  TWviol=2  rechg=3  syncRej=49869  offload=14  0.078s
-  -> V2 improvement vs V1 (makespan): 42.3%
+=== size N=20 ===
+  seed 20260720: V0= 1019.5 V1= 1232.0 V2=  559.7  imp= 54.6%  off=14/20  feas(V0/V1/V2)=1/1/1
+  seed 20260721: V0=  908.8 V1= 1000.7 V2=  723.8  imp= 27.7%  off=12/20  feas(V0/V1/V2)=1/1/1
+  seed 20260722: V0= 1110.4 V1= 1397.9 V2=  935.9  imp= 33.0%  off=12/20  feas(V0/V1/V2)=1/1/1
+  seed 20260723: V0= 1244.1 V1= 1407.5 V2=  772.4  imp= 45.1%  off=12/20  feas(V0/V1/V2)=1/1/1
+  seed 20260724: V0= 1173.6 V1= 1325.3 V2=  809.6  imp= 38.9%  off=14/20  feas(V0/V1/V2)=1/1/1
+  seed 20260725: V0= 1068.3 V1= 1297.4 V2=  782.5  imp= 39.7%  off=13/20  feas(V0/V1/V2)=1/1/1
+  seed 20260726: V0= 1184.7 V1= 1372.5 V2=  804.5  imp= 41.4%  off=14/20  feas(V0/V1/V2)=1/1/1
+  seed 20260727: V0= 1042.5 V1= 1255.4 V2=  492.8  imp= 60.7%  off=15/20  feas(V0/V1/V2)=1/1/1
+  seed 20260728: V0= 1053.8 V1= 1321.9 V2=  912.4  imp= 31.0%  off=12/20  feas(V0/V1/V2)=1/1/1
+  seed 20260729: V0=  994.9 V1= 1225.2 V2=  625.9  imp= 48.9%  off=16/20  feas(V0/V1/V2)=1/1/1
+
+==============================================================================
+AGGREGATE (mean over seeds per size)
+==============================================================================
+  size | n_inst | V0_mk | V1_mk | V2_mk | imp% | offload | offload% | V0_feas | V1_feas | V2_feas | syncRej | rechg | TWviol | runtime
+  N=8: V0=  434.7 V1=  485.8 V2=  240.5  imp= 50.5%  offload=5.2/8 (65.0%)  V2_feas=100%
+  N=12: V0=  614.4 V1=  694.7 V2=  312.2  imp= 55.3%  offload=8.5/12 (70.8%)  V2_feas=100%
+  N=16: V0=  816.6 V1=  975.9 V2=  448.3  imp= 53.9%  offload=11.5/16 (71.9%)  V2_feas=100%
+  N=20: V0= 1080.1 V1= 1283.6 V2=  741.9  imp= 42.1%  offload=13.4/20 (67.0%)  V2_feas=100%
 
 ==============================================================================
 FAILURE CASES (>=3, constraint-level diagnosis)

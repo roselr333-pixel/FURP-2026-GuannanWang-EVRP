@@ -72,3 +72,7 @@ PER-FAMILY MEAN GAP (GA seed-mean vs BKS):
 ------------------------------------------------------------------------------
 OVERALL: solved 56/56, GA mean gap to BKS = 36.7% (mean over 5 seeds per instance)
 ==============================================================================
+
+[saved] E:\FURP-EVRP\roselr333-pixel-FURP-2026-GuannanWang-EVRP\src\results\baseline_ga_vrptw_results.csv
+[saved] E:\FURP-EVRP\roselr333-pixel-FURP-2026-GuannanWang-EVRP\src\results\baseline_ga_vrptw_comparison.csv
+[saved] E:\FURP-EVRP\roselr333-pixel-FURP-2026-GuannanWang-EVRP\src\results\baseline_ga_vrptw_output.txt
