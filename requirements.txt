@@ -1,6 +1,7 @@
 # Pinned dependencies for the FURP EVRP project (reproducibility)
-# Install with: pip install -r src/requirements.txt
+# Install with: pip install -r requirements.txt
 # Environment: Python 3.13 venv, Windows
+# Note: the PyVRP baseline (baseline_pyvrp_vrptw.py) needs pyvrp; the rest need ortools.
 
 ortools==9.15.6755
 pyvrp==0.14.0
