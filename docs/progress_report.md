@@ -172,6 +172,13 @@ Honest notes:
 10. **Only 2/3 reading notes done**: survey + FSTSP written; Schneider 2014 pending a PDF.
 11. **Track C/D (RL/DL) not attempted**: acceptable per the lab (needs data and repeated runs first), but the final report should state in a sentence or two why it is deferred.
 
+### 3.5 Deepening stage (W6–W7 completed, 2026-09-10)
+
+14. ~~**No domain-standard solver baseline (PyVRP)**~~ ✅ **Delivered**: `baseline_pyvrp_vrptw.py` runs PyVRP 0.14.0 on all 56 Solomon instances, mean gap **−3.0%** (beats BKS); consolidated with OR-Tools (+7.2%) and own GA (+36.7%±15.9%) in `baseline_consolidated.py` → `baseline_consolidated.csv` + `baseline_consolidated.png` / `pyvrp_family_gap.png`. The three baselines are clearly positioned (PyVRP strongest → BKS → OR-Tools → GA), no overclaiming.
+15. ~~**Sensitivity reported as single values, no error bars**~~ ✅ **Delivered (with bug fix)**: `week06_sensitivity.py` upgraded to 5-seed mean ± std with error-bar figures. On 2026-09-10 a bug was fixed where the drone-range R parameter was not passed to the model (R sweep was flat at 50.5%); after the fix R 60→200 gives 15.5%→27.7%→35.2%→50.5%@160→48.7%@200 (saturates after 160), matching the depth doc. Q/K/N sweeps unchanged.
+16. ~~**Multi-objective computed at a single point**~~ ✅ **Delivered**: `week06_multi_objective.py` sweeps weights w∈{0,0.25,0.5,0.75,1.0} (5 seeds). V2 (215.2, 415.7) vs V1 (486.4, 622.4): distance −56%, makespan −33%, dominating on both axes; honestly labelled a "coarse front" (weighted-sum greedy, not a full Pareto solver).
+17. ~~**No defensible "why it works" chain**~~ ✅ **Delivered**: `docs/week06_depth_analysis_zh.md` chains the ablation (multi-customer ability as main source, +6.6~17.7pp), the sensitivity K scan (25.3%→56.5%), the applicability regime, two-axis MO dominance, three-baseline positioning, failure cases (N=50 ~4.5M sync rejections), and honest limitations into one argument; accompanied by `docs/experiment_evidence_index_zh.md` and `experiment_evidence_index_en.md` collecting every citable number with provenance.
+
 ### 3.4 Engineering and delivery
 
 12. **No git commit / push yet**: everything is still local; the reproducibility package only counts once it is committed.

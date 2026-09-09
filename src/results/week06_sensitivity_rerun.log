@@ -1,0 +1,6 @@
+wrote E:\FURP-EVRP\roselr333-pixel-FURP-2026-GuannanWang-EVRP\src\results\figures\sensitivity_panels.png
+wrote E:\FURP-EVRP\roselr333-pixel-FURP-2026-GuannanWang-EVRP\src\results\week06_sensitivity.csv
+  Q_battery: 120->55.8±10.0%, 180->52.6±10.6%, 250->50.5±9.3%, 350->50.1±9.8%, 500->47.1±9.7%
+  R_drone_range: 60->15.5±6.0%, 90->27.7±7.9%, 120->35.2±6.2%, 160->50.5±9.3%, 200->48.7±9.6%
+  K_max_cust: 1->25.3±8.6%, 2->50.5±9.3%, 3->56.5±16.5%
+  N_scale: 8->63.8±12.5%, 12->50.5±9.3%, 16->43.0±9.2%, 20->38.8±10.2%, 30->35.3±6.7%

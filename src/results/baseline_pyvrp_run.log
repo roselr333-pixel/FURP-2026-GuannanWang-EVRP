@@ -1,0 +1,69 @@
+inst           BKS    PyVRP     gap%  veh  feas
+------------------------------------------------
+C101         827.3    809.0     -2.2 None  True
+C102         827.3    809.0     -2.2 None  True
+C103         826.3    808.0     -2.2 None  True
+C104         822.9    803.0     -2.4 None  True
+C105         827.3    809.0     -2.2 None  True
+C106         827.3    809.0     -2.2 None  True
+C107         827.3    809.0     -2.2 None  True
+C108         827.3    808.0     -2.3 None  True
+C109         827.3    808.0     -2.3 None  True
+C201         589.1    565.0     -4.1 None  True
+C202         589.1    565.0     -4.1 None  True
+C203         588.7    563.0     -4.4 None  True
+C204         588.1    563.0     -4.3 None  True
+C205         586.4    562.0     -4.2 None  True
+C206         586.0    560.0     -4.4 None  True
+C207         585.8    559.0     -4.6 None  True
+C208         585.8    559.0     -4.6 None  True
+R101        1637.7   1577.0     -3.7 None  True
+R102        1466.6   1414.0     -3.6 None  True
+R103        1208.7   1173.0     -3.0 None  True
+R104         971.5    940.0     -3.2 None  True
+R105        1355.3   1320.0     -2.6 None  True
+R106        1234.6   1199.0     -2.9 None  True
+R107        1064.6   1035.0     -2.8 None  True
+R108         932.1    904.0     -3.0 None  True
+R109        1146.9   1112.0     -3.0 None  True
+R110        1068.0   1036.0     -3.0 None  True
+R111        1048.7   1007.0     -4.0 None  True
+R112         948.6    912.0     -3.9 None  True
+R201        1143.2   1104.0     -3.4 None  True
+R202        1029.6    986.0     -4.2 None  True
+R203         870.8    838.0     -3.8 None  True
+R204         731.3    702.0     -4.0 None  True
+R205         949.8    919.0     -3.2 None  True
+R206         875.9    849.0     -3.1 None  True
+R207         794.0    766.0     -3.5 None  True
+R208         701.0    680.0     -3.0 None  True
+R209         854.8    822.0     -3.8 None  True
+R210         900.5    870.0     -3.4 None  True
+R211         746.7    721.0     -3.4 None  True
+RC101       1619.8   1600.0     -1.2 None  True
+RC102       1457.4   1424.0     -2.3 None  True
+RC103       1258.0   1239.0     -1.5 None  True
+RC104       1132.3   1112.0     -1.8 None  True
+RC105       1513.7   1480.0     -2.2 None  True
+RC106       1372.7   1306.0     -4.9 None  True
+RC107       1207.8   1174.0     -2.8 None  True
+RC108       1114.2   1105.0     -0.8 None  True
+RC201       1261.8   1238.0     -1.9 None  True
+RC202       1092.3   1073.0     -1.8 None  True
+RC203        923.7    907.0     -1.8 None  True
+RC204        783.5    763.0     -2.6 None  True
+RC205       1154.0   1124.0     -2.6 None  True
+RC206       1051.1   1025.0     -2.5 None  True
+RC207        962.9    940.0     -2.4 None  True
+RC208        776.1    769.0     -0.9 None  True
+------------------------------------------------
+FAMILY MEAN GAP (PyVRP vs BKS):
+  C1      -2.3%
+  C2      -4.3%
+  R1      -3.2%
+  R2      -3.5%
+  RC1     -2.2%
+  RC2     -2.1%
+OVERALL mean gap = -3.0%  (n=56)
+wrote E:\FURP-EVRP\roselr333-pixel-FURP-2026-GuannanWang-EVRP\src\results\baseline_pyvrp_vrptw_results.csv
+wrote E:\FURP-EVRP\roselr333-pixel-FURP-2026-GuannanWang-EVRP\src\results\figures\pyvrp_family_gap.png
