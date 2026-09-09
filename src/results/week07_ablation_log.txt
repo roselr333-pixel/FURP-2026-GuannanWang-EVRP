@@ -9,13 +9,13 @@ total instances = 40 x 5 configs = 200 runs
 
 === size N=8 ===
   seed 20260720 [published     ] mk=  266.7 ( 29.1%) off=2/8 0.002s
-  seed 20260720 [v2            ] mk=  205.8 ( 45.3%) off=4/8 0.006s
+  seed 20260720 [v2            ] mk=  205.8 ( 45.3%) off=4/8 0.005s
   seed 20260720 [abl_cap1      ] mk=  266.7 ( 29.1%) off=2/8 0.002s
   seed 20260720 [abl_notakeoff ] mk=  232.8 ( 38.1%) off=2/8 0.004s
-  seed 20260720 [imp_cap3      ] mk=  159.1 ( 57.7%) off=5/8 0.013s
+  seed 20260720 [imp_cap3      ] mk=  159.1 ( 57.7%) off=5/8 0.012s
   seed 20260721 [published     ] mk=  345.4 ( 17.8%) off=1/8 0.001s
   seed 20260721 [v2            ] mk=  204.3 ( 51.4%) off=4/8 0.004s
-  seed 20260721 [abl_cap1      ] mk=  345.4 ( 17.8%) off=1/8 0.002s
+  seed 20260721 [abl_cap1      ] mk=  345.4 ( 17.8%) off=1/8 0.001s
   seed 20260721 [abl_notakeoff ] mk=  255.2 ( 39.2%) off=3/8 0.003s
   seed 20260721 [imp_cap3      ] mk=  247.7 ( 41.0%) off=6/8 0.008s
   seed 20260722 [published     ] mk=  303.2 ( 15.9%) off=2/8 0.002s
@@ -44,17 +44,17 @@ total instances = 40 x 5 configs = 200 runs
   seed 20260726 [abl_notakeoff ] mk=  337.9 ( 28.5%) off=2/8 0.003s
   seed 20260726 [imp_cap3      ] mk=  234.6 ( 50.3%) off=6/8 0.008s
   seed 20260727 [published     ] mk=  243.9 ( 22.6%) off=2/8 0.002s
-  seed 20260727 [v2            ] mk=  198.4 ( 37.0%) off=2/8 0.005s
+  seed 20260727 [v2            ] mk=  198.4 ( 37.0%) off=2/8 0.006s
   seed 20260727 [abl_cap1      ] mk=  243.9 ( 22.6%) off=2/8 0.002s
   seed 20260727 [abl_notakeoff ] mk=  198.4 ( 37.0%) off=2/8 0.004s
   seed 20260727 [imp_cap3      ] mk=  174.0 ( 44.8%) off=3/8 0.016s
   seed 20260728 [published     ] mk=  279.6 ( 27.1%) off=3/8 0.001s
-  seed 20260728 [v2            ] mk=  252.2 ( 34.3%) off=5/8 0.004s
+  seed 20260728 [v2            ] mk=  252.2 ( 34.3%) off=5/8 0.003s
   seed 20260728 [abl_cap1      ] mk=  279.6 ( 27.1%) off=3/8 0.002s
-  seed 20260728 [abl_notakeoff ] mk=  277.8 ( 27.6%) off=4/8 0.003s
+  seed 20260728 [abl_notakeoff ] mk=  277.8 ( 27.6%) off=4/8 0.002s
   seed 20260728 [imp_cap3      ] mk=  236.1 ( 38.5%) off=6/8 0.007s
   seed 20260729 [published     ] mk=  302.0 ( 18.6%) off=2/8 0.002s
-  seed 20260729 [v2            ] mk=  269.4 ( 27.4%) off=2/8 0.005s
+  seed 20260729 [v2            ] mk=  269.4 ( 27.4%) off=2/8 0.004s
   seed 20260729 [abl_cap1      ] mk=  302.0 ( 18.6%) off=2/8 0.002s
   seed 20260729 [abl_notakeoff ] mk=  269.4 ( 27.4%) off=2/8 0.003s
   seed 20260729 [imp_cap3      ] mk=  199.6 ( 46.2%) off=6/8 0.009s
@@ -63,157 +63,157 @@ total instances = 40 x 5 configs = 200 runs
   seed 20260720 [published     ] mk=  548.7 ( 12.9%) off=2/12 0.006s
   seed 20260720 [v2            ] mk=  372.2 ( 40.9%) off=7/12 0.019s
   seed 20260720 [abl_cap1      ] mk=  548.7 ( 12.9%) off=2/12 0.006s
-  seed 20260720 [abl_notakeoff ] mk=  404.6 ( 35.8%) off=5/12 0.014s
-  seed 20260720 [imp_cap3      ] mk=  329.6 ( 47.7%) off=8/12 0.056s
+  seed 20260720 [abl_notakeoff ] mk=  404.6 ( 35.8%) off=5/12 0.013s
+  seed 20260720 [imp_cap3      ] mk=  329.6 ( 47.7%) off=8/12 0.057s
   seed 20260721 [published     ] mk=  473.7 ( 17.3%) off=3/12 0.006s
   seed 20260721 [v2            ] mk=  352.4 ( 38.5%) off=8/12 0.018s
   seed 20260721 [abl_cap1      ] mk=  473.7 ( 17.3%) off=3/12 0.007s
   seed 20260721 [abl_notakeoff ] mk=  389.8 ( 32.0%) off=4/12 0.011s
-  seed 20260721 [imp_cap3      ] mk=  383.5 ( 33.1%) off=10/12 0.053s
+  seed 20260721 [imp_cap3      ] mk=  383.5 ( 33.1%) off=10/12 0.051s
   seed 20260722 [published     ] mk=  419.4 ( 16.8%) off=3/12 0.007s
-  seed 20260722 [v2            ] mk=  394.4 ( 21.8%) off=4/12 0.021s
-  seed 20260722 [abl_cap1      ] mk=  419.4 ( 16.8%) off=3/12 0.007s
-  seed 20260722 [abl_notakeoff ] mk=  402.0 ( 20.3%) off=2/12 0.014s
-  seed 20260722 [imp_cap3      ] mk=  351.9 ( 30.2%) off=9/12 0.059s
+  seed 20260722 [v2            ] mk=  394.4 ( 21.8%) off=4/12 0.022s
+  seed 20260722 [abl_cap1      ] mk=  419.4 ( 16.8%) off=3/12 0.008s
+  seed 20260722 [abl_notakeoff ] mk=  402.0 ( 20.3%) off=2/12 0.015s
+  seed 20260722 [imp_cap3      ] mk=  351.9 ( 30.2%) off=9/12 0.063s
   seed 20260723 [published     ] mk=  525.0 ( 22.0%) off=2/12 0.006s
   seed 20260723 [v2            ] mk=  419.6 ( 37.6%) off=8/12 0.021s
-  seed 20260723 [abl_cap1      ] mk=  525.0 ( 22.0%) off=2/12 0.006s
-  seed 20260723 [abl_notakeoff ] mk=  499.4 ( 25.8%) off=2/12 0.012s
+  seed 20260723 [abl_cap1      ] mk=  525.0 ( 22.0%) off=2/12 0.007s
+  seed 20260723 [abl_notakeoff ] mk=  499.4 ( 25.8%) off=2/12 0.013s
   seed 20260723 [imp_cap3      ] mk=  336.6 ( 50.0%) off=8/12 0.048s
   seed 20260724 [published     ] mk=  487.6 ( 19.8%) off=3/12 0.007s
   seed 20260724 [v2            ] mk=  311.7 ( 48.7%) off=6/12 0.017s
   seed 20260724 [abl_cap1      ] mk=  487.6 ( 19.8%) off=3/12 0.008s
-  seed 20260724 [abl_notakeoff ] mk=  346.2 ( 43.1%) off=5/12 0.012s
-  seed 20260724 [imp_cap3      ] mk=  306.9 ( 49.5%) off=6/12 0.049s
-  seed 20260725 [published     ] mk=  419.3 ( 31.5%) off=3/12 0.006s
-  seed 20260725 [v2            ] mk=  342.3 ( 44.1%) off=6/12 0.019s
-  seed 20260725 [abl_cap1      ] mk=  419.3 ( 31.5%) off=3/12 0.007s
-  seed 20260725 [abl_notakeoff ] mk=  376.9 ( 38.4%) off=4/12 0.013s
-  seed 20260725 [imp_cap3      ] mk=  288.8 ( 52.8%) off=7/12 0.053s
+  seed 20260724 [abl_notakeoff ] mk=  346.2 ( 43.1%) off=5/12 0.017s
+  seed 20260724 [imp_cap3      ] mk=  306.9 ( 49.5%) off=6/12 0.054s
+  seed 20260725 [published     ] mk=  419.3 ( 31.5%) off=3/12 0.007s
+  seed 20260725 [v2            ] mk=  342.3 ( 44.1%) off=6/12 0.021s
+  seed 20260725 [abl_cap1      ] mk=  419.3 ( 31.5%) off=3/12 0.008s
+  seed 20260725 [abl_notakeoff ] mk=  376.9 ( 38.4%) off=4/12 0.014s
+  seed 20260725 [imp_cap3      ] mk=  288.8 ( 52.8%) off=7/12 0.054s
   seed 20260726 [published     ] mk=  501.5 ( 19.5%) off=1/12 0.004s
-  seed 20260726 [v2            ] mk=  389.6 ( 37.5%) off=6/12 0.023s
+  seed 20260726 [v2            ] mk=  389.6 ( 37.5%) off=6/12 0.024s
   seed 20260726 [abl_cap1      ] mk=  501.5 ( 19.5%) off=1/12 0.005s
   seed 20260726 [abl_notakeoff ] mk=  474.7 ( 23.8%) off=2/12 0.015s
-  seed 20260726 [imp_cap3      ] mk=  317.1 ( 49.1%) off=8/12 0.060s
+  seed 20260726 [imp_cap3      ] mk=  317.1 ( 49.1%) off=8/12 0.061s
   seed 20260727 [published     ] mk=  384.9 ( 19.7%) off=2/12 0.006s
-  seed 20260727 [v2            ] mk=  256.1 ( 46.6%) off=6/12 0.030s
+  seed 20260727 [v2            ] mk=  256.1 ( 46.6%) off=6/12 0.029s
   seed 20260727 [abl_cap1      ] mk=  384.9 ( 19.7%) off=2/12 0.007s
   seed 20260727 [abl_notakeoff ] mk=  289.9 ( 39.5%) off=5/12 0.021s
-  seed 20260727 [imp_cap3      ] mk=  275.3 ( 42.6%) off=6/12 0.114s
+  seed 20260727 [imp_cap3      ] mk=  275.3 ( 42.6%) off=6/12 0.115s
   seed 20260728 [published     ] mk=  452.6 ( 19.8%) off=3/12 0.006s
   seed 20260728 [v2            ] mk=  460.5 ( 18.4%) off=2/12 0.013s
   seed 20260728 [abl_cap1      ] mk=  452.6 ( 19.8%) off=3/12 0.007s
   seed 20260728 [abl_notakeoff ] mk=  460.5 ( 18.4%) off=2/12 0.010s
-  seed 20260728 [imp_cap3      ] mk=  449.3 ( 20.4%) off=3/12 0.043s
+  seed 20260728 [imp_cap3      ] mk=  449.3 ( 20.4%) off=3/12 0.044s
   seed 20260729 [published     ] mk=  412.5 ( 21.8%) off=1/12 0.004s
   seed 20260729 [v2            ] mk=  294.5 ( 44.2%) off=6/12 0.020s
   seed 20260729 [abl_cap1      ] mk=  412.5 ( 21.8%) off=1/12 0.005s
   seed 20260729 [abl_notakeoff ] mk=  380.1 ( 27.9%) off=2/12 0.013s
-  seed 20260729 [imp_cap3      ] mk=  284.1 ( 46.1%) off=7/12 0.062s
+  seed 20260729 [imp_cap3      ] mk=  284.1 ( 46.1%) off=7/12 0.063s
 
 === size N=16 ===
   seed 20260720 [published     ] mk=  693.4 ( 21.0%) off=4/16 0.016s
-  seed 20260720 [v2            ] mk=  691.5 ( 21.3%) off=8/16 0.064s
+  seed 20260720 [v2            ] mk=  691.5 ( 21.3%) off=8/16 0.065s
   seed 20260720 [abl_cap1      ] mk=  693.4 ( 21.0%) off=4/16 0.018s
   seed 20260720 [abl_notakeoff ] mk=  748.9 ( 14.7%) off=2/16 0.032s
-  seed 20260720 [imp_cap3      ] mk=  631.7 ( 28.1%) off=12/16 0.201s
-  seed 20260721 [published     ] mk=  561.5 ( 22.6%) off=3/16 0.015s
-  seed 20260721 [v2            ] mk=  533.7 ( 26.4%) off=4/16 0.047s
+  seed 20260720 [imp_cap3      ] mk=  631.7 ( 28.1%) off=12/16 0.203s
+  seed 20260721 [published     ] mk=  561.5 ( 22.6%) off=3/16 0.016s
+  seed 20260721 [v2            ] mk=  533.7 ( 26.4%) off=4/16 0.049s
   seed 20260721 [abl_cap1      ] mk=  561.5 ( 22.6%) off=3/16 0.017s
   seed 20260721 [abl_notakeoff ] mk=  504.1 ( 30.5%) off=5/16 0.032s
-  seed 20260721 [imp_cap3      ] mk=  411.0 ( 43.3%) off=9/16 0.181s
+  seed 20260721 [imp_cap3      ] mk=  411.0 ( 43.3%) off=9/16 0.185s
   seed 20260722 [published     ] mk=  526.7 ( 33.0%) off=6/16 0.021s
-  seed 20260722 [v2            ] mk=  572.6 ( 27.1%) off=6/16 0.060s
-  seed 20260722 [abl_cap1      ] mk=  526.7 ( 33.0%) off=6/16 0.024s
+  seed 20260722 [v2            ] mk=  572.6 ( 27.1%) off=6/16 0.061s
+  seed 20260722 [abl_cap1      ] mk=  526.7 ( 33.0%) off=6/16 0.023s
   seed 20260722 [abl_notakeoff ] mk=  637.8 ( 18.8%) off=2/16 0.035s
-  seed 20260722 [imp_cap3      ] mk=  381.2 ( 51.5%) off=10/16 0.204s
+  seed 20260722 [imp_cap3      ] mk=  381.2 ( 51.5%) off=10/16 0.199s
   seed 20260723 [published     ] mk=  567.2 ( 20.8%) off=4/16 0.019s
-  seed 20260723 [v2            ] mk=  453.7 ( 36.6%) off=8/16 0.063s
-  seed 20260723 [abl_cap1      ] mk=  567.2 ( 20.8%) off=4/16 0.021s
-  seed 20260723 [abl_notakeoff ] mk=  478.5 ( 33.2%) off=6/16 0.038s
-  seed 20260723 [imp_cap3      ] mk=  433.7 ( 39.4%) off=9/16 0.204s
+  seed 20260723 [v2            ] mk=  453.7 ( 36.6%) off=8/16 0.062s
+  seed 20260723 [abl_cap1      ] mk=  567.2 ( 20.8%) off=4/16 0.022s
+  seed 20260723 [abl_notakeoff ] mk=  478.5 ( 33.2%) off=6/16 0.037s
+  seed 20260723 [imp_cap3      ] mk=  433.7 ( 39.4%) off=9/16 0.207s
   seed 20260724 [published     ] mk=  580.6 ( 25.2%) off=5/16 0.021s
-  seed 20260724 [v2            ] mk=  462.3 ( 40.5%) off=8/16 0.060s
-  seed 20260724 [abl_cap1      ] mk=  580.6 ( 25.2%) off=5/16 0.022s
-  seed 20260724 [abl_notakeoff ] mk=  517.3 ( 33.4%) off=7/16 0.038s
-  seed 20260724 [imp_cap3      ] mk=  439.3 ( 43.4%) off=10/16 0.181s
+  seed 20260724 [v2            ] mk=  462.3 ( 40.5%) off=8/16 0.059s
+  seed 20260724 [abl_cap1      ] mk=  580.6 ( 25.2%) off=5/16 0.023s
+  seed 20260724 [abl_notakeoff ] mk=  517.3 ( 33.4%) off=7/16 0.039s
+  seed 20260724 [imp_cap3      ] mk=  439.3 ( 43.4%) off=10/16 0.182s
   seed 20260725 [published     ] mk=  667.5 ( 12.5%) off=1/16 0.009s
-  seed 20260725 [v2            ] mk=  520.8 ( 31.7%) off=6/16 0.053s
+  seed 20260725 [v2            ] mk=  520.8 ( 31.7%) off=6/16 0.052s
   seed 20260725 [abl_cap1      ] mk=  667.5 ( 12.5%) off=1/16 0.010s
-  seed 20260725 [abl_notakeoff ] mk=  497.8 ( 34.7%) off=6/16 0.040s
+  seed 20260725 [abl_notakeoff ] mk=  497.8 ( 34.7%) off=6/16 0.042s
   seed 20260725 [imp_cap3      ] mk=  432.6 ( 43.3%) off=9/16 0.200s
-  seed 20260726 [published     ] mk=  564.6 ( 28.7%) off=4/16 0.018s
+  seed 20260726 [published     ] mk=  564.6 ( 28.7%) off=4/16 0.019s
   seed 20260726 [v2            ] mk=  458.2 ( 42.1%) off=8/16 0.053s
   seed 20260726 [abl_cap1      ] mk=  564.6 ( 28.7%) off=4/16 0.020s
-  seed 20260726 [abl_notakeoff ] mk=  495.3 ( 37.5%) off=6/16 0.035s
-  seed 20260726 [imp_cap3      ] mk=  470.5 ( 40.6%) off=10/16 0.219s
+  seed 20260726 [abl_notakeoff ] mk=  495.3 ( 37.5%) off=6/16 0.036s
+  seed 20260726 [imp_cap3      ] mk=  470.5 ( 40.6%) off=10/16 0.221s
   seed 20260727 [published     ] mk=  540.3 ( 33.3%) off=4/16 0.023s
   seed 20260727 [v2            ] mk=  543.3 ( 33.0%) off=7/16 0.113s
-  seed 20260727 [abl_cap1      ] mk=  540.3 ( 33.3%) off=4/16 0.024s
-  seed 20260727 [abl_notakeoff ] mk=  625.9 ( 22.8%) off=2/16 0.057s
-  seed 20260727 [imp_cap3      ] mk=  428.3 ( 47.2%) off=10/16 0.337s
+  seed 20260727 [abl_cap1      ] mk=  540.3 ( 33.3%) off=4/16 0.025s
+  seed 20260727 [abl_notakeoff ] mk=  625.9 ( 22.8%) off=2/16 0.056s
+  seed 20260727 [imp_cap3      ] mk=  428.3 ( 47.2%) off=10/16 0.343s
   seed 20260728 [published     ] mk=  603.7 ( 16.5%) off=3/16 0.014s
-  seed 20260728 [v2            ] mk=  451.9 ( 37.5%) off=10/16 0.052s
-  seed 20260728 [abl_cap1      ] mk=  603.7 ( 16.5%) off=3/16 0.015s
-  seed 20260728 [abl_notakeoff ] mk=  528.4 ( 26.9%) off=7/16 0.033s
-  seed 20260728 [imp_cap3      ] mk=  509.9 ( 29.5%) off=7/16 0.228s
-  seed 20260729 [published     ] mk=  710.4 (  8.7%) off=1/16 0.007s
+  seed 20260728 [v2            ] mk=  451.9 ( 37.5%) off=10/16 0.054s
+  seed 20260728 [abl_cap1      ] mk=  603.7 ( 16.5%) off=3/16 0.017s
+  seed 20260728 [abl_notakeoff ] mk=  528.4 ( 26.9%) off=7/16 0.034s
+  seed 20260728 [imp_cap3      ] mk=  509.9 ( 29.5%) off=7/16 0.231s
+  seed 20260729 [published     ] mk=  710.4 (  8.7%) off=1/16 0.008s
   seed 20260729 [v2            ] mk=  558.4 ( 28.2%) off=6/16 0.040s
   seed 20260729 [abl_cap1      ] mk=  710.4 (  8.7%) off=1/16 0.009s
   seed 20260729 [abl_notakeoff ] mk=  562.6 ( 27.7%) off=6/16 0.027s
-  seed 20260729 [imp_cap3      ] mk=  426.3 ( 45.2%) off=10/16 0.155s
+  seed 20260729 [imp_cap3      ] mk=  426.3 ( 45.2%) off=10/16 0.159s
 
 === size N=20 ===
-  seed 20260720 [published     ] mk=  705.7 ( 28.9%) off=6/20 0.034s
-  seed 20260720 [v2            ] mk=  607.3 ( 38.8%) off=11/20 0.117s
-  seed 20260720 [abl_cap1      ] mk=  705.7 ( 28.9%) off=6/20 0.040s
-  seed 20260720 [abl_notakeoff ] mk=  680.3 ( 31.5%) off=7/20 0.073s
-  seed 20260720 [imp_cap3      ] mk=  681.1 ( 31.4%) off=8/20 0.680s
-  seed 20260721 [published     ] mk=  646.8 ( 28.5%) off=7/20 0.053s
-  seed 20260721 [v2            ] mk=  555.5 ( 38.6%) off=11/20 0.137s
-  seed 20260721 [abl_cap1      ] mk=  646.8 ( 28.5%) off=7/20 0.050s
-  seed 20260721 [abl_notakeoff ] mk=  594.0 ( 34.3%) off=9/20 0.105s
-  seed 20260721 [imp_cap3      ] mk=  535.2 ( 40.8%) off=11/20 0.546s
+  seed 20260720 [published     ] mk=  705.7 ( 28.9%) off=6/20 0.035s
+  seed 20260720 [v2            ] mk=  607.3 ( 38.8%) off=11/20 0.121s
+  seed 20260720 [abl_cap1      ] mk=  705.7 ( 28.9%) off=6/20 0.039s
+  seed 20260720 [abl_notakeoff ] mk=  680.3 ( 31.5%) off=7/20 0.074s
+  seed 20260720 [imp_cap3      ] mk=  681.1 ( 31.4%) off=8/20 0.679s
+  seed 20260721 [published     ] mk=  646.8 ( 28.5%) off=7/20 0.045s
+  seed 20260721 [v2            ] mk=  555.5 ( 38.6%) off=11/20 0.138s
+  seed 20260721 [abl_cap1      ] mk=  646.8 ( 28.5%) off=7/20 0.048s
+  seed 20260721 [abl_notakeoff ] mk=  594.0 ( 34.3%) off=9/20 0.094s
+  seed 20260721 [imp_cap3      ] mk=  535.2 ( 40.8%) off=11/20 0.547s
   seed 20260722 [published     ] mk=  815.3 ( 19.6%) off=7/20 0.038s
-  seed 20260722 [v2            ] mk=  746.8 ( 26.4%) off=8/20 0.117s
+  seed 20260722 [v2            ] mk=  746.8 ( 26.4%) off=8/20 0.118s
   seed 20260722 [abl_cap1      ] mk=  815.3 ( 19.6%) off=7/20 0.042s
-  seed 20260722 [abl_notakeoff ] mk=  821.0 ( 19.1%) off=5/20 0.068s
-  seed 20260722 [imp_cap3      ] mk=  830.4 ( 18.1%) off=5/20 0.598s
+  seed 20260722 [abl_notakeoff ] mk=  821.0 ( 19.1%) off=5/20 0.069s
+  seed 20260722 [imp_cap3      ] mk=  830.4 ( 18.1%) off=5/20 0.608s
   seed 20260723 [published     ] mk=  797.0 ( 30.3%) off=7/20 0.047s
-  seed 20260723 [v2            ] mk=  778.8 ( 31.9%) off=9/20 0.149s
-  seed 20260723 [abl_cap1      ] mk=  797.0 ( 30.3%) off=7/20 0.049s
-  seed 20260723 [abl_notakeoff ] mk=  816.7 ( 28.6%) off=6/20 0.088s
-  seed 20260723 [imp_cap3      ] mk=  708.9 ( 38.0%) off=13/20 0.636s
+  seed 20260723 [v2            ] mk=  778.8 ( 31.9%) off=9/20 0.154s
+  seed 20260723 [abl_cap1      ] mk=  797.0 ( 30.3%) off=7/20 0.052s
+  seed 20260723 [abl_notakeoff ] mk=  816.7 ( 28.6%) off=6/20 0.091s
+  seed 20260723 [imp_cap3      ] mk=  708.9 ( 38.0%) off=13/20 0.648s
   seed 20260724 [published     ] mk=  728.8 ( 34.7%) off=7/20 0.040s
-  seed 20260724 [v2            ] mk=  702.2 ( 37.1%) off=10/20 0.132s
-  seed 20260724 [abl_cap1      ] mk=  728.8 ( 34.7%) off=7/20 0.043s
-  seed 20260724 [abl_notakeoff ] mk=  779.7 ( 30.1%) off=6/20 0.084s
-  seed 20260724 [imp_cap3      ] mk=  705.3 ( 36.8%) off=8/20 0.736s
+  seed 20260724 [v2            ] mk=  702.2 ( 37.1%) off=10/20 0.133s
+  seed 20260724 [abl_cap1      ] mk=  728.8 ( 34.7%) off=7/20 0.044s
+  seed 20260724 [abl_notakeoff ] mk=  779.7 ( 30.1%) off=6/20 0.086s
+  seed 20260724 [imp_cap3      ] mk=  705.3 ( 36.8%) off=8/20 0.741s
   seed 20260725 [published     ] mk=  881.7 ( 14.1%) off=2/20 0.027s
-  seed 20260725 [v2            ] mk=  617.8 ( 39.8%) off=9/20 0.182s
+  seed 20260725 [v2            ] mk=  617.8 ( 39.8%) off=9/20 0.181s
   seed 20260725 [abl_cap1      ] mk=  881.7 ( 14.1%) off=2/20 0.029s
-  seed 20260725 [abl_notakeoff ] mk=  646.6 ( 37.0%) off=7/20 0.107s
-  seed 20260725 [imp_cap3      ] mk=  607.4 ( 40.8%) off=8/20 0.904s
+  seed 20260725 [abl_notakeoff ] mk=  646.6 ( 37.0%) off=7/20 0.105s
+  seed 20260725 [imp_cap3      ] mk=  607.4 ( 40.8%) off=8/20 0.920s
   seed 20260726 [published     ] mk=  771.8 ( 30.5%) off=6/20 0.047s
   seed 20260726 [v2            ] mk=  762.8 ( 31.3%) off=7/20 0.130s
-  seed 20260726 [abl_cap1      ] mk=  771.8 ( 30.5%) off=6/20 0.052s
-  seed 20260726 [abl_notakeoff ] mk=  765.8 ( 31.0%) off=6/20 0.081s
-  seed 20260726 [imp_cap3      ] mk=  718.6 ( 35.3%) off=9/20 0.552s
-  seed 20260727 [published     ] mk=  789.5 ( 19.8%) off=4/20 0.046s
-  seed 20260727 [v2            ] mk=  822.7 ( 16.4%) off=4/20 0.157s
-  seed 20260727 [abl_cap1      ] mk=  789.5 ( 19.8%) off=4/20 0.049s
+  seed 20260726 [abl_cap1      ] mk=  771.8 ( 30.5%) off=6/20 0.051s
+  seed 20260726 [abl_notakeoff ] mk=  765.8 ( 31.0%) off=6/20 0.082s
+  seed 20260726 [imp_cap3      ] mk=  718.6 ( 35.3%) off=9/20 0.571s
+  seed 20260727 [published     ] mk=  789.5 ( 19.8%) off=4/20 0.047s
+  seed 20260727 [v2            ] mk=  822.7 ( 16.4%) off=4/20 0.165s
+  seed 20260727 [abl_cap1      ] mk=  789.5 ( 19.8%) off=4/20 0.047s
   seed 20260727 [abl_notakeoff ] mk=  850.8 ( 13.5%) off=2/20 0.103s
-  seed 20260727 [imp_cap3      ] mk=  579.3 ( 41.1%) off=12/20 0.763s
+  seed 20260727 [imp_cap3      ] mk=  579.3 ( 41.1%) off=12/20 0.761s
   seed 20260728 [published     ] mk=  842.2 ( 17.8%) off=5/20 0.030s
-  seed 20260728 [v2            ] mk=  768.3 ( 25.0%) off=12/20 0.096s
-  seed 20260728 [abl_cap1      ] mk=  842.2 ( 17.8%) off=5/20 0.035s
-  seed 20260728 [abl_notakeoff ] mk=  811.6 ( 20.8%) off=9/20 0.075s
-  seed 20260728 [imp_cap3      ] mk=  796.1 ( 22.3%) off=11/20 0.443s
-  seed 20260729 [published     ] mk=  825.9 (  9.0%) off=2/20 0.018s
-  seed 20260729 [v2            ] mk=  778.4 ( 14.2%) off=7/20 0.116s
+  seed 20260728 [v2            ] mk=  768.3 ( 25.0%) off=12/20 0.095s
+  seed 20260728 [abl_cap1      ] mk=  842.2 ( 17.8%) off=5/20 0.034s
+  seed 20260728 [abl_notakeoff ] mk=  811.6 ( 20.8%) off=9/20 0.076s
+  seed 20260728 [imp_cap3      ] mk=  796.1 ( 22.3%) off=11/20 0.454s
+  seed 20260729 [published     ] mk=  825.9 (  9.0%) off=2/20 0.019s
+  seed 20260729 [v2            ] mk=  778.4 ( 14.2%) off=7/20 0.122s
   seed 20260729 [abl_cap1      ] mk=  825.9 (  9.0%) off=2/20 0.021s
   seed 20260729 [abl_notakeoff ] mk=  796.1 ( 12.2%) off=2/20 0.055s
-  seed 20260729 [imp_cap3      ] mk=  750.4 ( 17.3%) off=8/20 0.549s
+  seed 20260729 [imp_cap3      ] mk=  750.4 ( 17.3%) off=8/20 0.556s
 
 ==============================================================================
 AGGREGATE (mean over seeds per size)

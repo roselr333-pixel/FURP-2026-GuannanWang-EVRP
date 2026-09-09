@@ -29,13 +29,21 @@
   instances are public data and the model is fully defined by the parameters at the bottom of each
   file, so replication does not depend on the PDF.
 
-## 3. Method (own constructive greedy)
+## 3. Method (own constructive greedy + multi-trip fleet)
 
-`src/experiments/schneider_evrptw.py`: each vehicle starts at the depot and greedily inserts the
-**nearest feasible customer** in earliest-deadline order (capacity / time-window / battery all
-feasible; if the battery is low it detours via the nearest station for a full recharge), closes the
-tour back to the depot, then a new vehicle starts. This is the simplest feasible constructive
-heuristic — **no vehicle-count minimization, no multi-trip, no metaheuristic**.
+`src/experiments/schneider_evrptw.py`: a homogeneous fleet is modelled with **multi-trip** — one truck
+may serve several routes, returning to the depot to reload and (if needed) fully recharge between trips,
+matching Schneider (2014)'s fleet setting. Each trip greedily inserts the **nearest feasible customer**
+in earliest-deadline order (capacity / time-window / battery all feasible; if the battery is low it
+detours via the nearest station for a full recharge). Objective follows Schneider's hierarchy: minimise
+vehicles first, then total distance.
+
+**Honest note:** multi-trip is switched on in the model, but the constructive greedy still **cannot
+assign customers to multi-trip vehicles globally** — later trips depart too late and miss early time
+windows, so a vehicle effectively still runs only 1–2 trips. I verified this empirically: sweeping the
+per-trip customer cap from ∞ down to 3 never reduced vehicle count (c201_21 stays between 14–21
+vehicles vs BKS 4) while distance rose from more depot returns. The vehicle-count gap is therefore due to
+the **heuristic itself**, not a modeling omission.
 
 ## 4. Results
 
@@ -46,34 +54,39 @@ heuristic — **no vehicle-count minimization, no multi-trip, no metaheuristic**
     in jmanzolli/E-VRPTW;
   - `_21` large instances (100 customers): taken from Adachi et al. (2022, IEICE NOLTA), who cite
     Schneider (2014) for the BKS table.
+- **Solve time:** < 0.02 s per instance (slowest rc201_21 ≈ 0.01 s) on a 20-core machine. The
+  constructive heuristic's compute cost is negligible; the gap is algorithmic quality, not compute.
 
 ## 5. Gap to BKS (honest attribution)
 
-| Set | Distance gap (mean) | Main cause |
+Across the 18 comparison instances (all fully served) the mean distance gap is **+48.9%**, with:
+
+| Set | Distance gap (mean) | Vehicles (mine vs BKS) |
 |---|---|---|
-| C5 small (5 customers) | **≈ +25%** (range −0.4% ~ +45.8%) | too many vehicles + non-optimal greedy routes |
-| `_21` large (100 customers) | **+50% ~ +216%** | large vehicle-count gap (see below) |
+| C5 small (5 customers) | **≈ +25%** (range −4.4% ~ +45.8%) | 0–2 more |
+| `_21` large (100 customers) | **+53% ~ +233%** | 5–11 more |
 
 Why the gap exists (stated plainly, no overclaiming):
 
 1. **Vehicle count not minimized (dominant).** Schneider's primary objective is minimizing vehicles,
-   and its vehicles may run **multiple trips** (one dispatch, several routes); my greedy runs one trip
-   per vehicle and does not prioritize compressing vehicle count, so it uses many more vehicles,
-   which directly inflates total distance. E.g. `c201_21`: mine 17 vs BKS 4; `rc201_21`: 15 vs 4.
+   and its vehicles may run **multiple trips** (one dispatch, several routes); the constructive greedy
+   cannot arrange multi-trips globally, so it uses many more vehicles, which directly inflates total
+   distance. E.g. `c201_21`: mine 15 vs BKS 4; `rc201_21`: 15 vs 4; `r201_21`: 13 vs 3.
    Most of the large-instance distance gap comes from here, not from route geometry.
 2. **Simple heuristic.** Nearest-feasible insertion; route geometry is suboptimal, assignment fragmented.
 3. **Distance metric.** I use raw Euclidean distance; the paper may truncate to 1 decimal — difference
    < 0.1%, negligible.
 4. **On `c103C5` my distance being slightly below BKS:** not a different instance (verified identical),
    but under Schneider's hierarchical objective the BKS chooses **fewer vehicles (m=1) and accepts a
-   slightly higher distance (176.05)**; my 3-vehicle solution is 175.3 (slightly shorter) but uses more
+   slightly higher distance (176.05)**; my 2-vehicle solution is 175.4 (slightly shorter) but uses more
    vehicles, so by the paper's objective mine is worse — as expected.
 
 ## 6. Limitations and next steps (explicit)
 
 - RC1 tight time windows leave 1 customer unserved → needs heavier insertion search or ALNS.
-- **Multi-trip + vehicle-count minimization not implemented** — the key lever to approach BKS, left as
-  extension (this is exactly what peers Ziqi / Frank do with ALNS / metaheuristics).
+- **Multi-trip is modelled, but global vehicle-count minimization (assigning customers to a multi-trip
+  fleet) is not implemented** — the key lever to approach BKS, left as extension (this is exactly what
+  peers Ziqi / Frank do with ALNS / metaheuristics).
 - Constructive heuristic only; no exact lower bound (MILP). Computing one is a separate contribution,
   outside this project's scope.
 - All of the above is reported honestly in the write-up; I do not present "close to BKS" as achieved.

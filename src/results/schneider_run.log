@@ -1,0 +1,94 @@
+c101C10      cust= 10 stn= 5 veh=  4 trips=  5 dist=   540.5 t= 0.00s unserved=0
+c101C5       cust=  5 stn= 3 veh=  3 trips=  5 dist=   296.1 t= 0.00s unserved=0
+c101_21      cust=100 stn=21 veh= 29 trips= 29 dist=  2710.5 t= 0.01s unserved=0
+c102_21      cust=100 stn=21 veh= 28 trips= 30 dist=  2987.7 t= 0.01s unserved=0
+c103C15      cust= 15 stn= 5 veh=  5 trips=  5 dist=   576.3 t= 0.00s unserved=0
+c103C5       cust=  5 stn= 2 veh=  2 trips=  3 dist=   175.4 t= 0.00s unserved=0
+c103_21      cust=100 stn=21 veh= 26 trips= 26 dist=  2719.8 t= 0.01s unserved=0
+c104C10      cust= 10 stn= 4 veh=  2 trips=  2 dist=   378.0 t= 0.00s unserved=0
+c104_21      cust=100 stn=21 veh= 18 trips= 19 dist=  2128.5 t= 0.01s unserved=0
+c105_21      cust=100 stn=21 veh= 22 trips= 23 dist=  2326.7 t= 0.01s unserved=0
+c106C15      cust= 15 stn= 3 veh=  4 trips=  6 dist=   496.1 t= 0.00s unserved=0
+c106_21      cust=100 stn=21 veh= 22 trips= 24 dist=  2484.0 t= 0.01s unserved=0
+c107_21      cust=100 stn=21 veh= 23 trips= 25 dist=  2636.3 t= 0.01s unserved=0
+c108_21      cust=100 stn=21 veh= 18 trips= 20 dist=  2209.4 t= 0.01s unserved=0
+c109_21      cust=100 stn=21 veh= 15 trips= 18 dist=  2027.4 t= 0.01s unserved=0
+c201_21      cust=100 stn=21 veh= 15 trips= 18 dist=  2099.4 t= 0.01s unserved=0
+c202C10      cust= 10 stn= 5 veh=  3 trips=  4 dist=   375.8 t= 0.00s unserved=0
+c202C15      cust= 15 stn= 5 veh=  5 trips=  5 dist=   619.5 t= 0.00s unserved=0
+c202_21      cust=100 stn=21 veh= 14 trips= 16 dist=  2172.1 t= 0.01s unserved=0
+c203_21      cust=100 stn=21 veh= 12 trips= 13 dist=  1910.4 t= 0.01s unserved=0
+c204_21      cust=100 stn=21 veh=  9 trips=  9 dist=  1581.1 t= 0.01s unserved=0
+c205C10      cust= 10 stn= 3 veh=  3 trips=  3 dist=   324.7 t= 0.00s unserved=0
+c205_21      cust=100 stn=21 veh= 11 trips= 11 dist=  1661.2 t= 0.01s unserved=0
+c206C5       cust=  5 stn= 4 veh=  1 trips=  2 dist=   279.6 t= 0.00s unserved=0
+c206_21      cust=100 stn=21 veh= 10 trips= 10 dist=  1489.5 t= 0.01s unserved=0
+c207_21      cust=100 stn=21 veh=  9 trips= 11 dist=  1738.8 t= 0.01s unserved=0
+c208C15      cust= 15 stn= 4 veh=  4 trips=  5 dist=   469.3 t= 0.00s unserved=0
+c208C5       cust=  5 stn= 3 veh=  1 trips=  1 dist=   231.1 t= 0.00s unserved=0
+c208_21      cust=100 stn=21 veh=  9 trips= 10 dist=  1524.2 t= 0.01s unserved=0
+r101_21      cust=100 stn=21 veh= 41 trips= 42 dist=  2940.8 t= 0.02s unserved=2
+r102C10      cust= 10 stn= 4 veh=  6 trips=  6 dist=   388.9 t= 0.00s unserved=0
+r102C15      cust= 15 stn= 8 veh=  8 trips=  9 dist=   575.3 t= 0.00s unserved=0
+r102_21      cust=100 stn=21 veh= 34 trips= 34 dist=  2424.0 t= 0.01s unserved=2
+r103C10      cust= 10 stn= 3 veh=  4 trips=  4 dist=   289.6 t= 0.00s unserved=0
+r103_21      cust=100 stn=21 veh= 30 trips= 30 dist=  2346.6 t= 0.01s unserved=2
+r104C5       cust=  5 stn= 3 veh=  2 trips=  2 dist=   177.1 t= 0.00s unserved=0
+r104_21      cust=100 stn=21 veh= 23 trips= 23 dist=  1894.5 t= 0.01s unserved=0
+r105C15      cust= 15 stn= 6 veh=  8 trips=  8 dist=   548.5 t= 0.00s unserved=0
+r105C5       cust=  5 stn= 3 veh=  4 trips=  4 dist=   149.2 t= 0.00s unserved=0
+r105_21      cust=100 stn=21 veh= 31 trips= 31 dist=  2384.6 t= 0.01s unserved=1
+r106_21      cust=100 stn=21 veh= 26 trips= 27 dist=  2152.6 t= 0.01s unserved=1
+r107_21      cust=100 stn=21 veh= 27 trips= 27 dist=  2242.0 t= 0.01s unserved=0
+r108_21      cust=100 stn=21 veh= 19 trips= 19 dist=  1635.0 t= 0.01s unserved=1
+r109_21      cust=100 stn=21 veh= 24 trips= 25 dist=  2087.3 t= 0.01s unserved=0
+r110_21      cust=100 stn=21 veh= 21 trips= 21 dist=  1808.6 t= 0.01s unserved=0
+r111_21      cust=100 stn=21 veh= 21 trips= 22 dist=  1917.8 t= 0.01s unserved=0
+r112_21      cust=100 stn=21 veh= 16 trips= 16 dist=  1580.5 t= 0.01s unserved=0
+r201C10      cust= 10 stn= 4 veh=  4 trips=  5 dist=   328.4 t= 0.00s unserved=0
+r201_21      cust=100 stn=21 veh= 13 trips= 13 dist=  1979.4 t= 0.00s unserved=0
+r202C15      cust= 15 stn= 6 veh=  4 trips=  5 dist=   625.1 t= 0.00s unserved=0
+r202C5       cust=  5 stn= 3 veh=  2 trips=  2 dist=   152.6 t= 0.00s unserved=0
+r202_21      cust=100 stn=21 veh= 13 trips= 13 dist=  1634.7 t= 0.00s unserved=0
+r203C10      cust= 10 stn= 5 veh=  2 trips=  2 dist=   317.6 t= 0.00s unserved=0
+r203C5       cust=  5 stn= 4 veh=  2 trips=  3 dist=   252.3 t= 0.00s unserved=0
+r203_21      cust=100 stn=21 veh= 11 trips= 11 dist=  1444.2 t= 0.00s unserved=0
+r204_21      cust=100 stn=21 veh=  8 trips=  8 dist=  1126.1 t= 0.00s unserved=0
+r205_21      cust=100 stn=21 veh=  9 trips=  9 dist=  1609.5 t= 0.00s unserved=0
+r206_21      cust=100 stn=21 veh=  8 trips=  9 dist=  1491.0 t= 0.00s unserved=0
+r207_21      cust=100 stn=21 veh=  7 trips=  7 dist=  1352.2 t= 0.00s unserved=0
+r208_21      cust=100 stn=21 veh=  6 trips=  6 dist=  1140.7 t= 0.00s unserved=0
+r209C15      cust= 15 stn= 5 veh=  3 trips=  3 dist=   546.7 t= 0.00s unserved=0
+r209_21      cust=100 stn=21 veh=  7 trips=  8 dist=  1403.3 t= 0.00s unserved=0
+r210_21      cust=100 stn=21 veh=  7 trips=  7 dist=  1452.2 t= 0.00s unserved=0
+r211_21      cust=100 stn=21 veh=  5 trips=  5 dist=  1317.5 t= 0.00s unserved=0
+rc101_21     cust=100 stn=21 veh= 28 trips= 29 dist=  2733.9 t= 0.01s unserved=1
+rc102C10     cust= 10 stn= 4 veh=  6 trips=  7 dist=   528.5 t= 0.00s unserved=0
+rc102_21     cust=100 stn=21 veh= 29 trips= 29 dist=  2871.9 t= 0.01s unserved=1
+rc103C15     cust= 15 stn= 5 veh=  6 trips=  6 dist=   555.5 t= 0.00s unserved=0
+rc103_21     cust=100 stn=21 veh= 21 trips= 21 dist=  2355.0 t= 0.01s unserved=0
+rc104_21     cust=100 stn=21 veh= 20 trips= 20 dist=  2369.1 t= 0.01s unserved=0
+rc105C5      cust=  5 stn= 4 veh=  4 trips=  4 dist=   271.0 t= 0.00s unserved=0
+rc105_21     cust=100 stn=21 veh= 24 trips= 24 dist=  2537.3 t= 0.01s unserved=1
+rc106_21     cust=100 stn=21 veh= 21 trips= 21 dist=  2328.6 t= 0.01s unserved=1
+rc107_21     cust=100 stn=21 veh= 18 trips= 18 dist=  2033.5 t= 0.01s unserved=1
+rc108C10     cust= 10 stn= 4 veh=  4 trips=  4 dist=   509.6 t= 0.00s unserved=0
+rc108C15     cust= 15 stn= 5 veh=  5 trips=  5 dist=   550.3 t= 0.00s unserved=0
+rc108C5      cust=  5 stn= 4 veh=  2 trips=  2 dist=   274.1 t= 0.00s unserved=0
+rc108_21     cust=100 stn=21 veh= 16 trips= 16 dist=  1748.4 t= 0.01s unserved=0
+rc201C10     cust= 10 stn= 4 veh=  6 trips=  6 dist=   487.9 t= 0.00s unserved=0
+rc201_21     cust=100 stn=21 veh= 15 trips= 15 dist=  2680.4 t= 0.00s unserved=0
+rc202C15     cust= 15 stn= 5 veh=  5 trips=  6 dist=   760.1 t= 0.00s unserved=0
+rc202_21     cust=100 stn=21 veh= 14 trips= 14 dist=  2284.6 t= 0.00s unserved=0
+rc203_21     cust=100 stn=21 veh= 10 trips= 10 dist=  1727.5 t= 0.00s unserved=0
+rc204C15     cust= 15 stn= 7 veh=  3 trips=  3 dist=   508.6 t= 0.00s unserved=1
+rc204C5      cust=  5 stn= 4 veh=  2 trips=  2 dist=   257.4 t= 0.00s unserved=0
+rc204_21     cust=100 stn=21 veh= 11 trips= 11 dist=  1652.7 t= 0.01s unserved=0
+rc205C10     cust= 10 stn= 4 veh=  4 trips=  4 dist=   547.1 t= 0.00s unserved=0
+rc205_21     cust=100 stn=21 veh= 12 trips= 14 dist=  2190.2 t= 0.00s unserved=0
+rc206_21     cust=100 stn=21 veh=  8 trips=  8 dist=  1857.7 t= 0.00s unserved=0
+rc207_21     cust=100 stn=21 veh=  7 trips=  7 dist=  1904.0 t= 0.00s unserved=0
+rc208C5      cust=  5 stn= 3 veh=  2 trips=  2 dist=   213.6 t= 0.00s unserved=0
+rc208_21     cust=100 stn=21 veh=  5 trips=  5 dist=  1345.8 t= 0.01s unserved=0
+
+wrote E:\FURP-EVRP\roselr333-pixel-FURP-2026-GuannanWang-EVRP\src\experiments\..\results\schneider_evrptw_baseline.csv (92 rows)

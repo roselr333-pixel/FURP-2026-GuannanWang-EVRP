@@ -36,26 +36,27 @@ with open(BASE) as f:
         if name not in BKS:
             continue
         my_v = int(row["vehicles"]); my_d = float(row["total_distance"])
-        uns = int(row["unserved"])
+        my_t = int(row["trips"]); uns = int(row["unserved"])
+        my_time = float(row.get("solve_time_s", 0.0))
         bk_v, bk_d = BKS[name]
         dgap = 100 * (my_d - bk_d) / bk_d
-        rows.append([name, row["n_customers"], row["n_stations"], my_v,
-                     round(my_d, 2), bk_v, bk_d, round(dgap, 1),
+        rows.append([name, row["n_customers"], row["n_stations"], my_v, my_t,
+                     round(my_d, 2), round(my_time, 3), bk_v, bk_d, round(dgap, 1),
                      my_v - bk_v, uns, SRC[name]])
 
 with open(OUT, "w", newline="") as f:
     w = csv.writer(f)
-    w.writerow(["instance", "n_customers", "n_stations", "my_vehicles",
-                "my_distance", "bks_vehicles", "bks_distance", "dist_gap_pct",
-                "vehicle_gap", "unserved", "bks_source"])
+    w.writerow(["instance", "n_customers", "n_stations", "my_vehicles", "my_trips",
+                "my_distance", "my_solve_time_s", "bks_vehicles", "bks_distance",
+                "dist_gap_pct", "vehicle_gap", "unserved", "bks_source"])
     w.writerows(rows)
 
-served = [r for r in rows if r[9] == 0]
+served = [r for r in rows if r[11] == 0]
 print(f"wrote {OUT} ({len(rows)} rows; fully served {len(served)}/{len(rows)})")
 if served:
-    gaps = [r[7] for r in served]
+    gaps = [r[9] for r in served]
     print(f"mean |dist gap| % (fully served): {round(statistics.mean(abs(g) for g in gaps),1)}")
     print(f"mean  dist gap % (fully served): {round(statistics.mean(gaps),1)}")
 for r in rows:
-    print(f"{r[0]:10s} my({r[3]:2d},{r[4]:7.1f}) bks({r[5]},{r[6]:7.1f}) "
-          f"dgap={r[7]:+5.1f}% vgap={r[8]:+d} uns={r[9]}")
+    print(f"{r[0]:10s} my({r[3]:2d}v/{r[4]:2d}t,{r[5]:7.1f},t={r[6]:.2f}s) "
+          f"bks({r[7]}v,{r[8]:7.1f}) dgap={r[9]:+5.1f}% vgap={r[10]:+d} uns={r[11]}")

@@ -1,0 +1,32 @@
+Python : C:\Users\admin\.workbuddy\binaries\python\envs\furp\Scripts\python.exe
+Repo   : E:\FURP-EVRP\roselr333-pixel-FURP-2026-GuannanWang-EVRP
+
+[RUN ] OR-Tools vs BKS (56 Solomon)  (7.2% mean gap; deterministic)
+  OK   (562.2s)
+[RUN ] PyVRP vs BKS (56 Solomon)  (-3.0% mean gap; deterministic)
+  OK   (46.8s)
+[RUN ] Self-written GA vs BKS (56)  (LONG ~35 min, 5 seeds)
+  OK   (3343.6s)
+[RUN ] 3-baseline consolidation  (reads the 3 CSVs above)
+  OK   (1.9s)
+[RUN ] Parameter sensitivity  (5 seeds x 4 params (R fixed 09-10))
+  OK   (5.6s)
+[RUN ] Multi-objective tradeoff  (weighted-sum, 5 weights x 5 seeds)
+  OK   (1.2s)
+[RUN ] Controlled ablation (5 configs)  (40 instances, sanity check)
+  OK   (14.3s)
+[RUN ] FSTSP repro vs M&C (2015)  (40 instances)
+  OK   (3.8s)
+[RUN ] Scaling decay (N=30/50)  (5 seeds)
+  OK   (25.0s)
+
+=== Summary ===
+  OK       562.2s  OR-Tools vs BKS (56 Solomon)
+  OK        46.8s  PyVRP vs BKS (56 Solomon)
+  OK      3343.6s  Self-written GA vs BKS (56)
+  OK         1.9s  3-baseline consolidation
+  OK         5.6s  Parameter sensitivity
+  OK         1.2s  Multi-objective tradeoff
+  OK        14.3s  Controlled ablation (5 configs)
+  OK         3.8s  FSTSP repro vs M&C (2015)
+  OK        25.0s  Scaling decay (N=30/50)

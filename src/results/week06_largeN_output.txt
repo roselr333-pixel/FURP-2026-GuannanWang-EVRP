@@ -6,18 +6,18 @@ truck_speed=1.0  drone_speed=2.0  drone_range=160.0  battery=250  recharge=40s
 variants: V0 truck-only(no EV) | V1 truck EV | V2 ground-air collab
 
 === size N=30 ===
-  seed 20260820: V0=  1538.9 V1=  2386.8 V2=  1730.9  imp= 27.5%  off=19/30  syncRej=344019  fea=True/True/True  0.36s
+  seed 20260820: V0=  1538.9 V1=  2386.8 V2=  1730.9  imp= 27.5%  off=19/30  syncRej=344019  fea=True/True/True  0.34s
   seed 20260821: V0=  1940.9 V1=  2597.7 V2=  2005.2  imp= 22.8%  off=16/30  syncRej=346066  fea=True/True/True  0.41s
-  seed 20260822: V0=  1641.8 V1=  2174.2 V2=  1502.1  imp= 30.9%  off=20/30  syncRej=342368  fea=True/True/True  0.45s
-  seed 20260823: V0=  1569.4 V1=  2057.5 V2=  1431.9  imp= 30.4%  off=19/30  syncRej=289244  fea=True/True/True  0.49s
-  seed 20260824: V0=  1688.6 V1=  2295.0 V2=  1690.3  imp= 26.4%  off=19/30  syncRej=360879  fea=True/True/True  0.47s
+  seed 20260822: V0=  1641.8 V1=  2174.2 V2=  1502.1  imp= 30.9%  off=20/30  syncRej=342368  fea=True/True/True  0.43s
+  seed 20260823: V0=  1569.4 V1=  2057.5 V2=  1431.9  imp= 30.4%  off=19/30  syncRej=289244  fea=True/True/True  0.47s
+  seed 20260824: V0=  1688.6 V1=  2295.0 V2=  1690.3  imp= 26.4%  off=19/30  syncRej=360879  fea=True/True/True  0.45s
 
 === size N=50 ===
-  seed 20260820: V0=  3240.3 V1=  5677.2 V2=  5075.8  imp= 10.6%  off=17/50  syncRej=4518910  fea=True/True/True  4.34s
-  seed 20260821: V0=  2948.0 V1=  6063.6 V2=  5303.1  imp= 12.5%  off=21/50  syncRej=4807561  fea=True/True/True  4.92s
-  seed 20260822: V0=  3260.7 V1=  5725.3 V2=  4961.5  imp= 13.3%  off=23/50  syncRej=4734796  fea=True/True/True  5.21s
-  seed 20260823: V0=  3055.2 V1=  5718.2 V2=  4984.8  imp= 12.8%  off=22/50  syncRej=4441945  fea=True/True/True  5.34s
-  seed 20260824: V0=  2965.5 V1=  5125.2 V2=  4543.7  imp= 11.3%  off=24/50  syncRej=4169722  fea=True/True/True  4.90s
+  seed 20260820: V0=  3240.3 V1=  5677.2 V2=  5075.8  imp= 10.6%  off=17/50  syncRej=4518910  fea=True/True/True  4.16s
+  seed 20260821: V0=  2948.0 V1=  6063.6 V2=  5303.1  imp= 12.5%  off=21/50  syncRej=4807561  fea=True/True/True  4.66s
+  seed 20260822: V0=  3260.7 V1=  5725.3 V2=  4961.5  imp= 13.3%  off=23/50  syncRej=4734796  fea=True/True/True  4.73s
+  seed 20260823: V0=  3055.2 V1=  5718.2 V2=  4984.8  imp= 12.8%  off=22/50  syncRej=4441945  fea=True/True/True  4.97s
+  seed 20260824: V0=  2965.5 V1=  5125.2 V2=  4543.7  imp= 11.3%  off=24/50  syncRej=4169722  fea=True/True/True  4.32s
 
 ==============================================================================
 AGGREGATE (mean over seeds per size)
@@ -25,5 +25,5 @@ AGGREGATE (mean over seeds per size)
   N=30: V0=  1675.9 V1=  2302.2 V2=  1672.1  V2_vs_V1= 27.6%  off=18.6/30  feas=100%
   N=50: V0=  3093.9 V1=  5661.9 V2=  4973.8  V2_vs_V1= 12.1%  off=21.4/50  feas=100%
 
-Total runtime: 26.9s
+Total runtime: 25.0s
 ==============================================================================
