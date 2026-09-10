@@ -85,12 +85,13 @@ sanity check: abl_cap1 (1 customer/sortie) ≡ published (M&C 2015) heuristic, c
 
 Source: `src/results/week06_largeN_summary.csv` (from `week06_largeN.py`).
 
-| Scale | V2 vs V1 benefit | Offload rate | Sync-feasibility rejections |
-|---|---:|---:|---:|
-| N=30 | 27.6% | 62.0% | 0.337 M |
-| N=50 | 12.1% | 42.8% | 4.535 M |
+| Scale | V2 vs V1 benefit | Offload rate | Sync rejections | Mean TW violations |
+|---|---:|---:|---:|---:|
+| N=30 | 27.6% | 62.0% | 0.337 M | 8.0 / 30 |
+| N=50 | 12.1% | 42.8% | 4.535 M | 24.0 / 50 |
+| N=100 | 2.3% | 23.4% | 179.5 M | 71.4 / 100 |
 
-At N=50 the V1 (battery+recharge) cost ≈ 5670 vs V0 (no battery) ≈ 3094 — the battery constraint alone nearly doubles the truck cost for N≥30, and the drone can only bypass a limited amount of recharge routing, so the synergy benefit is diluted.
+At N=50 the V1 (battery+recharge) cost ≈ 5670 vs V0 (no battery) ≈ 3094 — the battery constraint alone nearly doubles the truck cost for N≥30, and the drone can only bypass a limited amount of recharge routing, so the synergy benefit is diluted. At **N=100** the synergy collapses to 2.3%, offload rate drops to 23.4%, and V2 averages **71.4/100 late customers** — the greedy cannot meet time windows at this scale (it was never TW-feasible by construction; `feasible` here means energy-only). The scale boundary is shown in `figures/largen_scale_decay.png`; the honest reading is that the *effective* collaboration interval lies at **N ≤ 50**.
 
 ---
 
@@ -112,7 +113,7 @@ Grouped by nature; each item gives its "consequence + next step" so it reads as 
 - **Greedy without local search**: applying intra-route 2-opt to V2's constructed truck route (accept only strict makespan improvement) yields only 0–1.76% (peak 1.76% at N=16; see `week07_fstsp_with_ls.log`). By contrast, 2-opt on a plain OR-Tools route reaches −9.7% on CVRP n40 — showing V2's gain comes from the *collaborative structure* of offloading far-flung customers, not route fine-tuning; it also means V2 is already near the local optimum of its current neighborhood. **How far from global optimum remains unquantified** (unless a MILP bound or larger neighborhoods like 3-opt are added), left for future work.
 
 **Empirical-validation boundaries**
-- **Synthetic instances ≤ 50**: our truck-drone experiments use randomly generated synthetic instances and do not adopt the field's standard large-scale benchmark sets (e.g., the Solomon-derived FSTSP instances of Murray & Chu 2015 — which this project reproduced within their parameter range in W7; or the Masmoudi et al. 2018 instance set). Extrapolation to real large scale needs caution.
+- **Synthetic instances extended to 100, but the effective collaboration interval lies at N ≤ 50**: our truck-drone experiments use randomly generated synthetic instances and do not adopt the field's standard large-scale benchmark sets (e.g., the Solomon-derived FSTSP instances of Murray & Chu 2015 — which this project reproduced within their parameter range in W7; or the Masmoudi et al. 2018 instance set). At N=100 the synergy collapses to 2.3% and V2 averages 71.4/100 late customers (TW feasibility breaks down); extrapolation to real large scale needs caution.
 - **No MILP lower bound replicated**: baselines are anchored to BKS (literature optimum), not a self-proven bound. Computing exact bounds for this NP-hard problem is itself a separate research contribution, beyond this project's scope; absolute quality is therefore literature-anchored, not self-certified.
 - **Coarse MO front**: the weighted-sum greedy gives a "partial / inner" front and may miss non-convex Pareto regions; it is not a full Pareto solver (see §3). For a complete front, the natural next step is ε-constraint or NSGA-II (as in peer Xie's P-ACO/NSGA-II).
 
@@ -128,7 +129,7 @@ Grouped by nature; each item gives its "consequence + next step" so it reads as 
 | Sensitivity | `week06_sensitivity.py` | `week06_sensitivity.csv` | `sensitivity_panels.png` |
 | Multi-objective | `week06_multi_objective.py` | `week06_multi_objective.csv` | `mo_scatter.png` / `mo_tradeoff.png` |
 | Ablation | `week07_improvement_ablation.py` | `week07_ablation_raw.csv` / `_summary.csv` | — |
-| Scale | `week06_largeN.py` | `week06_largeN_results.csv` / `_summary.csv` | — |
+| Scale | `week06_largeN.py` | `week06_largeN_results.csv` / `_summary.csv` | `largen_scale_decay.png` |
 | FSTSP reproduction | `week07_fstsp_repro.py` | `week07_fstsp_raw.csv` / `_summary.csv` | — |
 
 Seed convention: all multi-seed experiments use fixed seed sets (e.g., `20260910–20260914`, or GA's `20260717/20260801/20260815/20260901/20261001`) for reproducibility; CSVs are excluded from the repo by design and regenerated locally via scripts + seeds.
