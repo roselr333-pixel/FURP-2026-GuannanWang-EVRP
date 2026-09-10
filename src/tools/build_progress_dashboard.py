@@ -26,6 +26,7 @@ figs = {
     "sensitivity": b64(os.path.join(FIGDIR, "sensitivity_panels.png")),
     "mo_scatter": b64(os.path.join(FIGDIR, "mo_scatter.png")),
     "mo_tradeoff": b64(os.path.join(FIGDIR, "mo_tradeoff.png")),
+    "largen": b64(os.path.join(REPO, "figures", "largen_scale_decay.png")),
 }
 
 # ---- task counts (from TaskList snapshot 2026-09-10) ----
@@ -133,8 +134,8 @@ HTML = f"""<!DOCTYPE html>
     <div class="bar"><span style="width:100%;background:var(--green)"></span></div>
     <div class="barlbl"><span>周报 / checkpoint / 学习笔记</span><span>100%</span></div>
     <div class="bar"><span style="width:100%;background:var(--green)"></span></div>
-    <div class="barlbl"><span>可复现包 + 最终 push（部分已推）</span><span>70%</span></div>
-    <div class="bar"><span style="width:70%;background:var(--amber)"></span></div>
+    <div class="barlbl"><span>可复现包 + 最终 push（已推送远端）</span><span>100%</span></div>
+    <div class="bar"><span style="width:100%;background:var(--green)"></span></div>
     <div class="barlbl"><span>终稿 report（W8 · 占 30%）</span><span>0%</span></div>
     <div class="bar"><span style="width:4%;background:var(--red)"></span></div>
     <div class="barlbl"><span>幻灯片 + 5–8 分钟 demo 视频</span><span>0%</span></div>
@@ -192,15 +193,21 @@ HTML = f"""<!DOCTYPE html>
       <img src="{figs['mo_tradeoff']}">
       <figcaption>图5 · 多目标权衡曲线（加权和扫描 w∈{{0,0.25,0.5,0.75,1.0}}）。</figcaption>
     </figure>
+
+    <figure>
+      <img src="{figs['largen']}">
+      <figcaption>图6 · 规模边界（N=30/50/100，5 种子均值）。V2 相对 V1 的 makespan 优势 27.6%→12.1%→2.3% 单调坍缩，
+      卸载率 62.0%→42.8%→23.4% 下降，N=100 时 V2 平均 71.4/100 顾客超时（TW 可行性崩溃）。诚实结论：有效协同区间落在 N≤50。</figcaption>
+    </figure>
   </section>
 
   <section>
     <h2><span class="dot"></span>④ 关键结论（来自深度分析文档）</h2>
     <ul>
       <li><b>主线：</b>协作增益主源是"多顾客能力"而非"会合次数"——受控消融(+6.6~17.7pp) 与敏感性 K 扫描(25.3%→56.5%) 两个独立实验互相印证。</li>
-      <li><b>适用区间：</b>客户分散、无人机续航不受限、规模中等时协同最划算；规模大到 N=50 时收益摊薄至约 12%。</li>
+      <li><b>适用区间：</b>客户分散、无人机续航不受限、规模中等时协同最划算；规模扩展至 N=100 时收益坍缩至 2.3%、V2 平均 71.4/100 顾客超时（TW 崩溃），有效协同区间落在 N≤50。</li>
       <li><b>三基线定位：</b>PyVRP(领域最强) &gt; BKS &gt; OR-Tools(商业) &gt; 自写 GA，定位清晰、不夸大。</li>
-      <li><b>诚实局限：</b>加权和贪心非完整 Pareto 求解；续航敏感性本轮异常待修；规模受限于算例。</li>
+      <li><b>诚实局限：</b>加权和贪心非完整 Pareto 求解；规模受限于合成算例（N=100 时 TW 可行性崩溃，有效区间 N≤50）；未复现 MILP 下界。</li>
     </ul>
   </section>
 
@@ -211,9 +218,9 @@ HTML = f"""<!DOCTYPE html>
       <tr><td>🔴 最高</td><td>写最终 report 终稿（占 30%，原创不套模板）</td><td>#61</td><td><span class="tag t-pend">未开始</span></td></tr>
       <tr><td>🔴 高</td><td>Poster FURP_Showcase.pdf（证书强制项）</td><td>#64</td><td><span class="tag t-pend">未开始</span></td></tr>
       <tr><td>🔴 高</td><td>幻灯片 + 5–8 分钟 demo 视频</td><td>#62</td><td><span class="tag t-pend">未开始</span></td></tr>
-      <tr><td>🟡 中</td><td>commit + push 完善后的项目产物（A/B/C 脚本+图+深度文档）</td><td>#74</td><td><span class="tag t-prog">待提交</span></td></tr>
-      <tr><td>🟡 中</td><td>核查 R 续航敏感性脚本（参数未生效）</td><td>#71 子项</td><td><span class="tag t-warn">待核</span></td></tr>
-      <tr><td>🟡 中</td><td>可复现包收尾 + 最终自检 + push</td><td>#63</td><td><span class="tag t-pend">未开始</span></td></tr>
+      <tr><td>🟢 完成</td><td>commit + push 完善后的项目产物（A/B/C 脚本+图+深度文档+N=100 扩展）</td><td>#74</td><td><span class="tag t-done">已提交</span></td></tr>
+      <tr><td>🟢 完成</td><td>核查 R 续航敏感性脚本（参数未生效，已修复重跑）</td><td>#71 子项</td><td><span class="tag t-done">已修复</span></td></tr>
+      <tr><td>🟢 完成</td><td>可复现包（run_all + REPRODUCE + requirements）收尾 + push</td><td>#63</td><td><span class="tag t-done">已完成</span></td></tr>
       <tr><td>🟢 低</td><td>把 A/B/C 结果汇总进报告素材文档</td><td>#70</td><td><span class="tag t-pend">未开始</span></td></tr>
     </table>
     <div class="note"><b>⚠ 诚信边界（已写入项目记忆）：</b>对标同学是"差距分析/领域标准线参照"，不是抄袭；
