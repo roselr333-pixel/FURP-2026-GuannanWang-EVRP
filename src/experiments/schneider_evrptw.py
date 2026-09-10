@@ -173,8 +173,10 @@ def solve(inst, seed=0, multitrip=True, trip_cap=8, max_cust=None):
             n_trips += 1
             for i in range(len(rt) - 1):
                 total += dist(node_by_id[rt[i]], node_by_id[rt[i + 1]])
+    vehicle_routes = [list(v["trips"]) for v in vehicles]
     return dict(vehicles=len(vehicles), trips=n_trips, distance=round(total, 2),
-                n_customers=len(custs), n_stations=len(stations), unserved=unserved)
+                n_customers=len(custs), n_stations=len(stations), unserved=unserved,
+                routes=vehicle_routes, node_by_id=node_by_id)
 
 def main():
     files = sorted(glob.glob(os.path.join(INST_DIR, "*.txt")))

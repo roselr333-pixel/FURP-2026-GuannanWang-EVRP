@@ -2,7 +2,7 @@
 
 > Purpose: a single page collecting every **citable number** in this project, with data provenance and honest limitations, so the final report can lift figures directly without misattribution.
 > All data here come from this project's own scripts and CSVs (under `src/results/`); no peer's report structure or framework is used.
-> Companion doc: `docs/week06_depth_analysis_zh.md` (which turns these numbers into a defensible "why it works / when it works" chain).
+> Companion docs: `docs/week06_depth_analysis_zh.md` and `docs/week06_depth_analysis_en.md` (which turn these numbers into a defensible "why it works / when it works" chain; the two are independent files, not sentence-by-sentence translations).
 
 ---
 
@@ -101,7 +101,35 @@ Source: `docs/failure_cases_master.md`. The most telling: on N=50 dense instance
 
 ---
 
-## 7. Honest limitations (keep in the report)
+## 7. Schneider (2014) E-VRPTW replication (our constructive-greedy vs BKS)
+
+Source: `src/results/schneider_evrptw_baseline.csv` (our solver, 92 instances) and
+`src/results/schneider_evrptw_bks_comparison.csv` (18 instances with BKS: 5-customer C5 set from
+jmanzolli/E-VRPTW citing Schneider 2014; 100-customer _21 set from Adachi et al. 2022 citing
+Schneider 2014). Our solver is a constructive greedy with a homogeneous multi-trip fleet
+(MIN vehicles then MIN distance), feasibility-checked on capacity + time windows (waiting allowed)
++ full recharge at stations. Figures: `figures/schneider_routes.png` (route maps for 4
+representative instances with BKS distance & vehicle gap annotated per panel),
+`figures/schneider_vehcomp.png` (vehicle count, our vs BKS across 18 instances).
+
+**Honest caveat**: BKS route geometry is not publicly available (only distance values from the
+secondary literature), so the comparison is at the aggregate level (distance + vehicle count),
+not a route-geometry overlay we cannot produce. Our 92 instances were byte-verified against the
+jmanzolli/E-VRPTW "E-VRPTW Instances" folder (whitespace-only diff), confirming they are the
+Schneider ORIGINAL data.
+
+Aggregate (18 instances with BKS):
+- Mean distance gap vs BKS: **+48.9%** (our constructive greedy vs Schneider/Adachi BKS).
+- Mean vehicle count: ours **5.3** vs BKS **1.9** (gap **+3.3**; the gap is largest on the
+  100-customer _21 set where ALNS-grade methods are needed to consolidate customers into BKS's
+  few vehicles — our greedy cannot globally assign customers to multi-trip vehicles because later
+  trips depart too late to catch early time windows).
+- A few C5 wins: c103C5 −0.4%, r105C5 −4.4% (our greedy is competitive on a couple of
+  small/loose-time-window instances; the heavy losses are on 100-customer + tight-TW instances).
+
+---
+
+## 8. Honest limitations (keep in the report)
 
 Grouped by nature; each item gives its "consequence + next step" so it reads as a research-boundary statement, not a weakness list.
 
@@ -119,7 +147,7 @@ Grouped by nature; each item gives its "consequence + next step" so it reads as 
 
 ---
 
-## 8. Data provenance (reproducible)
+## 9. Data provenance (reproducible)
 
 | Result | Script | CSV | Figure |
 |---|---|---|---|
@@ -130,6 +158,7 @@ Grouped by nature; each item gives its "consequence + next step" so it reads as 
 | Multi-objective | `week06_multi_objective.py` | `week06_multi_objective.csv` | `mo_scatter.png` / `mo_tradeoff.png` |
 | Ablation | `week07_improvement_ablation.py` | `week07_ablation_raw.csv` / `_summary.csv` | — |
 | Scale | `week06_largeN.py` | `week06_largeN_results.csv` / `_summary.csv` | `largen_scale_decay.png` |
+| Schneider replication | `schneider_evrptw.py` + `schneider_bks_compare.py` + `plot_schneider_routes.py` | `schneider_evrptw_baseline.csv` / `schneider_evrptw_bks_comparison.csv` | `schneider_routes.png` / `schneider_vehcomp.png` |
 | FSTSP reproduction | `week07_fstsp_repro.py` | `week07_fstsp_raw.csv` / `_summary.csv` | — |
 
 Seed convention: all multi-seed experiments use fixed seed sets (e.g., `20260910–20260914`, or GA's `20260717/20260801/20260815/20260901/20261001`) for reproducibility; CSVs are excluded from the repo by design and regenerated locally via scripts + seeds.
