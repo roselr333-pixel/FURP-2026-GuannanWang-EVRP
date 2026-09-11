@@ -33,6 +33,7 @@ STEPS = [
     ("Scaling decay (N=30/50/100)",         "week06_largeN.py",               "5 seeds"),
     ("LNS improvement (W8)",                "week08_lns.py",                  "60 instances, deterministic"),
     ("Multi-drone K=1/2/3 (W8 ext)",        "week08_multidrone.py",           "K-drone greedy + LNS, deterministic"),
+    ("Std instances + K=1/2/3/5 + sched",   "week08_multidrone_std.py",       "Solomon-derived, optimal drone schedule"),
     ("Paired significance tests",           "stat_tests.py",                  "Wilcoxon; reads W6/W7/W8 CSVs"),
 ]
 

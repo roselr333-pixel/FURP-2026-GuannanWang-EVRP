@@ -116,7 +116,9 @@ conclusion and together with it delimits where the method works.
   the field's standard large-scale benchmark sets (e.g., the Solomon-derived FSTSP instances of
   Murray & Chu 2015 — which this project reproduced within their parameter range in W7; or the
   Masmoudi et al. 2018 set). At N=100 the synergy collapses to 2.3% and V2 averages 71.4/100 late
-  customers (TW feasibility breaks down); extrapolation needs caution.
+  customers (TW feasibility breaks down); extrapolation needs caution. W8 extension 2 re-ran 16
+  standard instances built from official Solomon topologies (K=1/2/3/5) with a consistent
+  conclusion, so the results no longer rest on random geometry alone.
 - **No MILP lower bound replicated**: the baseline comparison uses BKS (literature optimum) rather
   than a self-proven bound; absolute quality is anchored to the literature, not self-certified.
 

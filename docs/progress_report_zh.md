@@ -179,6 +179,7 @@
 17. ~~**缺一条完整的"为何有效"结论链**~~ ✅ **已交付**：`docs/week06_depth_analysis_zh.md` 把消融（多顾客能力主源 +6.6~17.7pp）、敏感性 K 扫描（25.3%→56.5%）、适用区间、多目标两轴占优、三基线定位、失败案例（N=50 会合否决约 450 万次）、局限串成一条链；配套 `docs/experiment_evidence_index_zh.md` 与 `experiment_evidence_index_en.md` 集中所有可引用数值与出处。
 18. ~~**协同启发式没有改进阶段**~~ ✅ **已交付**：`src/experiments/week08_lns.py` 在贪心 V2 上加 destroy-repair 的 LNS，60 算例（10 种子 × N=8/12/16/20/30/50）上相对贪心稳定提升 **+9%~+12.6%**（配对 Wilcoxon 整体 p=3.6×10⁻⁹），并把 N=50 的协同收益从贪心 17.6% 抬到 28.1%；`src/experiments/stat_tests.py` 为所有关键配对（我的 V2 vs 已发表 M&C、消融两因子、LNS vs 贪心、V2 vs V1）补了显著性检验。图 `figures/lns_vs_greedy.png`。
 19. ~~**仅单架无人机**~~ ✅ **已交付**：`src/experiments/week08_multidrone.py` 支持 K 架并行串行无人机（K=1 与单架评估器数值一致），K=1/2/3 对比 60 算例：相对 truck-only 的收益 N=50 从 28.1% 升到 36.0%、N=8 从 45.5% 升到 69.6%，也抬高规模衰减曲线；LNS 在各 K 下仍 +5%~+14%（Wilcoxon K=3 vs K=1 整体 p=1.67×10⁻¹¹）。图 `figures/multidrone.png`。
+20. ~~**算例是随机几何 + K≤3 + 简单调度**~~ ✅ **已交付**：`src/experiments/week08_multidrone_std.py` 用官方 Solomon 拓扑（C101/C201/R101/RC101）构造 16 个标准实例，K 扩到 5（K=5 时收益 48.6%~71.4%）；`src/experiments/drone_scheduling.py` 把"架次→无人机"分配当显式调度（greedy / local / 精确最优），实测 naive 规则相对精确最优平均只 +0.081%（max 3.2%）、局部搜索仅 +0.001%，即简单规则已接近最优。图 `figures/multidrone_std.png`。
 
 ### 3.4 工程与交付
 

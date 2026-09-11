@@ -165,6 +165,15 @@ jmanzolli/E-VRPTW 引 Schneider 2014；100 顾客 _21 集取自 Adachi et al. 20
 
 K 从 1 增到 3 全面提升（N=50：28.1%→36.0%），并抬高规模衰减曲线；LNS 在各 K 下仍 +5%~+14%。配对 Wilcoxon：LNS K=3 vs K=1 整体 **p=1.67×10⁻¹¹**、各规模显著；K=2 vs K=1 整体 6.71×10⁻¹⁰（N=30 不显著 p=0.154）。出处 `week08_multidrone.py` → `week08_multidrone_summary.csv`；图 `figures/multidrone.png`；说明 `docs/week08_multidrone_note_zh.md`。
 
+**标准算例 + 更多无人机 + 调度（W8 扩展二）**：改用官方 Solomon 拓扑（C101/C201/R101/RC101，前 n 顾客，统一缩放到与合成同 RMS 半径），K=1/2/3/5，n=10/20/30/50（16 个标准实例）。LNS 收益 vs truck-only：
+
+| 规模 | K=1 | K=2 | K=3 | K=5 |
+|---|---:|---:|---:|---:|
+| N=10 | 36.7% | 53.4% | 63.1% | **71.4%** |
+| N=50 | 23.3% | 34.7% | 41.8% | **48.6%** |
+
+无人机越多收益越高、并压平规模衰减（均匀随机的 R101 收益最高、聚类的 C101 最低）。**调度**：把"架次→无人机"分配当显式调度，greedy（最早可用）vs local（局部搜索）vs optimal（分支定界精确最优）——local 相对 greedy 平均只 **+0.001%**，naive 规则相对精确最优平均只 **+0.081%（max 3.2%）**，即 naive 规则已接近最优、无需更复杂调度。出处 `week08_multidrone_std.py` + `drone_scheduling.py` + `fstsp_instances.py`；图 `figures/multidrone_std.png`；说明 `docs/week08_multidrone_std_note_zh.md`。
+
 ---
 
 ## 9. 局限
@@ -179,7 +188,8 @@ K 从 1 增到 3 全面提升（N=50：28.1%→36.0%），并抬高规模衰减�
 - **贪心本身无局部搜索（W8 已补上改进阶段）**：对 V2 构造出的卡车路线再做 intra-route 2-opt（仅接受严格改善 makespan），增益仅 0–1.76%（N=16 峰值 1.76%，见 `week07_fstsp_with_ls.log`）——说明增益来自「无人机卸掉远端顾客」的协同结构，而非路线微调。W8 加入 destroy-repair 的 LNS 后，相对贪心在各规模上稳定提升 +9%~+12.6%（Wilcoxon 整体 p=3.6×10⁻⁹，见 §8），不再只是路线微调。**离全局最优多远仍不可量化**（除非加 MILP 上界），留作后续。
 
 **实验验证边界**
-- **合成算例规模扩展到 100，但有效协同区间落在 N ≤ 50**：我的卡车-无人机实验用随机几何生成的合成算例，未接入领域常用的标准大规模基准集（如 Murray & Chu 2015 基于 Solomon 派生的 FSTSP 算例——本项目 W7 已在其参数范围内复现；或 Masmoudi et al. 2018 的实例集）。N=100 时协同收益坍缩至 2.3%、V2 平均 71.4/100 顾客超时（TW 可行性崩溃），结论向真实大规模外推需谨慎。W8 的 LNS 把 N=50 的协同收益从贪心的 17.6% 抬到 28.1%、减缓了衰减，但仍是同一批合成算例与同一套设定，边界没有变。
+- **合成算例规模扩展到 100，但有效协同区间落在 N ≤ 50**：我的卡车-无人机实验用随机几何生成的合成算例，未接入领域常用的标准大规模基准集（如 Murray & Chu 2015 基于 Solomon 派生的 FSTSP 算例——本项目 W7 已在其参数范围内复现；或 Masmoudi et al. 2018 的实例集）。N=100 时协同收益坍缩至 2.3%、V2 平均 71.4/100 顾客超时（TW 可行性崩溃），结论向真实大规模外推需谨慎。W8 的 LNS 把 N=50 的协同收益从贪心的 17.6% 抬到 28.1%、减缓了衰减，但仍是同一批合成算例与同一套设定，边界没有变。**W8 扩展二已用官方 Solomon 拓扑复跑 16 个标准实例（K=1/2/3/5），结论一致**，不再只依赖随机几何。
+- **无人机调度用简单规则已够用**：把"架次→无人机"分配当显式调度，局部搜索相对 naive 规则平均只 +0.001%、naive 相对精确最优平均只 +0.081%（max 3.2%，架次 ≤ 12 的 40 个配置）——naive 规则已接近最优，无需更复杂的调度器。
 - **W7/W8 的卡车-无人机实验用 FSTSP 完成时间评估器（不含时间窗/电量）**：这条线上的结论（消融、LNS、多无人机）都建立在"无时间窗/电量、单卡车"的 FSTSP 设定上；其中"单架无人机"已由 W8 扩展打破（K=1/2/3），把电池/充电与时间窗叠回来是另一条独立的下一步。
 - **未复现 MILP 下界**：基线对比用 BKS（文献最优）锚定，而非自证下界。对这个 NP-hard 问题求精确下界本身是一份独立的研究贡献，超出本项目范围；因此绝对质量靠文献锚定，不是自证。
 - **多目标为粗前沿**：加权和贪心给出的是「部分/内点」前沿，可能漏掉非凸区域的 Pareto 点；它不是完整的 Pareto 求解器（见 §3）。要得完整前沿，自然的下一步是 ε-constraint 或 NSGA-II（同侪 Xie 的 P-ACO/NSGA-II 即此类）。
@@ -199,6 +209,8 @@ K 从 1 增到 3 全面提升（N=50：28.1%→36.0%），并抬高规模衰减�
 | 规模 | `week06_largeN.py` | `week06_largeN_results.csv` / `_summary.csv` | `largen_scale_decay.png` |
 | LNS 改进 | `week08_lns.py` | `week08_lns_raw.csv` / `_summary.csv` | `lns_vs_greedy.png` |
 | 多无人机 | `week08_multidrone.py`（+ week07 的 K 架评估器） | `week08_multidrone_raw.csv` / `_summary.csv` | `multidrone.png` |
+| 标准算例多无人机 | `week08_multidrone_std.py` + `fstsp_instances.py` | `week08_multidrone_std_raw.csv` / `_summary.csv` | `multidrone_std.png` |
+| 无人机调度 | `drone_scheduling.py` | `week08_scheduling.csv` | — |
 | 显著性检验 | `stat_tests.py` | `stat_tests.csv` | — |
 | Schneider 复现 | `schneider_evrptw.py` + `schneider_bks_compare.py` + `plot_schneider_routes.py` | `schneider_evrptw_baseline.csv` / `schneider_evrptw_bks_comparison.csv` | `schneider_routes.png` / `schneider_vehcomp.png` |
 | FSTSP 复现 | `week07_fstsp_repro.py` | `week07_fstsp_raw.csv` / `_summary.csv` | — |
