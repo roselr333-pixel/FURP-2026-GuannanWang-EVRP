@@ -73,11 +73,11 @@ def all_customers(inst):
     return list(inst["customers"].keys())
 
 
-def two_opt(inst, route, trips, max_passes=10):
+def two_opt(inst, route, trips, max_passes=10, eval_fn=makespan):
     """Intra-route 2-opt on the truck backbone with the drone trips fixed.
     Accept a move only if the exact evaluator says the makespan improves."""
     route = route[:]
-    base = makespan(inst, route, trips)
+    base = eval_fn(inst, route, trips)
     moves = 0
     for _ in range(max_passes):
         improved = False
@@ -87,7 +87,7 @@ def two_opt(inst, route, trips, max_passes=10):
             for b in range(a + 1, m):
                 rev = seq[:a] + seq[a:b + 1][::-1] + seq[b + 1:]
                 cand = [0] + rev + [0]
-                nm = makespan(inst, cand, trips)
+                nm = eval_fn(inst, cand, trips)
                 if nm < base - 1e-9:
                     route, base, seq, improved = cand, nm, rev, True
                     moves += 1
@@ -139,7 +139,8 @@ def _near_positions(inst, route, c, k=NEAR_K):
     return sorted(keep)
 
 
-def _best_reinsertion(inst, route, trips, c, pool, rd, max_cust):
+def _best_reinsertion(inst, route, trips, c, pool, rd, max_cust,
+                      eval_fn=makespan):
     """Return (makespan, kind, payload) for the cheapest way to (re)insert c.
 
     kind: 'truck' -> payload (pos,)
@@ -151,7 +152,7 @@ def _best_reinsertion(inst, route, trips, c, pool, rd, max_cust):
     # (a) insert into the truck route at its best position
     for p in range(1, len(route)):
         cand = route[:p] + [c] + route[p:]
-        m = makespan(inst, cand, trips)
+        m = eval_fn(inst, cand, trips)
         if m < best[0] - 1e-9:
             best = (m, "truck", (p,))
 
@@ -164,7 +165,7 @@ def _best_reinsertion(inst, route, trips, c, pool, rd, max_cust):
             j = pos[bj]
             b = route[j]
             if dist(inst, a, c) + dist(inst, c, b) <= rd:
-                m = makespan(inst, route, trips + [(a, (c,), b)])
+                m = eval_fn(inst, route, trips + [(a, (c,), b)])
                 if m < best[0] - 1e-9:
                     best = (m, "drone", (a, (c,), b))
             if max_cust >= 2:
@@ -174,7 +175,7 @@ def _best_reinsertion(inst, route, trips, c, pool, rd, max_cust):
                             + dist(inst, order[1], b)
                         if d > rd:
                             continue
-                        m = makespan(inst, route, trips + [(a, order, b)])
+                        m = eval_fn(inst, route, trips + [(a, order, b)])
                         if m < best[0] - 1e-9:
                             best = (m, "pair", (a, order, b))
     return best
@@ -197,16 +198,25 @@ def _choose_customers(inst, route, trips, rng, q):
     return rng.sample(allc, min(q, len(allc)))
 
 
-def lns(inst, size, seed=0, rd=R_D, max_cust=2, iters=None, q_max=None):
-    """Destroy-and-repair LNS seeded from the greedy V2 solution."""
+def lns(inst, size, seed=0, rd=R_D, max_cust=2, iters=None, q_max=None,
+        eval_fn=makespan, greedy_fn=None):
+    """Destroy-and-repair LNS seeded from the greedy V2 solution.
+
+    eval_fn  : evaluator (inst, route, trips) -> makespan; defaults to the
+               single-drone FSTSP evaluator (multi-drone runs pass their own).
+    greedy_fn: optional greedy constructor (inst) -> (route, trips, offloaded);
+               defaults to the standard single-drone V2 greedy."""
     iters = iters if iters is not None else ITERS.get(size, 60)
     if q_max is None:
         q_max = max(2, min(8, size // 4))
 
     rng = random.Random(seed)
-    route, trips, _ = ab.my_v2_param(inst, max_cust=max_cust,
-                                     multi_takeoff=True, drone_range=rd)
-    cur = makespan(inst, route, trips)
+    if greedy_fn is None:
+        route, trips, _ = ab.my_v2_param(inst, max_cust=max_cust,
+                                         multi_takeoff=True, drone_range=rd)
+    else:
+        route, trips, _ = greedy_fn(inst)
+    cur = eval_fn(inst, route, trips)
     best_route, best_trips, best_mk = route[:], list(trips), cur
 
     if cur <= 0 or cur == float("inf"):
@@ -227,7 +237,7 @@ def lns(inst, size, seed=0, rd=R_D, max_cust=2, iters=None, q_max=None):
         while pending:
             c = pending.pop(0)
             mk_new, kind, data = _best_reinsertion(
-                inst, r2, t2, c, pending, rd, max_cust)
+                inst, r2, t2, c, pending, rd, max_cust, eval_fn)
             if kind is None:
                 feasible = False
                 break
@@ -245,7 +255,7 @@ def lns(inst, size, seed=0, rd=R_D, max_cust=2, iters=None, q_max=None):
             T *= alpha
             continue
 
-        new_mk = makespan(inst, r2, t2)
+        new_mk = eval_fn(inst, r2, t2)
         delta = new_mk - cur
         if delta < -1e-9 or rng.random() < math.exp(-delta / max(T, 1e-9)):
             route, trips, cur = r2, t2, new_mk

@@ -116,6 +116,50 @@ def fstsp_makespan(inst, route, drone_trips):
     return fstsp_simulate(inst, route, drone_trips)[-1]
 
 
+def fstsp_simulate_multi(inst, route, drone_trips, n_drones):
+    """Same model as fstsp_simulate but with `n_drones` parallel serial drones
+    carried by the truck (a multi-drone extension).
+
+    Each sortie is served by whichever drone can start earliest; a drone is a
+    serial resource whose next sortie starts only after its previous one has
+    been recovered. The truck still waits at a recovery node until the sortie
+    landing there has arrived. n_drones=1 reproduces fstsp_simulate exactly."""
+    arr = [0.0] * len(route)
+    for p in range(1, len(route)):
+        arr[p] = arr[p - 1] + _tt(inst, route[p - 1], route[p]) \
+            + _service(route[p])
+    if not drone_trips:
+        return arr
+    trips = sorted(drone_trips,
+                   key=lambda t: _resolve(route, t[0], "launch"))
+    avail = [0.0] * n_drones
+    for ln, cust, rn in trips:
+        i_pos = _resolve(route, ln, "launch")
+        j_pos = _resolve(route, rn, "recover")
+        cl = list(cust) if isinstance(cust, (list, tuple)) else [cust]
+        legs = [ln] + cl + [rn]
+        d = sum(w6.dist(inst, legs[p], legs[p + 1])
+                for p in range(len(legs) - 1))
+        flight = d / V_D + SERVICE * len(cl)
+        starts = [max(arr[i_pos], avail[k]) for k in range(n_drones)]
+        k = min(range(n_drones), key=lambda z: (starts[z], z))
+        launch = starts[k]
+        landing = launch + flight
+        truck_at_rec = arr[j_pos]
+        recovery = max(truck_at_rec, landing)
+        avail[k] = recovery
+        wait = recovery - truck_at_rec
+        if wait > 0:
+            for p in range(j_pos, len(arr)):
+                arr[p] += wait
+    return arr
+
+
+def fstsp_makespan_multi(inst, route, drone_trips, n_drones):
+    """Completion time with `n_drones` parallel serial drones."""
+    return fstsp_simulate_multi(inst, route, drone_trips, n_drones)[-1]
+
+
 def _truck_travel(inst, route, a_pos, b_pos):
     """Truck travel time from route[a_pos] to route[b_pos] (incl. service at
     intermediate nodes and at b)."""

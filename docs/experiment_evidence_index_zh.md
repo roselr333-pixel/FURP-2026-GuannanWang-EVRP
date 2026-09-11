@@ -155,6 +155,16 @@ jmanzolli/E-VRPTW 引 Schneider 2014；100 顾客 _21 集取自 Adachi et al. 20
 | LNS vs 贪心 V2 | 46 | −146.2 | 3.6×10⁻⁹ |
 | V2 vs V1（协同 vs 纯电） | 40 | −424.3 | 3.7×10⁻⁸ |
 
+**多无人机（W8 扩展，打破"单架"局限）**：K 架并行串行无人机，同算例同种子，K=1 与单架评估器数值一致。LNS 解相对 truck-only 的降幅：
+
+| 规模 | K=1 | K=2 | K=3 |
+|---|---:|---:|---:|
+| N=8 | 45.5% | 60.7% | **69.6%** |
+| N=20 | 38.5% | 48.0% | **53.5%** |
+| N=50 | 28.1% | 32.9% | **36.0%** |
+
+K 从 1 增到 3 全面提升（N=50：28.1%→36.0%），并抬高规模衰减曲线；LNS 在各 K 下仍 +5%~+14%。配对 Wilcoxon：LNS K=3 vs K=1 整体 **p=1.67×10⁻¹¹**、各规模显著；K=2 vs K=1 整体 6.71×10⁻¹⁰（N=30 不显著 p=0.154）。出处 `week08_multidrone.py` → `week08_multidrone_summary.csv`；图 `figures/multidrone.png`；说明 `docs/week08_multidrone_note_zh.md`。
+
 ---
 
 ## 9. 局限
@@ -170,6 +180,7 @@ jmanzolli/E-VRPTW 引 Schneider 2014；100 顾客 _21 集取自 Adachi et al. 20
 
 **实验验证边界**
 - **合成算例规模扩展到 100，但有效协同区间落在 N ≤ 50**：我的卡车-无人机实验用随机几何生成的合成算例，未接入领域常用的标准大规模基准集（如 Murray & Chu 2015 基于 Solomon 派生的 FSTSP 算例——本项目 W7 已在其参数范围内复现；或 Masmoudi et al. 2018 的实例集）。N=100 时协同收益坍缩至 2.3%、V2 平均 71.4/100 顾客超时（TW 可行性崩溃），结论向真实大规模外推需谨慎。W8 的 LNS 把 N=50 的协同收益从贪心的 17.6% 抬到 28.1%、减缓了衰减，但仍是同一批合成算例与同一套设定，边界没有变。
+- **W7/W8 的卡车-无人机实验用 FSTSP 完成时间评估器（不含时间窗/电量）**：这条线上的结论（消融、LNS、多无人机）都建立在"无时间窗/电量、单卡车"的 FSTSP 设定上；其中"单架无人机"已由 W8 扩展打破（K=1/2/3），把电池/充电与时间窗叠回来是另一条独立的下一步。
 - **未复现 MILP 下界**：基线对比用 BKS（文献最优）锚定，而非自证下界。对这个 NP-hard 问题求精确下界本身是一份独立的研究贡献，超出本项目范围；因此绝对质量靠文献锚定，不是自证。
 - **多目标为粗前沿**：加权和贪心给出的是「部分/内点」前沿，可能漏掉非凸区域的 Pareto 点；它不是完整的 Pareto 求解器（见 §3）。要得完整前沿，自然的下一步是 ε-constraint 或 NSGA-II（同侪 Xie 的 P-ACO/NSGA-II 即此类）。
 
@@ -187,6 +198,7 @@ jmanzolli/E-VRPTW 引 Schneider 2014；100 顾客 _21 集取自 Adachi et al. 20
 | 消融 | `week07_improvement_ablation.py` | `week07_ablation_raw.csv` / `_summary.csv` | — |
 | 规模 | `week06_largeN.py` | `week06_largeN_results.csv` / `_summary.csv` | `largen_scale_decay.png` |
 | LNS 改进 | `week08_lns.py` | `week08_lns_raw.csv` / `_summary.csv` | `lns_vs_greedy.png` |
+| 多无人机 | `week08_multidrone.py`（+ week07 的 K 架评估器） | `week08_multidrone_raw.csv` / `_summary.csv` | `multidrone.png` |
 | 显著性检验 | `stat_tests.py` | `stat_tests.csv` | — |
 | Schneider 复现 | `schneider_evrptw.py` + `schneider_bks_compare.py` + `plot_schneider_routes.py` | `schneider_evrptw_baseline.csv` / `schneider_evrptw_bks_comparison.csv` | `schneider_routes.png` / `schneider_vehcomp.png` |
 | FSTSP 复现 | `week07_fstsp_repro.py` | `week07_fstsp_raw.csv` / `_summary.csv` | — |

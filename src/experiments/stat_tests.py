@@ -147,6 +147,26 @@ def main():
                 f"n={row['n_nonzero']:>3}  mean_diff={row['mean_diff']:8.2f}  "
                 f"p={row['p_value']:.2e}  sig={row['sig_0.05']}")
 
+    # ---- W8 multi-drone: K drones vs 1 drone ----
+    md = _read(os.path.join(res, "week08_multidrone_raw.csv"))
+    n_before = len(out_rows)
+    if md:
+        section("W8 multi-drone (paired per instance; more drones vs 1)")
+        for label, ca, cb in [
+                ("LNS K=2 vs K=1", "K2_lns_mk", "K1_lns_mk"),
+                ("LNS K=3 vs K=1", "K3_lns_mk", "K1_lns_mk"),
+                ("greedy K=2 vs K=1", "K2_greedy_mk", "K1_greedy_mk"),
+                ("greedy K=3 vs K=1", "K3_greedy_mk", "K1_greedy_mk")]:
+            _test(md, ca, cb, label, "all sizes", out_rows)
+            for n in sorted({r["size"] for r in md}, key=lambda s: int(s)):
+                sub = [r for r in md if r["size"] == n]
+                _test(sub, ca, cb, label, f"N={n}", out_rows)
+        for row in out_rows[n_before:]:
+            log.append(
+                f"  [{row['scope']:>8}] {row['comparison']:<42} "
+                f"n={row['n_nonzero']:>3}  mean_diff={row['mean_diff']:8.2f}  "
+                f"p={row['p_value']:.2e}  sig={row['sig_0.05']}")
+
     # ---- W6 ground-air: V2 vs V1 ----
     ga = _read(os.path.join(res, "week06_ground_air_results.csv"))
     n_before = len(out_rows)

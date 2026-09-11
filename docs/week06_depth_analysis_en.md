@@ -109,8 +109,9 @@ conclusion and together with it delimits where the method works.
   decay (N=50: 17.6% → 28.1%).
 - **2–3 customers per sortie cap**: a simplification and a boundary; larger-scale multi-customer
   service needs heavier search.
-- **Single drone only**: the LNS and all collaboration results are measured with one serial drone;
-  multiple drones are left as an extension.
+- **Drone count**: all results use a single truck; the W8 extension tests "single drone" up to
+  K=1/2/3 (K=1→3 lifts the N=50 benefit from 28.1% to 36.0%), but still on the FSTSP evaluator
+  (no time windows or energy).
 - **Synthetic instances extended to 100, but the effective window lies at N ≤ 50**: I did not adopt
   the field's standard large-scale benchmark sets (e.g., the Solomon-derived FSTSP instances of
   Murray & Chu 2015 — which this project reproduced within their parameter range in W7; or the
@@ -132,7 +133,8 @@ conclusions into one **coherent chain**:
 > collapse and TW breakdown (effective window N ≤ 50) → multi-objective proves dominance on both
 > axes → three baselines place V2's collaborative increment → failure cases corroborate
 > the rendezvous constraint → the W8 LNS adds an improvement phase (+9~12.6%, offsetting the scaling
-> decay) → limitations stated plainly (scale boundary / synthetic instances / single drone).
+> decay) → multiple drones (K=1/2/3, N=50 benefit 28.1%→36.0%) → limitations stated plainly
+> (scale boundary / synthetic instances / no TW-energy).
 
 This chain lets every conclusion be traced back to an experiment, rather than resting on "I think
 so". That is what depth means, and it is the spine the final report should follow.

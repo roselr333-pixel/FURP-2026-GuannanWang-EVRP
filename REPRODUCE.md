@@ -36,6 +36,7 @@ python src/experiments/week06_sensitivity.py
 | FSTSP 复现（V2 比 M&C 2015 短 8–22%，卸载约 2 倍） | `week07_fstsp_repro.py` | 40 算例 | `src/results/week07_fstsp_*.csv` |
 | 规模衰减（N=50 收益 12.1%、会合否决 453 万） | `week06_largeN.py` | 5 种子 | `src/results/week06_largeN_summary.csv` |
 | LNS 改进（相对贪心 +9~12.6%，缓冲规模衰减） | `week08_lns.py` | 60 算例（10 种子 × N=8/12/16/20/30/50）；确定性 | `src/results/week08_lns_summary.csv`、`figures/lns_vs_greedy.png` |
+| 多无人机（K=1/2/3；K=1→3 时 N=50 收益 28.1%→36.0%） | `week08_multidrone.py` | 同 60 算例 × K=1/2/3；确定性 | `src/results/week08_multidrone_summary.csv`、`figures/multidrone.png` |
 | 配对显著性检验（Wilcoxon 符号秩） | `stat_tests.py` | 读 W6/W7/W8 的 CSV；numpy 手写、无新依赖 | `src/results/stat_tests.csv` |
 
 ## 4. 诚实说明

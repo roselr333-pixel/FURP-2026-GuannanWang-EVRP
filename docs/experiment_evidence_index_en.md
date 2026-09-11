@@ -162,6 +162,16 @@ Paired Wilcoxon signed-rank, overall rows (negative mean diff = first method sma
 | LNS vs greedy V2 | 46 | −146.2 | 3.6×10⁻⁹ |
 | V2 vs V1 (collaborative vs EV) | 40 | −424.3 | 3.7×10⁻⁸ |
 
+**Multiple drones (W8 extension, breaking the single-drone limitation)**: K parallel serial drones, same instances and seeds; K=1 is numerically identical to the single-drone evaluator. LNS reduction vs truck-only:
+
+| size | K=1 | K=2 | K=3 |
+|---|---:|---:|---:|
+| N=8 | 45.5% | 60.7% | **69.6%** |
+| N=20 | 38.5% | 48.0% | **53.5%** |
+| N=50 | 28.1% | 32.9% | **36.0%** |
+
+K=1→3 lifts the benefit at every size (N=50: 28.1%→36.0%) and raises the scaling-decay curve; the LNS still adds +5%~+14% at every K. Paired Wilcoxon: LNS K=3 vs K=1 overall **p=1.67×10⁻¹¹**, significant at every size; K=2 vs K=1 overall 6.71×10⁻¹⁰ (N=30 not significant, p=0.154). Source `week08_multidrone.py` → `week08_multidrone_summary.csv`; figure `figures/multidrone.png`; note `docs/week08_multidrone_note_en.md`.
+
 ---
 
 ## 9. Limitations
@@ -177,6 +187,7 @@ Grouped by nature; each item gives its "consequence + next step" so it reads as 
 
 **Empirical-validation boundaries**
 - **Synthetic instances extended to 100, but the effective collaboration interval lies at N ≤ 50**: my truck-drone experiments use randomly generated synthetic instances and do not adopt the field's standard large-scale benchmark sets (e.g., the Solomon-derived FSTSP instances of Murray & Chu 2015 — which this project reproduced within their parameter range in W7; or the Masmoudi et al. 2018 instance set). At N=100 the synergy collapses to 2.3% and V2 averages 71.4/100 late customers (TW feasibility breaks down); extrapolation to real large scale needs caution. The W8 LNS lifts the N=50 collaboration benefit from the greedy's 17.6% to 28.1%, slowing the decay, but it is still the same synthetic instances and setting, so the boundary is unchanged.
+- **The W7/W8 truck-drone experiments use the FSTSP completion-time evaluator (no time windows or energy)**: the ablation, LNS and multi-drone results all sit in this "no-TW/energy, single truck" FSTSP setting; the "single drone" part is now broken by the W8 extension (K=1/2/3), while re-adding battery/charging and time windows is a separate next step.
 - **No MILP lower bound replicated**: baselines are anchored to BKS (literature optimum), not a self-proven bound. Computing exact bounds for this NP-hard problem is itself a separate research contribution, beyond this project's scope; absolute quality is therefore literature-anchored, not self-certified.
 - **Coarse MO front**: the weighted-sum greedy gives a "partial / inner" front and may miss non-convex Pareto regions; it is not a full Pareto solver (see §3). For a complete front, the natural next step is ε-constraint or NSGA-II (as in peer Xie's P-ACO/NSGA-II).
 
@@ -194,6 +205,7 @@ Grouped by nature; each item gives its "consequence + next step" so it reads as 
 | Ablation | `week07_improvement_ablation.py` | `week07_ablation_raw.csv` / `_summary.csv` | — |
 | Scale | `week06_largeN.py` | `week06_largeN_results.csv` / `_summary.csv` | `largen_scale_decay.png` |
 | LNS improvement | `week08_lns.py` | `week08_lns_raw.csv` / `_summary.csv` | `lns_vs_greedy.png` |
+| Multi-drone | `week08_multidrone.py` (+ week07 K-drone evaluator) | `week08_multidrone_raw.csv` / `_summary.csv` | `multidrone.png` |
 | Significance tests | `stat_tests.py` | `stat_tests.csv` | — |
 | Schneider replication | `schneider_evrptw.py` + `schneider_bks_compare.py` + `plot_schneider_routes.py` | `schneider_evrptw_baseline.csv` / `schneider_evrptw_bks_comparison.csv` | `schneider_routes.png` / `schneider_vehcomp.png` |
 | FSTSP reproduction | `week07_fstsp_repro.py` | `week07_fstsp_raw.csv` / `_summary.csv` | — |

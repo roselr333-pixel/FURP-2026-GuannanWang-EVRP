@@ -30,6 +30,38 @@ W8 LNS (paired per instance)
   [    N=50] LNS vs greedy V2                           n=  9  mean_diff= -373.33  p=9.15e-03  sig=yes
 
 ==============================================================================
+W8 multi-drone (paired per instance; more drones vs 1)
+==============================================================================
+  [all sizes] LNS K=2 vs K=1                             n= 60  mean_diff=  -89.31  p=6.71e-10  sig=yes
+  [     N=8] LNS K=2 vs K=1                             n= 10  mean_diff=  -59.78  p=5.92e-03  sig=yes
+  [    N=12] LNS K=2 vs K=1                             n= 10  mean_diff=  -76.23  p=5.92e-03  sig=yes
+  [    N=16] LNS K=2 vs K=1                             n= 10  mean_diff=  -90.08  p=5.92e-03  sig=yes
+  [    N=20] LNS K=2 vs K=1                             n= 10  mean_diff=  -94.11  p=5.92e-03  sig=yes
+  [    N=30] LNS K=2 vs K=1                             n= 10  mean_diff=  -65.58  p=1.54e-01  sig=no
+  [    N=50] LNS K=2 vs K=1                             n= 10  mean_diff= -150.08  p=1.44e-02  sig=yes
+  [all sizes] LNS K=3 vs K=1                             n= 60  mean_diff= -159.31  p=1.67e-11  sig=yes
+  [     N=8] LNS K=3 vs K=1                             n= 10  mean_diff=  -94.70  p=5.92e-03  sig=yes
+  [    N=12] LNS K=3 vs K=1                             n= 10  mean_diff= -122.20  p=5.92e-03  sig=yes
+  [    N=16] LNS K=3 vs K=1                             n= 10  mean_diff= -144.92  p=5.92e-03  sig=yes
+  [    N=20] LNS K=3 vs K=1                             n= 10  mean_diff= -151.61  p=5.92e-03  sig=yes
+  [    N=30] LNS K=3 vs K=1                             n= 10  mean_diff= -196.52  p=5.92e-03  sig=yes
+  [    N=50] LNS K=3 vs K=1                             n= 10  mean_diff= -245.94  p=5.92e-03  sig=yes
+  [all sizes] greedy K=2 vs K=1                          n= 60  mean_diff= -117.56  p=1.67e-11  sig=yes
+  [     N=8] greedy K=2 vs K=1                          n= 10  mean_diff=  -74.19  p=5.92e-03  sig=yes
+  [    N=12] greedy K=2 vs K=1                          n= 10  mean_diff=  -98.01  p=5.92e-03  sig=yes
+  [    N=16] greedy K=2 vs K=1                          n= 10  mean_diff= -123.44  p=5.92e-03  sig=yes
+  [    N=20] greedy K=2 vs K=1                          n= 10  mean_diff= -125.56  p=5.92e-03  sig=yes
+  [    N=30] greedy K=2 vs K=1                          n= 10  mean_diff= -123.10  p=5.92e-03  sig=yes
+  [    N=50] greedy K=2 vs K=1                          n= 10  mean_diff= -161.07  p=5.92e-03  sig=yes
+  [all sizes] greedy K=3 vs K=1                          n= 60  mean_diff= -161.01  p=1.67e-11  sig=yes
+  [     N=8] greedy K=3 vs K=1                          n= 10  mean_diff= -105.12  p=5.92e-03  sig=yes
+  [    N=12] greedy K=3 vs K=1                          n= 10  mean_diff= -139.24  p=5.92e-03  sig=yes
+  [    N=16] greedy K=3 vs K=1                          n= 10  mean_diff= -160.75  p=5.92e-03  sig=yes
+  [    N=20] greedy K=3 vs K=1                          n= 10  mean_diff= -167.52  p=5.92e-03  sig=yes
+  [    N=30] greedy K=3 vs K=1                          n= 10  mean_diff= -153.13  p=5.92e-03  sig=yes
+  [    N=50] greedy K=3 vs K=1                          n= 10  mean_diff= -240.29  p=5.92e-03  sig=yes
+
+==============================================================================
 W6 ground-air (paired per instance)
 ==============================================================================
   [all sizes] V2 vs V1 (collaborative vs EV)             n= 40  mean_diff= -424.26  p=3.71e-08  sig=yes
