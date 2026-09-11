@@ -33,7 +33,7 @@
 - **I started my reading set.** On 2026-07-13 I read and noted my first paper — the EVRP survey by Erdelić & Carić (2019) — following the lab note template (see §2.8).
 - I also added a simple Genetic Algorithm baseline. On 2026-07-17 I implemented a Genetic Algorithm and benchmarked it on the **same** 56 official Solomon instances as OR-Tools, so the GA-vs-OR-Tools-vs-BKS comparison is on identical data (GA mean gap 36.2% vs OR-Tools 7.2%; see §2.9).
 
-**What I have NOT finished yet** (being honest — these are my real remaining gaps):
+**What I have NOT finished yet**:
 - **My reading gap is now partially closed.** I finished and uploaded my first paper note — the EVRP survey by Erdelić & Carić (2019, *Journal of Advanced Transportation*) — on 2026-07-13. Two more notes (Schneider 2014 E-VRPTW; Murray & Chu 2015 FSTSP) are still pending a PDF download.
 - **External baseline is partially done.** I added my own Genetic Algorithm baseline (2026-07-17, see §2.9), but I have not yet added a PyVRP or POMO baseline, and the GA is still far from OR-Tools (36.2% vs 7.2% mean gap to BKS).
 
@@ -204,7 +204,7 @@ The drone is carried by the truck, launched at any node *i* to serve one custome
 
 V2 beats the V1 baseline on every size, so the collaborative idea helps; the gain comes from serving one customer with the faster drone **in parallel** with the truck. This run also reports the metrics I was missing before — charging count / charging time / synchronization violations / time-window violations — and produces four failure cases (FC1–FC4) with constraint-level diagnosis (`week06_failure_cases.csv`).
 
-**Honest limitation:** with this first greedy the drone offloads only one customer per instance (the truck route is already compact, so removing more rarely lowers its makespan). Absolute numbers are not close to optimal (no local search). Improving drone-trip packing is the obvious next step. Full write-up: `docs/week06_ground_air_report.md`; data: `src/results/week06_ground_air_results.csv`.
+**Limitation:** with this first greedy the drone offloads only one customer per instance (the truck route is already compact, so removing more rarely lowers its makespan). Absolute numbers are not close to optimal (no local search). Improving drone-trip packing is the obvious next step. Full write-up: `docs/week06_ground_air_report.md`; data: `src/results/week06_ground_air_results.csv`.
 
 ---
 

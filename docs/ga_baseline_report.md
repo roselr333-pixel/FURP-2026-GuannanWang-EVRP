@@ -45,7 +45,7 @@ Per-family mean gap (GA vs BKS):
 - **Wide time windows (R2 / RC2) are hardest** (41% / 55%). With only 8 s and a basic local search, the GA barely converges on these looser, more combinatorial instances.
 - A side observation: on many R/RC instances OR-Tools itself uses *fewer* vehicles than BKS while paying more distance — that is the vehicle-fixed-cost modelling I noted in the checkpoint, not a GA issue.
 
-## 5. Limitations (honest)
+## 5. Limitations
 
 - Single run, single seed, only 8 s/instance — GA results are stochastic and the budget is small.
 - No parameter tuning; local search is basic.

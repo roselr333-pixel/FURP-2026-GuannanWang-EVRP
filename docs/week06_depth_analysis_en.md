@@ -63,7 +63,7 @@ Using a weighted-sum sweep (w ∈ {0, 0.25, 0.5, 0.75, 1.0}, 5 seeds) we get:
 - Collaborative (V2) mean: (distance 215.2, makespan 415.7)
 - i.e. distance **−56%**, makespan **−33%** — V2 dominates V1 on **both axes**, a genuine Pareto improvement.
 
-**Honest note**: this uses a weighted-sum scalarised greedy, not a full NSGA-II / Pareto solver, so
+**Note**: this uses a weighted-sum scalarised greedy, not a full NSGA-II / Pareto solver, so
 the front produced is "coarse". This is a *limitation* of the method, not a selling point — it is
 written into the limitations section below.
 
@@ -78,14 +78,13 @@ We put the three pure-truck VRPTW baselines (OR-Tools, GA, PyVRP) next to BKS in
 |---|---:|---|
 | **PyVRP** (standard open-source) | **−3.0%** | strongest baseline, community-standard solver |
 | OR-Tools (commercial) | +7.2% | main comparison baseline |
-| GA (own, 5-seed mean) | +36.6% ± 15.8% | own metaheuristic, honestly shown weak |
+| GA (own, 5-seed mean) | +36.6% ± 15.8% | own metaheuristic, weaker than the other two |
 
-**Key honest point**: our V2 is a *collaborative heuristic* optimising a makespan-driven synchronous
+**Note**: our V2 is a *collaborative heuristic* optimising a makespan-driven synchronous
 objective; its "distance" is not directly comparable to these pure distance-minimising baselines.
-Putting them side by side serves to show that "on standard truck VRPTW, a domain solver (PyVRP)
-reaches or slightly beats BKS" — which in turn highlights that this project's real increment is in
-*collaborative modelling*, not single-objective distance optimisation. This must be stated clearly,
-otherwise it is easily misread as "my method is worse than PyVRP".
+They are placed side by side to show that on standard truck VRPTW a domain solver (PyVRP)
+reaches or slightly beats BKS; the project's real increment lies in *collaborative modelling*,
+not single-objective distance optimisation.
 
 ---
 
@@ -100,7 +99,7 @@ conclusion and together with it delimits where the method works.
 
 ---
 
-## 6. Honest limitations (depth lands on self-awareness)
+## 6. Limitations
 
 - **Greedy without local search**: applying intra-route 2-opt post-processing to V2 yields only
   0–1.76% — meaning once far-flung customers are offloaded, the truck route is already near-linear,
@@ -127,7 +126,7 @@ conclusion chain**:
 > it from an independent angle (K sweep) → four parameters characterise the applicability window
 > (dispersed customers / ample range / moderate scale) → scale extension to 100 reveals synergy
 > collapse and TW breakdown (effective window N ≤ 50) → multi-objective proves dominance on both
-> axes → three baselines honestly place V2's collaborative increment → failure cases corroborate
+> axes → three baselines place V2's collaborative increment → failure cases corroborate
 > the rendezvous constraint → limitations stated plainly (no LS / scale boundary / synthetic instances).
 
 This chain lets every conclusion be traced back to an experiment, rather than resting on "I think

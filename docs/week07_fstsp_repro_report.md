@@ -41,7 +41,7 @@ Heuristic logic (Algorithms 1–4):
 - My V2, under the same FSTSP setting, is on average 8–22% shorter than the published method and offloads roughly twice as many customers. The reason is straightforward: serving two customers per flight is more efficient than one per flight given the drone is a serial resource — fewer sorties means less waiting.
 - Both are far from the absolute numbers of my week06 EV-TW V2 (a different problem with battery/time windows and a faster drone); that comparison is not valid here. This table only addresses the FSTSP setting.
 
-## 4. Honest limitations
+## 4. Limitations
 
 - **Heuristic only, no MILP.** The paper's MILP provides optimal bounds for small instances and validates heuristic quality; I have not implemented it, so I cannot yet say how far my heuristic is from optimum — only that it beats the published heuristic.
 - **Synthetic, small instances.** Customers are placed on a ring (week06 generator), not the paper's real/standard instances; sizes stop at 20. Robustness needs larger, more realistic instances.

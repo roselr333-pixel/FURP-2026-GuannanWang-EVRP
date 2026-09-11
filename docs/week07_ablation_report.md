@@ -84,7 +84,7 @@ check.)
   only 16.4%, cap3 improves 41.1%). The magnitude is geometry-dependent and
   varies a lot across seeds.
 
-## 5. An honest process note (method reflection, not a result)
+## 5. A process note (method reflection, not a result)
 
 In the first version C3 (abl_notakeoff) produced *identical* numbers to C1
 (V2) — a 0pp difference — which I initially read as "multi-takeoff does not
@@ -100,7 +100,7 @@ worse than C1. In other words, fixing this bug is precisely what made the
 shows *no difference*, suspect first that the implementation silently turned
 off the variable too, before concluding the mechanism is irrelevant.
 
-## 6. Honest limitations
+## 6. Limitations
 
 - **Still a greedy heuristic, no local search**; absolute numbers are not known
   to be near-optimal (the MILP upper bound is not implemented, so I can only

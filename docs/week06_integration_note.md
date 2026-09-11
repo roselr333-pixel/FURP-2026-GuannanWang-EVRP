@@ -104,7 +104,7 @@ The lab also encourages exploring RL / DL. I have **not** switched to Track C / 
 
 This is not to say learning methods are unimportant — only that, from the "build a reproducible workflow first" angle, doing Track B solidly is the better fit at this stage.
 
-## 5. Honest limitations
+## 5. Limitations
 
 - **Greedy, not optimized.** The route is nearest-neighbour + greedy insertion with no local search, so absolute numbers are far from optimal. The point is the fair comparison between variants, not the absolute value.
 - **At most 2 customers per flight.** Enumeration is capped at single/two customers to keep runtime reasonable (two-customer is already O(n⁴)).

@@ -38,7 +38,7 @@ in earliest-deadline order (capacity / time-window / battery all feasible; if th
 detours via the nearest station for a full recharge). Objective follows Schneider's hierarchy: minimise
 vehicles first, then total distance.
 
-**Honest note:** multi-trip is switched on in the model, but the constructive greedy still **cannot
+**Note:** multi-trip is switched on in the model, but the constructive greedy still **cannot
 assign customers to multi-trip vehicles globally** — later trips depart too late and miss early time
 windows, so a vehicle effectively still runs only 1–2 trips. I verified this empirically: sweeping the
 per-trip customer cap from ∞ down to 3 never reduced vehicle count (c201_21 stays between 14–21
@@ -48,7 +48,7 @@ the **heuristic itself**, not a modeling omission.
 ## 4. Results
 
 - All 92 instances ran. In the **RC1 family, one customer could not be inserted** because its time
-  window is too tight for the greedy (`unserved=1`), recorded honestly in the CSV rather than hidden.
+  window is too tight for the greedy (`unserved=1`), recorded in the CSV.
 - 18 instances have a Schneider (2014) BKS for comparison (table below). BKS sources:
   - `C5` small instances (5 customers): taken from the Schneider (2014) CPLEX results listed directly
     in jmanzolli/E-VRPTW;
@@ -57,7 +57,7 @@ the **heuristic itself**, not a modeling omission.
 - **Solve time:** < 0.02 s per instance (slowest rc201_21 ≈ 0.01 s) on a 20-core machine. The
   constructive heuristic's compute cost is negligible; the gap is algorithmic quality, not compute.
 
-## 5. Gap to BKS (honest attribution)
+## 5. Gap to BKS (attribution)
 
 Across the 18 comparison instances (all fully served) the mean distance gap is **+50.7%** (absolute
 mean; signed mean +50.1%). The solver is deterministic as of 2026-09-10 (unassigned customers iterated
@@ -87,11 +87,10 @@ Why the gap exists (stated plainly, no overclaiming):
 
 - RC1 tight time windows leave 1 customer unserved → needs heavier insertion search or ALNS.
 - **Multi-trip is modelled, but global vehicle-count minimization (assigning customers to a multi-trip
-  fleet) is not implemented** — the key lever to approach BKS, left as extension (this is exactly what
-  peers Ziqi / Frank do with ALNS / metaheuristics).
+  fleet) is not implemented** — the key lever for closing the gap to BKS, left as extension (this is
+  exactly what peers Ziqi / Frank do with ALNS / metaheuristics).
 - Constructive heuristic only; no exact lower bound (MILP). Computing one is a separate contribution,
   outside this project's scope.
-- All of the above is reported honestly in the write-up; I do not present "close to BKS" as achieved.
 
 ## 7. Artifacts
 

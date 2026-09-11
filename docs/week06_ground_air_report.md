@@ -131,7 +131,7 @@ Unlike the previous version, FC4 here shows the synchronization constraint is
 **genuinely active** (many rejections), because multi-customer flights make the
 rendezvous rule a real bottleneck rather than a formality.
 
-## 7. Honest limitations
+## 7. Limitations
 
 - **Greedy, not optimized.** The route is nearest-neighbour + greedy
   insertion; there is no local search, so absolute numbers are not close to

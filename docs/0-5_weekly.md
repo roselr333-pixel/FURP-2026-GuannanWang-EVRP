@@ -1,7 +1,7 @@
 # Weekly Progress Log
 
 > Update this file **every week**. Add a new entry at the top for each week.
-> This is the first thing we check during review. Keep it honest and specific — it also feeds your attendance record (Rule 1).
+> This is the first thing we check during review. Keep it specific — it also feeds your attendance record (Rule 1).
 
 **How to use:** copy the *Week template* block below for each new week. Newest week goes at the top.
 
@@ -16,9 +16,9 @@ leave emails have **already been sent** (confirmed). Week 5 meeting was attended
 **Deferred items (per current plan — not started yet):** paper reading notes
 ( will add after reading the papers), choosing the paper to replicate
 (planned for 2026-07-08/09), and POMO / GA baselines (to be attempted at a later
-stage). These are honestly marked as future work below.
+stage). These are marked as future work below.
 
-### Lab-deliverable status (honest)
+### Lab-deliverable status
 | Lab | Required | Status after catch-up |
 |---|---|---|
 | W1 | smoke test + env record + reflection + plot | ✅ baseline, env record, route PNG, reflection |
@@ -151,7 +151,7 @@ stage). These are honestly marked as future work below.
 - Paper reading took a long time; many concepts were unfamiliar.
 - Spent time on POMO/ML without ever running a solver — this is what caused the slide in progress.
 
-**Next steps (still open — honest)**
+**Next steps (still open)**
 - The Lab suggests also recreating a **GA** (py-ga-VRPTW) or **POMO** baseline and comparing methodologies. This is **deferred to a later stage** per the current plan; the current comparison is OR-Tools greedy vs OR-Tools + 2-opt.
 
 **Hours spent (optional):** 30h

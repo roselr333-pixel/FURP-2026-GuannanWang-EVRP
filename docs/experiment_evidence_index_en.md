@@ -1,6 +1,6 @@
 # Experiment Evidence Index
 
-> Purpose: a single page collecting every **citable number** in this project, with data provenance and honest limitations, so the final report can lift figures directly without misattribution.
+> Purpose: a single page collecting every **citable number** in this project, with data provenance and limitations, so figures can be lifted directly without misattribution.
 > All data here come from this project's own scripts and CSVs (under `src/results/`); no peer's report structure or framework is used.
 > Companion docs: `docs/week06_depth_analysis_zh.md` and `docs/week06_depth_analysis_en.md` (which turn these numbers into a defensible "why it works / when it works" chain; the two are independent files, not sentence-by-sentence translations).
 
@@ -14,7 +14,7 @@ Source: `src/results/baseline_consolidated.csv` / `_summary.csv` (from `baseline
 |---|---:|---|
 | **PyVRP** (standard open-source solver) | **−3.0%** | strongest baseline, community standard |
 | OR-Tools (commercial solver) | +7.2% | main comparison baseline |
-| GA (own, 5-seed mean) | +36.6% ± 15.8% | own metaheuristic, honestly shown weak |
+| GA (own, 5-seed mean) | +36.6% ± 15.8% | own metaheuristic, weaker than the other two |
 
 By family (gap vs BKS, PyVRP / OR-Tools / GA):
 
@@ -27,7 +27,7 @@ By family (gap vs BKS, PyVRP / OR-Tools / GA):
 | RC1 | 8 | −2.2% | +6.4% | +30.6% ± 2.4% |
 | RC2 | 8 | −2.1% | +13.7% | +56.8% ± 5.1% |
 
-**Honest point**: V2 is a collaborative heuristic optimising a makespan-driven synchronous objective; its "distance" is not directly comparable to these pure distance-minimising baselines. They are shown together to demonstrate that on standard truck VRPTW a domain solver (PyVRP) reaches or slightly beats BKS — highlighting that this project's contribution is in *collaborative modelling*, not single-objective distance optimisation. OR-Tools uses GUIDED_LOCAL_SEARCH with a 10 s cap and is stochastic; re-runs vary by ≈ ±0.1 pp (the figures above come from the consolidated CSV, which is the cited source).
+V2 is a collaborative heuristic optimising a makespan-driven synchronous objective; its "distance" is not directly comparable to these pure distance-minimising baselines. They are shown together to demonstrate that on standard truck VRPTW a domain solver (PyVRP) reaches or slightly beats BKS. OR-Tools uses GUIDED_LOCAL_SEARCH with a 10 s cap and is stochastic; re-runs vary by ≈ ±0.1 pp (the figures above come from the consolidated CSV, which is the cited source).
 
 ---
 
@@ -59,7 +59,7 @@ Source: `src/results/week06_multi_objective.csv` + `figures/mo_*.png` (from `wee
 
 - Distance **−56%**, makespan **−33%**; V2 dominates V1 on **both axes** (holds per seed).
 - Weights w ∈ {0, 0.25, 0.5, 0.75, 1.0}, 5 seeds; larger w favours distance at the cost of longer makespan.
-- **Honest limitation**: weighted-sum scalarised greedy, not a full NSGA-II / Pareto solver — the front is "coarse". This is a method limitation, not a selling point.
+- **Limitation**: weighted-sum scalarised greedy, not a full NSGA-II / Pareto solver — the front is "coarse". This is a method limitation, not a selling point.
 
 ---
 
@@ -91,7 +91,7 @@ Source: `src/results/week06_largeN_summary.csv` (from `week06_largeN.py`).
 | N=50 | 12.1% | 42.8% | 4.535 M | 24.0 / 50 |
 | N=100 | 2.3% | 23.4% | 179.5 M | 71.4 / 100 |
 
-At N=50 the V1 (battery+recharge) cost ≈ 5670 vs V0 (no battery) ≈ 3094 — the battery constraint alone nearly doubles the truck cost for N≥30, and the drone can only bypass a limited amount of recharge routing, so the synergy benefit is diluted. At **N=100** the synergy collapses to 2.3%, offload rate drops to 23.4%, and V2 averages **71.4/100 late customers** — the greedy cannot meet time windows at this scale (it was never TW-feasible by construction; `feasible` here means energy-only). The scale boundary is shown in `figures/largen_scale_decay.png`; the honest reading is that the *effective* collaboration interval lies at **N ≤ 50**.
+At N=50 the V1 (battery+recharge) cost ≈ 5670 vs V0 (no battery) ≈ 3094 — the battery constraint alone nearly doubles the truck cost for N≥30, and the drone can only bypass a limited amount of recharge routing, so the synergy benefit is diluted. At **N=100** the synergy collapses to 2.3%, offload rate drops to 23.4%, and V2 averages **71.4/100 late customers** — the greedy cannot meet time windows at this scale (it was never TW-feasible by construction; `feasible` here means energy-only). The scale boundary is shown in `figures/largen_scale_decay.png`; the reading is that the *effective* collaboration interval lies at **N ≤ 50**.
 
 ---
 
@@ -112,7 +112,7 @@ Schneider 2014). Our solver is a constructive greedy with a homogeneous multi-tr
 representative instances with BKS distance & vehicle gap annotated per panel),
 `figures/schneider_vehcomp.png` (vehicle count, our vs BKS across 18 instances).
 
-**Honest caveat**: BKS route geometry is not publicly available (only distance values from the
+**Caveat**: BKS route geometry is not publicly available (only distance values from the
 secondary literature), so the comparison is at the aggregate level (distance + vehicle count),
 not a route-geometry overlay we cannot produce. Our 92 instances were byte-verified against the
 jmanzolli/E-VRPTW "E-VRPTW Instances" folder (whitespace-only diff), confirming they are the
@@ -132,7 +132,7 @@ Aggregate (18 instances with BKS):
 
 ---
 
-## 8. Honest limitations (keep in the report)
+## 8. Limitations
 
 Grouped by nature; each item gives its "consequence + next step" so it reads as a research-boundary statement, not a weakness list.
 
