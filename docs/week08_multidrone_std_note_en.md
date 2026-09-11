@@ -48,35 +48,40 @@ methods share one simulation:
 - **greedy**: each sortie goes to the earliest-available drone (the old rule);
 - **local**: from greedy, repeatedly move a single sortie to another drone if it
   lowers the makespan;
-- **optimal**: branch and bound for the exact minimum (run only when the sortie
-  count is <= 12).
+- **optimal**: branch and bound for the exact minimum (sortie count <= 14; the
+  cap rose from 12 to 14 after adding symmetry breaking);
+- **lower bound (certificate)**: give every sortie its own drone, i.e. no drone
+  contention at all -- a valid lower bound on the optimum for any K. If the
+  greedy schedule reaches it, the greedy assignment is provably optimal.
 
-On the standard instances:
+On the standard instances (64 (family, n, K) configs):
 
-- the **local search gains only 0.001% on average over greedy (max 0.039%)** --
-  it barely finds any improvement;
-- on the 40 configs with <= 12 sorties where the exact optimum is available, the
-  **naive rule is on average only 0.081% above optimal (max 3.226%, in a couple
-  of configs)**.
+- the **local search gains only 0.001% on average over greedy (max 0.039%)**;
+- **optimality certificate: on 31/64 configs greedy == the lower bound, so the
+  naive rule is provably optimal there**;
+- on the 43 configs with <= 14 sorties where the exact optimum is available, the
+  **naive rule is on average only 0.196% above optimal (max 5.193%)**.
 
-Conclusion: the "earliest-available" rule is **already near-optimal** on these
-instances, so no heavier scheduler is needed. The limitation is now quantified
-and closed -- not skipped, but measured to be negligible. (Self-check: greedy
-equals the existing `fstsp_makespan_multi` exactly, and greedy >= local >=
-optimal always holds.)
+Conclusion: the "earliest-available" rule is **provably optimal on about half
+the configs** and very close on the rest. **What is still open**: on configs
+with many sorties the lower bound is loose, so the theoretical gain is bounded
+only by mean 3.23% (max 40.08%) -- scheduling optimality at large multi-drone
+scale is not proven. (Self-check: greedy equals the existing
+`fstsp_makespan_multi` exactly, and greedy >= local >= optimal always holds.)
 
 Figure: `figures/multidrone_std.png` (left: benefit rising with K on standard
 instances; right: the naive rule's gap to the optimum is near zero).
 
 ## 5. Limitations
 
-- Still the **FSTSP completion-time evaluator (no time windows or energy)** --
-  not handled here; that needs the week06 battery/charging and time windows
-  stacked back in.
-- The standard instances use Solomon coordinates with a uniform rescale (to keep
-  the endurance scale), not the paper's original FSTSP instance files.
-- The exact optimum is only checked up to 12 sorties; at larger sizes only
-  local vs greedy is available.
+- Time windows / energy: handled separately by V3 (electric truck + drone +
+  charging + time windows), see `docs/v3_ev_collab_note_en.md`; this section
+  still uses the FSTSP evaluator (no TW/energy).
+- Original instances: added separately (the original Murray & Chu 2015 FSTSP
+  set, 36 instances), see `docs/week08_mc_benchmark_note_en.md`; the standard
+  instances here are still Solomon coordinates with a uniform rescale.
+- Scheduling: provably optimal on about half the configs; with many sorties the
+  lower bound is loose and optimality is not proven (see section 4).
 
 ## 6. Artifacts
 

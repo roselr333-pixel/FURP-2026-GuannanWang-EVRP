@@ -30,6 +30,14 @@ Thumbs.db
 data/
 !**/data/.gitkeep
 
+# Exception: M&C 2015 FSTSP original benchmark instances are source data (not
+# generated output) and are required by week08_mc_benchmark.py for one-command
+# reproduction. Only the FSTSP 10-customer set is used in this project.
+!src/instances/murray_chu_2015/Murray_Chu_2015_test_data/FSTSP/FSTSP_10_customer_problems/**/*.csv
+
+# The PDSTSP variant is not used in this project — keep it out of the repo.
+src/instances/murray_chu_2015/Murray_Chu_2015_test_data/PDSTSP/
+
 # Secrets — NEVER commit credentials
 .env
 *.key

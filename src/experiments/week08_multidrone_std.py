@@ -35,7 +35,7 @@ import fstsp_instances as fi
 DRONES = [1, 2, 3, 5]
 SIZES = [10, 20, 30, 50]
 LNS_SEED = 20260720
-OPT_TRIP_CAP = 12          # only run the exact scheduler up to this many sorties
+OPT_TRIP_CAP = 14          # only run the exact scheduler up to this many sorties
 
 
 def _mean(vals):
@@ -88,9 +88,12 @@ def main():
                     (mk_truck - mk_l) / mk_truck * 100, 1)
                 row[f"K{K}_rt"] = round(rt, 2)
 
-                # scheduling on the LNS solution
+                # scheduling on the LNS solution: greedy / local / exact, plus a
+                # lower bound (each sortie on its own drone) that certifies the
+                # greedy assignment as optimal whenever the two meet
                 _, mk_gr = S.schedule_greedy(inst, l_route, l_trips, K)
                 _, mk_lo = S.schedule_local(inst, l_route, l_trips, K)
+                mk_lb = S.schedule_lb(inst, l_route, l_trips)
                 mk_op, proven, has_op = "", False, len(l_trips) <= OPT_TRIP_CAP
                 if has_op:
                     _, mk_op, proven = S.schedule_optimal(
@@ -100,9 +103,14 @@ def main():
                     "trips": len(l_trips),
                     "sched_greedy_mk": round(mk_gr, 2),
                     "sched_local_mk": round(mk_lo, 2),
+                    "sched_lb_mk": round(mk_lb, 2),
                     "sched_optimal_mk": (round(mk_op, 2) if has_op else ""),
                     "optimal_proven": (proven if has_op else ""),
                     "local_gain_pct": round((mk_gr - mk_lo) / mk_gr * 100, 3),
+                    "gap_bound_vs_lb_pct": round(
+                        (mk_gr - mk_lb) / mk_lb * 100, 3),
+                    "provably_optimal": ("yes" if (mk_gr - mk_lb) < 1e-6
+                                         else "no"),
                 }
                 if has_op:
                     srow["greedy_gap_to_opt_pct"] = round(
@@ -141,6 +149,13 @@ def main():
     loc_gains = [r["local_gain_pct"] for r in sched_rows]
     Lg.append(f"  mean local-search gain over the naive rule: "
               f"{_mean(loc_gains):.3f}%  (max {max(loc_gains):.3f}%)")
+    prov = [r for r in sched_rows if r["provably_optimal"] == "yes"]
+    bound = [r["gap_bound_vs_lb_pct"] for r in sched_rows]
+    Lg.append(f"  optimality certificate (lower bound = one drone per sortie): "
+              f"{len(prov)}/{len(sched_rows)} configs reach it "
+              f"-> the naive rule is provably optimal there")
+    Lg.append(f"  on the remaining configs the possible gain is bounded by "
+              f"mean {_mean(bound):.3f}% (max {max(bound):.3f}%) of the makespan")
     opts = [r for r in sched_rows if r["sched_optimal_mk"] != ""]
     if opts:
         gaps = [r["greedy_gap_to_opt_pct"] for r in opts]

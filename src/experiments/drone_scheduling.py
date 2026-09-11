@@ -115,8 +115,26 @@ def schedule_local(inst, route, trips, K, max_passes=20):
     return assign, best
 
 
+def schedule_lb(inst, route, trips):
+    """Lower bound on the optimal makespan: give every sortie its own drone.
+
+    With no drone contention the schedule can only get better, so this is a
+    valid lower bound for any K. It also certifies optimality for free: if the
+    greedy schedule equals this bound, the greedy assignment is optimal; and for
+    any scheduler the possible gain is at most (greedy - LB)."""
+    ts = _sorted_trips(route, trips)
+    if not ts:
+        return 0.0
+    _, lb = schedule_greedy(inst, route, ts, len(ts))
+    return lb
+
+
 def schedule_optimal(inst, route, trips, K, node_limit=400000):
     """Exact minimum makespan over all assignments (branch and bound).
+
+    Uses symmetry breaking: the drones are interchangeable, so only
+    "restricted-growth" assignments are enumerated (a drone index may be used
+    only once every lower index has been used), which removes the K! factor.
 
     Returns (assign, makespan, proven) where proven=False means the node limit
     was hit before the search completed (treat the makespan as an upper bound)."""
@@ -138,7 +156,10 @@ def schedule_optimal(inst, route, trips, K, node_limit=400000):
             if m < best[0]:
                 best[0], best[1] = m, assign[:]
             return
-        for d in range(K):
+        # symmetry breaking: cap the next usable drone index at the number of
+        # distinct drones used so far (+1), so each assignment is generated once
+        used = max(assign) + 1 if assign else 0
+        for d in range(min(K, used + 1)):
             assign.append(d)
             # partial makespan (first i+1 sorties) is a lower bound on the full
             # makespan, so it prunes branches that already exceed the incumbent

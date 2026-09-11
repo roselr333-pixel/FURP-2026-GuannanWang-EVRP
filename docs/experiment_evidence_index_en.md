@@ -179,7 +179,26 @@ K=1→3 lifts the benefit at every size (N=50: 28.1%→36.0%) and raises the sca
 | N=10 | 36.7% | 53.4% | 63.1% | **71.4%** |
 | N=50 | 23.3% | 34.7% | 41.8% | **48.6%** |
 
-More drones give a higher benefit and flatten the scaling decay (uniform-random R101 benefits most, clustered C101 least). **Scheduling**: treating the sortie-to-drone assignment as an explicit schedule, greedy (earliest-available) vs local (local search) vs optimal (branch and bound) gives a local gain of only **+0.001%** over greedy and a naive-rule gap of only **+0.081% to the exact optimum (max 3.2%)** -- the naive rule is already near-optimal. Source `week08_multidrone_std.py` + `drone_scheduling.py` + `fstsp_instances.py`; figure `figures/multidrone_std.png`; note `docs/week08_multidrone_std_note_en.md`.
+More drones give a higher benefit and flatten the scaling decay (uniform-random R101 benefits most, clustered C101 least). **Scheduling**: greedy vs local vs optimal (branch and bound, <= 14 sorties) plus a lower-bound certificate (every sortie on its own drone): local gains only **+0.001%** over greedy; **on 31/64 configs greedy reaches the lower bound, so the naive rule is provably optimal there**; against the exact optimum (43 configs) the naive rule is only **0.196% above it (max 5.2%)**. With many sorties the lower bound is loose and the theoretical gain is bounded only by mean 3.23% (max 40.1%), which stays unproven.
+
+**Original Murray & Chu (2015) FSTSP instances** (note `docs/week08_mc_benchmark_note_en.md`): the original set was downloaded from the hosting by Dell'Amico's group into `src/instances/murray_chu_2015/` (36 ten-customer instances, 11 shipping a literature OFV). The bundled README never says which of `tau`/`tauprime` is the truck; calibrating on **36/36 instances** shows `tauprime`'s implied speed matches the declared UAV speed (0.2/0.4/0.6), so `tau` = truck and `tauprime` = UAV.
+
+| config | vs truck-only TSP | LNS / literature OFV |
+|---|---:|---:|
+| c1K1 (exactly M&C's FSTSP: one customer per sortie, one drone) | 21.7% | **0.901** |
+| c1K3 | 36.6% | 0.709 |
+| c2K3 (my multi-customer extension) | 37.9% | 0.684 |
+
+So **under M&C's own FSTSP definition my LNS beats the objective shipped with the instances by about 9.9%**. The files carry no drone endurance, so endurance is unlimited and the longest flight per solution is reported (mean 25-30, max about 62).
+
+**V3: electric truck + drone + charging + time windows** (note `docs/v3_ev_collab_note_en.md`): the week06 battery, charging stations and time windows are stacked back into the collaborative model. The route lists customers only and charging detours are inserted by the evaluator, so the LNS destroy/repair is reused as is. 10 seeds per size:
+
+| size | V1 truck EV | V3 + LNS | gain | V1 TW violations -> V3 | V1 recharges -> V3 |
+|---|---:|---:|---:|---:|---:|
+| N=8 | 485.8 | 67.8 | **86.0%** | 2.4 -> **0.0** | 0.9 -> **0.0** |
+| N=20 | 1283.6 | 551.7 | **56.7%** | 13.5 -> **1.0** | 2.9 -> **1.3** |
+
+**The electric and time-window constraints amplify the drone's value**: the gain (56.7%~87.8%) is far above the 23%~45% the same methods reach in the FSTSP setting, because offloading shortens the truck route and removes most charging detours and late arrivals. Source `v3_ev_collab.py` -> `v3_ev_collab_summary.csv`.
 
 ---
 
@@ -189,15 +208,15 @@ Grouped by nature; each item gives its "consequence + next step" so it reads as 
 
 **Modeling-scope boundaries**
 - **2–3 customers/sortie cap**: a deliberate simplification and a boundary. Multi-customer drone service is O(n⁴) enumeration, infeasible at scale; supporting more customers needs lighter search (e.g., pre-cluster then assign). Larger multi-customer collaboration is future work.
-- **V2 does not yet re-introduce V1's battery/charging layer**: the truck-drone model (V2) is built on VRPTW and does not re-add the electric-vehicle battery and charging constraints of V1; a truly "electric truck + drone + charging station" joint optimization is a clear next step.
+- **The battery/charging layer is now re-introduced by V3**: V3 (electric truck + drone + charging stations + time windows) is implemented and compared against V1 (see §8); what is still missing is wiring **multiple drones** into V3.
 
 **Algorithmic-scope boundary**
 - **The greedy itself has no local search (W8 adds an improvement phase)**: applying intra-route 2-opt to V2's constructed truck route (accept only strict makespan improvement) yields only 0–1.76% (peak 1.76% at N=16; see `week07_fstsp_with_ls.log`) — showing V2's gain comes from the *collaborative structure* of offloading far-flung customers, not route fine-tuning. With the W8 destroy-and-repair LNS the gain over the greedy is a consistent +9% to +12.6% at every size (Wilcoxon overall p=3.6×10⁻⁹; see §8), beyond pure routing. **How far from global optimum remains unquantified** (unless a MILP bound is added), left for future work.
 
 **Empirical-validation boundaries**
-- **Synthetic instances extended to 100, but the effective collaboration interval lies at N ≤ 50**: my truck-drone experiments use randomly generated synthetic instances and do not adopt the field's standard large-scale benchmark sets (e.g., the Solomon-derived FSTSP instances of Murray & Chu 2015 — which this project reproduced within their parameter range in W7; or the Masmoudi et al. 2018 instance set). At N=100 the synergy collapses to 2.3% and V2 averages 71.4/100 late customers (TW feasibility breaks down); extrapolation to real large scale needs caution. The W8 LNS lifts the N=50 collaboration benefit from the greedy's 17.6% to 28.1%, slowing the decay, but it is still the same synthetic instances and setting, so the boundary is unchanged. **W8 extension 2 re-ran 16 standard instances built from official Solomon topologies (K=1/2/3/5) with the same conclusion**, so the results no longer rest on random geometry alone.
-- **The simple drone-scheduling rule is already good enough**: treating the sortie-to-drone assignment as an explicit schedule, local search gains only +0.001% over the naive rule and the naive rule is only +0.081% above the exact optimum (max 3.2%, over the 40 configs with <= 12 sorties) -- no heavier scheduler is needed.
-- **The W7/W8 truck-drone experiments use the FSTSP completion-time evaluator (no time windows or energy)**: the ablation, LNS and multi-drone results all sit in this "no-TW/energy, single truck" FSTSP setting; the "single drone" part is now broken by the W8 extension (K=1/2/3), while re-adding battery/charging and time windows is a separate next step.
+- **Synthetic instances extended to 100, but the effective collaboration interval lies at N ≤ 50**: my truck-drone experiments use randomly generated synthetic instances and do not adopt the field's standard large-scale benchmark sets (e.g., the Solomon-derived FSTSP instances of Murray & Chu 2015 — which this project reproduced within their parameter range in W7; or the Masmoudi et al. 2018 instance set). At N=100 the synergy collapses to 2.3% and V2 averages 71.4/100 late customers (TW feasibility breaks down); extrapolation to real large scale needs caution. The W8 LNS lifts the N=50 collaboration benefit from the greedy's 17.6% to 28.1%, slowing the decay, but it is still the same synthetic instances and setting, so the boundary is unchanged. **W8 extension 2 re-ran 16 standard instances built from official Solomon topologies (K=1/2/3/5) with the same conclusion**; **the original Murray & Chu (2015) instances were also downloaded** (36 ten-customer instances, see §8), so the results no longer rest on synthetic or rescaled Solomon data alone. What is still missing is standard-benchmark validation at larger sizes (N > 50).
+- **Drone scheduling: provably optimal on about half the configs, unproven at scale**: with the lower bound (every sortie its own drone) as a certificate, greedy reaches that bound on 31/64 configs (so it is optimal there) and is only 0.196% above the exact optimum where that is computable (<= 14 sorties). But with many sorties the bound is loose and the possible gain is bounded only by mean 3.23% (max 40.08%) -- **scheduling optimality at large multi-drone scale is not proven**.
+- **Time windows / energy are now covered by V3**: V3 stacks the week06 battery, charging stations and time windows back into the truck-drone model (see §8), reaching 56.7%~87.8% over the truck-only EV baseline and removing most late arrivals and charging detours. V3 is still single-drone, and time windows are a penalty in the search rather than a hard constraint (the violation count is reported).
 - **No MILP lower bound replicated**: baselines are anchored to BKS (literature optimum), not a self-proven bound. Computing exact bounds for this NP-hard problem is itself a separate research contribution, beyond this project's scope; absolute quality is therefore literature-anchored, not self-certified.
 - **Coarse MO front**: the weighted-sum greedy gives a "partial / inner" front and may miss non-convex Pareto regions; it is not a full Pareto solver (see §3). For a complete front, the natural next step is ε-constraint or NSGA-II (as in peer Xie's P-ACO/NSGA-II).
 
@@ -218,6 +237,8 @@ Grouped by nature; each item gives its "consequence + next step" so it reads as 
 | Multi-drone | `week08_multidrone.py` (+ week07 K-drone evaluator) | `week08_multidrone_raw.csv` / `_summary.csv` | `multidrone.png` |
 | Multi-drone (standard) | `week08_multidrone_std.py` + `fstsp_instances.py` | `week08_multidrone_std_raw.csv` / `_summary.csv` | `multidrone_std.png` |
 | Drone scheduling | `drone_scheduling.py` | `week08_scheduling.csv` | — |
+| Original M&C benchmark | `week08_mc_benchmark.py` + `fstsp_mc.py` | `week08_mc_benchmark_raw.csv` | — |
+| V3 (electric + drone + TW) | `v3_ev_collab.py` | `v3_ev_collab_raw.csv` / `_summary.csv` | — |
 | Significance tests | `stat_tests.py` | `stat_tests.csv` | — |
 | Schneider replication | `schneider_evrptw.py` + `schneider_bks_compare.py` + `plot_schneider_routes.py` | `schneider_evrptw_baseline.csv` / `schneider_evrptw_bks_comparison.csv` | `schneider_routes.png` / `schneider_vehcomp.png` |
 | FSTSP reproduction | `week07_fstsp_repro.py` | `week07_fstsp_raw.csv` / `_summary.csv` | — |

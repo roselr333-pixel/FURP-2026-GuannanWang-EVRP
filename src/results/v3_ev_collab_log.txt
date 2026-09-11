@@ -1,0 +1,10 @@
+==============================================================================
+V3 -- electric truck + drone + charging + time windows
+==============================================================================
+sizes=[8, 12, 16, 20]  seeds=10  base 20260720
+V1 = truck-only EV | V3g = EV+drone greedy | V3l = EV+drone greedy+LNS
+
+  N= 8: V1=   485.8  V3g=   136.5 ( 71.7%)  V3l=    67.8 ( 86.0%)  LNS gain 47.94%  TWviol V1=2.4 V3l=0.0  rechg 0.9->0.0
+  N=12: V1=   694.7  V3g=   201.1 ( 71.0%)  V3l=    84.0 ( 87.8%)  LNS gain 57.32%  TWviol V1=6.0 V3l=0.0  rechg 1.3->0.0
+  N=16: V1=   975.9  V3g=   427.5 ( 55.8%)  V3l=   260.6 ( 73.3%)  LNS gain 38.92%  TWviol V1=9.6 V3l=0.0  rechg 2.1->0.2
+  N=20: V1=  1283.6  V3g=   716.4 ( 44.2%)  V3l=   551.7 ( 56.7%)  LNS gain 23.28%  TWviol V1=13.5 V3l=1.0  rechg 2.9->1.3
