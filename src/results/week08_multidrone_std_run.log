@@ -21,8 +21,8 @@ AGGREGATE by size (mean over families)
 SCHEDULING: greedy (earliest-available) vs local vs optimal
 ==============================================================================
   mean local-search gain over the naive rule: 0.001%  (max 0.039%)
-  optimality certificate (lower bound = one drone per sortie): 31/64 configs reach it -> the naive rule is provably optimal there
-  on the remaining configs the possible gain is bounded by mean 3.234% (max 40.084%) of the makespan
+  optimality certificate (lower bound = max[one-drone-per-sortie, total_flight/K]): 31/64 configs reach it -> the naive rule is provably optimal there
+  on the remaining configs the possible gain is bounded by mean 2.464% (max 33.402%) of the makespan
   exact-optimal check on 43 configs (trips <= 14): naive rule is on average 0.196% above optimal (max 5.193%)
 
 [raw -> E:\FURP-EVRP\roselr333-pixel-FURP-2026-GuannanWang-EVRP\src\results\week08_multidrone_std_raw.csv]

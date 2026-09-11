@@ -43,14 +43,18 @@ R_D = w6.R_D
 dist = w6.dist
 
 
-def ev_collab(inst, route, drone_trips, q=None):
-    """Completion time of an electric-truck + drone solution, with charging
-    detours and time windows.
+def _trip_flight(inst, ln, custs, rn):
+    """Drone flight time and Euclidean distance for one sortie."""
+    cl = list(custs) if isinstance(custs, (list, tuple)) else [custs]
+    legs = [ln] + cl + [rn]
+    dsum = sum(dist(inst, legs[p], legs[p + 1]) for p in range(len(legs) - 1))
+    return dsum / V_D + SERVICE * len(cl), dsum
 
-    route       : [0, ...customers..., 0]  (charging stops are added here)
-    drone_trips : (launch, customers_tuple, recover)
-    Returns dict(makespan, truck_makespan, drone_makespan, tw_viol,
-                 energy_inf, recharges, total_dist)."""
+
+def _truck_timeline(inst, route, q=None):
+    """Truck route (customers only) expanded with charging detours.
+
+    Returns (path, arr, recharges, tw_viol, energy_inf)."""
     Q = q if q is not None else inst["Q"]
     path = [0]
     arr = [0.0]
@@ -59,7 +63,6 @@ def ev_collab(inst, route, drone_trips, q=None):
     recharges = 0
     energy_inf = False
     tw_viol = 0
-
     for node in route[1:]:
         d = dist(inst, path[-1], node)
         if battery - d * RHO < 0:
@@ -86,21 +89,52 @@ def ev_collab(inst, route, drone_trips, q=None):
             t += SERVICE
         path.append(node)
         arr.append(t)
+    return path, arr, recharges, tw_viol, energy_inf
 
+
+def _greedy_assign(inst, path, arr, ts, K):
+    """Earliest-available-drone assignment (pure: reads arr, updates per-drone
+    availability only; truck-wait propagation is applied later by the
+    simulator). Returns assign[i] = drone index of sortie i."""
+    avail = [0.0] * K
+    assign = []
+    for (ln, custs, rn) in ts:
+        i_pos = 0 if ln == 0 else path.index(ln)
+        flight, _ = _trip_flight(inst, ln, custs, rn)
+        starts = [max(arr[i_pos], avail[k]) for k in range(K)]
+        d = min(range(K), key=lambda k: (starts[k], k))
+        avail[d] = starts[d] + flight
+        assign.append(d)
+    return assign
+
+
+def ev_collab_k(inst, route, trips, K, assign=None, q=None):
+    """K-drone extension of ev_collab.
+
+    A fixed truck route (customers only; charging detours inserted internally)
+    plus a set of drone sorties, each assigned to one of K homogeneous drones.
+    Every drone flies its own sorties in launch order; if a drone recovers after
+    the truck reaches its recovery node, the truck waits.
+
+    Returns dict(makespan, truck_makespan, drone_makespan, tw_viol, energy_inf,
+                 recharges, total_dist, assignment, offloaded)."""
+    path, arr, recharges, truck_tw, energy_inf = _truck_timeline(inst, route, q)
+    ts = sorted(trips, key=lambda tr: 0 if tr[0] == 0 else path.index(tr[0]))
+    if assign is None:
+        assign = _greedy_assign(inst, path, arr, ts, K)
+    avail = [0.0] * K
     drone_free = 0.0
-    for ln, custs, rn in sorted(drone_trips,
-                                key=lambda tr: 0 if tr[0] == 0
-                                else path.index(tr[0])):
+    tw_viol = truck_tw
+    offloaded = 0
+    for idx, (ln, custs, rn) in enumerate(ts):
+        d = assign[idx]
         i_pos = 0 if ln == 0 else path.index(ln)
         j_pos = len(path) - 1 if rn == 0 else path.index(rn)
-        launch = arr[i_pos]
-        legs = [ln] + list(custs) + [rn]
-        dsum = sum(dist(inst, legs[k], legs[k + 1])
-                   for k in range(len(legs) - 1))
-        flight = dsum / V_D + SERVICE * len(custs)
-        if dsum > R_D:
+        flight, fsum = _trip_flight(inst, ln, custs, rn)
+        if fsum > R_D:
             energy_inf = True
-        # drone time windows (sequential service)
+        # per-customer time windows along this sortie (sequential service)
+        launch = max(arr[i_pos], avail[d])
         tt = launch
         prev = ln
         for c in custs:
@@ -111,14 +145,15 @@ def ev_collab(inst, route, drone_trips, q=None):
                 tw_viol += 1
             tt += SERVICE
             prev = c
+            offloaded += 1
         landing = launch + flight
         recovery = max(arr[j_pos], landing)
+        avail[d] = recovery
         drone_free = max(drone_free, recovery)
         wait = recovery - arr[j_pos]
         if wait > 0:
             for p in range(j_pos, len(arr)):
                 arr[p] += wait
-            t += wait
 
     return {
         "makespan": max(arr[-1], drone_free),
@@ -129,16 +164,32 @@ def ev_collab(inst, route, drone_trips, q=None):
         "recharges": recharges,
         "total_dist": sum(dist(inst, path[k], path[k + 1])
                           for k in range(len(path) - 1)),
+        "assignment": assign,
+        "offloaded": offloaded,
     }
+
+
+def ev_collab(inst, route, drone_trips, q=None):
+    """Single-drone special case of ev_collab_k (backwards compatible)."""
+    return ev_collab_k(inst, route, drone_trips, 1, q=q)
 
 
 TW_PENALTY = 1000.0
 
 
 def ev_lns(inst, route, drone_trips):
-    """Scalar objective for the LNS: makespan, with energy-infeasible solutions
-    rejected outright and time-window violations heavily penalised."""
+    """Scalar objective for the LNS (single-drone): makespan, with
+    energy-infeasible solutions rejected outright and time-window violations
+    heavily penalised."""
     r = ev_collab(inst, route, drone_trips)
+    if r["energy_inf"]:
+        return float("inf")
+    return r["makespan"] + TW_PENALTY * r["tw_viol"]
+
+
+def ev_lns_k(inst, route, trips, K, q=None):
+    """Scalar objective for the LNS on the K-drone model."""
+    r = ev_collab_k(inst, route, trips, K, q=q)
     if r["energy_inf"]:
         return float("inf")
     return r["makespan"] + TW_PENALTY * r["tw_viol"]
@@ -206,6 +257,7 @@ def main():
     SIZES = [8, 12, 16, 20]
     N_SEEDS = 10
     SEED_BASE = 20260720
+    K_DRONES = [1, 2, 3]
 
     rows = []
     for n in SIZES:
@@ -216,16 +268,11 @@ def main():
             # V1: truck-only electric vehicle
             v1 = w6.truck_ev_route(inst, list(inst["customers"].keys()),
                                    allow_recharge=True)
-            # V3 greedy
+            # V3 greedy (single drone)
             gr, gt, go = v3_greedy(inst)
             g = ev_collab(inst, gr, gt)
-            # V3 + LNS
-            lr, lt, _, _ = L.lns(inst, n, seed=seed,
-                                 eval_fn=ev_lns,
-                                 greedy_fn=lambda inst: v3_greedy(inst))
-            l = ev_collab(inst, lr, lt)
 
-            rows.append({
+            row = {
                 "size": n, "seed": seed,
                 "V1_makespan": round(v1["makespan"], 1),
                 "V1_tw_viol": v1["tw_viol"],
@@ -234,37 +281,60 @@ def main():
                 "V3g_tw_viol": g["tw_viol"],
                 "V3g_recharges": g["recharges"],
                 "V3g_offloaded": sum(len(c) for _, c, _ in gt),
-                "V3l_makespan": round(l["makespan"], 1),
-                "V3l_tw_viol": l["tw_viol"],
-                "V3l_recharges": l["recharges"],
-                "V3l_offloaded": sum(len(c) for _, c, _ in lt),
                 "imp_greedy_vs_V1_pct": round(
                     (v1["makespan"] - g["makespan"]) / v1["makespan"] * 100, 1),
-                "imp_lns_vs_V1_pct": round(
-                    (v1["makespan"] - l["makespan"]) / v1["makespan"] * 100, 1),
-                "imp_lns_vs_greedy_pct": round(
-                    (g["makespan"] - l["makespan"]) / g["makespan"] * 100, 2),
-            })
+            }
+            # V3 + LNS for each drone count K
+            for K in K_DRONES:
+                ev = (lambda K: (lambda i, r, t: ev_lns_k(i, r, t, K)))(K)
+                lr, lt, _, _ = L.lns(inst, n, seed=seed,
+                                     eval_fn=ev,
+                                     greedy_fn=lambda inst: v3_greedy(inst))
+                l = ev_collab_k(inst, lr, lt, K)
+                row[f"V3l_K{K}_makespan"] = round(l["makespan"], 1)
+                row[f"V3l_K{K}_tw_viol"] = l["tw_viol"]
+                row[f"V3l_K{K}_recharges"] = l["recharges"]
+                row[f"V3l_K{K}_offloaded"] = l["offloaded"]
+                row[f"imp_lnsK{K}_vs_V1_pct"] = round(
+                    (v1["makespan"] - l["makespan"]) / v1["makespan"] * 100, 1)
+                if K == 1:
+                    row["imp_lns_vs_greedy_pct"] = round(
+                        (g["makespan"] - l["makespan"]) / g["makespan"] * 100, 2)
+                else:
+                    row[f"V3l_K{K}_vs_K1_pct"] = round(
+                        (row["V3l_K1_makespan"] - l["makespan"])
+                        / row["V3l_K1_makespan"] * 100, 2)
+            rows.append(row)
 
     summary = []
     for n in SIZES:
         sub = [r for r in rows if r["size"] == n]
-        summary.append({
+        srow = {
             "size": n, "n_instances": len(sub),
             "V1_makespan": round(_mean([r["V1_makespan"] for r in sub]), 1),
             "V3g_makespan": round(_mean([r["V3g_makespan"] for r in sub]), 1),
-            "V3l_makespan": round(_mean([r["V3l_makespan"] for r in sub]), 1),
             "V3g_imp_vs_V1_pct": round(
                 _mean([r["imp_greedy_vs_V1_pct"] for r in sub]), 1),
-            "V3l_imp_vs_V1_pct": round(
-                _mean([r["imp_lns_vs_V1_pct"] for r in sub]), 1),
-            "V3l_imp_vs_greedy_pct": round(
-                _mean([r["imp_lns_vs_greedy_pct"] for r in sub]), 2),
             "V1_tw_viol": round(_mean([r["V1_tw_viol"] for r in sub]), 1),
-            "V3l_tw_viol": round(_mean([r["V3l_tw_viol"] for r in sub]), 1),
+            "V3g_tw_viol": round(_mean([r["V3g_tw_viol"] for r in sub]), 1),
             "V1_recharges": round(_mean([r["V1_recharges"] for r in sub]), 1),
-            "V3l_recharges": round(_mean([r["V3l_recharges"] for r in sub]), 1),
-        })
+            "V3g_recharges": round(_mean([r["V3g_recharges"] for r in sub]), 1),
+            "imp_lns_vs_greedy_pct": round(
+                _mean([r["imp_lns_vs_greedy_pct"] for r in sub]), 2),
+        }
+        for K in K_DRONES:
+            srow[f"V3l_K{K}_makespan"] = round(
+                _mean([r[f"V3l_K{K}_makespan"] for r in sub]), 1)
+            srow[f"V3l_K{K}_imp_vs_V1_pct"] = round(
+                _mean([r[f"imp_lnsK{K}_vs_V1_pct"] for r in sub]), 1)
+            srow[f"V3l_K{K}_tw_viol"] = round(
+                _mean([r[f"V3l_K{K}_tw_viol"] for r in sub]), 1)
+            srow[f"V3l_K{K}_recharges"] = round(
+                _mean([r[f"V3l_K{K}_recharges"] for r in sub]), 1)
+            if K > 1:
+                srow[f"V3l_K{K}_vs_K1_pct"] = round(
+                    _mean([r[f"V3l_K{K}_vs_K1_pct"] for r in sub]), 2)
+        summary.append(srow)
 
     fields = []
     for r in rows:
@@ -281,18 +351,23 @@ def main():
         w.writerows(summary)
 
     Lg = ["=" * 78,
-          "V3 -- electric truck + drone + charging + time windows",
+          "V3 -- electric truck + drone + charging + time windows (K drones)",
           "=" * 78,
-          f"sizes={SIZES}  seeds={N_SEEDS}  base {SEED_BASE}",
+          f"sizes={SIZES}  seeds={N_SEEDS}  base {SEED_BASE}  drones K={K_DRONES}",
           "V1 = truck-only EV | V3g = EV+drone greedy | V3l = EV+drone greedy+LNS",
           ""]
     for s in summary:
         Lg.append(f"  N={s['size']:2d}: V1={s['V1_makespan']:8.1f}  "
                   f"V3g={s['V3g_makespan']:8.1f} ({s['V3g_imp_vs_V1_pct']:5.1f}%)  "
-                  f"V3l={s['V3l_makespan']:8.1f} ({s['V3l_imp_vs_V1_pct']:5.1f}%)  "
-                  f"LNS gain {s['V3l_imp_vs_greedy_pct']:5.2f}%  "
-                  f"TWviol V1={s['V1_tw_viol']:.1f} V3l={s['V3l_tw_viol']:.1f}  "
-                  f"rechg {s['V1_recharges']:.1f}->{s['V3l_recharges']:.1f}")
+                  f"LNS gain {s['imp_lns_vs_greedy_pct']:5.2f}%  "
+                  f"TWviol V1={s['V1_tw_viol']:.1f}  "
+                  f"rechg {s['V1_recharges']:.1f}")
+        Lg.append("      " + "  ".join(
+            f"K{K}: {s[f'V3l_K{K}_makespan']:8.1f} "
+            f"({s[f'V3l_K{K}_imp_vs_V1_pct']:5.1f}% vs V1"
+            + (f", {s[f'V3l_K{K}_vs_K1_pct']:5.2f}% vs K1" if K > 1 else "")
+            + f", TWv {s[f'V3l_K{K}_tw_viol']:.1f}, rc {s[f'V3l_K{K}_recharges']:.1f})"
+            for K in K_DRONES))
     text = "\n".join(Lg)
     with open(out_txt, "w") as f:
         f.write(text)

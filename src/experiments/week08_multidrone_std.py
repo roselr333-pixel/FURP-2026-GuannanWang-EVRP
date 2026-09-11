@@ -93,7 +93,7 @@ def main():
                 # greedy assignment as optimal whenever the two meet
                 _, mk_gr = S.schedule_greedy(inst, l_route, l_trips, K)
                 _, mk_lo = S.schedule_local(inst, l_route, l_trips, K)
-                mk_lb = S.schedule_lb(inst, l_route, l_trips)
+                mk_lb = S.schedule_lb(inst, l_route, l_trips, K)
                 mk_op, proven, has_op = "", False, len(l_trips) <= OPT_TRIP_CAP
                 if has_op:
                     _, mk_op, proven = S.schedule_optimal(
@@ -151,8 +151,8 @@ def main():
               f"{_mean(loc_gains):.3f}%  (max {max(loc_gains):.3f}%)")
     prov = [r for r in sched_rows if r["provably_optimal"] == "yes"]
     bound = [r["gap_bound_vs_lb_pct"] for r in sched_rows]
-    Lg.append(f"  optimality certificate (lower bound = one drone per sortie): "
-              f"{len(prov)}/{len(sched_rows)} configs reach it "
+    Lg.append(f"  optimality certificate (lower bound = max[one-drone-per-sortie, "
+              f"total_flight/K]): {len(prov)}/{len(sched_rows)} configs reach it "
               f"-> the naive rule is provably optimal there")
     Lg.append(f"  on the remaining configs the possible gain is bounded by "
               f"mean {_mean(bound):.3f}% (max {max(bound):.3f}%) of the makespan")

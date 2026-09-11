@@ -115,18 +115,29 @@ def schedule_local(inst, route, trips, K, max_passes=20):
     return assign, best
 
 
-def schedule_lb(inst, route, trips):
-    """Lower bound on the optimal makespan: give every sortie its own drone.
+def schedule_lb(inst, route, trips, K):
+    """Tighter valid lower bound on the optimal makespan for K drones.
 
-    With no drone contention the schedule can only get better, so this is a
-    valid lower bound for any K. It also certifies optimality for free: if the
-    greedy schedule equals this bound, the greedy assignment is optimal; and for
-    any scheduler the possible gain is at most (greedy - LB)."""
+    It takes the maximum of two valid bounds:
+      * lb_inf  -- give every sortie its own drone (no drone contention); this is
+        the previous bound and equals the makespan when sorties never compete.
+      * lb_load -- K drones must together cover the total sortie flight time, so
+        the busiest drone does at least total_flight / K of work. This captures
+        the contention that the infinite-drone bound ignores, and is what
+        tightens the certificate when there are many sorties and few drones.
+
+    Both terms are individually valid lower bounds on the (K-drone) makespan, so
+    their maximum is too. Whenever the greedy schedule equals this bound it is
+    provably optimal, and for any scheduler the possible gain is at most
+    (greedy - LB)."""
     ts = _sorted_trips(route, trips)
     if not ts:
         return 0.0
-    _, lb = schedule_greedy(inst, route, ts, len(ts))
-    return lb
+    _, lb_inf = schedule_greedy(inst, route, ts, len(ts))
+    total_flight = sum(_legs_and_flight(inst, ln, cust, rn)
+                       for (ln, cust, rn) in ts)
+    lb_load = total_flight / K
+    return max(lb_inf, lb_load)
 
 
 def schedule_optimal(inst, route, trips, K, node_limit=400000):

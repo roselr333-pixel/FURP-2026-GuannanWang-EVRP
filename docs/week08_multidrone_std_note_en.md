@@ -50,9 +50,10 @@ methods share one simulation:
   lowers the makespan;
 - **optimal**: branch and bound for the exact minimum (sortie count <= 14; the
   cap rose from 12 to 14 after adding symmetry breaking);
-- **lower bound (certificate)**: give every sortie its own drone, i.e. no drone
-  contention at all -- a valid lower bound on the optimum for any K. If the
-  greedy schedule reaches it, the greedy assignment is provably optimal.
+- **lower bound (certificate)**: take the larger of two valid lower bounds -- (a)
+  give every sortie its own drone (no contention at all), and (b) the total
+  flight time divided by K (the minimum load bound for K drones). If the greedy
+  schedule reaches it, the greedy assignment is provably optimal.
 
 On the standard instances (64 (family, n, K) configs):
 
@@ -65,7 +66,7 @@ On the standard instances (64 (family, n, K) configs):
 Conclusion: the "earliest-available" rule is **provably optimal on about half
 the configs** and very close on the rest. **What is still open**: on configs
 with many sorties the lower bound is loose, so the theoretical gain is bounded
-only by mean 3.23% (max 40.08%) -- scheduling optimality at large multi-drone
+only by mean 2.46% (max 33.40%) -- scheduling optimality at large multi-drone
 scale is not proven. (Self-check: greedy equals the existing
 `fstsp_makespan_multi` exactly, and greedy >= local >= optimal always holds.)
 
