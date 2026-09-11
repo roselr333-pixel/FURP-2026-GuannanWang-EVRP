@@ -1,0 +1,39 @@
+
+==============================================================================
+W7 ablation (paired per instance; negative mean_diff = first method has smaller makespan)
+==============================================================================
+  [all sizes] my V2 vs published (M&C 2015)              n= 40  mean_diff=  -73.05  p=5.93e-07  sig=yes
+  [     N=8] my V2 vs published (M&C 2015)              n= 10  mean_diff=  -45.63  p=5.92e-03  sig=yes
+  [    N=12] my V2 vs published (M&C 2015)              n= 10  mean_diff= -103.19  p=8.05e-03  sig=yes
+  [    N=16] my V2 vs published (M&C 2015)              n= 10  mean_diff=  -76.95  p=3.23e-02  sig=yes
+  [    N=20] my V2 vs published (M&C 2015)              n= 10  mean_diff=  -66.41  p=1.91e-02  sig=yes
+  [all sizes] my V2 vs abl_cap1 (multi-customer)         n= 40  mean_diff=  -73.05  p=5.93e-07  sig=yes
+  [     N=8] my V2 vs abl_cap1 (multi-customer)         n= 10  mean_diff=  -45.63  p=5.92e-03  sig=yes
+  [    N=12] my V2 vs abl_cap1 (multi-customer)         n= 10  mean_diff= -103.19  p=8.05e-03  sig=yes
+  [    N=16] my V2 vs abl_cap1 (multi-customer)         n= 10  mean_diff=  -76.95  p=3.23e-02  sig=yes
+  [    N=20] my V2 vs abl_cap1 (multi-customer)         n= 10  mean_diff=  -66.41  p=1.91e-02  sig=yes
+  [all sizes] my V2 vs abl_notakeoff (multi-takeoff)     n= 36  mean_diff=  -40.75  p=8.42e-07  sig=yes
+  [     N=8] my V2 vs abl_notakeoff (multi-takeoff)     n=  7  mean_diff=  -37.71  p=2.25e-02  sig=yes
+  [    N=12] my V2 vs abl_notakeoff (multi-takeoff)     n=  9  mean_diff=  -47.87  p=9.15e-03  sig=yes
+  [    N=16] my V2 vs abl_notakeoff (multi-takeoff)     n= 10  mean_diff=  -35.02  p=3.23e-02  sig=yes
+  [    N=20] my V2 vs abl_notakeoff (multi-takeoff)     n= 10  mean_diff=  -42.20  p=5.92e-03  sig=yes
+
+==============================================================================
+W8 LNS (paired per instance)
+==============================================================================
+  [all sizes] LNS vs greedy V2                           n= 46  mean_diff= -146.19  p=3.64e-09  sig=yes
+  [     N=8] LNS vs greedy V2                           n=  8  mean_diff=  -29.63  p=1.43e-02  sig=yes
+  [    N=12] LNS vs greedy V2                           n=  8  mean_diff=  -52.88  p=1.43e-02  sig=yes
+  [    N=16] LNS vs greedy V2                           n=  7  mean_diff=  -89.17  p=2.25e-02  sig=yes
+  [    N=20] LNS vs greedy V2                           n=  6  mean_diff= -149.33  p=3.60e-02  sig=yes
+  [    N=30] LNS vs greedy V2                           n=  8  mean_diff= -148.05  p=1.43e-02  sig=yes
+  [    N=50] LNS vs greedy V2                           n=  9  mean_diff= -373.33  p=9.15e-03  sig=yes
+
+==============================================================================
+W6 ground-air (paired per instance)
+==============================================================================
+  [all sizes] V2 vs V1 (collaborative vs EV)             n= 40  mean_diff= -424.26  p=3.71e-08  sig=yes
+  [     N=8] V2 vs V1 (collaborative vs EV)             n= 10  mean_diff= -245.34  p=5.92e-03  sig=yes
+  [    N=12] V2 vs V1 (collaborative vs EV)             n= 10  mean_diff= -382.46  p=5.92e-03  sig=yes
+  [    N=16] V2 vs V1 (collaborative vs EV)             n= 10  mean_diff= -527.63  p=5.92e-03  sig=yes
+  [    N=20] V2 vs V1 (collaborative vs EV)             n= 10  mean_diff= -541.63  p=5.92e-03  sig=yes

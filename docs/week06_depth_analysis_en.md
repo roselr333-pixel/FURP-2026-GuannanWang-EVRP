@@ -48,7 +48,8 @@ never TW-feasible by construction). Full curves in `figures/largen_scale_decay.p
 **Overall conclusion**: truck–drone collaboration pays most when "customers are dispersed, drone
 range is unconstrained, and the problem scale is moderate"; once the scale is large enough that the
 battery constraint nearly doubles the truck's cost, the collaboration dividend is diluted (the
-*effective* collaboration window in practice lies at **N ≤ 50**). This is a **data-backed
+*effective* collaboration window in practice lies at **N ≤ 50**). The W8 LNS lifts the N=50
+collaboration benefit from the greedy's 17.6% to 28.1%, slowing this decay. This is a **data-backed
 applicability judgement**, not a vague "drones are useful".
 
 ---
@@ -100,12 +101,16 @@ conclusion and together with it delimits where the method works.
 
 ## 6. Limitations
 
-- **Greedy without local search**: applying intra-route 2-opt post-processing to V2 yields only
-  0–1.76% — meaning once far-flung customers are offloaded, the truck route is already near-linear,
-  so local search is nearly useless; it also shows the gain comes from *collaborative structure*,
-  not route fine-tuning.
+- **The greedy itself has no local search (W8 adds an LNS)**: applying intra-route 2-opt
+  post-processing to V2 yields only 0–1.76% — meaning once far-flung customers are offloaded, the
+  truck route is already near-linear, so route fine-tuning is nearly useless; the gain comes from
+  *collaborative structure*. With the W8 destroy-and-repair LNS the gain over the greedy is a
+  consistent **+9% to +12.6% at every size** (Wilcoxon overall p=3.6×10⁻⁹), and it offsets the scaling
+  decay (N=50: 17.6% → 28.1%).
 - **2–3 customers per sortie cap**: a simplification and a boundary; larger-scale multi-customer
   service needs heavier search.
+- **Single drone only**: the LNS and all collaboration results are measured with one serial drone;
+  multiple drones are left as an extension.
 - **Synthetic instances extended to 100, but the effective window lies at N ≤ 50**: I did not adopt
   the field's standard large-scale benchmark sets (e.g., the Solomon-derived FSTSP instances of
   Murray & Chu 2015 — which this project reproduced within their parameter range in W7; or the
@@ -126,7 +131,8 @@ conclusions into one **coherent chain**:
 > (dispersed customers / ample range / moderate scale) → scale extension to 100 reveals synergy
 > collapse and TW breakdown (effective window N ≤ 50) → multi-objective proves dominance on both
 > axes → three baselines place V2's collaborative increment → failure cases corroborate
-> the rendezvous constraint → limitations stated plainly (no LS / scale boundary / synthetic instances).
+> the rendezvous constraint → the W8 LNS adds an improvement phase (+9~12.6%, offsetting the scaling
+> decay) → limitations stated plainly (scale boundary / synthetic instances / single drone).
 
 This chain lets every conclusion be traced back to an experiment, rather than resting on "I think
 so". That is what depth means, and it is the spine the final report should follow.

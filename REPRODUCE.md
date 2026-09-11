@@ -35,10 +35,12 @@ python src/experiments/week06_sensitivity.py
 | 受控消融（多顾客能力为主增益 +6.6~17.7pp；sanity check 通过） | `week07_improvement_ablation.py` | 40 算例 | `src/results/week07_ablation_summary.csv` |
 | FSTSP 复现（V2 比 M&C 2015 短 8–22%，卸载约 2 倍） | `week07_fstsp_repro.py` | 40 算例 | `src/results/week07_fstsp_*.csv` |
 | 规模衰减（N=50 收益 12.1%、会合否决 453 万） | `week06_largeN.py` | 5 种子 | `src/results/week06_largeN_summary.csv` |
+| LNS 改进（相对贪心 +9~12.6%，缓冲规模衰减） | `week08_lns.py` | 60 算例（10 种子 × N=8/12/16/20/30/50）；确定性 | `src/results/week08_lns_summary.csv`、`figures/lns_vs_greedy.png` |
+| 配对显著性检验（Wilcoxon 符号秩） | `stat_tests.py` | 读 W6/W7/W8 的 CSV；numpy 手写、无新依赖 | `src/results/stat_tests.csv` |
 
 ## 4. 诚实说明
 
 - **CSV 按 `.gitignore` 设计不入库**：结果靠脚本 + 种子本地重跑生成；仓库保留的是脚本、日志（`.txt` / `.log`）与图（PNG），因此老师看到的是"可重跑的证据链"而非孤数。
 - **硬件**：Windows / Python 3.13.14 / OR-Tools 9.15.6755 / 20 核（详见 `docs/env_record.md`）。
 - **续航 R 敏感性**在 2026-09-10 修复过一个 bug（之前 `mk_range` 未把续航传给模型，扫描恒为 50.5%）；修复后曲线见上方 §2。
-- **多目标为粗前沿**：加权和贪心，不是完整 NSGA-II / Pareto 求解器（见 `docs/experiment_evidence_index_zh.md` §7）。
+- **多目标为粗前沿**：加权和贪心，不是完整 NSGA-II / Pareto 求解器（见 `docs/experiment_evidence_index_zh.md` §3）。

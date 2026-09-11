@@ -132,7 +132,39 @@ Aggregate (18 instances with BKS):
 
 ---
 
-## 8. Limitations
+## 8. LNS improvement + significance tests (W8)
+
+Source: `src/results/week08_lns_summary.csv` (from `week08_lns.py`); significance in `src/results/stat_tests.csv` (`stat_tests.py`, numpy-only, no new dependency); figure `figures/lns_vs_greedy.png`.
+
+A destroy-and-repair LNS (random / worst / whole-sortie destroy + truck / single / paired repair + simulated-annealing acceptance) on top of the greedy V2, same FSTSP evaluator, 10 seeds × 6 sizes (N=8/12/16/20/30/50):
+
+| Size | truck-only | V2 greedy | greedy+2-opt | greedy+LNS | LNS vs greedy |
+|---|---:|---:|---:|---:|---:|
+| N=8 | 391.3 | 236.8 | 235.0 | **213.1** | **+9.70%** |
+| N=12 | 579.4 | 359.3 | 359.3 | **317.0** | **+10.98%** |
+| N=16 | 774.8 | 524.6 | 514.3 | **462.2** | **+10.95%** |
+| N=20 | 1022.3 | 714.1 | 706.7 | **624.5** | **+11.56%** |
+| N=30 | 1597.7 | 1212.7 | 1201.2 | **1094.2** | **+9.09%** |
+| N=50 | 3114.1 | 2569.1 | 2514.5 | **2233.1** | **+12.56%** |
+
+- LNS improves the greedy by a consistent **+9% to +12.6% at every size**; paired Wilcoxon overall **p = 3.6×10⁻⁹**, significant at every size.
+- LNS offsets the scaling decay: the greedy's reduction vs truck-only falls 39.2% → 17.6% (N=8→50), while LNS only falls 45.5% → 28.1%; at N=50 LNS still gives 28.1%.
+- Intra-route 2-opt alone barely moves (0–2%), so the gain comes from re-allocating drone tasks and the overall structure, not route fine-tuning.
+- Deterministic: one seed-derived RNG per instance, fixed iteration budget; the same seed reproduces the same numbers.
+
+Paired Wilcoxon signed-rank, overall rows (negative mean diff = first method smaller; n = nonzero pairs):
+
+| Comparison | n | mean diff | p |
+|---|---:|---:|---:|
+| my V2 vs published M&C 2015 | 40 | −73.0 | 5.9×10⁻⁷ |
+| my V2 vs abl_cap1 (multi-customer) | 40 | −73.0 | 5.9×10⁻⁷ |
+| my V2 vs abl_notakeoff (multi-takeoff) | 36 | −40.8 | 8.4×10⁻⁷ |
+| LNS vs greedy V2 | 46 | −146.2 | 3.6×10⁻⁹ |
+| V2 vs V1 (collaborative vs EV) | 40 | −424.3 | 3.7×10⁻⁸ |
+
+---
+
+## 9. Limitations
 
 Grouped by nature; each item gives its "consequence + next step" so it reads as a research-boundary statement, not a weakness list.
 
@@ -141,16 +173,16 @@ Grouped by nature; each item gives its "consequence + next step" so it reads as 
 - **V2 does not yet re-introduce V1's battery/charging layer**: the truck-drone model (V2) is built on VRPTW and does not re-add the electric-vehicle battery and charging constraints of V1; a truly "electric truck + drone + charging station" joint optimization is a clear next step.
 
 **Algorithmic-scope boundary**
-- **Greedy without local search**: applying intra-route 2-opt to V2's constructed truck route (accept only strict makespan improvement) yields only 0–1.76% (peak 1.76% at N=16; see `week07_fstsp_with_ls.log`). By contrast, 2-opt on a plain OR-Tools route reaches −9.7% on CVRP n40 — showing V2's gain comes from the *collaborative structure* of offloading far-flung customers, not route fine-tuning; it also means V2 is already near the local optimum of its current neighborhood. **How far from global optimum remains unquantified** (unless a MILP bound or larger neighborhoods like 3-opt are added), left for future work.
+- **The greedy itself has no local search (W8 adds an improvement phase)**: applying intra-route 2-opt to V2's constructed truck route (accept only strict makespan improvement) yields only 0–1.76% (peak 1.76% at N=16; see `week07_fstsp_with_ls.log`) — showing V2's gain comes from the *collaborative structure* of offloading far-flung customers, not route fine-tuning. With the W8 destroy-and-repair LNS the gain over the greedy is a consistent +9% to +12.6% at every size (Wilcoxon overall p=3.6×10⁻⁹; see §8), beyond pure routing. **How far from global optimum remains unquantified** (unless a MILP bound is added), left for future work.
 
 **Empirical-validation boundaries**
-- **Synthetic instances extended to 100, but the effective collaboration interval lies at N ≤ 50**: my truck-drone experiments use randomly generated synthetic instances and do not adopt the field's standard large-scale benchmark sets (e.g., the Solomon-derived FSTSP instances of Murray & Chu 2015 — which this project reproduced within their parameter range in W7; or the Masmoudi et al. 2018 instance set). At N=100 the synergy collapses to 2.3% and V2 averages 71.4/100 late customers (TW feasibility breaks down); extrapolation to real large scale needs caution.
+- **Synthetic instances extended to 100, but the effective collaboration interval lies at N ≤ 50**: my truck-drone experiments use randomly generated synthetic instances and do not adopt the field's standard large-scale benchmark sets (e.g., the Solomon-derived FSTSP instances of Murray & Chu 2015 — which this project reproduced within their parameter range in W7; or the Masmoudi et al. 2018 instance set). At N=100 the synergy collapses to 2.3% and V2 averages 71.4/100 late customers (TW feasibility breaks down); extrapolation to real large scale needs caution. The W8 LNS lifts the N=50 collaboration benefit from the greedy's 17.6% to 28.1%, slowing the decay, but it is still the same synthetic instances and setting, so the boundary is unchanged.
 - **No MILP lower bound replicated**: baselines are anchored to BKS (literature optimum), not a self-proven bound. Computing exact bounds for this NP-hard problem is itself a separate research contribution, beyond this project's scope; absolute quality is therefore literature-anchored, not self-certified.
 - **Coarse MO front**: the weighted-sum greedy gives a "partial / inner" front and may miss non-convex Pareto regions; it is not a full Pareto solver (see §3). For a complete front, the natural next step is ε-constraint or NSGA-II (as in peer Xie's P-ACO/NSGA-II).
 
 ---
 
-## 9. Data provenance (reproducible)
+## 10. Data provenance (reproducible)
 
 | Result | Script | CSV | Figure |
 |---|---|---|---|
@@ -161,7 +193,9 @@ Grouped by nature; each item gives its "consequence + next step" so it reads as 
 | Multi-objective | `week06_multi_objective.py` | `week06_multi_objective.csv` | `mo_scatter.png` / `mo_tradeoff.png` |
 | Ablation | `week07_improvement_ablation.py` | `week07_ablation_raw.csv` / `_summary.csv` | — |
 | Scale | `week06_largeN.py` | `week06_largeN_results.csv` / `_summary.csv` | `largen_scale_decay.png` |
+| LNS improvement | `week08_lns.py` | `week08_lns_raw.csv` / `_summary.csv` | `lns_vs_greedy.png` |
+| Significance tests | `stat_tests.py` | `stat_tests.csv` | — |
 | Schneider replication | `schneider_evrptw.py` + `schneider_bks_compare.py` + `plot_schneider_routes.py` | `schneider_evrptw_baseline.csv` / `schneider_evrptw_bks_comparison.csv` | `schneider_routes.png` / `schneider_vehcomp.png` |
 | FSTSP reproduction | `week07_fstsp_repro.py` | `week07_fstsp_raw.csv` / `_summary.csv` | — |
 
-Seed convention: all multi-seed experiments use fixed seed sets (e.g., `20260910–20260914`, or GA's `20260717/20260801/20260815/20260901/20261001`) for reproducibility; CSVs are excluded from the repo by design and regenerated locally via scripts + seeds.
+Seed convention: all multi-seed experiments use fixed seed sets (GA uses `20260717/20260801/20260815/20260901/20261001`; W6/W7/W8 use consecutive seeds from `20260720`) for reproducibility; CSVs are excluded from the repo by design and regenerated locally via scripts + seeds.

@@ -1,0 +1,90 @@
+==============================================================================
+WEEK 8 -- LNS improvement on the ground-air collaborative heuristic
+==============================================================================
+seeds=10 (base 20260720..20260729)  sizes=[8, 12, 16, 20, 30, 50]
+truck_speed=1.0  drone_speed=2.0  drone_range=160.0  service=10
+shared evaluator: FSTSP completion time, ONE serial drone, sync enforced
+methods: truck-only | V2 greedy | V2 greedy + 2-opt | V2 greedy + LNS
+iterations per size (destroy-repair): {8: 300, 12: 300, 16: 300, 20: 400, 30: 250, 50: 150}
+
+=== size N=8 ===
+  seed 20260720: truck=  376.3 greedy=  205.8 opt2=  198.9 LNS=  181.1  LNS-greedy=11.99%  off=3/8  0.13s
+  seed 20260721: truck=  420.0 greedy=  204.3 opt2=  204.3 LNS=  204.3  LNS-greedy= 0.00%  off=2/8  0.08s
+  seed 20260722: truck=  360.4 greedy=  235.8 opt2=  235.8 LNS=  206.8  LNS-greedy=12.31%  off=3/8  0.11s
+  seed 20260723: truck=  424.1 greedy=  236.0 opt2=  236.0 LNS=  226.6  LNS-greedy= 3.96%  off=3/8  0.10s
+  seed 20260724: truck=  425.9 greedy=  317.8 opt2=  317.8 LNS=  252.4  LNS-greedy=20.58%  off=3/8  0.08s
+  seed 20260725: truck=  364.0 greedy=  208.3 opt2=  208.3 LNS=  187.1  LNS-greedy=10.15%  off=3/8  0.14s
+  seed 20260726: truck=  472.5 greedy=  240.3 opt2=  240.3 LNS=  234.3  LNS-greedy= 2.51%  off=3/8  0.11s
+  seed 20260727: truck=  315.1 greedy=  198.4 opt2=  187.2 LNS=  158.3  LNS-greedy=20.18%  off=3/8  0.15s
+  seed 20260728: truck=  383.7 greedy=  252.2 opt2=  252.2 LNS=  252.2  LNS-greedy= 0.00%  off=3/8  0.08s
+  seed 20260729: truck=  371.1 greedy=  269.4 opt2=  269.4 LNS=  228.2  LNS-greedy=15.29%  off=4/8  0.10s
+
+=== size N=12 ===
+  seed 20260720: truck=  630.1 greedy=  372.2 opt2=  372.2 LNS=  279.0  LNS-greedy=25.04%  off=3/12  0.32s
+  seed 20260721: truck=  573.1 greedy=  352.4 opt2=  352.4 LNS=  352.4  LNS-greedy= 0.00%  off=4/12  0.22s
+  seed 20260722: truck=  504.3 greedy=  394.4 opt2=  394.4 LNS=  352.6  LNS-greedy=10.59%  off=4/12  0.33s
+  seed 20260723: truck=  672.7 greedy=  419.6 opt2=  419.6 LNS=  319.0  LNS-greedy=23.99%  off=4/12  0.30s
+  seed 20260724: truck=  607.9 greedy=  311.7 opt2=  311.7 LNS=  311.7  LNS-greedy= 0.00%  off=3/12  0.30s
+  seed 20260725: truck=  612.1 greedy=  342.3 opt2=  342.3 LNS=  303.5  LNS-greedy=11.34%  off=4/12  0.34s
+  seed 20260726: truck=  622.9 greedy=  389.6 opt2=  389.6 LNS=  307.6  LNS-greedy=21.05%  off=3/12  0.43s
+  seed 20260727: truck=  479.4 greedy=  256.1 opt2=  256.1 LNS=  237.6  LNS-greedy= 7.22%  off=4/12  0.57s
+  seed 20260728: truck=  564.3 greedy=  460.5 opt2=  460.5 LNS=  413.0  LNS-greedy=10.33%  off=5/12  0.21s
+  seed 20260729: truck=  527.3 greedy=  294.5 opt2=  294.5 LNS=  293.9  LNS-greedy= 0.19%  off=3/12  0.29s
+
+=== size N=16 ===
+  seed 20260720: truck=  878.2 greedy=  691.5 opt2=  662.3 LNS=  537.4  LNS-greedy=22.29%  off=5/16  0.57s
+  seed 20260721: truck=  725.2 greedy=  533.7 opt2=  529.6 LNS=  455.4  LNS-greedy=14.67%  off=6/16  0.56s
+  seed 20260722: truck=  785.7 greedy=  572.6 opt2=  560.0 LNS=  476.7  LNS-greedy=16.76%  off=5/16  0.62s
+  seed 20260723: truck=  715.9 greedy=  453.7 opt2=  453.7 LNS=  453.7  LNS-greedy= 0.00%  off=4/16  0.76s
+  seed 20260724: truck=  776.6 greedy=  462.3 opt2=  462.3 LNS=  415.4  LNS-greedy=10.15%  off=6/16  0.84s
+  seed 20260725: truck=  762.7 greedy=  520.8 opt2=  520.8 LNS=  499.1  LNS-greedy= 4.17%  off=7/16  0.65s
+  seed 20260726: truck=  792.0 greedy=  458.2 opt2=  458.2 LNS=  458.2  LNS-greedy= 0.00%  off=4/16  0.68s
+  seed 20260727: truck=  810.4 greedy=  543.3 opt2=  534.1 LNS=  381.2  LNS-greedy=29.83%  off=4/16  0.94s
+  seed 20260728: truck=  723.1 greedy=  451.9 opt2=  451.9 LNS=  451.9  LNS-greedy= 0.00%  off=5/16  0.54s
+  seed 20260729: truck=  778.0 greedy=  558.4 opt2=  509.5 LNS=  493.2  LNS-greedy=11.69%  off=5/16  0.60s
+
+=== size N=20 ===
+  seed 20260720: truck=  992.5 greedy=  607.3 opt2=  607.3 LNS=  607.3  LNS-greedy= 0.00%  off=6/20  1.48s
+  seed 20260721: truck=  904.7 greedy=  555.5 opt2=  555.5 LNS=  555.5  LNS-greedy= 0.00%  off=6/20  1.67s
+  seed 20260722: truck= 1014.5 greedy=  746.8 opt2=  746.8 LNS=  664.1  LNS-greedy=11.08%  off=7/20  1.47s
+  seed 20260723: truck= 1143.6 greedy=  778.8 opt2=  728.3 LNS=  540.4  LNS-greedy=30.62%  off=7/20  1.78s
+  seed 20260724: truck= 1115.6 greedy=  702.2 opt2=  702.2 LNS=  589.2  LNS-greedy=16.10%  off=6/20  1.42s
+  seed 20260725: truck= 1026.7 greedy=  617.8 opt2=  617.8 LNS=  617.8  LNS-greedy= 0.00%  off=5/20  1.53s
+  seed 20260726: truck= 1109.8 greedy=  762.8 opt2=  762.8 LNS=  636.7  LNS-greedy=16.53%  off=7/20  1.23s
+  seed 20260727: truck=  984.0 greedy=  822.7 opt2=  799.8 LNS=  556.3  LNS-greedy=32.39%  off=7/20  1.98s
+  seed 20260728: truck= 1024.5 greedy=  768.3 opt2=  768.3 LNS=  768.3  LNS-greedy= 0.00%  off=6/20  0.92s
+  seed 20260729: truck=  907.2 greedy=  778.4 opt2=  778.4 LNS=  709.0  LNS-greedy= 8.91%  off=4/20  0.92s
+
+=== size N=30 ===
+  seed 20260720: truck= 1529.8 greedy= 1032.7 opt2= 1030.6 LNS= 1030.6  LNS-greedy= 0.21%  off=8/30  2.23s
+  seed 20260721: truck= 1383.2 greedy=  952.1 opt2=  952.1 LNS=  952.1  LNS-greedy= 0.00%  off=8/30  2.70s
+  seed 20260722: truck= 1855.1 greedy= 1532.4 opt2= 1518.4 LNS= 1399.9  LNS-greedy= 8.65%  off=6/30  1.34s
+  seed 20260723: truck= 1695.7 greedy= 1340.4 opt2= 1311.6 LNS=  971.3  LNS-greedy=27.53%  off=11/30  2.31s
+  seed 20260724: truck= 1697.6 greedy= 1352.4 opt2= 1309.5 LNS= 1161.8  LNS-greedy=14.09%  off=6/30  3.23s
+  seed 20260725: truck= 1541.1 greedy= 1196.1 opt2= 1195.9 LNS= 1086.2  LNS-greedy= 9.19%  off=12/30  2.64s
+  seed 20260726: truck= 1618.7 greedy= 1218.9 opt2= 1216.9 LNS= 1178.0  LNS-greedy= 3.35%  off=10/30  2.19s
+  seed 20260727: truck= 1558.8 greedy= 1061.4 opt2= 1061.4 LNS= 1061.4  LNS-greedy= 0.00%  off=9/30  3.10s
+  seed 20260728: truck= 1578.9 greedy= 1298.2 opt2= 1274.0 LNS= 1121.4  LNS-greedy=13.62%  off=12/30  1.91s
+  seed 20260729: truck= 1518.5 greedy= 1142.2 opt2= 1142.2 LNS=  979.7  LNS-greedy=14.23%  off=11/30  1.89s
+
+=== size N=50 ===
+  seed 20260720: truck= 3322.4 greedy= 2887.9 opt2= 2843.3 LNS= 2444.9  LNS-greedy=15.34%  off=16/50  5.30s
+  seed 20260721: truck= 3104.7 greedy= 2587.7 opt2= 2587.7 LNS= 2179.8  LNS-greedy=15.76%  off=12/50  5.14s
+  seed 20260722: truck= 3289.3 greedy= 2844.7 opt2= 2657.2 LNS= 2331.2  LNS-greedy=18.05%  off=20/50  5.45s
+  seed 20260723: truck= 2696.0 greedy= 1942.3 opt2= 1942.3 LNS= 1942.3  LNS-greedy= 0.00%  off=12/50  6.47s
+  seed 20260724: truck= 3067.1 greedy= 2398.8 opt2= 2378.3 LNS= 2084.3  LNS-greedy=13.11%  off=17/50  5.52s
+  seed 20260725: truck= 2820.8 greedy= 2399.8 opt2= 2356.3 LNS= 2364.2  LNS-greedy= 1.49%  off=12/50  5.10s
+  seed 20260726: truck= 3341.3 greedy= 2696.2 opt2= 2687.0 LNS= 2302.1  LNS-greedy=14.62%  off=18/50  7.29s
+  seed 20260727: truck= 2954.5 greedy= 2677.0 opt2= 2571.0 LNS= 2187.4  LNS-greedy=18.29%  off=16/50  4.65s
+  seed 20260728: truck= 3428.7 greedy= 2655.8 opt2= 2636.2 LNS= 2196.6  LNS-greedy=17.29%  off=17/50  4.76s
+  seed 20260729: truck= 3116.0 greedy= 2600.8 opt2= 2486.1 LNS= 2298.2  LNS-greedy=11.64%  off=15/50  4.30s
+
+==============================================================================
+AGGREGATE (mean over seeds per size)
+==============================================================================
+  N= 8: truck=  391.3  greedy=  236.8 ( 39.2%)  opt2=  235.0  LNS=  213.1 ( 45.5%)  LNS-greedy= 9.70%  0.1s/it
+  N=12: truck=  579.4  greedy=  359.3 ( 37.8%)  opt2=  359.3  LNS=  317.0 ( 44.8%)  LNS-greedy=10.98%  0.3s/it
+  N=16: truck=  774.8  greedy=  524.6 ( 32.4%)  opt2=  514.3  LNS=  462.2 ( 40.2%)  LNS-greedy=10.95%  0.7s/it
+  N=20: truck= 1022.3  greedy=  714.1 ( 29.9%)  opt2=  706.7  LNS=  624.5 ( 38.5%)  LNS-greedy=11.56%  1.4s/it
+  N=30: truck= 1597.7  greedy= 1212.7 ( 24.4%)  opt2= 1201.2  LNS= 1094.2 ( 31.6%)  LNS-greedy= 9.09%  2.4s/it
+  N=50: truck= 3114.1  greedy= 2569.1 ( 17.6%)  opt2= 2514.5  LNS= 2233.1 ( 28.1%)  LNS-greedy=12.56%  5.4s/it

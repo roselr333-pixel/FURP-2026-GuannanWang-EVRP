@@ -31,6 +31,8 @@ STEPS = [
     ("Controlled ablation (5 configs)",     "week07_improvement_ablation.py", "40 instances, sanity check"),
     ("FSTSP repro vs M&C (2015)",           "week07_fstsp_repro.py",          "40 instances"),
     ("Scaling decay (N=30/50/100)",         "week06_largeN.py",               "5 seeds"),
+    ("LNS improvement (W8)",                "week08_lns.py",                  "60 instances, deterministic"),
+    ("Paired significance tests",           "stat_tests.py",                  "Wilcoxon; reads W6/W7/W8 CSVs"),
 ]
 
 
