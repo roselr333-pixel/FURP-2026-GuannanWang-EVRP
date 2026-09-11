@@ -63,7 +63,7 @@ Every experiment I run speaks to this question.
 | Requirement | My status | Reading |
 |---|---|---|
 | Explain the four problem classes | CVRP / VRPTW / EVRP-TW / truck-drone all coded | met |
-| Reproduce a baseline | OR-Tools on Solomon 56 (56/56 feasible, avg gap 7.2%) + self-written GA (5-seed check, avg gap 36.7%±15.9%) + **reproduced Murray & Chu 2015 FSTSP heuristic** | met; Schneider 2014 still pending |
+| Reproduce a baseline | OR-Tools on Solomon 56 (56/56 feasible, avg gap 7.2%) + self-written GA (5-seed check, avg gap 36.6%±15.8%) + **reproduced Murray & Chu 2015 FSTSP heuristic** | met; Schneider 2014 still pending |
 | Report objective/feasibility/violations/time | all scripts emit these fields | met; GA now has a 5-seed check |
 | Diagnose infeasibility/inefficiency | FC1–FC4 constraint-level failure table | met |
 | One focused improvement | truck-drone multi-customer extension (V2), 8.5–22.3% shorter than published baseline | met |
@@ -78,7 +78,7 @@ Every experiment I run speaks to this question.
 - **W2 literature**: one survey note (Erdelić & Carić 2019) finished; the FSTSP foundational paper note was also written during reproduction. The planned third paper (Schneider 2014) is still missing.
 - **W3 baseline reproduction**:
   - OR-Tools on the official Solomon 56 set: 56/56 feasible, average gap 7.2% vs BKS;
-  - self-written GA (permutation coding + Solomon I1 insertion decoding + OX crossover + tournament + elitism): 56/56 runs complete; 5-seed check gives avg gap 36.7%±15.9% (best-of-5 31.2%) — honestly reported as weaker than OR-Tools, a "self-built baseline" rather than an improvement.
+  - self-written GA (permutation coding + Solomon I1 insertion decoding + OX crossover + tournament + elitism): 56/56 runs complete; 5-seed check gives avg gap 36.6%±15.8% (best-of-5 31.2%) — honestly reported as weaker than OR-Tools, a "self-built baseline" rather than an improvement.
 - **W4 EVRP-TW constraints**: electric-vehicle + charging experiments done, and charging count / charging time / energy violations are reported inside the later week06 script, but not yet assembled into a dedicated scoring-facing violation table.
 - **W5 truck-drone formulation**: v2 lets the drone ride the truck and launch/recover at any node; on a small instance it is 49.8% shorter than truck-only and 28.8% shorter than the old "depot-only" drone version, confirming that arbitrary-node launch/recovery genuinely relaxes the constraint.
 - **W6 hybrid method (Track B)**: one greedy core runs V0 (truck-only, no EV) / V1 (truck EV baseline) / V2 (collaborative EV). 4 sizes (8/12/16/20) × 10 seeds = 40 instances, all feasible; V2 improves over V1 by **42–55%** on average, with a 65–72% average offload rate. The Week 6 Integration Note (Track B, 4 sections, EN+ZH) is written.
@@ -128,15 +128,15 @@ I ran the self-written GA on all 56 Solomon instances with 5 fixed seeds (`20260
 
 | Metric (gap to BKS) | Value |
 |---|---:|
-| Cross-instance seed-mean gap | **36.7%** (std across instances 15.9%) |
+| Cross-instance seed-mean gap | **36.6%** (std across instances 15.8%) |
 | Cross-instance best-of-5 gap | **31.2%** |
 | Within-instance seed spread (mean std) | **3.9 pp** |
 | Solved | 56/56 feasible |
 
-Per family (seed-mean gap): C1 25.9%, C2 36.0%, R1 31.2%, R2 41.9%, RC1 30.4%, RC2 56.8%.
+Per family (seed-mean gap): C1 25.9%, C2 36.0%, R1 31.2%, R2 41.5%, RC1 30.6%, RC2 56.8%.
 
 Honest notes:
-- The earlier "~36.2%" was a **single-seed** figure; the 5-seed check gives **36.7%**, essentially the same — my GA is fairly stable, with a within-instance seed spread of only 3.9 pp on average.
+- The earlier "~36.2%" was a **single-seed** figure; the 5-seed check gives **36.6%**, essentially the same — my GA is fairly stable, with a within-instance seed spread of only 3.9 pp on average.
 - This is not an improvement, just a statistically sounder check of an existing baseline: I now report mean±spread instead of one random run. Best-of-5 (31.2%) sits ~5 pp below the mean, normal GA variance.
 - The GA is still clearly weaker than OR-Tools (7.2%); its role is unchanged — a baseline I implemented to understand the evolutionary operators, not a SOTA attempt.
 - Fixed a latent bug: the old `main()` called `random.seed()` outside the loop, polluting the global RNG and making "multi-seed" meaningless; it now reseeds only inside `solve_ga(seed=...)`, so the five runs are genuinely independent.
@@ -174,7 +174,7 @@ Honest notes:
 
 ### 3.5 Deepening stage (W6–W7 completed, 2026-09-10)
 
-14. ~~**No domain-standard solver baseline (PyVRP)**~~ ✅ **Delivered**: `baseline_pyvrp_vrptw.py` runs PyVRP 0.14.0 on all 56 Solomon instances, mean gap **−3.0%** (beats BKS); consolidated with OR-Tools (+7.2%) and own GA (+36.7%±15.9%) in `baseline_consolidated.py` → `baseline_consolidated.csv` + `baseline_consolidated.png` / `pyvrp_family_gap.png`. The three baselines are clearly positioned (PyVRP strongest → BKS → OR-Tools → GA), no overclaiming.
+14. ~~**No domain-standard solver baseline (PyVRP)**~~ ✅ **Delivered**: `baseline_pyvrp_vrptw.py` runs PyVRP 0.14.0 on all 56 Solomon instances, mean gap **−3.0%** (beats BKS); consolidated with OR-Tools (+7.2%) and own GA (+36.6%±15.8%) in `baseline_consolidated.py` → `baseline_consolidated.csv` + `baseline_consolidated.png` / `pyvrp_family_gap.png`. The three baselines are clearly positioned (PyVRP strongest → BKS → OR-Tools → GA), no overclaiming.
 15. ~~**Sensitivity reported as single values, no error bars**~~ ✅ **Delivered (with bug fix)**: `week06_sensitivity.py` upgraded to 5-seed mean ± std with error-bar figures. On 2026-09-10 a bug was fixed where the drone-range R parameter was not passed to the model (R sweep was flat at 50.5%); after the fix R 60→200 gives 15.5%→27.7%→35.2%→50.5%@160→48.7%@200 (saturates after 160), matching the depth doc. Q/K/N sweeps unchanged.
 16. ~~**Multi-objective computed at a single point**~~ ✅ **Delivered**: `week06_multi_objective.py` sweeps weights w∈{0,0.25,0.5,0.75,1.0} (5 seeds). V2 (215.2, 415.7) vs V1 (486.4, 622.4): distance −56%, makespan −33%, dominating on both axes; honestly labelled a "coarse front" (weighted-sum greedy, not a full Pareto solver).
 17. ~~**No defensible "why it works" chain**~~ ✅ **Delivered**: `docs/week06_depth_analysis_zh.md` chains the ablation (multi-customer ability as main source, +6.6~17.7pp), the sensitivity K scan (25.3%→56.5%), the applicability regime, two-axis MO dominance, three-baseline positioning, failure cases (N=50 ~4.5M sync rejections), and honest limitations into one argument; accompanied by `docs/experiment_evidence_index_zh.md` and `experiment_evidence_index_en.md` collecting every citable number with provenance.

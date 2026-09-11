@@ -8,7 +8,7 @@ import os
 import datetime
 
 REPO = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-FIGDIR = os.path.join(REPO, "src", "results", "figures")
+FIGDIR = os.path.join(REPO, "figures")
 OUT = os.path.join(REPO, "progress_dashboard.html")
 
 GEN_DATE = "2026-09-10"
@@ -26,7 +26,7 @@ figs = {
     "sensitivity": b64(os.path.join(FIGDIR, "sensitivity_panels.png")),
     "mo_scatter": b64(os.path.join(FIGDIR, "mo_scatter.png")),
     "mo_tradeoff": b64(os.path.join(FIGDIR, "mo_tradeoff.png")),
-    "largen": b64(os.path.join(REPO, "figures", "largen_scale_decay.png")),
+    "largen": b64(os.path.join(FIGDIR, "largen_scale_decay.png")),
 }
 
 # ---- task counts (from TaskList snapshot 2026-09-10) ----
@@ -161,14 +161,14 @@ HTML = f"""<!DOCTYPE html>
     <div class="grid" style="margin-bottom:8px">
       <div class="kpi good"><div class="v">−3.0%</div><div class="k">PyVRP 基线 vs BKS（最强求解器）</div></div>
       <div class="kpi"><div class="v">+7.2%</div><div class="k">OR-Tools 商业求解器 vs BKS</div></div>
-      <div class="kpi bad"><div class="v">+36.7%</div><div class="k">自写 GA vs BKS（±15.9%）</div></div>
+      <div class="kpi bad"><div class="v">+36.6%</div><div class="k">自写 GA vs BKS（±15.8%）</div></div>
       <div class="kpi warn"><div class="v">+6.6~17.7pp</div><div class="k">消融：多顾客能力主增益</div></div>
     </div>
 
     <figure>
       <img src="{figs['consolidated']}">
       <figcaption>图1 · 三基线整合对比（按 Solomon 族，gap vs BKS）。PyVRP 平均 −3.0%（优于 BKS），
-      OR-Tools +7.2%，自写 GA +36.7%±15.9%。少数 RC2 实例 GA 偏差大（数据驱动的定位，非夸大）。</figcaption>
+      OR-Tools +7.2%，自写 GA +36.6%±15.8%。少数 RC2 实例 GA 偏差大（数据驱动的定位，非夸大）。</figcaption>
     </figure>
 
     <figure>

@@ -99,7 +99,7 @@ def solve(inst, seed=0, multitrip=True, trip_cap=8, max_cust=None):
             if max_cust is not None and len(served) >= max_cust:
                 break
             best = None; best_key = None
-            for cid in list(unassigned):
+            for cid in sorted(unassigned):  # deterministic: avoid set-iteration hash-order non-determinism
                 c = cbyid[cid]
                 if load + c["demand"] > C + 1e-9:
                     continue

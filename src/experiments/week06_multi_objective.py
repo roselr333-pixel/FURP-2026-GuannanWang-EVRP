@@ -17,8 +17,8 @@ points across w and seeds traces the achievable trade-off front, and we
 show V2 dominates the truck-only (V1) baseline on both axes.
 
 Outputs:
-  src/results/figures/mo_scatter.png     (V1 vs V2-weighted cloud)
-  src/results/figures/mo_tradeoff.png    (one instance: dist vs makespan vs w)
+  figures/mo_scatter.png     (V1 vs V2-weighted cloud)
+  figures/mo_tradeoff.png    (one instance: dist vs makespan vs w)
   src/results/week06_multi_objective.csv
 """
 import os
@@ -36,7 +36,8 @@ N = 12
 WS = [0.0, 0.25, 0.5, 0.75, 1.0]
 RHO = 1.0          # truck energy per distance unit (from week06)
 DRONE_RHO = 0.3    # drone energy per distance unit (proxy: cheaper per km)
-FIG_DIR = os.path.join("src", "results", "figures")
+REPO = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+FIG_DIR = os.path.join(REPO, "figures")
 os.makedirs(FIG_DIR, exist_ok=True)
 
 

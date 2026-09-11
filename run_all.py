@@ -7,7 +7,7 @@ Usage:
     PYTHON=/path/to/venv/python run_all.py     # or force a specific interpreter
 
 Each script writes its own CSV / log under src/results/ and figures under
-src/results/figures/. Scripts are ordered so that dependents (e.g.
+figures/ (repo root). Scripts are ordered so that dependents (e.g.
 baseline_consolidated.py reads the three baseline CSVs) are produced first.
 A full run takes roughly 40-60 minutes; the self-written GA baseline is the slow one.
 """
@@ -30,7 +30,7 @@ STEPS = [
     ("Multi-objective tradeoff",            "week06_multi_objective.py",      "weighted-sum, 5 weights x 5 seeds"),
     ("Controlled ablation (5 configs)",     "week07_improvement_ablation.py", "40 instances, sanity check"),
     ("FSTSP repro vs M&C (2015)",           "week07_fstsp_repro.py",          "40 instances"),
-    ("Scaling decay (N=30/50)",             "week06_largeN.py",               "5 seeds"),
+    ("Scaling decay (N=30/50/100)",         "week06_largeN.py",               "5 seeds"),
 ]
 
 

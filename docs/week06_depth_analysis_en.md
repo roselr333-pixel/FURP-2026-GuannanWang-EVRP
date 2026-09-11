@@ -78,7 +78,7 @@ We put the three pure-truck VRPTW baselines (OR-Tools, GA, PyVRP) next to BKS in
 |---|---:|---|
 | **PyVRP** (standard open-source) | **−3.0%** | strongest baseline, community-standard solver |
 | OR-Tools (commercial) | +7.2% | main comparison baseline |
-| GA (own, 5-seed mean) | +36.7% ± 15.9% | own metaheuristic, honestly shown weak |
+| GA (own, 5-seed mean) | +36.6% ± 15.8% | own metaheuristic, honestly shown weak |
 
 **Key honest point**: our V2 is a *collaborative heuristic* optimising a makespan-driven synchronous
 objective; its "distance" is not directly comparable to these pure distance-minimising baselines.

@@ -16,7 +16,7 @@ stay consistent with the ablation study. Synthetic instances via make_instance.
 Paths are resolved relative to this file, so the script runs from any CWD.
 
 Outputs:
-  src/results/figures/sensitivity_panels.png   (4 panels, mean±std)
+  figures/sensitivity_panels.png   (4 panels, mean±std)
   src/results/week06_sensitivity.csv            (raw sweep table with std)
 """
 import os
@@ -34,7 +34,7 @@ import week07_fstsp_repro as f7
 REPO = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 SEEDS = [20260910, 20260911, 20260912, 20260913, 20260914]
 N_BASE = 12
-FIG_DIR = os.path.join(REPO, "src", "results", "figures")
+FIG_DIR = os.path.join(REPO, "figures")
 os.makedirs(FIG_DIR, exist_ok=True)
 
 

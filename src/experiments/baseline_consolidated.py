@@ -19,7 +19,7 @@ Paths are resolved relative to this file, so the script runs from any CWD.
 Outputs:
   src/results/baseline_consolidated.csv        (per-instance, 4 solvers + BKS)
   src/results/baseline_consolidated_summary.csv (per-family mean gap)
-  src/results/figures/baseline_consolidated.png (grouped gap bars)
+  figures/baseline_consolidated.png (grouped gap bars)
 """
 import os
 import csv
@@ -31,7 +31,7 @@ import numpy as np
 
 REPO = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 RESULTS = os.path.join(REPO, "src", "results")
-FIG_DIR = os.path.join(RESULTS, "figures")
+FIG_DIR = os.path.join(REPO, "figures")
 os.makedirs(FIG_DIR, exist_ok=True)
 
 FAMILIES = ["C1", "C2", "R1", "R2", "RC1", "RC2"]

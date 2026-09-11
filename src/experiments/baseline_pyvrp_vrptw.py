@@ -12,7 +12,7 @@ PyVRP reads VRPLIB Solomon files directly; no model construction needed.
 
 Output:
   src/results/baseline_pyvrp_vrptw_results.csv   (per-instance)
-  src/results/figures/pyvrp_family_gap.png        (family mean gap bar)
+  figures/pyvrp_family_gap.png        (family mean gap bar)
 """
 import os
 import csv
@@ -25,8 +25,9 @@ import baseline_ga_vrptw as bg
 
 RESULTS_DIR = bg.RESULTS_DIR
 INST_DIR = bg.INSTANCE_DIR
+REPO = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 CSV_PATH = os.path.join(RESULTS_DIR, "baseline_pyvrp_vrptw_results.csv")
-FIG_PATH = os.path.join(RESULTS_DIR, "figures", "pyvrp_family_gap.png")
+FIG_PATH = os.path.join(REPO, "figures", "pyvrp_family_gap.png")
 FAMILIES = bg.FAMILIES
 ALL_INSTANCES = bg.ALL_INSTANCES
 SEED = 42

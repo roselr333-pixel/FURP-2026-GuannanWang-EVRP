@@ -14,7 +14,7 @@ Source: `src/results/baseline_consolidated.csv` / `_summary.csv` (from `baseline
 |---|---:|---|
 | **PyVRP** (standard open-source solver) | **−3.0%** | strongest baseline, community standard |
 | OR-Tools (commercial solver) | +7.2% | main comparison baseline |
-| GA (own, 5-seed mean) | +36.7% ± 15.9% | own metaheuristic, honestly shown weak |
+| GA (own, 5-seed mean) | +36.6% ± 15.8% | own metaheuristic, honestly shown weak |
 
 By family (gap vs BKS, PyVRP / OR-Tools / GA):
 
@@ -22,12 +22,12 @@ By family (gap vs BKS, PyVRP / OR-Tools / GA):
 |---|---:|---:|---:|---:|
 | C1 | 9 | −2.3% | +4.2% | +25.9% ± 24.2% |
 | C2 | 8 | −4.3% | +0.9% | +36.0% ± 16.3% |
-| R1 | 12 | −3.2% | +5.1% | +31.2% ± 8.3% |
-| R2 | 11 | −3.5% | +12.4% | +41.9% ± 6.3% |
-| RC1 | 8 | −2.2% | +6.4% | +30.4% ± 2.0% |
+| R1 | 12 | −3.2% | +5.1% | +31.2% ± 8.2% |
+| R2 | 11 | −3.5% | +12.4% | +41.5% ± 6.0% |
+| RC1 | 8 | −2.2% | +6.4% | +30.6% ± 2.4% |
 | RC2 | 8 | −2.1% | +13.7% | +56.8% ± 5.1% |
 
-**Honest point**: V2 is a collaborative heuristic optimising a makespan-driven synchronous objective; its "distance" is not directly comparable to these pure distance-minimising baselines. They are shown together to demonstrate that on standard truck VRPTW a domain solver (PyVRP) reaches or slightly beats BKS — highlighting that this project's contribution is in *collaborative modelling*, not single-objective distance optimisation.
+**Honest point**: V2 is a collaborative heuristic optimising a makespan-driven synchronous objective; its "distance" is not directly comparable to these pure distance-minimising baselines. They are shown together to demonstrate that on standard truck VRPTW a domain solver (PyVRP) reaches or slightly beats BKS — highlighting that this project's contribution is in *collaborative modelling*, not single-objective distance optimisation. OR-Tools uses GUIDED_LOCAL_SEARCH with a 10 s cap and is stochastic; re-runs vary by ≈ ±0.1 pp (the figures above come from the consolidated CSV, which is the cited source).
 
 ---
 
@@ -116,14 +116,17 @@ representative instances with BKS distance & vehicle gap annotated per panel),
 secondary literature), so the comparison is at the aggregate level (distance + vehicle count),
 not a route-geometry overlay we cannot produce. Our 92 instances were byte-verified against the
 jmanzolli/E-VRPTW "E-VRPTW Instances" folder (whitespace-only diff), confirming they are the
-Schneider ORIGINAL data.
+Schneider ORIGINAL data. Our solver is deterministic as of 2026-09-10 (the unassigned-customer set
+is iterated in sorted ID order, removing Python's per-process hash randomisation), so every number
+below reproduces exactly on re-run.
 
 Aggregate (18 instances with BKS):
-- Mean distance gap vs BKS: **+48.9%** (our constructive greedy vs Schneider/Adachi BKS).
-- Mean vehicle count: ours **5.3** vs BKS **1.9** (gap **+3.3**; the gap is largest on the
-  100-customer _21 set where ALNS-grade methods are needed to consolidate customers into BKS's
-  few vehicles — our greedy cannot globally assign customers to multi-trip vehicles because later
-  trips depart too late to catch early time windows).
+- Mean distance gap vs BKS: **+50.7%** (absolute mean; signed mean +50.1%; our constructive greedy
+  vs Schneider/Adachi BKS).
+- Mean vehicle count: ours **5.4** vs BKS **2.1** (gap **+3.4**; the gap is largest on the
+  100-customer _21 set — max vehicle gap +12 on c201_21 — where ALNS-grade methods are needed to
+  consolidate customers into BKS's few vehicles; our greedy cannot globally assign customers to
+  multi-trip vehicles because later trips depart too late to catch early time windows).
 - A few C5 wins: c103C5 −0.4%, r105C5 −4.4% (our greedy is competitive on a couple of
   small/loose-time-window instances; the heavy losses are on 100-customer + tight-TW instances).
 

@@ -59,19 +59,21 @@ the **heuristic itself**, not a modeling omission.
 
 ## 5. Gap to BKS (honest attribution)
 
-Across the 18 comparison instances (all fully served) the mean distance gap is **+48.9%**, with:
+Across the 18 comparison instances (all fully served) the mean distance gap is **+50.7%** (absolute
+mean; signed mean +50.1%). The solver is deterministic as of 2026-09-10 (unassigned customers iterated
+in sorted ID order), so these numbers reproduce exactly on re-run. Breakdown:
 
 | Set | Distance gap (mean) | Vehicles (mine vs BKS) |
 |---|---|---|
-| C5 small (5 customers) | **≈ +25%** (range −4.4% ~ +45.8%) | 0–2 more |
-| `_21` large (100 customers) | **+53% ~ +233%** | 5–11 more |
+| C5 small (5 customers) | **≈ +21%** (range −4.4% ~ +45.8%) | 0–2 more |
+| `_21` large (100 customers) | **+54% ~ +239%** | 5–12 more |
 
 Why the gap exists (stated plainly, no overclaiming):
 
 1. **Vehicle count not minimized (dominant).** Schneider's primary objective is minimizing vehicles,
    and its vehicles may run **multiple trips** (one dispatch, several routes); the constructive greedy
    cannot arrange multi-trips globally, so it uses many more vehicles, which directly inflates total
-   distance. E.g. `c201_21`: mine 15 vs BKS 4; `rc201_21`: 15 vs 4; `r201_21`: 13 vs 3.
+   distance. E.g. `c201_21`: mine 16 vs BKS 4; `rc201_21`: 15 vs 4; `r201_21`: 14 vs 3.
    Most of the large-instance distance gap comes from here, not from route geometry.
 2. **Simple heuristic.** Nearest-feasible insertion; route geometry is suboptimal, assignment fragmented.
 3. **Distance metric.** I use raw Euclidean distance; the paper may truncate to 1 decimal — difference

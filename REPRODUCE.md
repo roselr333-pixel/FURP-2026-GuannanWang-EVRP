@@ -29,7 +29,7 @@ python src/experiments/week06_sensitivity.py
 
 | 报告中的结论 | 脚本 | 种子 / 参数 | 主要产物 |
 |---|---|---|---|
-| 三基线 vs BKS（PyVRP −3.0% / OR-Tools +7.2% / GA +36.7%±15.9%） | `benchmark_official_solomon.py` + `baseline_pyvrp_vrptw.py` + `baseline_ga_vrptw.py` → `baseline_consolidated.py` | GA 5 种子；OR-Tools / PyVRP 决定性 | `src/results/baseline_consolidated.csv`、`figures/baseline_gap_by_family.png` |
+| 三基线 vs BKS（PyVRP −3.0% / OR-Tools +7.2% / GA +36.6%±15.8%） | `benchmark_official_solomon.py` + `baseline_pyvrp_vrptw.py` + `baseline_ga_vrptw.py` → `baseline_consolidated.py` | GA 5 种子；OR-Tools / PyVRP 决定性 | `src/results/baseline_consolidated.csv`、`figures/baseline_gap_by_family.png` |
 | 参数敏感性（电池 / 续航 / 每架次 / 规模） | `week06_sensitivity.py` | 5 种子；n=12 | `src/results/week06_sensitivity.csv`、`figures/sensitivity_panels.png` |
 | 多目标权衡（距离 −56% / 时长 −33%，两轴占优） | `week06_multi_objective.py` | 5 权重 × 5 种子 | `src/results/week06_multi_objective.csv`、`figures/mo_*.png` |
 | 受控消融（多顾客能力为主增益 +6.6~17.7pp；sanity check 通过） | `week07_improvement_ablation.py` | 40 算例 | `src/results/week07_ablation_summary.csv` |
