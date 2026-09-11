@@ -95,7 +95,7 @@ as `protected`, my code wrongly banned the depot from being used as a
 launch/recovery again, so one sortie was dropped — and "multi-takeoff off"
 coincidentally matched "multi-takeoff on". **After the fix** (only forbid
 *offloading* a launch/recovery node; allow reuse), C3 finally showed 4–7pp
-worse than C1. In other words, fixing this bug is precisely what made the
+worse than C1. So fixing this bug is precisely what made the
 "multi-takeoff does contribute" conclusion surface. Lesson: when an ablation
 shows *no difference*, suspect first that the implementation silently turned
 off the variable too, before concluding the mechanism is irrelevant.

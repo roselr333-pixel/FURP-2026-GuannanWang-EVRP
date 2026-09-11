@@ -2,7 +2,7 @@
 
 > Purpose: a single page collecting every **citable number** in this project, with data provenance and limitations, so figures can be lifted directly without misattribution.
 > All data here come from this project's own scripts and CSVs (under `src/results/`); no peer's report structure or framework is used.
-> Companion docs: `docs/week06_depth_analysis_zh.md` and `docs/week06_depth_analysis_en.md` (which turn these numbers into a defensible "why it works / when it works" chain; the two are independent files, not sentence-by-sentence translations).
+> Companion docs: `docs/week06_depth_analysis_zh.md` and `docs/week06_depth_analysis_en.md` (which turn these numbers into a coherent "why it works / when it works" chain; the two are independent files, not sentence-by-sentence translations).
 
 ---
 
@@ -101,33 +101,33 @@ Source: `docs/failure_cases_master.md`. The most telling: on N=50 dense instance
 
 ---
 
-## 7. Schneider (2014) E-VRPTW replication (our constructive-greedy vs BKS)
+## 7. Schneider (2014) E-VRPTW replication (my constructive-greedy vs BKS)
 
-Source: `src/results/schneider_evrptw_baseline.csv` (our solver, 92 instances) and
+Source: `src/results/schneider_evrptw_baseline.csv` (my solver, 92 instances) and
 `src/results/schneider_evrptw_bks_comparison.csv` (18 instances with BKS: 5-customer C5 set from
 jmanzolli/E-VRPTW citing Schneider 2014; 100-customer _21 set from Adachi et al. 2022 citing
-Schneider 2014). Our solver is a constructive greedy with a homogeneous multi-trip fleet
+Schneider 2014). My solver is a constructive greedy with a homogeneous multi-trip fleet
 (MIN vehicles then MIN distance), feasibility-checked on capacity + time windows (waiting allowed)
 + full recharge at stations. Figures: `figures/schneider_routes.png` (route maps for 4
 representative instances with BKS distance & vehicle gap annotated per panel),
-`figures/schneider_vehcomp.png` (vehicle count, our vs BKS across 18 instances).
+`figures/schneider_vehcomp.png` (vehicle count, mine vs BKS across 18 instances).
 
 **Caveat**: BKS route geometry is not publicly available (only distance values from the
 secondary literature), so the comparison is at the aggregate level (distance + vehicle count),
-not a route-geometry overlay we cannot produce. Our 92 instances were byte-verified against the
+not a route-geometry overlay I cannot produce. My 92 instances were byte-verified against the
 jmanzolli/E-VRPTW "E-VRPTW Instances" folder (whitespace-only diff), confirming they are the
-Schneider ORIGINAL data. Our solver is deterministic as of 2026-09-10 (the unassigned-customer set
+Schneider ORIGINAL data. My solver is deterministic as of 2026-09-10 (the unassigned-customer set
 is iterated in sorted ID order, removing Python's per-process hash randomisation), so every number
 below reproduces exactly on re-run.
 
 Aggregate (18 instances with BKS):
-- Mean distance gap vs BKS: **+50.7%** (absolute mean; signed mean +50.1%; our constructive greedy
+- Mean distance gap vs BKS: **+50.7%** (absolute mean; signed mean +50.1%; my constructive greedy
   vs Schneider/Adachi BKS).
-- Mean vehicle count: ours **5.4** vs BKS **2.1** (gap **+3.4**; the gap is largest on the
+- Mean vehicle count: mine **5.4** vs BKS **2.1** (gap **+3.4**; the gap is largest on the
   100-customer _21 set — max vehicle gap +12 on c201_21 — where ALNS-grade methods are needed to
-  consolidate customers into BKS's few vehicles; our greedy cannot globally assign customers to
+  consolidate customers into BKS's few vehicles; my greedy cannot globally assign customers to
   multi-trip vehicles because later trips depart too late to catch early time windows).
-- A few C5 wins: c103C5 −0.4%, r105C5 −4.4% (our greedy is competitive on a couple of
+- A few C5 wins: c103C5 −0.4%, r105C5 −4.4% (my greedy is competitive on a couple of
   small/loose-time-window instances; the heavy losses are on 100-customer + tight-TW instances).
 
 ---
@@ -144,7 +144,7 @@ Grouped by nature; each item gives its "consequence + next step" so it reads as 
 - **Greedy without local search**: applying intra-route 2-opt to V2's constructed truck route (accept only strict makespan improvement) yields only 0–1.76% (peak 1.76% at N=16; see `week07_fstsp_with_ls.log`). By contrast, 2-opt on a plain OR-Tools route reaches −9.7% on CVRP n40 — showing V2's gain comes from the *collaborative structure* of offloading far-flung customers, not route fine-tuning; it also means V2 is already near the local optimum of its current neighborhood. **How far from global optimum remains unquantified** (unless a MILP bound or larger neighborhoods like 3-opt are added), left for future work.
 
 **Empirical-validation boundaries**
-- **Synthetic instances extended to 100, but the effective collaboration interval lies at N ≤ 50**: our truck-drone experiments use randomly generated synthetic instances and do not adopt the field's standard large-scale benchmark sets (e.g., the Solomon-derived FSTSP instances of Murray & Chu 2015 — which this project reproduced within their parameter range in W7; or the Masmoudi et al. 2018 instance set). At N=100 the synergy collapses to 2.3% and V2 averages 71.4/100 late customers (TW feasibility breaks down); extrapolation to real large scale needs caution.
+- **Synthetic instances extended to 100, but the effective collaboration interval lies at N ≤ 50**: my truck-drone experiments use randomly generated synthetic instances and do not adopt the field's standard large-scale benchmark sets (e.g., the Solomon-derived FSTSP instances of Murray & Chu 2015 — which this project reproduced within their parameter range in W7; or the Masmoudi et al. 2018 instance set). At N=100 the synergy collapses to 2.3% and V2 averages 71.4/100 late customers (TW feasibility breaks down); extrapolation to real large scale needs caution.
 - **No MILP lower bound replicated**: baselines are anchored to BKS (literature optimum), not a self-proven bound. Computing exact bounds for this NP-hard problem is itself a separate research contribution, beyond this project's scope; absolute quality is therefore literature-anchored, not self-certified.
 - **Coarse MO front**: the weighted-sum greedy gives a "partial / inner" front and may miss non-convex Pareto regions; it is not a full Pareto solver (see §3). For a complete front, the natural next step is ε-constraint or NSGA-II (as in peer Xie's P-ACO/NSGA-II).
 

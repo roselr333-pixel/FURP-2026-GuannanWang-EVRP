@@ -176,7 +176,7 @@
 14. ~~**缺领域标准求解器基线（PyVRP）**~~ ✅ **已交付**：`baseline_pyvrp_vrptw.py` 在 56 个 Solomon 实例上跑 PyVRP 0.14.0，平均 gap **−3.0%**（优于 BKS）；与 OR-Tools(+7.2%)、自写 GA(+36.6%±15.8%) 一并整合进 `baseline_consolidated.py` → `baseline_consolidated.csv` + `baseline_consolidated.png` / `pyvrp_family_gap.png`。三条基线定位清晰（PyVRP 最强，BKS 次之，OR-Tools 再次，自写 GA 最弱）。
 15. ~~**参数敏感性只报单值、无误差带**~~ ✅ **已交付（并修 bug）**：`week06_sensitivity.py` 升为 5 种子均值±标准差，图带误差带。2026-09-10 修复续航 R 参数未传给模型的 bug（此前 R 扫描恒为 50.5%），修复后 R 60→200 实测 15.5%→27.7%→35.2%→50.5%@160→48.7%@200（160 后饱和），与深度文档一致；Q/K/N 扫描结论不变。
 16. ~~**多目标只算单点**~~ ✅ **已交付**：`week06_multi_objective.py` 用加权和扫 w∈{0,0.25,0.5,0.75,1.0}（5 种子）。V2(215.2, 415.7) 相对 V1(486.4, 622.4) 距离 −56%、时长 −33%，两轴同时占优；属于"粗前沿"（加权和贪心，非完整 Pareto 求解器）。
-17. ~~**缺一条可辩护的"为何有效"结论链**~~ ✅ **已交付**：`docs/week06_depth_analysis_zh.md` 把消融（多顾客能力主源 +6.6~17.7pp）、敏感性 K 扫描（25.3%→56.5%）、适用区间、多目标两轴占优、三基线定位、失败案例（N=50 会合否决约 450 万次）、局限串成一条链；配套 `docs/experiment_evidence_index_zh.md` 与 `experiment_evidence_index_en.md` 集中所有可引用数值与出处。
+17. ~~**缺一条完整的"为何有效"结论链**~~ ✅ **已交付**：`docs/week06_depth_analysis_zh.md` 把消融（多顾客能力主源 +6.6~17.7pp）、敏感性 K 扫描（25.3%→56.5%）、适用区间、多目标两轴占优、三基线定位、失败案例（N=50 会合否决约 450 万次）、局限串成一条链；配套 `docs/experiment_evidence_index_zh.md` 与 `experiment_evidence_index_en.md` 集中所有可引用数值与出处。
 
 ### 3.4 工程与交付
 
@@ -196,6 +196,6 @@
 
 ## 五、小结
 
-到 2026-07-24，主线（Ground-air collaborative EVRP-TW）已经形成了一个闭环：从基线（纯卡车 EV、OR-Tools、已发表 FSTSP 启发式）到改进（多顾客＋多次起降的 V2），再到受控消融，证据链是完整的、可复现的。真正还欠着的是两件事——**把成果打包成 W8 交付物**，以及**再补一个 EV-TW 侧的已发表基线（Schneider 2014）**。这两件补齐后，项目页那四条评分维度基本都能落到具体交付物上。
+到 2026-07-24，主线（Ground-air collaborative EVRP-TW）已经串成完整的一条线：从基线（纯卡车 EV、OR-Tools、已发表 FSTSP 启发式）到改进（多顾客＋多次起降的 V2），再到受控消融，证据链是完整的、可复现的。真正还欠着的是两件事——**把成果打包成 W8 交付物**，以及**再补一个 EV-TW 侧的已发表基线（Schneider 2014）**。这两件补齐后，项目页那四条评分维度基本都能落到具体交付物上。
 
 相关文件：`src/experiments/`（各周脚本）、`src/results/`（逐算例与聚合 CSV）、`docs/`（各周报告与笔记）、`learning_guide/papers/`（阅读笔记）。

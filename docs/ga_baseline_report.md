@@ -41,7 +41,7 @@ Per-family mean gap (GA vs BKS):
 ## 4. What the numbers tell me
 
 - **GA is worse than OR-Tools on every instance** (`ga_minus_ortools_gap` is positive for all 56). This is expected: OR-Tools uses industrial-grade guided local search, while my GA is a basic textbook metaheuristic.
-- **High variance on clustered instances.** C101 / C105 / C106 come within 0.2% of BKS (close to OR-Tools), but C103 blows up to 90.6%. The savings seed helped the easy clustered cases but hurt stability elsewhere — a real weakness worth noting.
+- **High variance on clustered instances.** C101 / C105 / C106 come within 0.2% of BKS (close to OR-Tools), but C103 blows up to 90.6%. The savings seed helped the easy clustered cases but hurt stability elsewhere — a real weakness.
 - **Wide time windows (R2 / RC2) are hardest** (41% / 55%). With only 8 s and a basic local search, the GA barely converges on these looser, more combinatorial instances.
 - A side observation: on many R/RC instances OR-Tools itself uses *fewer* vehicles than BKS while paying more distance — that is the vehicle-fixed-cost modelling I noted in the checkpoint, not a GA issue.
 
