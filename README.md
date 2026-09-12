@@ -73,9 +73,10 @@ Key documents:
 | `docs/progress_report_zh.md` / `_en.md` | mid-project self-review against the brief |
 | `docs/week06_depth_analysis_zh.md` / `_en.md` | the "why it works / when it works" conclusion chain |
 | `docs/experiment_evidence_index_zh.md` / `_en.md` | every citable number with its source and caveats |
+| `docs/formal_model_zh.md` / `_en.md` | the formal model: sets, parameters, variables, objective, hard vs soft constraints, and what is not modelled |
 | `docs/failure_cases_master.md` | 17 failure cases with constraint-level diagnosis |
 | `docs/configs_and_parameters.md` | instances, solver settings, seeds, path conventions |
-| `docs/v3_ev_collab_note_*`, `docs/week08_*_note_*`, `docs/schneider_evrptw_replication_*` | per-experiment notes |
+| `docs/v3_ev_collab_note_*`, `docs/week08_*_note_*`, `docs/week07_ablation_std_note_*`, `docs/schneider_evrptw_replication_*` | per-experiment notes |
 
 `src/experiments/` by theme:
 

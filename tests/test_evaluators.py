@@ -157,3 +157,25 @@ def test_w6_collaborative_plan_is_physically_executable(tag, inst):
     assert not math.isinf(
         w6.simulate(inst, r["route"], r["drone_trips"], w6.R_D)[1])
 
+def test_fstsp_evaluator_matches_clean_model_on_random_plans():
+    """week07.fstsp_simulate and cpsat_fstsp.fstsp_makespan_clean are one model."""
+    rng = random.Random(3)
+    for trial in range(40):
+        inst = w6.make_instance(rng.choice([8, 10, 12]), seed=5000 + trial)
+        cust = list(inst["customers"].keys())
+        rng.shuffle(cust)
+        route = [0] + cust + [0]
+        trips = []
+        for _ in range(rng.randint(0, 3)):
+            i = rng.randrange(0, len(route) - 2)
+            j = rng.randrange(i + 1, len(route) - 1)
+            custs = tuple(rng.sample(cust, rng.choice([1, 2])))
+            trips.append((route[i], custs, route[j]))
+        ref = f7.fstsp_makespan(inst, route, trips)
+        clean = X.fstsp_makespan_clean(inst, route, trips)
+        if math.isinf(clean):
+            assert math.isinf(ref)
+        else:
+            assert ref == pytest.approx(clean)
+
+
