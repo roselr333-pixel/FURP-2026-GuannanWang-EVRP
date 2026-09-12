@@ -24,15 +24,19 @@ truck-only)
 
 | size | truck-only | K=1 | K=2 | K=3 |
 |---|---:|---:|---:|---:|
-| N=8 | 391.3 | 213.1 (45.5%) | 153.3 (60.7%) | **118.4 (69.6%)** |
-| N=12 | 579.4 | 317.0 (44.8%) | 240.8 (58.1%) | **194.8 (66.0%)** |
-| N=16 | 774.8 | 462.2 (40.2%) | 372.1 (51.8%) | **317.3 (58.8%)** |
-| N=20 | 1022.3 | 624.5 (38.5%) | 530.4 (48.0%) | **472.9 (53.5%)** |
-| N=30 | 1597.7 | 1094.2 (31.6%) | 1028.7 (35.7%) | **897.7 (43.5%)** |
-| N=50 | 3114.1 | 2233.1 (28.1%) | 2083.0 (32.9%) | **1987.2 (36.0%)** |
+| N=8 | 391.3 | 222.2 (43.1%) | 156.0 (60.1%) | **118.6 (69.6%)** |
+| N=12 | 579.4 | 338.5 (41.6%) | 249.8 (56.6%) | **200.3 (65.2%)** |
+| N=16 | 774.8 | 471.0 (39.0%) | 370.9 (51.8%) | **317.3 (58.9%)** |
+| N=20 | 1022.3 | 594.4 (41.6%) | 496.8 (51.2%) | **468.3 (54.0%)** |
+| N=30 | 1597.7 | 1037.4 (34.9%) | 910.7 (43.0%) | **828.8 (48.1%)** |
+| N=50 | 3114.1 | 2188.4 (29.5%) | 2004.5 (35.4%) | **1922.2 (38.1%)** |
 
-The LNS still improves each K-drone greedy consistently: +9.7~12.6% (K=1),
-+5.1~12.9% (K=2), +8.6~14.2% (K=3) across sizes.
+The LNS still improves each K-drone greedy consistently: +12.5~21.3% (K=1),
++7.4~21.1% (K=2), +9.2~23.5% (K=3) across sizes.
+
+> 2026-09-13: this table was re-run after the main evaluator was made physical
+> (see `docs/evaluator_physical_fix_note_en.md`); the old N=8 K=1→3 was
+> 45.5%→69.6% and N=50 was 28.1%→36.0%.
 
 Figure: `figures/multidrone.png` (left: completion time per K; right: benefit vs
 truck-only rising with K).
@@ -47,7 +51,7 @@ truck-only rising with K).
 - The LNS still pays off at every K (+5% to +14%), so the improvement phase and
   the drone count are **two independent sources of gain**.
 - Paired Wilcoxon: **LNS K=3 vs K=1 overall p=1.67×10⁻¹¹, significant at every
-  size**; K=2 vs K=1 overall p=6.71×10⁻¹⁰, but **N=30 is not significant
+  size**; K=2 vs K=1 overall p=1.67×10⁻¹¹, but **N=30 is not significant
   (p=0.154)** -- an extra drone occasionally makes little difference at a
   medium size. (Greedy K=2/K=3 vs K=1 is significant at every size.)
 

@@ -96,13 +96,14 @@ Key documents:
 | Comparison | Result |
 |---|---|
 | Baselines vs BKS (56 Solomon) | PyVRP −3.0% · OR-Tools +7.2% · my GA +36.6% ± 15.8% |
-| V2 (collaborative) vs truck-only EV | ~30–39% lower completion time |
-| Ablation | multi-customer sorties +6.6–17.7 pp (main), stop reuse +4.1–7.3 pp |
-| LNS vs greedy V2 | +9–12.6%, paired Wilcoxon p = 3.6×10⁻⁹ |
-| Murray & Chu (2015) replication | V2 8.5–22.3% shorter; c1K1 LNS / published OFV = 0.901 |
+| V2 (collaborative) vs truck-only EV | 24.8–34.5% lower completion time |
+| Ablation | multi-customer sorties +8.6–12.1 pp (main), stop reuse +2.2–4.4 pp |
+| LNS vs greedy V2 | +12.5–21.3%, paired Wilcoxon p = 1.7×10⁻¹⁰ |
+| Distance from the exact optimum (CP-SAT, small n) | n=8 proven optimal: greedy +31.2%, LNS +16.5% |
+| Murray & Chu (2015) replication | V2 10.2–14.2% shorter; c1K1 LNS / published OFV = 0.901 |
 | Schneider (2014) replication | distance +50.7% vs BKS, mean vehicles 5.4 vs 2.1 |
-| Multi-drone (standard instances) | K=1→5 raises the gain to 48.6–71.4% |
-| Drone scheduling | naive rule provably optimal on 31/64 configs |
+| Multi-drone (standard instances) | K=1→5 raises the gain to 46.8–71.4% |
+| Drone scheduling | naive rule provably optimal on 64/64 configs |
 | V3 (EV + TW + drone) | K=1 −34.7–53.4%, K=3 up to −72.8% vs truck-only EV |
 
 Full numbers and their caveats: `docs/experiment_evidence_index_zh.md`.

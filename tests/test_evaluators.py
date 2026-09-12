@@ -12,12 +12,28 @@ import week06_ground_air_evrp_tw as w6
 import week07_fstsp_repro as f7
 import week07_improvement_ablation as ab
 import fstsp_instances as fi
+import cpsat_fstsp as X
 import v3_ev_collab as v3
 
 SYNTHETIC = [("synth-n10", w6.make_instance(10, seed=20260720)),
              ("synth-n12", w6.make_instance(12, seed=20260721))]
 SOLOMON = [("C101-n10", fi.make_solomon_fstsp("C101", 10)),
            ("R101-n10", fi.make_solomon_fstsp("R101", 10))]
+
+
+@pytest.mark.parametrize("tag,inst", SYNTHETIC + SOLOMON)
+def test_heuristic_plans_are_physically_valid(tag, inst):
+    """The shared evaluator must agree with the physical evaluator: the greedy
+    and the published heuristic must not rely on un-realizable (nested) sortie
+    sets, i.e. their makespan must be finite and equal to clean evaluation."""
+    plans = [ab.my_v2_param(inst, max_cust=2, multi_takeoff=True),
+             ab.my_v2_param(inst, max_cust=1, multi_takeoff=True),
+             f7.fstsp_insertion(inst)]
+    for route, trips, _ in plans:
+        mk = f7.fstsp_makespan(inst, route, trips)
+        assert mk != float("inf")
+        assert mk == pytest.approx(
+            X.fstsp_makespan_clean(inst, route, trips))
 
 
 @pytest.mark.parametrize("tag,inst", SYNTHETIC + SOLOMON)

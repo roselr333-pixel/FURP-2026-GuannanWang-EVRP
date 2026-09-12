@@ -14,15 +14,15 @@ instances = Solomon topology, first n customers, rescaled to the synthetic cloud
 ==============================================================================
 AGGREGATE by size (mean over families)
 ==============================================================================
-  N=10 truck=   351.7  K1:    219.5 ( 36.7%)  K2:    160.0 ( 53.4%)  K3:    126.8 ( 63.1%)  K5:     95.1 ( 71.4%)
-  N=20 truck=   718.9  K1:    488.2 ( 30.9%)  K2:    390.4 ( 44.1%)  K3:    360.5 ( 48.6%)  K5:    281.5 ( 60.1%)
-  N=30 truck=  1218.0  K1:    907.9 ( 23.9%)  K2:    739.0 ( 37.2%)  K3:    650.8 ( 45.1%)  K5:    521.8 ( 56.2%)
-  N=50 truck=  2370.2  K1:   1761.2 ( 23.3%)  K2:   1510.1 ( 34.7%)  K3:   1331.8 ( 41.8%)  K5:   1183.9 ( 48.6%)
+  N=10 truck=   351.7  K1:    221.0 ( 37.2%)  K2:    169.7 ( 51.2%)  K3:    134.3 ( 61.1%)  K5:     95.1 ( 71.4%)
+  N=20 truck=   718.9  K1:    455.1 ( 36.0%)  K2:    381.2 ( 46.0%)  K3:    334.5 ( 52.6%)  K5:    265.5 ( 62.4%)
+  N=30 truck=  1218.0  K1:    797.9 ( 33.5%)  K2:    664.5 ( 43.9%)  K3:    580.1 ( 51.5%)  K5:    507.5 ( 57.5%)
+  N=50 truck=  2370.2  K1:   1695.2 ( 27.5%)  K2:   1426.2 ( 38.4%)  K3:   1326.8 ( 42.7%)  K5:   1228.9 ( 46.8%)
 
 ==============================================================================
 SCHEDULING: greedy (earliest-available) vs local vs optimal
 ==============================================================================
-  mean local-search gain over the naive rule: 0.001%  (max 0.039%)
-  optimality certificate (lower bound = max[one-drone-per-sortie, total_flight/K]): 31/64 configs reach it -> the naive rule is provably optimal there
-  on the remaining configs the possible gain is bounded by mean 2.464% (max 33.402%) of the makespan
-  exact-optimal check on 43 configs (trips <= 14): naive rule is on average 0.196% above optimal (max 5.193%)
+  mean local-search gain over the naive rule: 0.000%  (max 0.000%)
+  optimality certificate (lower bound = max[one-drone-per-sortie, total_flight/K]): 64/64 configs reach it -> the naive rule is provably optimal there
+  on the remaining configs the possible gain is bounded by mean 0.000% (max 0.000%) of the makespan
+  exact-optimal check on 32 configs (trips <= 14): naive rule is on average 0.000% above optimal (max 0.000%)

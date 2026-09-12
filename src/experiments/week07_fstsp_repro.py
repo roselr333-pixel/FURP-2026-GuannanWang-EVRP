@@ -13,7 +13,11 @@ What is faithful to the paper (Section 3.3, Algorithms 1-4):
     node on the truck route (the "rendezvous" / synchronization constraint).
   - Because there is only one drone, sorties are SERIAL: a new sortie can only
     launch after the previous one has been recovered (the drone is back on the
-    truck). The shared evaluator below enforces this strictly.
+    truck). The shared evaluator below enforces this strictly, including the
+    rendezvous geometry: a sortie may only launch from a truck node the truck has
+    not yet passed. A sortie set that violates this (e.g. one sortie nested
+    inside another) is not physically realisable and is reported as infeasible
+    (inf) rather than being given a makespan.
   - The heuristic is a "route and re-assign" greedy: start with a TSP tour
     that assigns the truck to every customer, then repeatedly move a customer
     from the truck to the drone if it reduces the completion time.
@@ -46,6 +50,7 @@ V_T = w6.V_T          # truck speed
 V_D = w6.V_D          # drone speed
 SERVICE = w6.SERVICE  # customer service time
 R_D = w6.R_D          # drone max flight length per sortie (range)
+INF = float("inf")
 
 
 # ---------------------------------------------------------------------------
@@ -72,12 +77,18 @@ def fstsp_simulate(inst, route, drone_trips):
     """
     Truck arrival (+service) times along `route` (depot bookends), with the
     truck waiting at a recovery node if the drone has not yet landed, AND with
-    a single serial drone (a sortie may only launch after the previous one is
-    recovered).
+    a single serial drone.
+
+    Physical validity: a sortie launches at a truck node i and is recovered at a
+    later node j (i before j on the route), its flight length is within range,
+    and the drone must be back on the truck before the truck reaches i --
+    otherwise the sortie would have to launch from a node the truck has already
+    left, which no feasible plan realises. If any of these is violated the plan
+    is infeasible and the function returns an all-inf array.
 
     route        : [0, ...truck nodes..., 0]
     drone_trips  : (launch_node, cust_or_custs, recover_node)
-    Returns the arrival-time array (len == len(route)).
+    Returns the arrival-time array (len == len(route)), or [inf] * len(route).
     """
     arr = [0.0] * len(route)
     for p in range(1, len(route)):
@@ -90,20 +101,26 @@ def fstsp_simulate(inst, route, drone_trips):
     # process sorties in launch order; the drone is a single serial resource
     trips = sorted(drone_trips,
                    key=lambda t: _resolve(route, t[0], "launch"))
-    drone_avail = 0.0
+    drone_free = 0.0
     for ln, cust, rn in trips:
         i_pos = _resolve(route, ln, "launch")
         j_pos = _resolve(route, rn, "recover")
-        launch = max(arr[i_pos], drone_avail)
+        if i_pos >= j_pos:
+            return [INF] * len(route)
         cl = list(cust) if isinstance(cust, (list, tuple)) else [cust]
         legs = [ln] + cl + [rn]
         d = sum(w6.dist(inst, legs[p], legs[p + 1])
                 for p in range(len(legs) - 1))
+        if d > R_D + 1e-9:
+            return [INF] * len(route)
+        # the drone must be back on the truck before the truck reaches i
+        if drone_free > arr[i_pos] + 1e-9:
+            return [INF] * len(route)
         flight = d / V_D + SERVICE * len(cl)
-        landing = launch + flight
+        landing = arr[i_pos] + flight
         truck_at_rec = arr[j_pos]
         recovery = max(truck_at_rec, landing)
-        drone_avail = recovery
+        drone_free = recovery
         wait = recovery - truck_at_rec
         if wait > 0:
             for p in range(j_pos, len(arr)):
@@ -123,7 +140,11 @@ def fstsp_simulate_multi(inst, route, drone_trips, n_drones):
     Each sortie is served by whichever drone can start earliest; a drone is a
     serial resource whose next sortie starts only after its previous one has
     been recovered. The truck still waits at a recovery node until the sortie
-    landing there has arrived. n_drones=1 reproduces fstsp_simulate exactly."""
+    landing there has arrived. n_drones=1 reproduces fstsp_simulate exactly.
+
+    Physical validity is enforced as in `fstsp_simulate`: launch before recover,
+    flight within range, and at least one drone back on the truck when the truck
+    reaches the launch node. An infeasible sortie set yields an all-inf array."""
     arr = [0.0] * len(route)
     for p in range(1, len(route)):
         arr[p] = arr[p - 1] + _tt(inst, route[p - 1], route[p]) \
@@ -136,15 +157,21 @@ def fstsp_simulate_multi(inst, route, drone_trips, n_drones):
     for ln, cust, rn in trips:
         i_pos = _resolve(route, ln, "launch")
         j_pos = _resolve(route, rn, "recover")
+        if i_pos >= j_pos:
+            return [INF] * len(route)
         cl = list(cust) if isinstance(cust, (list, tuple)) else [cust]
         legs = [ln] + cl + [rn]
         d = sum(w6.dist(inst, legs[p], legs[p + 1])
                 for p in range(len(legs) - 1))
+        if d > R_D + 1e-9:
+            return [INF] * len(route)
         flight = d / V_D + SERVICE * len(cl)
         starts = [max(arr[i_pos], avail[k]) for k in range(n_drones)]
         k = min(range(n_drones), key=lambda z: (starts[z], z))
-        launch = starts[k]
-        landing = launch + flight
+        # at least one drone must be back on the truck when it reaches i
+        if starts[k] > arr[i_pos] + 1e-9:
+            return [INF] * len(route)
+        landing = arr[i_pos] + flight
         truck_at_rec = arr[j_pos]
         recovery = max(truck_at_rec, landing)
         avail[k] = recovery

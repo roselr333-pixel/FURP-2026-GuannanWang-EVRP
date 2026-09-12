@@ -36,31 +36,34 @@ V2 and the published baseline stays apples-to-apples.
 
 | size | truck-only | V2 greedy | greedy+2-opt | greedy+LNS | LNS vs greedy |
 |---|---:|---:|---:|---:|---:|
-| N=8  | 391.3 | 236.8 (−39.2%) | 235.0 | **213.1** (−45.5%) | **+9.70%** |
-| N=12 | 579.4 | 359.3 (−37.8%) | 359.3 | **317.0** (−44.8%) | **+10.98%** |
-| N=16 | 774.8 | 524.6 (−32.4%) | 514.3 | **462.2** (−40.2%) | **+10.95%** |
-| N=20 | 1022.3 | 714.1 (−29.9%) | 706.7 | **624.5** (−38.5%) | **+11.56%** |
-| N=30 | 1597.7 | 1212.7 (−24.4%) | 1201.2 | **1094.2** (−31.6%) | **+9.09%** |
-| N=50 | 3114.1 | 2569.1 (−17.6%) | 2514.5 | **2233.1** (−28.1%) | **+12.56%** |
+| N=8  | 391.3 | 256.0 (−34.5%) | 247.7 | **222.2** (−43.2%) | **+12.51%** |
+| N=12 | 579.4 | 412.1 (−28.9%) | 400.2 | **338.5** (−41.6%) | **+16.78%** |
+| N=16 | 774.8 | 554.4 (−28.4%) | 533.9 | **471.0** (−39.2%) | **+13.29%** |
+| N=20 | 1022.3 | 767.2 (−25.0%) | 746.3 | **594.4** (−41.9%) | **+21.32%** |
+| N=30 | 1597.7 | 1270.1 (−20.5%) | 1220.6 | **1037.4** (−35.1%) | **+16.91%** |
+| N=50 | 3114.1 | 2641.3 (−15.2%) | 2588.4 | **2188.4** (−29.7%) | **+16.59%** |
 
 Parentheses give the makespan reduction vs truck-only (larger is better). Mean
-per-instance runtime is 0.11–5.4 s (single machine, rising with size).
+per-instance runtime is 0.15–6.1 s (single machine, rising with size).
+
+> 2026-09-13: this table was re-run after the main evaluator was made physical
+> (see `docs/evaluator_physical_fix_note_en.md`); the old figures were
+> +9%~+12.6% for LNS over greedy.
 
 Figure: `figures/lns_vs_greedy.png` (left: completion time by size; right:
 improvement over the greedy).
 
 ## 4. What it shows
 
-- LNS improves the greedy V2 by a **consistent +9% to +12.6% at every size**,
+- LNS improves the greedy V2 by a **consistent +12.5% to +21.3% at every size**,
   and this is not noise: a paired Wilcoxon signed-rank test gives an overall
-  **p = 3.6×10⁻⁹**, with every individual size significant at the 0.05 level
+  **p = 1.7×10⁻¹⁰**, with every individual size significant at the 0.05 level
   (see `stat_tests.csv`).
 - LNS clearly **offsets the scaling decay**: the greedy's reduction vs truck-only
-  falls from 39.2% (N=8) to 17.6% (N=50), while LNS only falls from 45.5% to
-  28.1%. At N=50 the LNS still gives 28.1%, more than ten points above the greedy's
-  17.6%.
-- By contrast, an intra-route 2-opt on the truck backbone alone barely moves
-  (0–2%). The gain therefore comes from **re-allocating drone tasks and the
+  falls from 34.5% (N=8) to 15.2% (N=50), while LNS only falls from 43.1% to
+  29.5%; at N=50 the LNS still gives 29.5%.
+- By contrast, an intra-route 2-opt on the truck backbone alone adds only about
+  2%~3.2%. The gain therefore comes mainly from **re-allocating drone tasks and the
   overall structure**, not from route polishing -- consistent with the W7 ablation
   finding that multi-customer ability is the main gain.
 - The earlier "greedy has no local search" limitation now has an actual

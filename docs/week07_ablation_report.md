@@ -44,10 +44,14 @@ the gain?*
 
 | Size | Truck | C0 published | C1 V2 | C2 abl_cap1 | C3 abl_notakeoff | C4 imp_cap3 |
 |---|---:|---:|---:|---:|---:|---:|
-| 8  | 391.3 | 282.5 (27.4%) | **236.8 (39.2%)** | 282.5 (27.4%) | 263.2 (32.8%) | **210.6 (46.2%)** |
-| 12 | 579.4 | 462.5 (20.1%) | **359.3 (37.8%)** | 462.5 (20.1%) | 402.4 (30.5%) | **332.3 (42.1%)** |
-| 16 | 774.8 | 601.6 (22.2%) | **524.6 (32.4%)** | 601.6 (22.2%) | 559.7 (28.0%) | **456.5 (41.1%)** |
-| 20 | 1022.3 | 780.4 (23.3%) | **714.1 (29.9%)** | 780.4 (23.3%) | 756.3 (25.8%) | **691.3 (32.2%)** |
+| 8  | 391.3 | 296.5 (23.9%) | **256.0 (34.5%)** | 296.5 (23.9%) | 266.1 (32.1%) | **241.8 (38.5%)** |
+| 12 | 579.4 | 470.5 (18.8%) | **412.1 (29.0%)** | 470.5 (18.8%) | 432.3 (25.5%) | **406.7 (29.6%)** |
+| 16 | 774.8 | 645.4 (16.6%) | **554.4 (28.7%)** | 645.4 (16.6%) | 588.0 (24.3%) | **485.1 (37.6%)** |
+| 20 | 1022.3 | 855.5 (16.2%) | **767.2 (24.8%)** | 855.5 (16.2%) | 790.0 (22.6%) | **743.3 (27.2%)** |
+
+> 2026-09-13: re-run after the main evaluator was made physical (see
+> `docs/evaluator_physical_fix_note_en.md`). The old figures were C0
+> 27.4/20.1/22.2/23.3% and C1 39.2/37.8/32.4/29.9%.
 
 (percent = improvement vs truck-only; C2 equals C0 exactly — see §5 sanity
 check.)
@@ -57,32 +61,31 @@ check.)
 
 | Size | multi-customer (C1−C2) | multi-takeoff (C1−C3) | cap3 further (C4−C1) |
 |---|---:|---:|---:|
-| 8  | +11.8 | +6.4 | +7.0 |
-| 12 | +17.7 | +7.3 | +4.3 |
-| 16 | +10.2 | +4.4 | +8.7 |
-| 20 | +6.6  | +4.1 | +2.3 |
+| 8  | +10.6 | +2.4 | +4.0 |
+| 12 | +10.2 | +3.5 | +0.6 |
+| 16 | +12.1 | +4.4 | +8.9 |
+| 20 | +8.6  | +2.2 | +2.4 |
 
 ## 4. How to read it
 
 - **The improvement holds, and beats the published baseline steadily.** Across
   all 4 sizes V2 (C1) is shorter than the published baseline (C0): vs truck,
-  published improves 20–27%, V2 improves 30–39%; expressed as "how much
-  shorter than published", V2 is **8.5%–22.3%** shorter than published. This
+  published improves 16–24%, V2 improves 25–35%; expressed as "how much
+  shorter than published", V2 is **10.2%–14.2%** shorter than published. This
   is exactly the "improvement vs baseline, fair comparison" the project page
   asks for.
 - **The gain is mainly the multi-customer capability.** Raising the per-sortie
-  cap from 1 (C0/C2) to 2 (C1) contributes +6.6~+17.7pp — the single largest
+  cap from 1 (C0/C2) to 2 (C1) contributes +8.6~+12.1pp — the single largest
   source. The intuition is direct: serving two customers per sortie saves more
   of the drone's launch-recovery overhead than serving one, and because the
   drone is a serial resource, fewer sorties means fewer waiting gaps.
-- **Multi-takeoff is the second source (+4.1~+7.3pp).** Reusing one stop for
+- **Multi-takeoff is the second source (+2.2~+4.4pp).** Reusing one stop for
   several launches means the drone does not have to return to the depot to
   re-organize every time, keeping the collaboration more flexible.
-- **Pushing the cap to 3 (C4) helps further (+2.3~+8.7pp).** This shows "customers
+- **Pushing the cap to 3 (C4) helps further (+0.6~+8.9pp).** This shows "customers
   per sortie" is itself a useful lever, and that cap=2 can get stuck in a local
-  optimum that cap=3 escapes on some instances (e.g. seed 20260727: V2 improves
-  only 16.4%, cap3 improves 41.1%). The magnitude is geometry-dependent and
-  varies a lot across seeds.
+  optimum that cap=3 escapes on some instances. The magnitude is
+  geometry-dependent and varies a lot across seeds.
 
 ## 5. A process note (method reflection, not a result)
 

@@ -63,3 +63,8 @@ AGGREGATE (mean over seeds per size)
   N=12: truck=  579.4 published=  470.5 ( 18.8%)  my=  412.1 ( 29.0%)  my+LS=  400.2 (+3.07%LS)  myVsPub= 12.5%  off pub=1.5/12 my=3.1/12  2opt-moves=1.3
   N=16: truck=  774.8 published=  645.4 ( 16.6%)  my=  554.4 ( 28.7%)  my+LS=  533.9 (+3.08%LS)  myVsPub= 14.2%  off pub=2.4/16 my=5.5/16  2opt-moves=2.1
   N=20: truck= 1022.3 published=  855.5 ( 16.2%)  my=  767.2 ( 24.8%)  my+LS=  746.3 (+2.49%LS)  myVsPub= 10.2%  off pub=2.8/20 my=5.6/20  2opt-moves=1.9
+
+
+[raw -> E:\FURP-EVRP\roselr333-pixel-FURP-2026-GuannanWang-EVRP\src\results\week07_fstsp_raw.csv]
+[summary -> E:\FURP-EVRP\roselr333-pixel-FURP-2026-GuannanWang-EVRP\src\results\week07_fstsp_summary.csv]
+[log -> E:\FURP-EVRP\roselr333-pixel-FURP-2026-GuannanWang-EVRP\src\results\week07_fstsp_log.txt]

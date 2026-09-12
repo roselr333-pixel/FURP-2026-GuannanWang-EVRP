@@ -29,16 +29,19 @@ Reduction vs truck-only (LNS solution):
 
 | size | truck-only | K=1 | K=2 | K=3 | K=5 |
 |---|---:|---:|---:|---:|---:|
-| N=10 | 351.7 | 36.7% | 53.4% | 63.1% | **71.4%** |
-| N=20 | 718.9 | 30.9% | 44.1% | 48.6% | **60.1%** |
-| N=30 | 1218.0 | 23.9% | 37.2% | 45.1% | **56.2%** |
-| N=50 | 2370.2 | 23.3% | 34.7% | 41.8% | **48.6%** |
+| N=10 | 351.7 | 37.2% | 51.2% | 61.1% | **71.4%** |
+| N=20 | 718.9 | 36.0% | 46.0% | 52.6% | **62.4%** |
+| N=30 | 1218.0 | 33.5% | 43.9% | 51.5% | **57.5%** |
+| N=50 | 2370.2 | 27.5% | 38.4% | 42.7% | **46.8%** |
 
 On the **standard topologies** the conclusion matches the synthetic runs: more
-drones give a higher benefit (48.6%~71.4% at K=5) and further flatten the
-scaling-decay curve. By family, uniform-random R101 benefits most (42.6% already
-with a single drone at N=50) and clustered C101 least (23.3% at N=50) -- as
-expected, dispersed customers suit the drone better.
+drones give a higher benefit (46.8%~71.4% at K=5) and further flatten the
+scaling-decay curve. By family, uniform-random R101 benefits most and clustered
+C101 least -- as expected, dispersed customers suit the drone better.
+
+> 2026-09-13: this table was re-run after the main evaluator was made physical
+> (see `docs/evaluator_physical_fix_note_en.md`); the old N=10 K=1→5 was
+> 36.7%→71.4% and N=50 was 23.3%→48.6%.
 
 ## 4. Drone scheduling: how far is the naive rule from optimal?
 
@@ -57,18 +60,18 @@ methods share one simulation:
 
 On the standard instances (64 (family, n, K) configs):
 
-- the **local search gains only 0.001% on average over greedy (max 0.039%)**;
-- **optimality certificate: on 31/64 configs greedy == the lower bound, so the
-  naive rule is provably optimal there**;
-- on the 43 configs with <= 14 sorties where the exact optimum is available, the
-  **naive rule is on average only 0.196% above optimal (max 5.193%)**.
+- the **local search gains 0.000% over greedy** -- it finds no improvement at all;
+- **optimality certificate: on 64/64 configs greedy == the lower bound, so the
+  naive rule is provably optimal on every config**;
+- on the 32 configs with <= 14 sorties the naive rule matches the exact optimum
+  (0.000%).
 
-Conclusion: the "earliest-available" rule is **provably optimal on about half
-the configs** and very close on the rest. **What is still open**: on configs
-with many sorties the lower bound is loose, so the theoretical gain is bounded
-only by mean 2.46% (max 33.40%) -- scheduling optimality at large multi-drone
-scale is not proven. (Self-check: greedy equals the existing
-`fstsp_makespan_multi` exactly, and greedy >= local >= optimal always holds.)
+Conclusion: after the main evaluator was made physical the sortie sets no longer
+overlap, so the K drones have **no contention** and the "earliest-available" rule
+is **provably optimal on all 64 configs**. (Self-check: greedy equals the existing
+`fstsp_makespan_multi` exactly, and greedy >= local >= optimal always holds.) The
+earlier "31/64 + a small local gain" was a false contention created by nested
+sorties.
 
 Figure: `figures/multidrone_std.png` (left: benefit rising with K on standard
 instances; right: the naive rule's gap to the optimum is near zero).

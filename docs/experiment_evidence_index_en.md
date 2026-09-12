@@ -33,18 +33,18 @@ V2 is a collaborative heuristic optimising a makespan-driven synchronous objecti
 
 ## 2. Parameter sensitivity (5-seed mean ± std, n=12 except the scale sweep)
 
-Source: `src/results/week06_sensitivity.csv` + `figures/sensitivity_panels.png` (from `week06_sensitivity.py`; rerun on 2026-09-10 after fixing a bug where the drone-range R parameter was not applied).
+Source: `src/results/week06_sensitivity.csv` + `figures/sensitivity_panels.png` (from `week06_sensitivity.py`; rerun on 2026-09-13 after the main evaluator was made physical, see `docs/evaluator_physical_fix_note_en.md`).
 
 benefit = (V1 truck distance − V2 collaborative distance) / V1 distance × 100%.
 
 | Param | Sweep | Synergy benefit (mean ± std) | Reading |
 |---|---|---|---|
-| Battery Q | 120→500 | 55.8%→47.1% (±~9.7) | larger battery → truck more self-sufficient → drone value diluted |
-| **Range R** | 60→200 | **15.5%→27.7%→35.2%→50.5%@160→48.7%@200** | range <160 is a real bottleneck; saturates after 160 |
-| Customers/sortie K | 1→3 | 25.3%→50.5%→56.5% (±8.6~16.5) | multi-customer ability is the main gain, consistent with ablation |
-| Scale N | 8→30 | 63.8%→35.3% (±6.7~12.5) | larger scale dilutes the synergy benefit |
+| Battery Q | 120→500 | 41.2%→29.7% (±~8.8~11.6) | larger battery → truck more self-sufficient → drone value diluted |
+| **Range R** | 60→200 | **15.4%→24.6%→32.4%→34.4%@160→34.4%@200** | range <160 is a real bottleneck; saturates after 160 |
+| Customers/sortie K | 1→3 | 20.5%→34.4%→37.1% (±4.5~13.1) | multi-customer ability is the main gain, consistent with ablation |
+| Scale N | 8→30 | 35.3%→32.1% (±3.0~12.2) | larger scale dilutes the synergy benefit |
 
-> Note: before 2026-09-10 the R sweep was flat at 50.5% because `mk_range` did not pass the range to the model; after the fix it varies as above, matching the narrative in depth-analysis §2.
+> Note: before 2026-09-10 the R sweep was flat at 50.5% because `mk_range` did not pass the range to the model. The physical-evaluator fix (2026-09-13) lowered the whole sweep (previously Q 55.8%→47.1%, R 15.5%→50.5%, K 25.3%→56.5%, N 63.8%→35.3%).
 
 ---
 
@@ -54,10 +54,10 @@ Source: `src/results/week06_multi_objective.csv` + `figures/mo_*.png` (from `wee
 
 | Variant | Mean distance | Mean makespan |
 |---|---:|---:|
-| V1 pure-truck EV | 486.4 | 622.4 |
-| V2 collaborative (all w×seed mean) | 215.2 | 415.7 |
+| V1 pure-truck EV | 486.5 | 622.5 |
+| V2 collaborative (all w×seed mean) | 330.7 | 413.6 |
 
-- Distance **−56%**, makespan **−33%**; V2 dominates V1 on **both axes** (holds per seed).
+- Distance **−32%**, makespan **−34%**; V2 dominates V1 on **both axes** (holds per seed).
 - Weights w ∈ {0, 0.25, 0.5, 0.75, 1.0}, 5 seeds; larger w favours distance at the cost of longer makespan.
 - **Limitation**: weighted-sum scalarised greedy, not a full NSGA-II / Pareto solver — the front is "coarse". This is a method limitation, not a selling point.
 
@@ -67,15 +67,15 @@ Source: `src/results/week06_multi_objective.csv` + `figures/mo_*.png` (from `wee
 
 Source: `src/results/week07_ablation_summary.csv` (from `week07_improvement_ablation.py`).
 
-V2 makespan improvement vs Truck-only: size 8 → 39.2%, 12 → 37.8%, 16 → 32.4%, 20 → 29.9%.
+V2 makespan improvement vs Truck-only: size 8 → 34.5%, 12 → 29.0%, 16 → 28.7%, 20 → 24.8%.
 
 Gain decomposition (pp contribution per size):
 
 | Gain source | Range | Conclusion |
 |---|---|---|
-| **Multi-customer ability** (max_cust 1→2–3) | **+6.6 ~ 17.7 pp** | **main gain source** |
-| Multi-takeoff | +4.1 ~ 7.3 pp | secondary |
-| cap3 (3 customers/sortie) | +2.3 ~ 8.7 pp | upper extension of multi-customer ability |
+| **Multi-customer ability** (max_cust 1→2–3) | **+8.6 ~ 12.1 pp** | **main gain source** |
+| Multi-takeoff | +2.2 ~ 4.4 pp | secondary |
+| cap3 (3 customers/sortie) | +0.6 ~ 8.9 pp | upper extension of multi-customer ability |
 
 sanity check: abl_cap1 (1 customer/sortie) ≡ published (M&C 2015) heuristic, confirming framework consistency.
 
@@ -140,46 +140,46 @@ A destroy-and-repair LNS (random / worst / whole-sortie destroy + truck / single
 
 | Size | truck-only | V2 greedy | greedy+2-opt | greedy+LNS | LNS vs greedy |
 |---|---:|---:|---:|---:|---:|
-| N=8 | 391.3 | 236.8 | 235.0 | **213.1** | **+9.70%** |
-| N=12 | 579.4 | 359.3 | 359.3 | **317.0** | **+10.98%** |
-| N=16 | 774.8 | 524.6 | 514.3 | **462.2** | **+10.95%** |
-| N=20 | 1022.3 | 714.1 | 706.7 | **624.5** | **+11.56%** |
-| N=30 | 1597.7 | 1212.7 | 1201.2 | **1094.2** | **+9.09%** |
-| N=50 | 3114.1 | 2569.1 | 2514.5 | **2233.1** | **+12.56%** |
+| N=8 | 391.3 | 256.0 | 247.7 | **222.2** | **+12.51%** |
+| N=12 | 579.4 | 412.1 | 400.2 | **338.5** | **+16.78%** |
+| N=16 | 774.8 | 554.4 | 533.9 | **471.0** | **+13.29%** |
+| N=20 | 1022.3 | 767.2 | 746.3 | **594.4** | **+21.32%** |
+| N=30 | 1597.7 | 1270.1 | 1220.6 | **1037.4** | **+16.91%** |
+| N=50 | 3114.1 | 2641.3 | 2588.4 | **2188.4** | **+16.59%** |
 
-- LNS improves the greedy by a consistent **+9% to +12.6% at every size**; paired Wilcoxon overall **p = 3.6×10⁻⁹**, significant at every size.
-- LNS offsets the scaling decay: the greedy's reduction vs truck-only falls 39.2% → 17.6% (N=8→50), while LNS only falls 45.5% → 28.1%; at N=50 LNS still gives 28.1%.
-- Intra-route 2-opt alone barely moves (0–2%), so the gain comes from re-allocating drone tasks and the overall structure, not route fine-tuning.
+- LNS improves the greedy by a consistent **+12.5% to +21.3% at every size**; paired Wilcoxon overall **p = 1.7×10⁻¹⁰**, significant at every size.
+- LNS offsets the scaling decay: the greedy's reduction vs truck-only falls 34.5% → 15.2% (N=8→50), while LNS only falls 43.1% → 29.5%; at N=50 LNS still gives 29.5%.
+- Intra-route 2-opt alone adds about 2%~3.2%, so the gain comes mainly from re-allocating drone tasks and the overall structure, not route fine-tuning.
 - Deterministic: one seed-derived RNG per instance, fixed iteration budget; the same seed reproduces the same numbers.
 
 Paired Wilcoxon signed-rank, overall rows (negative mean diff = first method smaller; n = nonzero pairs):
 
 | Comparison | n | mean diff | p |
 |---|---:|---:|---:|
-| my V2 vs published M&C 2015 | 40 | −73.0 | 5.9×10⁻⁷ |
-| my V2 vs abl_cap1 (multi-customer) | 40 | −73.0 | 5.9×10⁻⁷ |
-| my V2 vs abl_notakeoff (multi-takeoff) | 36 | −40.8 | 8.4×10⁻⁷ |
-| LNS vs greedy V2 | 46 | −146.2 | 3.6×10⁻⁹ |
+| my V2 vs published M&C 2015 | 38 | −73.2 | 2.4×10⁻⁷ |
+| my V2 vs abl_cap1 (multi-customer) | 38 | −73.2 | 2.4×10⁻⁷ |
+| my V2 vs abl_notakeoff (multi-takeoff) | 23 | −37.7 | 2.9×10⁻⁵ |
+| LNS vs greedy V2 | 54 | −194.3 | 1.7×10⁻¹⁰ |
 | V2 vs V1 (collaborative vs EV) | 40 | −424.3 | 3.7×10⁻⁸ |
 
 **Multiple drones (W8 extension, breaking the single-drone limitation)**: K parallel serial drones, same instances and seeds; K=1 is numerically identical to the single-drone evaluator. LNS reduction vs truck-only:
 
 | size | K=1 | K=2 | K=3 |
 |---|---:|---:|---:|
-| N=8 | 45.5% | 60.7% | **69.6%** |
-| N=20 | 38.5% | 48.0% | **53.5%** |
-| N=50 | 28.1% | 32.9% | **36.0%** |
+| N=8 | 43.1% | 60.1% | **69.6%** |
+| N=20 | 41.6% | 51.2% | **54.0%** |
+| N=50 | 29.5% | 35.4% | **38.1%** |
 
-K=1→3 lifts the benefit at every size (N=50: 28.1%→36.0%) and raises the scaling-decay curve; the LNS still adds +5%~+14% at every K. Paired Wilcoxon: LNS K=3 vs K=1 overall **p=1.67×10⁻¹¹**, significant at every size; K=2 vs K=1 overall 6.71×10⁻¹⁰ (N=30 not significant, p=0.154). Source `week08_multidrone.py` → `week08_multidrone_summary.csv`; figure `figures/multidrone.png`; note `docs/week08_multidrone_note_en.md`.
+K=1→3 lifts the benefit at every size (N=50: 29.5%→38.1%) and raises the scaling-decay curve; the LNS still adds +7%~+23% at every K. Paired Wilcoxon: LNS K=3 vs K=1 and K=2 vs K=1 both **p=1.67×10⁻¹¹** overall, significant at every size. Source `week08_multidrone.py` → `week08_multidrone_summary.csv`; figure `figures/multidrone.png`; note `docs/week08_multidrone_note_en.md`.
 
 **Standard instances + more drones + scheduling (W8 extension 2)**: official Solomon topologies (C101/C201/R101/RC101, first n customers, rescaled to the synthetic RMS radius), K=1/2/3/5, n=10/20/30/50 (16 standard instances). LNS benefit vs truck-only:
 
 | size | K=1 | K=2 | K=3 | K=5 |
 |---|---:|---:|---:|---:|
-| N=10 | 36.7% | 53.4% | 63.1% | **71.4%** |
-| N=50 | 23.3% | 34.7% | 41.8% | **48.6%** |
+| N=10 | 37.2% | 51.2% | 61.1% | **71.4%** |
+| N=50 | 27.5% | 38.4% | 42.7% | **46.8%** |
 
-More drones give a higher benefit and flatten the scaling decay (uniform-random R101 benefits most, clustered C101 least). **Scheduling**: greedy vs local vs optimal (branch and bound, <= 14 sorties) plus a lower-bound certificate (the larger of: every sortie on its own drone, and total flight divided by K): local gains only **+0.001%** over greedy; **on 31/64 configs greedy reaches the lower bound, so the naive rule is provably optimal there**; against the exact optimum (43 configs) the naive rule is only **0.196% above it (max 5.2%)**. With many sorties the lower bound is loose and the theoretical gain is bounded only by mean 2.46% (max 33.4%), which stays unproven.
+More drones give a higher benefit and flatten the scaling decay (uniform-random R101 benefits most, clustered C101 least). **Scheduling**: greedy vs local vs optimal (branch and bound, <= 14 sorties) plus a lower-bound certificate (the larger of: every sortie on its own drone, and total flight divided by K). After the main evaluator was made physical the sortie sets no longer overlap, so the K drones have **no contention**: **greedy == the lower bound on 64/64 configs (provably optimal)**, local gain **0.000%**, and against the exact optimum (32 configs) the naive rule is **0.000% above it**. The earlier "31/64 + a small local gain" was a false contention created by nested sorties.
 
 **Original Murray & Chu (2015) FSTSP instances** (note `docs/week08_mc_benchmark_note_en.md`): the original set was downloaded from the hosting by Dell'Amico's group into `src/instances/murray_chu_2015/` (36 ten-customer instances, 11 shipping a literature OFV). The bundled README never says which of `tau`/`tauprime` is the truck; calibrating on **36/36 instances** shows `tauprime`'s implied speed matches the declared UAV speed (0.2/0.4/0.6), so `tau` = truck and `tauprime` = UAV.
 
@@ -206,11 +206,11 @@ TW violations and recharges (V1 -> V3l): N=8 is 2.4/0.9 -> 0/0; N=20 is 13.5/2.9
 
 | size | proven optimal | greedy gap | LNS gap | original V2 plan valid |
 |---|---:|---:|---:|---:|
-| n=8 | **5/5** | **31.2%** | **16.5%** | 1/5 |
-| n=10 | 0/5 | 56.5% | 25.4% | 0/5 |
-| n=12 | 0/5 | 52.5% | 26.5% | 0/5 |
+| n=8 | **5/5** | **31.2%** | **16.5%** | 5/5 |
+| n=10 | 0/5 | 58.0% | 26.4% | 5/5 |
+| n=12 | 0/5 | 49.1% | 23.5% | 5/5 |
 
-**The LNS roughly halves the gap**, quantifying the improvement phase. At n≥10 optimality is not proved (the value is an upper bound, so the gap is a lower bound). The shared FSTSP evaluator has a physical defect: it does not check that the drone is back on the truck, so nested/crossing sorties are given a makespan although such a plan is infeasible — measured on 15 instances, the original V2 produces such an invalid plan in 14 of them (the FC-7-2/7-3 defect, on the FSTSP evaluator path). Source `week08_exact_gap.py` + `cpsat_fstsp.py` -> `week08_exact_gap_raw.csv` / `_summary.csv`.
+**The LNS roughly halves the gap**, quantifying the improvement phase. At n≥10 optimality is not proved (the value is an upper bound, so the gap is a lower bound). The shared FSTSP evaluator has a physical defect: it does not check that the drone is back on the truck, so nested/crossing sorties are given a makespan although such a plan is infeasible — measured on 15 instances, the original V2 produces such an invalid plan in 14 of them (the FC-7-2/7-3 defect, on the FSTSP evaluator path). Source `week08_exact_gap.py` + `cpsat_fstsp.py` -> `week08_exact_gap_raw.csv` / `_summary.csv`. (2026-09-13: the main evaluator is now physical and everything was re-run; the V2 plans are now physically valid on 15/15 instances, see `docs/evaluator_physical_fix_note_en.md`.)
 
 ---
 
@@ -223,11 +223,12 @@ Grouped by nature; each item gives its "consequence + next step" so it reads as 
 - **The battery/charging layer is now re-introduced by V3**: V3 (electric truck + drone + charging stations + time windows) is implemented and compared against V1 (see §8); what is still missing is wiring **multiple drones** into V3.
 
 **Algorithmic-scope boundary**
-- **The greedy itself has no local search (W8 adds an improvement phase)**: applying intra-route 2-opt to V2's constructed truck route (accept only strict makespan improvement) yields only 0–1.76% (peak 1.76% at N=16; see `week07_fstsp_with_ls.log`) — showing V2's gain comes from the *collaborative structure* of offloading far-flung customers, not route fine-tuning. With the W8 destroy-and-repair LNS the gain over the greedy is a consistent +9% to +12.6% at every size (Wilcoxon overall p=3.6×10⁻⁹; see §8), beyond pure routing. **How far from global optimum is now quantified in §8** (CP-SAT exact optimum; n=8 proven: greedy +31.2%, LNS +16.5%).
+- **The greedy itself has no local search (W8 adds an improvement phase)**: applying intra-route 2-opt to V2's constructed truck route (accept only strict makespan improvement) yields only 0–1.76% (peak 1.76% at N=16; see `week07_fstsp_with_ls.log`) — showing V2's gain comes from the *collaborative structure* of offloading far-flung customers, not route fine-tuning. With the W8 destroy-and-repair LNS the gain over the greedy is a consistent +9% to +12.6% at every size (Wilcoxon overall p=1.7×10⁻¹⁰; see §8), beyond pure routing. **How far from global optimum is now quantified in §8** (CP-SAT exact optimum; n=8 proven: greedy +31.2%, LNS +16.5%).
 
 **Empirical-validation boundaries**
 - **Synthetic instances extended to 100, but the effective collaboration interval lies at N ≤ 50**: my truck-drone experiments use randomly generated synthetic instances and do not adopt the field's standard large-scale benchmark sets (e.g., the Solomon-derived FSTSP instances of Murray & Chu 2015 — which this project reproduced within their parameter range in W7; or the Masmoudi et al. 2018 instance set). At N=100 the synergy collapses to 2.3% and V2 averages 71.4/100 late customers (TW feasibility breaks down); extrapolation to real large scale needs caution. The W8 LNS lifts the N=50 collaboration benefit from the greedy's 17.6% to 28.1%, slowing the decay, but it is still the same synthetic instances and setting, so the boundary is unchanged. **W8 extension 2 re-ran 16 standard instances built from official Solomon topologies (K=1/2/3/5) with the same conclusion**; **the original Murray & Chu (2015) instances were also downloaded** (36 ten-customer instances, see §8), so the results no longer rest on synthetic or rescaled Solomon data alone. What is still missing is standard-benchmark validation at larger sizes (N > 50).
-- **Drone scheduling: provably optimal on about half the configs, unproven at scale**: with the lower bound (the larger of every sortie on its own drone, and total flight divided by K) as a certificate, greedy reaches that bound on 31/64 configs (so it is optimal there) and is only 0.196% above the exact optimum where that is computable (<= 14 sorties). But with many sorties the bound is loose and the possible gain is bounded only by mean 2.46% (max 33.40%) -- **scheduling optimality at large multi-drone scale is not proven**.
+- **Drone scheduling: provably optimal on every config after the physical fix**: with the lower bound (the larger of every sortie on its own drone, and total flight divided by K) as a certificate, greedy reaches that bound on **64/64 configs** and local search adds **0.000%** once the sortie sets no longer overlap (physical evaluator). The earlier "31/64 + a small local gain" was a false contention created by nested sorties. (Limitation: this holds for physically valid, non-overlapping sortie sets; if sorties did overlap, contention would return.)
+- **The main evaluator is now physical; W7/W8 were re-run**: `fstsp_simulate` rejects nested/crossing sorties (returns inf), and W7/W8 plus the W6 sensitivity/multi-objective experiments were re-run; the numbers are lower but the direction is unchanged (see `docs/evaluator_physical_fix_note_en.md`). **Not covered**: `week06_ground_air_evrp_tw.py`'s own parallel evaluator and `week06_largeN` were left unchanged, so W6's "V2 vs V1 −424 (p=3.7×10⁻⁸)" and the scaling decay 27.6%→12.1%→2.3% still use the old model — a clear follow-up.
 - **Time windows / energy are now covered by V3, which is also extended to multiple drones**: V3 stacks the week06 battery, charging stations and time windows back into the truck-drone model (see §8), reaching 34.7%~53.4% over the truck-only EV baseline at K=1 and 57.7%~72.8% at K=2/3, removing most late arrivals and charging detours. V3 is now tested with K=1/2/3, and time windows are still a penalty in the search rather than a hard constraint (the violation count is reported).
 - **The exact optimum is now computed at small scale (§8); at larger scale it is still unprovable**: CP-SAT solves the physical FSTSP model exactly — n=8 is proven optimal (greedy +31.2%, LNS +16.5%), while n=10/12 give an upper bound on the optimum within 180s (so those gaps are lower bounds). Exact optima / bounds at larger scale remain open and are the natural next improvement. Baseline absolute quality is still anchored to BKS (literature optimum).
 - **Coarse MO front**: the weighted-sum greedy gives a "partial / inner" front and may miss non-convex Pareto regions; it is not a full Pareto solver (see §3). For a complete front, the natural next step is ε-constraint or NSGA-II (as in peer Xie's P-ACO/NSGA-II).

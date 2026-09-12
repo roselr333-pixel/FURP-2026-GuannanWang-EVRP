@@ -226,3 +226,8 @@ AGGREGATE (mean over seeds per size)
       decomp: multi-customer +12.1pp, multi-takeoff +4.4pp, cap3 +8.9pp
   N=20: truck= 1022.3  published=  855.5 ( 16.2%)  v2=  767.2 ( 24.8%)  abl_cap1=  855.5 ( 16.2%)  abl_notakeoff=  790.0 ( 22.6%)  imp_cap3=  743.3 ( 27.2%)
       decomp: multi-customer +8.6pp, multi-takeoff +2.2pp, cap3 +2.4pp
+
+
+[raw -> E:\FURP-EVRP\roselr333-pixel-FURP-2026-GuannanWang-EVRP\src\results\week07_ablation_raw.csv]
+[summary -> E:\FURP-EVRP\roselr333-pixel-FURP-2026-GuannanWang-EVRP\src\results\week07_ablation_summary.csv]
+[log -> E:\FURP-EVRP\roselr333-pixel-FURP-2026-GuannanWang-EVRP\src\results\week07_ablation_log.txt]

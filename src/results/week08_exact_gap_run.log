@@ -1,18 +1,18 @@
-n=8 seed=20260720: OPT=158.49 (OPTIMAL, 37.11s) | greedy 46.9% LNS 15.27% | raw V2 valid=no
-n=8 seed=20260721: OPT=204.21 (OPTIMAL, 18.47s) | greedy 0.04% LNS 0.04% | raw V2 valid=yes
-n=8 seed=20260722: OPT=173.38 (OPTIMAL, 18.62s) | greedy 51.53% LNS 30.82% | raw V2 valid=no
-n=8 seed=20260723: OPT=211.88 (OPTIMAL, 16.26s) | greedy 11.38% LNS 11.38% | raw V2 valid=no
-n=8 seed=20260724: OPT=218.77 (OPTIMAL, 13.56s) | greedy 46.33% LNS 25.03% | raw V2 valid=no
-n=10 seed=20260720: OPT=222.45 (FEASIBLE, 180.15s) | greedy 74.38% LNS 14.86% | raw V2 valid=no
-n=10 seed=20260721: OPT=245.41 (FEASIBLE, 180.13s) | greedy 52.63% LNS 31.09% | raw V2 valid=no
-n=10 seed=20260722: OPT=200.97 (FEASIBLE, 180.17s) | greedy 60.21% LNS 45.68% | raw V2 valid=no
-n=10 seed=20260723: OPT=246.7 (FEASIBLE, 180.12s) | greedy 51.72% LNS 18.61% | raw V2 valid=no
-n=10 seed=20260724: OPT=252.24 (FEASIBLE, 180.1s) | greedy 43.38% LNS 16.58% | raw V2 valid=no
-n=12 seed=20260720: OPT=277.69 (FEASIBLE, 180.17s) | greedy 57.25% LNS 21.73% | raw V2 valid=no
-n=12 seed=20260721: OPT=292.92 (FEASIBLE, 180.14s) | greedy 35.52% LNS 24.65% | raw V2 valid=no
-n=12 seed=20260722: OPT=259.06 (FEASIBLE, 180.42s) | greedy 55.18% LNS 28.81% | raw V2 valid=no
-n=12 seed=20260723: OPT=287.34 (FEASIBLE, 180.17s) | greedy 73.79% LNS 16.94% | raw V2 valid=no
-n=12 seed=20260724: OPT=298.5 (FEASIBLE, 180.16s) | greedy 40.57% LNS 40.57% | raw V2 valid=no
+n=8 seed=20260720: OPT=158.49 (OPTIMAL, 32.06s) | greedy 46.9% LNS 15.27% | raw V2 valid=yes
+n=8 seed=20260721: OPT=204.21 (OPTIMAL, 14.74s) | greedy 0.04% LNS 0.04% | raw V2 valid=yes
+n=8 seed=20260722: OPT=173.38 (OPTIMAL, 19.18s) | greedy 51.53% LNS 30.82% | raw V2 valid=yes
+n=8 seed=20260723: OPT=211.88 (OPTIMAL, 19.29s) | greedy 11.38% LNS 11.38% | raw V2 valid=yes
+n=8 seed=20260724: OPT=218.77 (OPTIMAL, 8.74s) | greedy 46.33% LNS 25.03% | raw V2 valid=yes
+n=10 seed=20260720: OPT=217.23 (FEASIBLE, 180.14s) | greedy 78.57% LNS 17.62% | raw V2 valid=yes
+n=10 seed=20260721: OPT=249.76 (FEASIBLE, 180.18s) | greedy 49.97% LNS 28.8% | raw V2 valid=yes
+n=10 seed=20260722: OPT=200.97 (FEASIBLE, 180.15s) | greedy 60.21% LNS 45.68% | raw V2 valid=yes
+n=10 seed=20260723: OPT=237.0 (FEASIBLE, 180.14s) | greedy 57.93% LNS 23.47% | raw V2 valid=yes
+n=10 seed=20260724: OPT=252.24 (FEASIBLE, 180.26s) | greedy 43.38% LNS 16.58% | raw V2 valid=yes
+n=12 seed=20260720: OPT=277.69 (FEASIBLE, 180.17s) | greedy 57.25% LNS 21.73% | raw V2 valid=yes
+n=12 seed=20260721: OPT=302.51 (FEASIBLE, 180.18s) | greedy 31.22% LNS 20.7% | raw V2 valid=yes
+n=12 seed=20260722: OPT=259.06 (FEASIBLE, 180.46s) | greedy 55.18% LNS 28.81% | raw V2 valid=yes
+n=12 seed=20260723: OPT=293.95 (FEASIBLE, 180.14s) | greedy 69.88% LNS 14.31% | raw V2 valid=yes
+n=12 seed=20260724: OPT=317.74 (FEASIBLE, 180.15s) | greedy 32.06% LNS 32.06% | raw V2 valid=yes
 ==============================================================================
 Exact optimality gap on small instances (CP-SAT)
 ==============================================================================
@@ -25,9 +25,9 @@ FSTSP model optimum (no overlapping sorties). Where the run is not
 proven optimal the value is an upper bound on the optimum, so the
 gap is a lower bound on the true gap.
 
-  N= 8: proven 5/5 | greedy gap  31.24% | LNS gap  16.51% | proven-only: greedy 31.24%, LNS 16.51% | raw V2 plan valid 1/5
-  N=10: proven 0/5 | greedy gap  56.46% | LNS gap  25.36% | proven-only: greedy 0.00%, LNS 0.00% | raw V2 plan valid 0/5
-  N=12: proven 0/5 | greedy gap  52.46% | LNS gap  26.54% | proven-only: greedy 0.00%, LNS 0.00% | raw V2 plan valid 0/5
+  N= 8: proven 5/5 | greedy gap  31.24% | LNS gap  16.51% | proven-only: greedy 31.24%, LNS 16.51% | raw V2 plan valid 5/5
+  N=10: proven 0/5 | greedy gap  58.01% | LNS gap  26.43% | proven-only: greedy 0.00%, LNS 0.00% | raw V2 plan valid 5/5
+  N=12: proven 0/5 | greedy gap  49.12% | LNS gap  23.52% | proven-only: greedy 0.00%, LNS 0.00% | raw V2 plan valid 5/5
 
 [raw -> E:\FURP-EVRP\roselr333-pixel-FURP-2026-GuannanWang-EVRP\src\results\week08_exact_gap_raw.csv]
 [summary -> E:\FURP-EVRP\roselr333-pixel-FURP-2026-GuannanWang-EVRP\src\results\week08_exact_gap_summary.csv]

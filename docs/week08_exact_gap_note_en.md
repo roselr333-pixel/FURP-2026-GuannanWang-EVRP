@@ -16,7 +16,7 @@ truck. A sortie set that nests one sortie inside another (launch at 0, recover a
 makespan even though one drone cannot fly two overlapping sorties.
 
 Measured on the 15 instances at n=8/10/12, the project's original V2 produces
-such an invalid plan in **14 of 15 cases** (1/5 valid at n=8, 0/5 at n≥10). This
+such an invalid plan in **14 of 15 cases** (1/5 valid at n=8, 0/5 at n≥10). This (2026-09-13: the main evaluator is now physical and everything was re-run; the V2 plans are now physically valid on 15/15 instances, see `docs/evaluator_physical_fix_note_en.md`.)
 is the same class of defect as FC-7-2 / FC-7-3, on the FSTSP evaluator's code
 path.
 
@@ -56,9 +56,9 @@ gap = (heuristic − optimum) / optimum.
 
 | size | optimality proven | greedy gap (mean) | LNS gap (mean) | greedy range | LNS range | original V2 plan valid |
 |---|---:|---:|---:|---:|---:|---:|
-| n=8 | **5/5** | **31.2%** | **16.5%** | 0.04 – 51.5% | 0.04 – 30.8% | 1/5 |
-| n=10 | 0/5 | 56.5% | 25.4% | 43.4 – 74.4% | 14.9 – 45.7% | 0/5 |
-| n=12 | 0/5 | 52.5% | 26.5% | 35.5 – 73.8% | 16.9 – 40.6% | 0/5 |
+| n=8 | **5/5** | **31.2%** | **16.5%** | 0.04 – 51.5% | 0.04 – 30.8% | 5/5 |
+| n=10 | 0/5 | 58.0% | 26.4% | 43.4 – 78.6% | 16.6 – 45.7% | 5/5 |
+| n=12 | 0/5 | 49.1% | 23.5% | 31.2 – 69.9% | 14.3 – 32.1% | 5/5 |
 
 ## 5. What it shows and where it stops
 

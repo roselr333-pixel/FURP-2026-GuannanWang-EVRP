@@ -80,7 +80,7 @@ def clean_simulate(inst, route, trips, rd=R_D):
     for ln, cs, rn in ts:
         i_pos = _lpos(route, ln)
         j_pos = _rpos(route, rn)
-        cl = list(cs)
+        cl = list(cs) if isinstance(cs, (list, tuple)) else [cs]
         if i_pos >= j_pos:
             return False, None
         legs = [ln] + cl + [rn]

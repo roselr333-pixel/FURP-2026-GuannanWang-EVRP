@@ -10,6 +10,6 @@ FSTSP model optimum (no overlapping sorties). Where the run is not
 proven optimal the value is an upper bound on the optimum, so the
 gap is a lower bound on the true gap.
 
-  N= 8: proven 5/5 | greedy gap  31.24% | LNS gap  16.51% | proven-only: greedy 31.24%, LNS 16.51% | raw V2 plan valid 1/5
-  N=10: proven 0/5 | greedy gap  56.46% | LNS gap  25.36% | proven-only: greedy 0.00%, LNS 0.00% | raw V2 plan valid 0/5
-  N=12: proven 0/5 | greedy gap  52.46% | LNS gap  26.54% | proven-only: greedy 0.00%, LNS 0.00% | raw V2 plan valid 0/5
+  N= 8: proven 5/5 | greedy gap  31.24% | LNS gap  16.51% | proven-only: greedy 31.24%, LNS 16.51% | raw V2 plan valid 5/5
+  N=10: proven 0/5 | greedy gap  58.01% | LNS gap  26.43% | proven-only: greedy 0.00%, LNS 0.00% | raw V2 plan valid 5/5
+  N=12: proven 0/5 | greedy gap  49.12% | LNS gap  23.52% | proven-only: greedy 0.00%, LNS 0.00% | raw V2 plan valid 5/5
