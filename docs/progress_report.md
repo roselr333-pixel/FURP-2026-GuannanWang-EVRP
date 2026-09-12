@@ -1,6 +1,7 @@
 # Progress Report — FURP 2026 EVRP
 
 > Student self-assessment, written 2026-07-24 by Guannan Wang.
+> Note: this file predates the 2026-09-13 physical-evaluator fix. Its experiment numbers (week06 scaling decay, ablation gains, multi-objective, LNS, multi-drone) are on the earlier evaluator; current values are in `docs/experiment_evidence_index_en.md` and `docs/evaluator_physical_fix_note_en.md`.
 > This is a mid-project check: it states what the supervisor actually asks for, maps it against what I have done so far, and lists what is still worth strengthening. The stance is an inventory — I do not overstate finished work and I do not hide the gaps.
 
 ---

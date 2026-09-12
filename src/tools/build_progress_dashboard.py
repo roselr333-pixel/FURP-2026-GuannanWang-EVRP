@@ -162,7 +162,7 @@ HTML = f"""<!DOCTYPE html>
       <div class="kpi good"><div class="v">−3.0%</div><div class="k">PyVRP 基线 vs BKS（最强求解器）</div></div>
       <div class="kpi"><div class="v">+7.2%</div><div class="k">OR-Tools 商业求解器 vs BKS</div></div>
       <div class="kpi bad"><div class="v">+36.6%</div><div class="k">自写 GA vs BKS（±15.8%）</div></div>
-      <div class="kpi warn"><div class="v">+6.6~17.7pp</div><div class="k">消融：多顾客能力主增益</div></div>
+      <div class="kpi warn"><div class="v">+8.6~12.1pp</div><div class="k">消融：多顾客能力主增益</div></div>
     </div>
 
     <figure>
@@ -180,13 +180,13 @@ HTML = f"""<!DOCTYPE html>
       <img src="{figs['sensitivity']}">
       <figcaption>图3 · 参数敏感性（5 种子均值 ± 误差带）。K(每架次客户数) 1→3：25.3%→56.5%；
       Q(电池) 120→500：55.8%→47.1%；N(规模) 8→30：63.8%→35.3%。
-      <b style="color:var(--green)">✓ R(无人机续航) 已修复：60→200 实测随续航变化（15.5%→27.7%→35.2%→50.5%@160，200 处 48.7% 已饱和），与深度文档一致。</b></figcaption>
+      <b style="color:var(--green)">✓ R(无人机续航) 已修复：60→200 实测随续航变化（15.4%→24.6%→32.4%→34.4%@160，160 后饱和），与深度文档一致。</b></figcaption>
     </figure>
 
     <figure>
       <img src="{figs['mo_scatter']}">
       <figcaption>图4 · 多目标散点：V2(距离 215.2, 时长 415.7) 相对 V1 纯卡车(486.4, 622.4) 在两轴同时占优
-      （距离 −56%、时长 −33%）。诚实说明：加权和标量化贪心，前沿为"粗"前沿，非完整 Pareto。</figcaption>
+      （距离 −32%、时长 −34%）。诚实说明：加权和标量化贪心，前沿为"粗"前沿，非完整 Pareto。</figcaption>
     </figure>
 
     <figure>
@@ -196,18 +196,18 @@ HTML = f"""<!DOCTYPE html>
 
     <figure>
       <img src="{figs['largen']}">
-      <figcaption>图6 · 规模边界（N=30/50/100，5 种子均值）。V2 相对 V1 的 makespan 优势 27.6%→12.1%→2.3% 单调坍缩，
-      卸载率 62.0%→42.8%→23.4% 下降，N=100 时 V2 平均 71.4/100 顾客超时（TW 可行性崩溃）。诚实结论：有效协同区间落在 N≤50。</figcaption>
+      <figcaption>图6 · 规模边界（N=30/50/100，5 种子均值）。V2 相对 V1 的 makespan 优势 8.6%→3.4%→0.5% 单调坍缩，
+      卸载率 11.3%→5.2%→2.6% 下降，N=100 时 V2 平均 88.8/100 顾客超时（TW 可行性崩溃）。诚实结论：有效协同区间收窄到 N≤30。</figcaption>
     </figure>
   </section>
 
   <section>
     <h2><span class="dot"></span>④ 关键结论（来自深度分析文档）</h2>
     <ul>
-      <li><b>主线：</b>协作增益主源是"多顾客能力"而非"会合次数"——受控消融(+6.6~17.7pp) 与敏感性 K 扫描(25.3%→56.5%) 两个独立实验互相印证。</li>
-      <li><b>适用区间：</b>客户分散、无人机续航不受限、规模中等时协同最划算；规模扩展至 N=100 时收益坍缩至 2.3%、V2 平均 71.4/100 顾客超时（TW 崩溃），有效协同区间落在 N≤50。</li>
+      <li><b>主线：</b>协作增益主源是"多顾客能力"而非"会合次数"——受控消融(+8.6~12.1pp；标准算例上 +7.2~8.9pp) 与敏感性 K 扫描(20.5%→37.1%) 两个独立实验互相印证。</li>
+      <li><b>适用区间：</b>客户分散、无人机续航不受限、规模中等时协同最划算；规模扩展至 N=100 时收益坍缩至 0.5%、V2 平均 88.8/100 顾客超时（TW 崩溃），有效协同区间收窄到 N≤30。</li>
       <li><b>三基线定位：</b>PyVRP(领域最强) &gt; BKS &gt; OR-Tools(商业) &gt; 自写 GA，定位清晰、不夸大。</li>
-      <li><b>诚实局限：</b>加权和贪心非完整 Pareto 求解；规模受限于合成算例（N=100 时 TW 可行性崩溃，有效区间 N≤50）；未复现 MILP 下界。</li>
+      <li><b>诚实局限：</b>加权和贪心非完整 Pareto 求解；规模受限于合成算例（N=100 时 TW 可行性崩溃，有效区间 N≤30）；未复现 MILP 下界。</li>
     </ul>
   </section>
 

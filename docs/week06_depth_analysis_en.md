@@ -15,16 +15,18 @@ This is the single most important point to make, and two **independent** experim
 
 - **Controlled ablation** (week07, 5 configs on the same stage): holding "drone may take off/land
   several times" fixed, relaxing "at most 1 customer per sortie" to "2–3 customers" yields a gain of
-  **+6.6 ~ 17.7 percentage points**; whereas "allowing multiple takeoffs/landings" by itself only
-  contributes **+4.1 ~ 7.3 pp**. So letting the drone **serve several customers on one
+  **+8.6 ~ 12.1 percentage points**; whereas "allowing multiple takeoffs/landings" by itself only
+  contributes **+2.2 ~ 4.4 pp**. So letting the drone **serve several customers on one
   outbound trip** is the main source of gain.
 - **Parameter sensitivity** (week06, sweeping K = customers per sortie): as K rises 1 → 3, the
-  synergy benefit rises **25.3% → 56.5%**, exactly the same direction as the ablation.
+  synergy benefit rises **20.5% → 37.1%**, exactly the same direction as the ablation.
 
 The two experiments use different instance sets and different angles, but point at the same
 conclusion — which means the conclusion is **stable**, not an artifact of one run. This is where the
 project earns its "depth": instead of reporting one flattering final number, it uses controlled
 experiments to surface the mechanism that actually matters.
+
+**The same ablation re-run on official Solomon topologies** (48 standard instances: C1/C2/R1/RC1 x N=8/12/16/20 x 3 customer windows) gives a multi-customer gain of **+7.2 ~ 8.9 percentage points** and a multi-takeoff gain of **+1.3 ~ 2.0 pp**, with `abl_cap1` still equal to published instance by instance. The main gain source is the same on both geometries; by family the magnitude varies a lot (14.1pp on the uniform R topology, 5.7-5.8pp on the clustered C1/C2 topologies), so how much the multi-customer ability buys depends on the spatial pattern. See `docs/week07_ablation_std_note_en.md`.
 
 ---
 
@@ -35,21 +37,21 @@ boundary** of the synergy (all 5-seed means; error bands in `figures/sensitivity
 
 | Parameter | Sweep | Synergy benefit | Reading |
 |---|---|---|---|
-| Battery Q | 120 → 500 | 55.8% → 47.1% | larger battery → truck more self-sufficient → drone value diluted |
-| **Drone range R** | 60 → 200 | **15.5% → 50.5%** (saturates after 160) | range < 160 is a *real bottleneck*, binding the gain |
-| Customers/sortie K | 1 → 3 | 25.3% → 56.5% | consistent with ablation: multi-customer ability is the main gain |
-| Customer scale N (distance dim.) | 8 → 30 | 63.8% → 35.3% | distance-dim benefit dilutes with scale |
+| Battery Q | 120 → 500 | 41.2% → 29.7% | larger battery → truck more self-sufficient → drone value diluted |
+| **Drone range R** | 60 → 200 | **15.4% → 34.4%** (saturates after 160) | range < 160 is a *real bottleneck*, binding the gain |
+| Customers/sortie K | 1 → 3 | 20.5% → 37.1% | consistent with ablation: multi-customer ability is the main gain |
+| Customer scale N (distance dim.) | 8 → 30 | 35.3% → 32.1% | distance-dim benefit dilutes with scale |
 
 **Scale extension (time dimension, N=30/50/100, 5 seeds)**: V2's makespan advantage over V1 goes
-27.6% → 12.1% → 2.3%, while the offload rate falls 62.0% → 42.8% → 23.4% monotonically; at N=100
-V2 averages **71.4 / 100 late customers** (time-window feasibility collapses, because the greedy was
+8.6% → 3.4% → 0.5%, while the offload rate falls 11.3% → 5.2% → 2.6% monotonically; at N=100
+V2 averages **88.8 / 100 late customers** (time-window feasibility collapses, because the greedy was
 never TW-feasible by construction). Full curves in `figures/largen_scale_decay.png`.
 
 **Overall conclusion**: truck–drone collaboration pays most when "customers are dispersed, drone
 range is unconstrained, and the problem scale is moderate"; once the scale is large enough that the
 battery constraint nearly doubles the truck's cost, the collaboration dividend is diluted (the
-*effective* collaboration window in practice lies at **N ≤ 50**). The W8 LNS lifts the N=50
-collaboration benefit from the greedy's 17.6% to 28.1%, slowing this decay. This is a **data-backed
+*effective* collaboration window in practice narrows to **N ≤ 30**; only 3.4% is left at N=50). The W8 LNS lifts the N=50
+benefit in the same FSTSP setting from the greedy's 15.2% to 29.5%, slowing this decay. This is a **data-backed
 applicability judgement**, not a vague "drones are useful".
 
 ---
@@ -59,9 +61,9 @@ applicability judgement**, not a vague "drones are useful".
 In a synchronous truck–drone model, distance and completion time (makespan) are in natural tension.
 Using a weighted-sum sweep (w ∈ {0, 0.25, 0.5, 0.75, 1.0}, 5 seeds) I get:
 
-- Pure-truck EV (V1) mean: (distance 486.4, makespan 622.4)
-- Collaborative (V2) mean: (distance 215.2, makespan 415.7)
-- i.e. distance **−56%**, makespan **−33%** — V2 dominates V1 on **both axes**, a genuine Pareto improvement.
+- Pure-truck EV (V1) mean: (distance 486.5, makespan 622.5)
+- Collaborative (V2) mean: (distance 330.7, makespan 413.6)
+- i.e. distance **−32%**, makespan **−34%** — V2 dominates V1 on **both axes**, a genuine Pareto improvement.
 
 **Note**: this uses a weighted-sum scalarised greedy, not a full NSGA-II / Pareto solver, so
 the front produced is "coarse". This is a *limitation* of the method, not a selling point — it is
@@ -91,7 +93,7 @@ not single-objective distance optimisation.
 ## 5. Failure-case analysis
 
 Among the 17 failure cases, the most telling is this: on N=50 dense instances, the
-**synchronous-feasibility rejection count reaches ~4.5 million**. This shows that the synchronous
+**synchronous-feasibility rejection count reaches ~1.01 million**. This shows that the synchronous
 rendezvous constraint (the drone must rejoin the truck path at some point) is the main bottleneck at
 large scale — exactly corroborating the "benefit dilutes with scale" finding from §2, and jointly
 bounding the method's applicability. Failure is not embarrassing; it *corroborates* the sensitivity
@@ -102,20 +104,20 @@ conclusion and together with it delimits where the method works.
 ## 6. Limitations
 
 - **The greedy itself has no local search (W8 adds an LNS)**: applying intra-route 2-opt
-  post-processing to V2 yields only 0–1.76% — meaning once far-flung customers are offloaded, the
+  post-processing to V2 yields 1.97–3.22% — meaning once far-flung customers are offloaded, the
   truck route is already near-linear, so route fine-tuning is nearly useless; the gain comes from
   *collaborative structure*. With the W8 destroy-and-repair LNS the gain over the greedy is a
-  consistent **+9% to +12.6% at every size** (Wilcoxon overall p=3.6×10⁻⁹), and it offsets the scaling
-  decay (N=50: 17.6% → 28.1%).
+  consistent **+12.5% to +21.3% at every size** (Wilcoxon overall p=1.7×10⁻¹⁰), and it offsets the scaling
+  decay (N=50: 15.2% → 29.5%).
 - **2–3 customers per sortie cap**: a simplification and a boundary; larger-scale multi-customer
   service needs heavier search.
 - **Drone count**: all results use a single truck; the W8 extension tests "single drone" up to
-  K=1/2/3 (K=1→3 lifts the N=50 benefit from 28.1% to 36.0%), but still on the FSTSP evaluator
+  K=1/2/3 (K=1→3 lifts the N=50 benefit from 29.5% to 38.1%), but still on the FSTSP evaluator
   (no time windows or energy).
-- **Synthetic instances extended to 100, but the effective window lies at N ≤ 50**: I did not adopt
+- **Synthetic instances extended to 100, but the effective window narrows to N ≤ 30**: I did not adopt
   the field's standard large-scale benchmark sets (e.g., the Solomon-derived FSTSP instances of
   Murray & Chu 2015 — which this project reproduced within their parameter range in W7; or the
-  Masmoudi et al. 2018 set). At N=100 the synergy collapses to 2.3% and V2 averages 71.4/100 late
+  Masmoudi et al. 2018 set). At N=100 the synergy collapses to 0.5% and V2 averages 88.8/100 late
   customers (TW feasibility breaks down); extrapolation needs caution. W8 extension 2 re-ran 16
   standard instances built from official Solomon topologies (K=1/2/3/5) with a consistent
   conclusion, so the results no longer rest on random geometry alone.
@@ -132,10 +134,10 @@ conclusions into one **coherent chain**:
 > Controlled ablation locates the main gain source (multi-customer ability) → sensitivity confirms
 > it from an independent angle (K sweep) → four parameters characterise the applicability window
 > (dispersed customers / ample range / moderate scale) → scale extension to 100 reveals synergy
-> collapse and TW breakdown (effective window N ≤ 50) → multi-objective proves dominance on both
+> collapse and TW breakdown (effective window N ≤ 30) → multi-objective proves dominance on both
 > axes → three baselines place V2's collaborative increment → failure cases corroborate
-> the rendezvous constraint → the W8 LNS adds an improvement phase (+9~12.6%, offsetting the scaling
-> decay) → multiple drones (K=1/2/3, N=50 benefit 28.1%→36.0%) → limitations stated plainly
+> the rendezvous constraint → the W8 LNS adds an improvement phase (+12.5~21.3%, offsetting the scaling
+> decay) → multiple drones (K=1/2/3, N=50 benefit 29.5%→38.1%) → limitations stated plainly
 > (scale boundary / synthetic instances / no TW-energy).
 
 This chain lets every conclusion be traced back to an experiment, rather than resting on "I think

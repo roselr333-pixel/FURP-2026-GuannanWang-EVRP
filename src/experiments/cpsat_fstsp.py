@@ -7,19 +7,9 @@ The reports repeatedly note that "how far the heuristic is from the optimum" is
 not quantified, because no exact solver existed for the collaborative problem.
 This module provides one, so the gap can be stated on small instances.
 
-A modelling subtlety this module fixes
--------------------------------------
-The shared evaluator `week07_fstsp_repro.fstsp_simulate` serialises sorties with
-a `drone_avail` chain but does NOT check that the drone is physically back on the
-truck before the next launch. A sortie set that nests one sortie inside another
-(launch i1 -> recover j1, with a second sortie launched and recovered in between)
-is therefore accepted and given a value, even though one drone cannot serve two
-overlapping sorties. Several greedy solutions produced by my heuristics contain
-exactly this pattern, so their reported makespan is optimistic and does not
-correspond to a feasible plan.
-
-To make the optimum and the heuristic comparable, both are defined here on the
-PHYSICALLY VALID model:
+The model both the optimum and the heuristics use
+------------------------------------------------
+Both are defined on the same physically valid model:
   * each sortie launches at a truck node i, serves 1-2 customers, and is
     recovered at a later truck node j (i before j on the truck route);
   * a sortie's flight length must not exceed the drone range R_D;
@@ -27,6 +17,12 @@ PHYSICALLY VALID model:
     before the previous one has been recovered, and the launch node cannot be a
     node the truck has already passed;
   * the truck waits at a recovery node until its sortie lands.
+
+`clean_simulate` below is an independent implementation of that model.
+`week07_fstsp_repro.fstsp_simulate` enforces the same rules; the nested-sortie
+gap it used to have (sorties could overlap because the drone's return was never
+checked) was fixed on 2026-09-13, see
+`docs/evaluator_physical_fix_note_en.md`.
 
 Contents
 --------

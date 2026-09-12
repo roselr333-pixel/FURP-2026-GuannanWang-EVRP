@@ -41,12 +41,12 @@ python -m pytest tests/ -q
 |---|---|---|---|
 | 三基线 vs BKS（PyVRP −3.0% / OR-Tools +7.2% / GA +36.6%±15.8%） | `benchmark_official_solomon.py` + `baseline_pyvrp_vrptw.py` + `baseline_ga_vrptw.py` → `baseline_consolidated.py` | GA 5 种子；OR-Tools / PyVRP 决定性 | `src/results/baseline_consolidated.csv`、`figures/baseline_gap_by_family.png` |
 | 参数敏感性（电池 / 续航 / 每架次 / 规模） | `week06_sensitivity.py` | 5 种子；n=12 | `src/results/week06_sensitivity.csv`、`figures/sensitivity_panels.png` |
-| 多目标权衡（距离 −56% / 时长 −33%，两轴占优） | `week06_multi_objective.py` | 5 权重 × 5 种子 | `src/results/week06_multi_objective.csv`、`figures/mo_*.png` |
-| 受控消融（多顾客能力为主增益 +6.6~17.7pp；sanity check 通过） | `week07_improvement_ablation.py` | 40 算例 | `src/results/week07_ablation_summary.csv` |
-| FSTSP 复现（V2 比 M&C 2015 短 8–22%，卸载约 2 倍） | `week07_fstsp_repro.py` | 40 算例 | `src/results/week07_fstsp_*.csv` |
-| 规模衰减（N=50 收益 12.1%、会合否决 453 万） | `week06_largeN.py` | 5 种子 | `src/results/week06_largeN_summary.csv` |
-| LNS 改进（相对贪心 +9~12.6%，缓冲规模衰减） | `week08_lns.py` | 60 算例（10 种子 × N=8/12/16/20/30/50）；确定性 | `src/results/week08_lns_summary.csv`、`figures/lns_vs_greedy.png` |
-| 多无人机（K=1/2/3；K=1→3 时 N=50 收益 28.1%→36.0%） | `week08_multidrone.py` | 同 60 算例 × K=1/2/3；确定性 | `src/results/week08_multidrone_summary.csv`、`figures/multidrone.png` |
+| 多目标权衡（距离 −32% / 时长 −34%，两轴占优） | `week06_multi_objective.py` | 5 权重 × 5 种子 | `src/results/week06_multi_objective.csv`、`figures/mo_*.png` |
+| 受控消融（多顾客能力为主增益 +8.6~12.1pp；sanity check 通过） | `week07_improvement_ablation.py` | 40 算例 | `src/results/week07_ablation_summary.csv` |
+| FSTSP 复现（V2 比 M&C 2015 短 10.2–14.2%） | `week07_fstsp_repro.py` | 40 算例 | `src/results/week07_fstsp_*.csv` |
+| 规模衰减（N=50 收益 3.4%、单机调度拒绝 101 万） | `week06_largeN.py` | 5 种子 | `src/results/week06_largeN_summary.csv` |
+| LNS 改进（相对贪心 +12.5~21.3%，缓冲规模衰减） | `week08_lns.py` | 60 算例（10 种子 × N=8/12/16/20/30/50）；确定性 | `src/results/week08_lns_summary.csv`、`figures/lns_vs_greedy.png` |
+| 多无人机（K=1/2/3；K=1→3 时 N=50 收益 29.5%→38.1%） | `week08_multidrone.py` | 同 60 算例 × K=1/2/3；确定性 | `src/results/week08_multidrone_summary.csv`、`figures/multidrone.png` |
 | 标准算例 + K=1/2/3/5 + 最优调度 | `week08_multidrone_std.py`（+ `fstsp_instances.py`、`drone_scheduling.py`） | 16 个 Solomon 标准实例；确定性 | `src/results/week08_multidrone_std_summary.csv`、`week08_scheduling.csv`、`figures/multidrone_std.png` |
 | 论文原始算例（M&C 2015；c1K1 的 LNS/OFV=0.901） | `week08_mc_benchmark.py` + `fstsp_mc.py` | 36 个原始 10 顾客实例；确定性 | `src/results/week08_mc_benchmark_raw.csv` |
 | V3（电动卡车+无人机+充电+时间窗；相对纯电卡车 K=1 降 34.7%~53.4%、K=3 达 72.8%） | `v3_ev_collab.py` | 4 规模 × 10 种子 × K=1/2/3；确定性 | `src/results/v3_ev_collab_summary.csv`、`v3_ev_collab_raw.csv` |

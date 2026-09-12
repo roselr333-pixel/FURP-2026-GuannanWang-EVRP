@@ -9,6 +9,9 @@
 > This file is a v2 iteration of the same code: the previous version offloaded
 > only one customer per instance; this version fixes the drone task allocation
 > so it can actually offload several.
+>
+> 2026-09-13: re-run after the physical evaluator fix; the numbers here are
+> updated to that model (see `docs/evaluator_physical_fix_note_en.md`).
 
 ## 1. What I built
 
@@ -25,9 +28,8 @@ Vehicle / constraint setup:
 - **Drone** is carried by the truck, launched at any truck node *i* to serve
   one or more customers, and recovered at any later truck node *j*. A drone
   trip must satisfy (a) **range** — total flight length `i→(visited
-  customers)→j` ≤ drone range; (b) **rendezvous** — the drone lands at *j* no
-  later than the truck arrives (the drone may wait, but cannot land after the
-  truck has left); (c) the customers' **time windows**. The drone battery is
+  customers)→j` ≤ drone range; (b) **rendezvous** — the truck waits at *j* until the drone has landed
+  there, and the drone is serial (one sortie at a time); (c) the customers' **time windows**. The drone battery is
   reset on recovery (battery-swap assumption).
 - **Objective**: minimize makespan = max(truck completion time, drone
   completion time).
@@ -40,7 +42,7 @@ listed under "next step" earlier:
 
 1. **One flight can serve multiple customers.** After launching from *i*, the
    drone may visit `k1→k2→…` in order before landing at *j*, as long as the
-   whole sub-path stays within range and finishes before the truck reaches
+   whole sub-path stays within range and the truck can wait for it at
    *j*. The current code allows at most 2 customers per flight (it enumerates
    both single- and two-customer options and keeps the better one).
 2. **One truck stop can launch/recover several times.** Once a truck node is
@@ -49,8 +51,8 @@ listed under "next step" earlier:
 
 The heuristic: take the V1 truck route (with charging-station insertions) as
 the base, then repeatedly scan every launch segment (i, j) on the route,
-enumerate the customer groups it could serve, and accept a group only when
-removing those customers from the truck route lowers the truck makespan.
+enumerate the customer groups it could serve, and accept a group only when adding
+that sortie lowers the makespan of the whole physical plan.
 Repeat until nothing more can be accepted. This keeps the drone busy while
 guaranteeing every offload actually helps the completion time.
 
@@ -83,7 +85,9 @@ Note: the 8- and 12-customer instances happen to share a near-identical V2
 makespan (~278.6) because both truck sub-routes end at the same charging
 station before returning to the depot, so the final leg takes the same time.
 This is an artifact of the small seeded instances and does not affect the
-comparison.
+comparison. This pilot predates the 2026-09-13 physical-evaluator fix and was
+not re-run; for the current model see §4.2 and
+`docs/evaluator_physical_fix_note_en.md`.
 
 ### 4.2 Multi-seed robustness (10 seeds × 4 sizes = 40 instances, added 2026-07-23)
 
@@ -93,23 +97,25 @@ performance per size.
 
 | Size | V0 | V1 (base) | V2 (prop.) | V2 vs V1 | mean offload | offload % | V2 feas. |
 |---|---:|---:|---:|---:|---:|---:|---:|
-| 8 | 434.7 | 485.8 | 240.5 | **−50.5%** | 5.2 / 8 | 65.0% | 100% |
-| 12 | 614.4 | 694.7 | 312.2 | **−55.3%** | 8.5 / 12 | 70.8% | 100% |
-| 16 | 816.6 | 975.9 | 448.3 | **−53.9%** | 11.5 / 16 | 71.9% | 100% |
-| 20 | 1080.1 | 1283.6 | 741.9 | **−42.1%** | 13.4 / 20 | 67.0% | 100% |
+| 8 | 434.7 | 485.8 | 324.2 | **−33.6%** | 2.5 / 8 | 31.2% | 100% |
+| 12 | 614.4 | 694.7 | 525.4 | **−24.5%** | 2.6 / 12 | 21.7% | 100% |
+| 16 | 816.6 | 975.9 | 783.9 | **−19.6%** | 2.9 / 16 | 18.1% | 100% |
+| 20 | 1080.1 | 1283.6 | 1078.4 | **−15.6%** | 2.9 / 20 | 14.5% | 100% |
 
-- All 40 instances are feasible (V0/V1/V2 feasibility 100%).
-- The mean V2-over-V1 improvement sits at 42%–55% and does not swing much
-  across seeds (per-seed range 27.7%–71.7%), so the collaborative benefit is
-  stable rather than a product of one lucky seed.
-- Mean offload rate is 65%–72%: the drone genuinely serves the majority of
-  customers in parallel across many instances.
+- All 40 instances are feasible (V0/V1/V2 feasibility 100%, and every V2 plan
+  passes the physical evaluator).
+- The mean V2-over-V1 improvement sits at 16%–34% (N=20 → N=8) and does not
+  swing much across seeds (per-seed range 7.3%–48.9%), so the collaborative
+  benefit is stable rather than a product of one lucky seed.
+- Mean offload rate is 14%–31% (2–3 customers per instance): with one serial
+  drone only a single sortie is in the air at a time, so the offload volume is
+  much smaller than under the earlier (non-physical) evaluator.
 - Fairness still holds: V1 and V2 share the same constructive core, so the gap
   is purely the effect of adding the drone.
 
 Compared with the version that offloaded only one customer, the collaborative
-benefit is now much larger (that version improved by only 12–21%; this one by
-40–59%).
+benefit is still larger (that version improved by only 12–21%; this one by
+16–34%).
 
 ## 5. Metrics I now report (what the project page asks for)
 
@@ -125,11 +131,11 @@ rejected by the rendezvous rule), runtime, and the fixed seed.
 | FC1 | truck EV, recharge OFF, battery=120 | energy violation — cannot cover the distance | allow recharge at stations or raise battery |
 | FC2 | collaborative, drone range = 40 (tiny) | only 2 customers offloaded; V2 ≈ V1 | larger drone range, or accept degraded-to-baseline |
 | FC3 | truck EV, tight time windows (width=35) | 10 customers served outside their window | relax windows / prioritise TW in insertion |
-| FC4 | collaborative, 16 customers | 14822 trips rejected by rendezvous (rule is active and binding) | reorder route / launch earlier to exercise it |
+| FC4 | collaborative, 16 customers | 7871 trips refused by the single-drone schedule (range / launch order / drone still in flight) | reorder route / launch earlier to exercise it |
 
-Unlike the previous version, FC4 here shows the synchronization constraint is
-**genuinely active** (many rejections), because multi-customer flights make the
-rendezvous rule a real bottleneck rather than a formality.
+Unlike the previous version, FC4 here shows the single-drone schedule is
+**genuinely active** (many rejections): once sorties may not overlap, "one drone
+flies one sortie at a time" becomes a real bottleneck rather than a formality.
 
 ## 7. Limitations
 

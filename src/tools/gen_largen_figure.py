@@ -3,9 +3,9 @@ Generate figures/largen_scale_decay.png — the N=30/50/100 scale-boundary chart
 for the ground-air collaborative EVRP-TW.
 
 Three panels (all read from src/results/week06_largeN_summary.csv):
-  1. V2 vs V1 makespan advantage (%)  -> collapses 27.6 -> 12.1 -> 2.3
-  2. Drone offload rate (%)            -> collapses 62.0 -> 42.8 -> 23.4
-  3. Time-window violation rate (%)     -> explodes 26.7 -> 48.0 -> 71.4
+  1. V2 vs V1 makespan advantage (%)  -> collapses 8.6 -> 3.4 -> 0.5
+  2. Drone offload rate (%)            -> collapses 11.3 -> 5.2 -> 2.6
+  3. Time-window violation rate (%)     -> explodes 68.0 -> 78.0 -> 88.8
 
 This is an honest scale-boundary asset for the final report: as N grows the
 drone can offload a shrinking fraction of customers, so the truck dominates and

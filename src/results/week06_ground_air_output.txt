@@ -1,5 +1,5 @@
 ==============================================================================
-WEEK 6 v2 â€” GROUND-AIR COLLABORATIVE EVRP-TW (multi-seed experiment)
+WEEK 6 v2 ¡ª GROUND-AIR COLLABORATIVE EVRP-TW (multi-seed experiment)
 ==============================================================================
 seeds=10 (base 20260720..20260729)  sizes=[8, 12, 16, 20]
 truck_speed=1.0  drone_speed=2.0  drone_range=160.0  battery=250  recharge=40s
@@ -7,61 +7,61 @@ variants: V0 truck-only(no EV) | V1 truck EV | V2 ground-air collaborative EV
 total instances = 40 (>=10 instances, 4 scales, multiple seeds)
 
 === size N=8 ===
-  seed 20260720: V0=  433.6 V1=  497.9 V2=  218.2  imp= 56.2%  off=4/8  feas(V0/V1/V2)=1/1/1
-  seed 20260721: V0=  420.0 V1=  460.0 V2=  244.8  imp= 46.8%  off=6/8  feas(V0/V1/V2)=1/1/1
-  seed 20260722: V0=  423.1 V1=  488.6 V2=  299.1  imp= 38.8%  off=5/8  feas(V0/V1/V2)=1/1/1
-  seed 20260723: V0=  471.6 V1=  549.1 V2=  237.9  imp= 56.7%  off=6/8  feas(V0/V1/V2)=1/1/1
-  seed 20260724: V0=  477.0 V1=  519.4 V2=  274.3  imp= 47.2%  off=6/8  feas(V0/V1/V2)=1/1/1
-  seed 20260725: V0=  417.7 V1=  463.2 V2=  278.6  imp= 39.9%  off=4/8  feas(V0/V1/V2)=1/1/1
-  seed 20260726: V0=  500.5 V1=  541.5 V2=  233.1  imp= 57.0%  off=5/8  feas(V0/V1/V2)=1/1/1
-  seed 20260727: V0=  387.9 V1=  387.9 V2=  143.2  imp= 63.1%  off=5/8  feas(V0/V1/V2)=1/1/1
-  seed 20260728: V0=  383.7 V1=  454.2 V2=  242.9  imp= 46.5%  off=6/8  feas(V0/V1/V2)=1/1/1
-  seed 20260729: V0=  431.6 V1=  496.6 V2=  233.0  imp= 53.1%  off=5/8  feas(V0/V1/V2)=1/1/1
+  seed 20260720: V0=  433.6 V1=  497.9 V2=  294.5  imp= 40.8%  off=2/8  feas(V0/V1/V2)=1/1/1
+  seed 20260721: V0=  420.0 V1=  460.0 V2=  266.4  imp= 42.1%  off=4/8  feas(V0/V1/V2)=1/1/1
+  seed 20260722: V0=  423.1 V1=  488.6 V2=  318.3  imp= 34.8%  off=4/8  feas(V0/V1/V2)=1/1/1
+  seed 20260723: V0=  471.6 V1=  549.1 V2=  359.2  imp= 34.6%  off=3/8  feas(V0/V1/V2)=1/1/1
+  seed 20260724: V0=  477.0 V1=  519.4 V2=  374.4  imp= 27.9%  off=1/8  feas(V0/V1/V2)=1/1/1
+  seed 20260725: V0=  417.7 V1=  463.2 V2=  328.0  imp= 29.2%  off=2/8  feas(V0/V1/V2)=1/1/1
+  seed 20260726: V0=  500.5 V1=  541.5 V2=  379.3  imp= 30.0%  off=3/8  feas(V0/V1/V2)=1/1/1
+  seed 20260727: V0=  387.9 V1=  387.9 V2=  198.4  imp= 48.9%  off=2/8  feas(V0/V1/V2)=1/1/1
+  seed 20260728: V0=  383.7 V1=  454.2 V2=  367.3  imp= 19.1%  off=2/8  feas(V0/V1/V2)=1/1/1
+  seed 20260729: V0=  431.6 V1=  496.6 V2=  356.1  imp= 28.3%  off=2/8  feas(V0/V1/V2)=1/1/1
 
 === size N=12 ===
-  seed 20260720: V0=  631.2 V1=  673.5 V2=  277.6  imp= 58.8%  off=8/12  feas(V0/V1/V2)=1/1/1
-  seed 20260721: V0=  604.5 V1=  652.6 V2=  394.6  imp= 39.5%  off=7/12  feas(V0/V1/V2)=1/1/1
-  seed 20260722: V0=  541.1 V1=  625.9 V2=  260.6  imp= 58.4%  off=9/12  feas(V0/V1/V2)=1/1/1
-  seed 20260723: V0=  701.0 V1=  799.5 V2=  406.9  imp= 49.1%  off=9/12  feas(V0/V1/V2)=1/1/1
-  seed 20260724: V0=  656.2 V1=  736.2 V2=  329.8  imp= 55.2%  off=8/12  feas(V0/V1/V2)=1/1/1
-  seed 20260725: V0=  673.7 V1=  718.6 V2=  254.1  imp= 64.6%  off=8/12  feas(V0/V1/V2)=1/1/1
-  seed 20260726: V0=  672.1 V1=  788.2 V2=  370.0  imp= 53.1%  off=8/12  feas(V0/V1/V2)=1/1/1
-  seed 20260727: V0=  505.9 V1=  545.9 V2=  197.0  imp= 63.9%  off=10/12  feas(V0/V1/V2)=1/1/1
-  seed 20260728: V0=  573.3 V1=  732.5 V2=  353.0  imp= 51.8%  off=10/12  feas(V0/V1/V2)=1/1/1
-  seed 20260729: V0=  585.4 V1=  674.0 V2=  278.6  imp= 58.7%  off=8/12  feas(V0/V1/V2)=1/1/1
+  seed 20260720: V0=  631.2 V1=  673.5 V2=  561.4  imp= 16.7%  off=2/12  feas(V0/V1/V2)=1/1/1
+  seed 20260721: V0=  604.5 V1=  652.6 V2=  440.3  imp= 32.5%  off=5/12  feas(V0/V1/V2)=1/1/1
+  seed 20260722: V0=  541.1 V1=  625.9 V2=  486.9  imp= 22.2%  off=2/12  feas(V0/V1/V2)=1/1/1
+  seed 20260723: V0=  701.0 V1=  799.5 V2=  632.9  imp= 20.8%  off=2/12  feas(V0/V1/V2)=1/1/1
+  seed 20260724: V0=  656.2 V1=  736.2 V2=  559.7  imp= 24.0%  off=2/12  feas(V0/V1/V2)=1/1/1
+  seed 20260725: V0=  673.7 V1=  718.6 V2=  498.8  imp= 30.6%  off=3/12  feas(V0/V1/V2)=1/1/1
+  seed 20260726: V0=  672.1 V1=  788.2 V2=  595.0  imp= 24.5%  off=2/12  feas(V0/V1/V2)=1/1/1
+  seed 20260727: V0=  505.9 V1=  545.9 V2=  400.4  imp= 26.7%  off=2/12  feas(V0/V1/V2)=1/1/1
+  seed 20260728: V0=  573.3 V1=  732.5 V2=  593.4  imp= 19.0%  off=4/12  feas(V0/V1/V2)=1/1/1
+  seed 20260729: V0=  585.4 V1=  674.0 V2=  485.0  imp= 28.0%  off=2/12  feas(V0/V1/V2)=1/1/1
 
 === size N=16 ===
-  seed 20260720: V0=  941.0 V1= 1121.4 V2=  505.4  imp= 54.9%  off=12/16  feas(V0/V1/V2)=1/1/1
-  seed 20260721: V0=  773.8 V1=  950.5 V2=  342.5  imp= 64.0%  off=13/16  feas(V0/V1/V2)=1/1/1
-  seed 20260722: V0=  807.1 V1=  944.2 V2=  355.2  imp= 62.4%  off=13/16  feas(V0/V1/V2)=1/1/1
-  seed 20260723: V0=  792.5 V1=  926.6 V2=  473.5  imp= 48.9%  off=11/16  feas(V0/V1/V2)=1/1/1
-  seed 20260724: V0=  802.4 V1=  956.1 V2=  592.6  imp= 38.0%  off=11/16  feas(V0/V1/V2)=1/1/1
-  seed 20260725: V0=  800.4 V1=  974.0 V2=  455.0  imp= 53.3%  off=10/16  feas(V0/V1/V2)=1/1/1
-  seed 20260726: V0=  792.0 V1=  926.3 V2=  545.7  imp= 41.1%  off=10/16  feas(V0/V1/V2)=1/1/1
-  seed 20260727: V0=  873.9 V1= 1011.0 V2=  286.1  imp= 71.7%  off=11/16  feas(V0/V1/V2)=1/1/1
-  seed 20260728: V0=  752.9 V1=  909.5 V2=  425.1  imp= 53.3%  off=12/16  feas(V0/V1/V2)=1/1/1
-  seed 20260729: V0=  830.0 V1= 1039.5 V2=  501.8  imp= 51.7%  off=12/16  feas(V0/V1/V2)=1/1/1
+  seed 20260720: V0=  941.0 V1= 1121.4 V2=  882.7  imp= 21.3%  off=3/16  feas(V0/V1/V2)=1/1/1
+  seed 20260721: V0=  773.8 V1=  950.5 V2=  783.5  imp= 17.6%  off=1/16  feas(V0/V1/V2)=1/1/1
+  seed 20260722: V0=  807.1 V1=  944.2 V2=  794.8  imp= 15.8%  off=2/16  feas(V0/V1/V2)=1/1/1
+  seed 20260723: V0=  792.5 V1=  926.6 V2=  733.1  imp= 20.9%  off=2/16  feas(V0/V1/V2)=1/1/1
+  seed 20260724: V0=  802.4 V1=  956.1 V2=  809.0  imp= 15.4%  off=2/16  feas(V0/V1/V2)=1/1/1
+  seed 20260725: V0=  800.4 V1=  974.0 V2=  774.4  imp= 20.5%  off=4/16  feas(V0/V1/V2)=1/1/1
+  seed 20260726: V0=  792.0 V1=  926.3 V2=  712.5  imp= 23.1%  off=6/16  feas(V0/V1/V2)=1/1/1
+  seed 20260727: V0=  873.9 V1= 1011.0 V2=  770.3  imp= 23.8%  off=1/16  feas(V0/V1/V2)=1/1/1
+  seed 20260728: V0=  752.9 V1=  909.5 V2=  731.2  imp= 19.6%  off=4/16  feas(V0/V1/V2)=1/1/1
+  seed 20260729: V0=  830.0 V1= 1039.5 V2=  847.2  imp= 18.5%  off=4/16  feas(V0/V1/V2)=1/1/1
 
 === size N=20 ===
-  seed 20260720: V0= 1019.5 V1= 1232.0 V2=  559.7  imp= 54.6%  off=14/20  feas(V0/V1/V2)=1/1/1
-  seed 20260721: V0=  908.8 V1= 1000.7 V2=  723.8  imp= 27.7%  off=12/20  feas(V0/V1/V2)=1/1/1
-  seed 20260722: V0= 1110.4 V1= 1397.9 V2=  935.9  imp= 33.0%  off=12/20  feas(V0/V1/V2)=1/1/1
-  seed 20260723: V0= 1244.1 V1= 1407.5 V2=  772.4  imp= 45.1%  off=12/20  feas(V0/V1/V2)=1/1/1
-  seed 20260724: V0= 1173.6 V1= 1325.3 V2=  809.6  imp= 38.9%  off=14/20  feas(V0/V1/V2)=1/1/1
-  seed 20260725: V0= 1068.3 V1= 1297.4 V2=  782.5  imp= 39.7%  off=13/20  feas(V0/V1/V2)=1/1/1
-  seed 20260726: V0= 1184.7 V1= 1372.5 V2=  804.5  imp= 41.4%  off=14/20  feas(V0/V1/V2)=1/1/1
-  seed 20260727: V0= 1042.5 V1= 1255.4 V2=  492.8  imp= 60.7%  off=15/20  feas(V0/V1/V2)=1/1/1
-  seed 20260728: V0= 1053.8 V1= 1321.9 V2=  912.4  imp= 31.0%  off=12/20  feas(V0/V1/V2)=1/1/1
-  seed 20260729: V0=  994.9 V1= 1225.2 V2=  625.9  imp= 48.9%  off=16/20  feas(V0/V1/V2)=1/1/1
+  seed 20260720: V0= 1019.5 V1= 1232.0 V2= 1083.9  imp= 12.0%  off=1/20  feas(V0/V1/V2)=1/1/1
+  seed 20260721: V0=  908.8 V1= 1000.7 V2=  928.2  imp=  7.2%  off=2/20  feas(V0/V1/V2)=1/1/1
+  seed 20260722: V0= 1110.4 V1= 1397.9 V2= 1168.4  imp= 16.4%  off=5/20  feas(V0/V1/V2)=1/1/1
+  seed 20260723: V0= 1244.1 V1= 1407.5 V2= 1060.6  imp= 24.6%  off=4/20  feas(V0/V1/V2)=1/1/1
+  seed 20260724: V0= 1173.6 V1= 1325.3 V2= 1161.8  imp= 12.3%  off=1/20  feas(V0/V1/V2)=1/1/1
+  seed 20260725: V0= 1068.3 V1= 1297.4 V2= 1134.8  imp= 12.5%  off=4/20  feas(V0/V1/V2)=1/1/1
+  seed 20260726: V0= 1184.7 V1= 1372.5 V2= 1021.1  imp= 25.6%  off=4/20  feas(V0/V1/V2)=1/1/1
+  seed 20260727: V0= 1042.5 V1= 1255.4 V2= 1061.1  imp= 15.5%  off=2/20  feas(V0/V1/V2)=1/1/1
+  seed 20260728: V0= 1053.8 V1= 1321.9 V2= 1118.4  imp= 15.4%  off=4/20  feas(V0/V1/V2)=1/1/1
+  seed 20260729: V0=  994.9 V1= 1225.2 V2= 1045.7  imp= 14.7%  off=2/20  feas(V0/V1/V2)=1/1/1
 
 ==============================================================================
 AGGREGATE (mean over seeds per size)
 ==============================================================================
-  size | n_inst | V0_mk | V1_mk | V2_mk | imp% | offload | offload% | V0_feas | V1_feas | V2_feas | syncRej | rechg | TWviol | runtime
-  N=8: V0=  434.7 V1=  485.8 V2=  240.5  imp= 50.5%  offload=5.2/8 (65.0%)  V2_feas=100%
-  N=12: V0=  614.4 V1=  694.7 V2=  312.2  imp= 55.3%  offload=8.5/12 (70.8%)  V2_feas=100%
-  N=16: V0=  816.6 V1=  975.9 V2=  448.3  imp= 53.9%  offload=11.5/16 (71.9%)  V2_feas=100%
-  N=20: V0= 1080.1 V1= 1283.6 V2=  741.9  imp= 42.1%  offload=13.4/20 (67.0%)  V2_feas=100%
+  size | n_inst | V0_mk | V1_mk | V2_mk | imp% | offload | offload% | V0_feas | V1_feas | V2_feas | V2_plan_ok | syncRej | rechg | TWviol | runtime
+  N=8: V0=  434.7 V1=  485.8 V2=  324.2  imp= 33.6%  offload=2.5/8 (31.2%)  V2_feas=100%
+  N=12: V0=  614.4 V1=  694.7 V2=  525.4  imp= 24.5%  offload=2.6/12 (21.7%)  V2_feas=100%
+  N=16: V0=  816.6 V1=  975.9 V2=  783.9  imp= 19.6%  offload=2.9/16 (18.1%)  V2_feas=100%
+  N=20: V0= 1080.1 V1= 1283.6 V2= 1078.4  imp= 15.6%  offload=2.9/20 (14.5%)  V2_feas=100%
 
 ==============================================================================
 FAILURE CASES (>=3, constraint-level diagnosis)
@@ -69,4 +69,4 @@ FAILURE CASES (>=3, constraint-level diagnosis)
   FC1 [truck-only EV, recharge OFF, battery=120]: energy violation (cannot cover distance even with one charge). Next: route becomes infeasible; fix: allow recharge at stations or raise battery capacity.
   FC2 [collaborative, drone_range=40 (tiny)]: only 2 customers offloaded; V2 makespan 588.9 ~ V1, drone contributes little. Next: fix: larger drone range, or accept degraded-to-baseline behaviour.
   FC3 [truck EV, tight time windows (width=35)]: 10 customers served outside their window. Next: fix: relax windows, add vehicles, or prioritise TW in insertion.
-  FC4 [collaborative, 16 customers]: 14822 drone trips rejected by rendezvous (land-after-truck) constraint. Next: fix: reorder truck route or launch earlier; shows sync is active.
+  FC4 [collaborative, 16 customers]: 7871 drone trips refused by the single-drone schedule (range, launch order, or a drone still in flight). Next: fix: reorder truck route or launch earlier; shows sync is active.

@@ -1,6 +1,7 @@
 # 项目进度分析报告（FURP 2026 EVRP）
 
 > 学生自评，写于 2026-07-24，Guannan Wang。
+> 注：本文件写于 2026-09-13 主评估器物理化之前，文中的实验数值（week06 规模衰减、消融增益、多目标、LNS、多无人机等）沿用当时的评估器口径；物理化后的当前数值见 `docs/experiment_evidence_index_zh.md` 与 `docs/evaluator_physical_fix_note_zh.md`。
 > 这是一份给自己和导师看的中期自检：先说清楚老师到底要求什么，再对照我已做的事，最后列出还能补强的地方。
 
 ---

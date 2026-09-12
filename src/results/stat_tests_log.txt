@@ -64,8 +64,8 @@ W8 multi-drone (paired per instance; more drones vs 1)
 ==============================================================================
 W6 ground-air (paired per instance)
 ==============================================================================
-  [all sizes] V2 vs V1 (collaborative vs EV)             n= 40  mean_diff= -424.26  p=3.71e-08  sig=yes
-  [     N=8] V2 vs V1 (collaborative vs EV)             n= 10  mean_diff= -245.34  p=5.92e-03  sig=yes
-  [    N=12] V2 vs V1 (collaborative vs EV)             n= 10  mean_diff= -382.46  p=5.92e-03  sig=yes
-  [    N=16] V2 vs V1 (collaborative vs EV)             n= 10  mean_diff= -527.63  p=5.92e-03  sig=yes
-  [    N=20] V2 vs V1 (collaborative vs EV)             n= 10  mean_diff= -541.63  p=5.92e-03  sig=yes
+  [all sizes] V2 vs V1 (collaborative vs EV)             n= 40  mean_diff= -182.05  p=3.71e-08  sig=yes
+  [     N=8] V2 vs V1 (collaborative vs EV)             n= 10  mean_diff= -161.66  p=5.92e-03  sig=yes
+  [    N=12] V2 vs V1 (collaborative vs EV)             n= 10  mean_diff= -169.31  p=5.92e-03  sig=yes
+  [    N=16] V2 vs V1 (collaborative vs EV)             n= 10  mean_diff= -192.04  p=5.92e-03  sig=yes
+  [    N=20] V2 vs V1 (collaborative vs EV)             n= 10  mean_diff= -205.19  p=5.92e-03  sig=yes

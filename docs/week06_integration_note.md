@@ -62,27 +62,34 @@ Minimize makespan = max(truck completion time, drone completion time).
 - **Instances**: randomly generated, 4 sizes N = {8, 12, 16, 20} customers, each with 4 charging stations. Locations, time windows, and demands are all fixed by seed, so runs are reproducible.
 - **Seeds**: 10 random seeds per size (seed base `20260720`) = **40 instances**, meeting the lab's "≥10 instances + 3 sizes + multiple seeds" requirement.
 - **Parameters**: truck speed `V_T = 1.0`, drone speed `V_D = 2.0`, drone range `R_D = 160`, battery `Q = 250`, recharge `RECHARGE = 40`, service `SERVICE = 10`, energy factor `RHO = 1.0`.
-- **Reported metrics** (aligned with the project page's minimum standard): objective (makespan + total distance), feasibility, TW violations, energy/battery violations, recharge count and time, **synchronization violations** (drone trips rejected by the rendezvous rule), offloaded count, runtime, seed and parameters.
+- **Reported metrics** (aligned with the project page's minimum standard): objective (makespan + total distance), feasibility, TW violations, energy/battery violations, recharge count and time, **synchronization violations** (drone trips refused by the single-drone schedule), offloaded count, runtime, seed and parameters.
 - **Failure cases**: 4 targeted instances (FC1–FC4) for constraint-level diagnosis, see §4.3.
 
 ## 4. Preliminary Result
 
 ### 4.1 Main comparison (mean over 40 instances)
 
+> Re-run on 2026-09-13 under the physical evaluator; the numbers below are
+> updated to that model (see `docs/evaluator_physical_fix_note_en.md`).
+
 | Size | V0 (ref. lower) | V1 (base) | V2 (prop.) | V2 vs V1 | mean offload | offload % | V2 feas. |
 |---|---:|---:|---:|---:|---:|---:|---:|
-| 8 | 434.7 | 485.8 | 240.5 | **−50.5%** | 5.2 / 8 | 65.0% | 100% |
-| 12 | 614.4 | 694.7 | 312.2 | **−55.3%** | 8.5 / 12 | 70.8% | 100% |
-| 16 | 816.6 | 975.9 | 448.3 | **−53.9%** | 11.5 / 16 | 71.9% | 100% |
-| 20 | 1080.1 | 1283.6 | 741.9 | **−42.1%** | 13.4 / 20 | 67.0% | 100% |
+| 8 | 434.7 | 485.8 | 324.2 | **−33.6%** | 2.5 / 8 | 31.2% | 100% |
+| 12 | 614.4 | 694.7 | 525.4 | **−24.5%** | 2.6 / 12 | 21.7% | 100% |
+| 16 | 816.6 | 975.9 | 783.9 | **−19.6%** | 2.9 / 16 | 18.1% | 100% |
+| 20 | 1080.1 | 1283.6 | 1078.4 | **−15.6%** | 2.9 / 20 | 14.5% | 100% |
 
-- All 40 instances are feasible (V0 / V1 / V2 feasibility 100%).
-- The mean V2-over-V1 improvement sits at **42%–55%**; the per-seed spread is 27.7%–71.7%, so the collaborative benefit is stable rather than a product of one lucky seed.
-- Mean offload rate is 65%–72%: the drone serves the majority of customers in parallel across most instances.
+- All 40 instances are feasible (V0 / V1 / V2 feasibility 100%, and every V2 plan
+  passes the physical evaluator).
+- The mean V2-over-V1 improvement sits at **16%–34%** (N=20 → N=8); the per-seed
+  spread is 7.3%–48.9%, so the collaborative benefit is stable rather than a product of one lucky seed.
+- Mean offload rate is 14%–31% (2–3 customers per instance): with a single drone
+  only one sortie is in the air at a time.
 
 ### 4.2 How to read this
 
-The gain comes from serving several customers with the faster drone **in parallel** with the truck, not from using fewer recharges (V1 and V2 have nearly identical recharge counts). V0 (no battery limit) has a slightly lower makespan than V1, which shows the battery/charging constraint does impose a real extra cost on the truck route — and V2 recovers part of that cost through the drone. This is what makes the ground-air collaborative line worth pursuing further.
+The gain comes from letting the faster drone take a few far-away customers off the
+truck, not from using fewer recharges (V1 and V2 have nearly identical recharge counts). V0 (no battery limit) has a slightly lower makespan than V1, which shows the battery/charging constraint does impose a real extra cost on the truck route — and V2 recovers part of that cost through the drone. This is what makes the ground-air collaborative line worth pursuing further.
 
 ### 4.3 Failure cases (constraint-level diagnosis)
 
@@ -91,9 +98,9 @@ The gain comes from serving several customers with the faster drone **in paralle
 | FC1 | truck EV, recharge OFF, battery = 120 | energy violation (one full charge is not enough) | must allow recharge or raise battery |
 | FC2 | collaborative, drone range = 40 (tiny) | only 2 offloaded, V2 ≈ V1 | too-small range makes the drone useless |
 | FC3 | truck EV, tight TW (width = 35) | 10 customers outside window | tight windows break feasibility directly |
-| FC4 | collaborative, 16 customers | 14822 trips rejected by rendezvous | the sync constraint is active and binding |
+| FC4 | collaborative, 16 customers | 7871 trips refused by the single-drone schedule | the schedule constraint is active and binding |
 
-FC4 is worth a note: in the previous version, offloading only one customer per instance meant the rendezvous rule was almost never triggered. With multi-customer flights, the synchronization constraint becomes a genuine bottleneck — which in turn shows this "improvement" actually touches the problem's key constraint, rather than tinkering at the margins.
+FC4 is worth a note: in the previous version, offloading only one customer per instance meant the rendezvous rule was almost never triggered. Once sorties may not overlap, the single-drone schedule becomes a genuine bottleneck — which in turn shows this "improvement" actually touches the problem's key constraint, rather than tinkering at the margins.
 
 ### 4.4 A note on learning-based extensions (Track C / D)
 

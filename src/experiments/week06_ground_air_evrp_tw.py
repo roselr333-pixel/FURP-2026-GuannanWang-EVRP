@@ -12,6 +12,10 @@ Improvements over the previous v1 script:
   - the heuristic repeatedly picks the best multi-customer offload until
     no further makespan reduction is possible.
 
+The completion-time evaluator enforces a physically executable single-drone
+schedule: the truck waits at a recovery node for its drone, and a sortie may
+only launch after the previous one has been recovered.
+
 Three variants still share the same greedy constructive core:
   V0  truck-only, NO battery limit
   V1  truck-only EVRP-TW (battery + charging + TW)
@@ -163,32 +167,91 @@ def node_extra(inst, node):
     return SERVICE
 
 
-def simulate(inst, route, drone_trips):
+def route_positions(route):
+    """First and last position of every node along the truck route.
+
+    The depot sits at both bookends, so a launch node resolves to its first
+    occurrence and a recovery node to its last one.
     """
-    Truck arrival times + drone makespan.
+    first, last = {}, {}
+    for idx, node in enumerate(route):
+        first.setdefault(node, idx)
+        last[node] = idx
+    return first, last
+
+
+def _accepted_sortie_intervals(route, drone_trips):
+    """Truck-route intervals already claimed by accepted sorties.
+
+    A single drone is a serial resource, so a new sortie may not overlap any of
+    these; sharing an endpoint is fine (the drone is back on the truck there).
+    """
+    first, last = route_positions(route)
+    out = []
+    for ln, _custs, rn in drone_trips:
+        if ln in first and rn in last:
+            out.append((first[ln], last[rn]))
+    return out
+
+
+def _overlaps(i_pos, j_pos, intervals):
+    return any(not (j_pos <= a or i_pos >= b) for a, b in intervals)
+
+
+def simulate(inst, route, drone_trips, rd=None):
+    """
+    Truck arrival times + drone mission finish time for a single-drone plan.
 
     route        : list of truck nodes, including depot bookends
     drone_trips  : list of (launch_node, customer_list, land_node)
                    customer_list may contain one or more customers
+
+    This is the same physical model as the shared FSTSP evaluator
+    (week07_fstsp_repro.fstsp_simulate): the truck waits at a recovery node
+    until the drone has landed there, and one drone is one serial resource, so
+    a sortie can only launch once the previous one has been recovered. A plan
+    is infeasible (drone finish time math.inf) when a launch does not precede
+    its recovery, when a flight is longer than the range rd, when a sortie
+    would start while the drone is still in the air, or when the launch or
+    recovery node is not on the route.
     """
+    rd = R_D if rd is None else rd
     full = route[:]
     arr = [0.0] * len(full)
     for p in range(1, len(full)):
         d = dist(inst, full[p - 1], full[p])
         arr[p] = arr[p - 1] + d / V_T + node_extra(inst, full[p])
 
+    if not drone_trips:
+        return arr, 0.0
+
+    first, last = route_positions(full)
+    trips = sorted(drone_trips, key=lambda t: first.get(t[0], len(full)))
     drone_free = 0.0
-    for ln, custs, rn in drone_trips:
-        i_pos = 0 if ln == 0 else full.index(ln)
-        j_pos = len(full) - 1 if rn == 0 else full.index(rn)
-        launch = arr[i_pos]
+    for ln, custs, rn in trips:
+        if ln not in first or rn not in last:
+            return arr, math.inf
+        i_pos, j_pos = first[ln], last[rn]
+        if i_pos >= j_pos:
+            return arr, math.inf
         # build drone sub-route: ln -> custs -> rn
         legs = [ln] + list(custs) + [rn]
         drone_dist = sum(dist(inst, legs[i], legs[i + 1])
                          for i in range(len(legs) - 1))
-        drone_t = drone_dist / V_D + SERVICE * len(custs)
-        landing = launch + drone_t
-        drone_free = max(drone_free, landing)
+        if drone_dist > rd + 1e-9:
+            return arr, math.inf
+        # the drone has to be back on the truck when it reaches the launch node
+        if drone_free > arr[i_pos] + 1e-9:
+            return arr, math.inf
+        flight = drone_dist / V_D + SERVICE * len(custs)
+        landing = arr[i_pos] + flight
+        truck_at_rec = arr[j_pos]
+        recovery = max(truck_at_rec, landing)
+        drone_free = recovery
+        wait = recovery - truck_at_rec
+        if wait > 0:
+            for p in range(j_pos, len(arr)):
+                arr[p] += wait
     return arr, drone_free
 
 
@@ -196,19 +259,17 @@ def simulate(inst, route, drone_trips):
 # V2: improved drone task allocation
 # ---------------------------------------------------------------------------
 
-def _customer_list_is_feasible(inst, ln, custs, rn, truck_i, truck_j, rd):
-    """Check if a multi-customer drone trip can meet range and rendezvous."""
+def _customer_list_is_feasible(inst, ln, custs, rn, launch_time, rd):
+    """Cheap pre-filter before the evaluator: range and the drone's own
+    time windows (sequential service in the given order). Physical scheduling
+    feasibility itself is decided by `simulate`.
+    """
     legs = [ln] + list(custs) + [rn]
     drone_dist = sum(dist(inst, legs[i], legs[i + 1])
                      for i in range(len(legs) - 1))
     if drone_dist > rd:
         return False
-    drone_t = drone_dist / V_D + SERVICE * len(custs)
-    # rendezvous: drone must land by the time the truck reaches rn
-    if drone_t > truck_j - truck_i:
-        return False
-    # time windows (sequential service in the given order)
-    t = truck_i + dist(inst, ln, custs[0]) / V_D + SERVICE
+    t = launch_time + dist(inst, ln, custs[0]) / V_D + SERVICE
     if t < inst["tw"][custs[0]][0] or t > inst["tw"][custs[0]][1]:
         return False
     for idx in range(1, len(custs)):
@@ -238,21 +299,25 @@ def collaborative(inst, drone_range=None):
     drone_trips = []      # (launch, [cust, ...], land)
     sync_rejected = 0
 
-    def makespan(route, trips):
-        a, d = simulate(inst, route, trips)
-        return max(a[-1], d)
-
     while True:
         # current truck route after removing offloaded customers
         route = [n for n in v1_route if n not in offloaded]
-        arr, _ = simulate(inst, route, [])
-        pos = {n: i for i, n in enumerate(route)}
+        arr_cur, drone_cur = simulate(inst, route, drone_trips, rd)
+        if math.isinf(drone_cur):
+            break
+        mk_current = max(arr_cur[-1], drone_cur)
+        accepted = _accepted_sortie_intervals(route, drone_trips)
 
         best = None
         # iterate over all launch/recovery pairs in the current truck route
         for i_idx in range(len(route) - 1):
             for j_idx in range(i_idx + 2, len(route)):
                 ln, rn = route[i_idx], route[j_idx]
+                # one drone is one serial resource: a new sortie may not
+                # overlap an accepted one
+                if _overlaps(i_idx, j_idx, accepted):
+                    sync_rejected += 1
+                    continue
                 # candidate customers between ln and rn that are still on truck
                 candidates = [route[k] for k in range(i_idx + 1, j_idx)
                               if route[k] not in inst["stations"]
@@ -260,42 +325,41 @@ def collaborative(inst, drone_range=None):
                               and route[k] not in protected]
                 if not candidates:
                     continue
-                truck_i, truck_j = arr[i_idx], arr[j_idx]
+
+                def consider(custs, ln=ln, rn=rn):
+                    """Keep this sortie only if the physical plan improves."""
+                    nonlocal best, sync_rejected
+                    test_route = [n for n in route if n not in custs]
+                    new_trips = drone_trips + [(ln, list(custs), rn)]
+                    a2, d2 = simulate(inst, test_route, new_trips, rd)
+                    if math.isinf(d2):
+                        sync_rejected += 1
+                        return
+                    gain = mk_current - max(a2[-1], d2)
+                    if gain > 0 and (best is None or gain > best[0]):
+                        best = (gain, ln, rn, custs)
 
                 # single-customer trips
                 for k in candidates:
                     custs = (k,)
                     if not _customer_list_is_feasible(
-                            inst, ln, custs, rn, truck_i, truck_j, rd):
+                            inst, ln, custs, rn, arr_cur[i_idx], rd):
                         sync_rejected += 1
                         continue
-                    # reduction in truck makespan if k is removed from route
-                    test_route = [n for n in route if n != k]
-                    a2, _ = simulate(inst, test_route, [])
-                    reduction = arr[-1] - a2[-1]
-                    if reduction > 0 and (best is None
-                                          or reduction > best[0]):
-                        best = (reduction, ln, rn, custs)
+                    consider(custs)
 
                 # two-customer trips (try both orderings)
                 if len(candidates) >= 2:
                     for idx1 in range(len(candidates)):
                         for idx2 in range(idx1 + 1, len(candidates)):
                             k1, k2 = candidates[idx1], candidates[idx2]
-                            for order in [(k1, k2), (k2, k1)]:
-                                custs = order
+                            for custs in [(k1, k2), (k2, k1)]:
                                 if not _customer_list_is_feasible(
-                                        inst, ln, custs, rn, truck_i,
-                                        truck_j, rd):
+                                        inst, ln, custs, rn,
+                                        arr_cur[i_idx], rd):
                                     sync_rejected += 1
                                     continue
-                                test_route = [n for n in route
-                                              if n not in custs]
-                                a2, _ = simulate(inst, test_route, [])
-                                reduction = arr[-1] - a2[-1]
-                                if reduction > 0 and (best is None
-                                                      or reduction > best[0]):
-                                    best = (reduction, ln, rn, custs)
+                                consider(custs)
 
         if best is None:
             break
@@ -309,7 +373,8 @@ def collaborative(inst, drone_range=None):
 
     # final V2 route: original V1 route with offloaded customers removed
     v2_route = [n for n in v1_route if n not in offloaded]
-    arr2, drone_mk = simulate(inst, v2_route, drone_trips)
+    arr2, drone_mk = simulate(inst, v2_route, drone_trips, rd)
+    plan_valid = not math.isinf(drone_mk)
     truck_mk = arr2[-1]
 
     # truck time-window violations on the final V2 route
@@ -344,12 +409,14 @@ def collaborative(inst, drone_range=None):
 
     return {
         "route": v2_route, "drone_trips": drone_trips,
-        "makespan": max(truck_mk, drone_mk),
+        "makespan": max(truck_mk, drone_mk) if plan_valid
+        else float("inf"),
         "truck_makespan": truck_mk, "drone_makespan": drone_mk,
         "total_dist": truck_dist + drone_dist,
         "recharges": rechg, "charge_time": rechg * RECHARGE,
         "tw_viol": tw_viol_truck + tw_viol_drone,
         "energy_inf": v1["energy_inf"], "sync_rejected": sync_rejected,
+        "plan_valid": plan_valid,
         "offloaded": len(offloaded), "n_customers": inst["n"],
     }
 
@@ -364,21 +431,23 @@ def run_variant(inst, kind):
         return {"makespan": r["makespan"], "total_dist": r["total_dist"],
                 "feasible": not r["energy_inf"], "tw_viol": r["tw_viol"],
                 "energy_viol": 0, "recharges": 0, "charge_time": 0.0,
-                "sync_viol": 0, "offloaded": 0}
+                "sync_viol": 0, "offloaded": 0, "plan_valid": True}
     if kind == "V1":
         r = truck_ev_route(inst, all_c, allow_recharge=True)
         return {"makespan": r["makespan"], "total_dist": r["total_dist"],
                 "feasible": not r["energy_inf"], "tw_viol": r["tw_viol"],
                 "energy_viol": 1 if r["energy_inf"] else 0,
                 "recharges": r["recharges"], "charge_time": r["charge_time"],
-                "sync_viol": 0, "offloaded": 0}
+                "sync_viol": 0, "offloaded": 0, "plan_valid": True}
     # V2 collaborative
     r = collaborative(inst)
     return {"makespan": r["makespan"], "total_dist": r["total_dist"],
-            "feasible": not r["energy_inf"], "tw_viol": r["tw_viol"],
+            "feasible": (not r["energy_inf"]) and r["plan_valid"],
+            "tw_viol": r["tw_viol"],
             "energy_viol": 1 if r["energy_inf"] else 0,
             "recharges": r["recharges"], "charge_time": r["charge_time"],
-            "sync_viol": r["sync_rejected"], "offloaded": r["offloaded"]}
+            "sync_viol": r["sync_rejected"], "offloaded": r["offloaded"],
+            "plan_valid": r["plan_valid"]}
 
 
 def _mean(vals):
@@ -463,6 +532,7 @@ def main():
     summary_rows = []
     hdr = ("size | n_inst | V0_mk | V1_mk | V2_mk | imp% | "
            "offload | offload% | V0_feas | V1_feas | V2_feas | "
+           "V2_plan_ok | "
            "syncRej | rechg | TWviol | runtime")
     L.append("  " + hdr)
     for n in SIZES:
@@ -482,6 +552,8 @@ def main():
             "V0_feas_rate": round(_rate([r["feasible"] for r in v0]), 3),
             "V1_feas_rate": round(_rate([r["feasible"] for r in v1]), 3),
             "V2_feas_rate": round(_rate([r["feasible"] for r in v2]), 3),
+            "V2_plan_valid_rate": round(
+                _rate([r["plan_valid"] for r in v2]), 3),
             "V2_sync_rej_mean": round(_mean([r["sync_viol"] for r in v2]), 1),
             "V2_recharges_mean": round(_mean([r["recharges"] for r in v2]), 1),
             "V2_tw_viol_mean": round(_mean([r["tw_viol"] for r in v2]), 1),
@@ -534,12 +606,12 @@ def main():
     failures.append(fc3)
     L.append(f"  {fc3[0]} [{fc3[1]}]: {fc3[2]}. Next: {fc3[3]}.")
 
-    # FC4: sync rejection when drone trip would land after truck left
+    # FC4: sorties refused by the physical single-drone schedule
     inst_f4 = make_instance(16, seed=SEED + 16)
     r4 = collaborative(inst_f4)
     fc4 = ("FC4", "collaborative, 16 customers",
-           f"{r4['sync_rejected']} drone trips rejected by rendezvous "
-           f"(land-after-truck) constraint",
+           f"{r4['sync_rejected']} drone trips refused by the single-drone "
+           f"schedule (range, launch order, or a drone still in flight)",
            "fix: reorder truck route or launch earlier; shows sync is active")
     failures.append(fc4)
     L.append(f"  {fc4[0]} [{fc4[1]}]: {fc4[2]}. Next: {fc4[3]}.")

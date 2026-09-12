@@ -81,17 +81,17 @@ sanity check: abl_cap1 (1 customer/sortie) ≡ published (M&C 2015) heuristic, c
 
 ---
 
-## 5. Scale decay (N=30 / 50, 5 seeds)
+## 5. Scale decay (N=30 / 50 / 100, 5 seeds)
 
 Source: `src/results/week06_largeN_summary.csv` (from `week06_largeN.py`).
 
 | Scale | V2 vs V1 benefit | Offload rate | Sync rejections | Mean TW violations |
 |---|---:|---:|---:|---:|
-| N=30 | 27.6% | 62.0% | 0.337 M | 8.0 / 30 |
-| N=50 | 12.1% | 42.8% | 4.535 M | 24.0 / 50 |
-| N=100 | 2.3% | 23.4% | 179.5 M | 71.4 / 100 |
+| N=30 | 8.6% | 11.3% | 0.122 M | 20.4 / 30 |
+| N=50 | 3.4% | 5.2% | 1.012 M | 39.0 / 50 |
+| N=100 | 0.5% | 2.6% | 23.935 M | 88.8 / 100 |
 
-At N=50 the V1 (battery+recharge) cost ≈ 5670 vs V0 (no battery) ≈ 3094 — the battery constraint alone nearly doubles the truck cost for N≥30, and the drone can only bypass a limited amount of recharge routing, so the synergy benefit is diluted. At **N=100** the synergy collapses to 2.3%, offload rate drops to 23.4%, and V2 averages **71.4/100 late customers** — the greedy cannot meet time windows at this scale (it was never TW-feasible by construction; `feasible` here means energy-only). The scale boundary is shown in `figures/largen_scale_decay.png`; the reading is that the *effective* collaboration interval lies at **N ≤ 50**.
+At N=50 the V1 (battery+recharge) cost ≈ 5670 vs V0 (no battery) ≈ 3094 — the battery constraint alone nearly doubles the truck cost for N≥30, and the drone can only bypass a limited amount of recharge routing, so the synergy benefit is diluted. At **N=100** the synergy collapses to 0.5%, offload rate drops to 2.6%, and V2 averages **88.8/100 late customers** — the greedy cannot meet time windows at this scale (it was never TW-feasible by construction; `feasible` here means energy-only). The scale boundary is shown in `figures/largen_scale_decay.png`; the reading is that the *effective* collaboration interval narrows to **N ≤ 30** (only 3.4% is left at N=50).
 
 ---
 
@@ -160,7 +160,7 @@ Paired Wilcoxon signed-rank, overall rows (negative mean diff = first method sma
 | my V2 vs abl_cap1 (multi-customer) | 38 | −73.2 | 2.4×10⁻⁷ |
 | my V2 vs abl_notakeoff (multi-takeoff) | 23 | −37.7 | 2.9×10⁻⁵ |
 | LNS vs greedy V2 | 54 | −194.3 | 1.7×10⁻¹⁰ |
-| V2 vs V1 (collaborative vs EV) | 40 | −424.3 | 3.7×10⁻⁸ |
+| V2 vs V1 (collaborative vs EV) | 40 | −182.1 | 3.71×10⁻⁸ |
 
 **Multiple drones (W8 extension, breaking the single-drone limitation)**: K parallel serial drones, same instances and seeds; K=1 is numerically identical to the single-drone evaluator. LNS reduction vs truck-only:
 
@@ -226,9 +226,9 @@ Grouped by nature; each item gives its "consequence + next step" so it reads as 
 - **The greedy itself has no local search (W8 adds an improvement phase)**: applying intra-route 2-opt to V2's constructed truck route (accept only strict makespan improvement) yields only 0–1.76% (peak 1.76% at N=16; see `week07_fstsp_with_ls.log`) — showing V2's gain comes from the *collaborative structure* of offloading far-flung customers, not route fine-tuning. With the W8 destroy-and-repair LNS the gain over the greedy is a consistent +9% to +12.6% at every size (Wilcoxon overall p=1.7×10⁻¹⁰; see §8), beyond pure routing. **How far from global optimum is now quantified in §8** (CP-SAT exact optimum; n=8 proven: greedy +31.2%, LNS +16.5%).
 
 **Empirical-validation boundaries**
-- **Synthetic instances extended to 100, but the effective collaboration interval lies at N ≤ 50**: my truck-drone experiments use randomly generated synthetic instances and do not adopt the field's standard large-scale benchmark sets (e.g., the Solomon-derived FSTSP instances of Murray & Chu 2015 — which this project reproduced within their parameter range in W7; or the Masmoudi et al. 2018 instance set). At N=100 the synergy collapses to 2.3% and V2 averages 71.4/100 late customers (TW feasibility breaks down); extrapolation to real large scale needs caution. The W8 LNS lifts the N=50 collaboration benefit from the greedy's 17.6% to 28.1%, slowing the decay, but it is still the same synthetic instances and setting, so the boundary is unchanged. **W8 extension 2 re-ran 16 standard instances built from official Solomon topologies (K=1/2/3/5) with the same conclusion**; **the original Murray & Chu (2015) instances were also downloaded** (36 ten-customer instances, see §8), so the results no longer rest on synthetic or rescaled Solomon data alone. What is still missing is standard-benchmark validation at larger sizes (N > 50).
+- **Synthetic instances extended to 100, but the effective collaboration interval narrows to N ≤ 30**: my truck-drone experiments use randomly generated synthetic instances and do not adopt the field's standard large-scale benchmark sets (e.g., the Solomon-derived FSTSP instances of Murray & Chu 2015 — which this project reproduced within their parameter range in W7; or the Masmoudi et al. 2018 instance set). At N=100 the synergy collapses to 0.5% and V2 averages 88.8/100 late customers (TW feasibility breaks down); extrapolation to real large scale needs caution. The W8 LNS lifts the N=50 collaboration benefit from the greedy's 15.2% to 29.5%, slowing the decay, but it is still the same synthetic instances and setting, so the boundary is unchanged. **W8 extension 2 re-ran 16 standard instances built from official Solomon topologies (K=1/2/3/5) with the same conclusion**; **the original Murray & Chu (2015) instances were also downloaded** (36 ten-customer instances, see §8), so the results no longer rest on synthetic or rescaled Solomon data alone. What is still missing is standard-benchmark validation at larger sizes (N > 50).
 - **Drone scheduling: provably optimal on every config after the physical fix**: with the lower bound (the larger of every sortie on its own drone, and total flight divided by K) as a certificate, greedy reaches that bound on **64/64 configs** and local search adds **0.000%** once the sortie sets no longer overlap (physical evaluator). The earlier "31/64 + a small local gain" was a false contention created by nested sorties. (Limitation: this holds for physically valid, non-overlapping sortie sets; if sorties did overlap, contention would return.)
-- **The main evaluator is now physical; W7/W8 were re-run**: `fstsp_simulate` rejects nested/crossing sorties (returns inf), and W7/W8 plus the W6 sensitivity/multi-objective experiments were re-run; the numbers are lower but the direction is unchanged (see `docs/evaluator_physical_fix_note_en.md`). **Not covered**: `week06_ground_air_evrp_tw.py`'s own parallel evaluator and `week06_largeN` were left unchanged, so W6's "V2 vs V1 −424 (p=3.7×10⁻⁸)" and the scaling decay 27.6%→12.1%→2.3% still use the old model — a clear follow-up.
+- **Both shared evaluators are now physical, and W6/W7/W8 were re-run**: `week07_fstsp_repro.fstsp_simulate` and `week06_ground_air_evrp_tw.simulate` both reject nested/crossing sorties, both require the drone to be recovered before the next sortie, and both make the truck wait at the recovery node (returning inf for an infeasible plan). W7/W8, the W6 headline, `week06_largeN` and the V2-vs-V1 row of `stat_tests` were re-run (see `docs/evaluator_physical_fix_note_en.md`). The numbers are lower but the direction is unchanged: the W6 headline V2-vs-V1 advantage falls from 42-55% to **16-34%**, and the scaling decay from 27.6/12.1/2.3% to **8.6/3.4/0.5%**. V0/V1 involve no drone and are unchanged.
 - **Time windows / energy are now covered by V3, which is also extended to multiple drones**: V3 stacks the week06 battery, charging stations and time windows back into the truck-drone model (see §8), reaching 34.7%~53.4% over the truck-only EV baseline at K=1 and 57.7%~72.8% at K=2/3, removing most late arrivals and charging detours. V3 is now tested with K=1/2/3, and time windows are still a penalty in the search rather than a hard constraint (the violation count is reported).
 - **The exact optimum is now computed at small scale (§8); at larger scale it is still unprovable**: CP-SAT solves the physical FSTSP model exactly — n=8 is proven optimal (greedy +31.2%, LNS +16.5%), while n=10/12 give an upper bound on the optimum within 180s (so those gaps are lower bounds). Exact optima / bounds at larger scale remain open and are the natural next improvement. Baseline absolute quality is still anchored to BKS (literature optimum).
 - **Coarse MO front**: the weighted-sum greedy gives a "partial / inner" front and may miss non-convex Pareto regions; it is not a full Pareto solver (see §3). For a complete front, the natural next step is ε-constraint or NSGA-II (as in peer Xie's P-ACO/NSGA-II).

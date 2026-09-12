@@ -1,4 +1,4 @@
-# Physical evaluator fix (W7/W8 re-run note)
+# Physical evaluator fix (W7/W8 + W6 re-run note)
 
 ## 1. What changed
 
@@ -53,6 +53,11 @@ figures (`lns_vs_greedy`, `multidrone`, `multidrone_std`, `sensitivity_panels`,
 | Sensitivity: range R (60→160→200) | 15.5% → 50.5% → 48.7% | **15.4% → 34.4% → 34.4%** |
 | Sensitivity: customers/sortie K (1→3) | 25.3% → 50.6% → 56.5% | **20.5% → 34.4% → 37.1%** |
 | Multi-objective: distance / makespan (V2 vs V1) | −56% / −33% | **−32% / −34%** |
+| W6 headline V2 vs V1 (N=8/12/16/20) | 50.5 / 55.3 / 53.9 / 42.1% | **33.6 / 24.5 / 19.6 / 15.6%** |
+| W6 offload rate (N=8/12/16/20) | 65.0 / 70.8 / 71.9 / 67.0% | **31.2 / 21.7 / 18.1 / 14.5%** |
+| Scaling decay, V2 vs V1 (N=30/50/100) | 27.6% → 12.1% → 2.3% | **8.6% → 3.4% → 0.5%** |
+| Scaling decay, offload rate (N=30/50/100) | 62.0% → 42.8% → 23.4% | **11.3% → 5.2% → 2.6%** |
+| Wilcoxon: V2 vs V1 (collaborative vs EV) | n=40, −424.3, p=3.7×10⁻⁸ | **n=40, −182.1, p=3.71×10⁻⁸** |
 
 Takeaways:
 
@@ -69,19 +74,51 @@ Takeaways:
   the multi-objective distance axis (−56%→−32%), both of which depended directly
   on the optimistically low makespans.
 
-## 4. One item left out this round
+## 4. Second round: the week06 evaluator (same day)
 
-`week06_ground_air_evrp_tw.py` has its own `simulate`, which is a **parallel**
-model (each sortie takes its landing time independently, with no serialisation
-and no truck waiting) — looser even than the old `fstsp_simulate`. The W6
-V0/V1/V2 headline and `week06_largeN` (scaling decay) go through that path and
-were **not changed or re-run**, so "V2 vs V1 −424 (p=3.7×10⁻⁸)" and the scaling
-decay 27.6%→12.1%→2.3% are still on the old model. Making this physical too and
-re-running W6 is a clear follow-up.
+`week06_ground_air_evrp_tw.py` had its own `simulate`: it took each sortie's
+landing time independently (`drone_free = max(...)`), never checked that the drone
+was back on the truck and never serialised sorties, so nested or crossing sorties
+were given a makespan too — looser than the pre-fix `fstsp_simulate`. The W6
+V0/V1/V2 headline and `week06_largeN` (scaling decay) ran through that path.
+
+This round puts it on **the same physical model as `fstsp_simulate`**:
+
+- sorties are processed in launch-position order;
+- a launch must precede its recovery on the truck route;
+- a sortie's flight stays within `R_D`;
+- a sortie cannot start before the previous one has been recovered (one drone
+  flies one sortie at a time);
+- if the drone arrives late the truck waits at the recovery node, and the wait
+  shifts every later arrival;
+- any violation returns `inf`.
+
+In the same change, `collaborative` accepts a sortie only when **the makespan of
+the whole physical plan improves** (previously: when removing the customers
+shortened the *truck* route), and candidate sorties are checked against the
+single-drone route positions. Together these keep the heuristic from producing
+plans the evaluator would reject: the re-run reports
+`V2_plan_valid_rate = 1.0` at every size.
+
+Cross-validation: over 400 random routes with random sortie sets,
+`week06_ground_air_evrp_tw.simulate` and `week07_fstsp_repro.fstsp_simulate`
+return the same makespan, including the same infeasibility verdicts; the
+regression tests are listed in section 5.
+
+Scope: the W6 headline, `week06_largeN` and the "V2 vs V1" row of
+`stat_tests` were re-run. V0/V1 involve no drone and are bit-for-bit unchanged
+(N=50 V1 is still 5661.9). `week06_sensitivity` and `week06_multi_objective`
+go through `fstsp_makespan` and are unaffected. Old and new numbers are the last
+five rows of section 3. The direction is unchanged as well: the benefit still
+decays monotonically with scale, and now faster (only 3.4% left at N=50), so the
+effective collaboration interval narrows to N ≤ 30.
 
 ## 5. Artifacts
 
-- Change: `src/experiments/week07_fstsp_repro.py` (`fstsp_simulate` / `fstsp_simulate_multi`)
-- Regression test: `tests/test_evaluators.py::test_heuristic_plans_are_physically_valid`
+- Round 1 change: `src/experiments/week07_fstsp_repro.py` (`fstsp_simulate` / `fstsp_simulate_multi`)
+- Round 1 regression test: `tests/test_evaluators.py::test_heuristic_plans_are_physically_valid`
 - Failure case: FC-7-4 in `docs/failure_cases_master.md` (now fixed)
-- Re-run logs and CSVs under `src/results/`
+- Round 1 re-run logs and CSVs under `src/results/` (`week07_*`, `week08_*`, `week06_sensitivity*`, `week06_multi_objective*`, `stat_tests*`)
+- Round 2 change: `src/experiments/week06_ground_air_evrp_tw.py` (`simulate` / `collaborative` / `run_variant` / summary columns)
+- Round 2 regression tests: `tests/test_evaluators.py::test_w6_evaluator_rejects_overlapping_sorties`, `::test_w6_evaluator_rejects_out_of_range_sortie`, `::test_w6_truck_waits_for_a_late_drone`, `::test_w6_evaluator_matches_shared_fstsp_evaluator`, `::test_w6_collaborative_plan_is_physically_executable`
+- Round 2 re-run logs and CSVs: `src/results/week06_ground_air_*`, `week06_largeN_*`, `stat_tests*`

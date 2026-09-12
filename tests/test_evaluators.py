@@ -6,6 +6,9 @@ V3 (electric + time-window) evaluator must agree with its single-drone form and
 still serve every customer.
 """
 
+import math
+import random
+
 import pytest
 
 import week06_ground_air_evrp_tw as w6
@@ -79,3 +82,78 @@ def test_v3_energy_feasible_on_greedy_solution(tag, inst):
     """The greedy V3 solution stays energy-feasible (no infeasible recharge)."""
     route, trips, _ = v3.v3_greedy(inst)
     assert v3.ev_collab(inst, route, trips)["energy_inf"] is False
+
+def _line_instance():
+    """Four customers on a line from the depot: every time is exact."""
+    coord = {0: (0.0, 0.0), 1: (10.0, 0.0), 2: (20.0, 0.0),
+             3: (30.0, 0.0), 4: (40.0, 0.0), 5: (-45.0, 0.0)}
+    return {"depot": coord[0],
+            "customers": {i: coord[i] for i in (1, 2, 3, 4)},
+            "stations": {5: coord[5]},
+            "tw": {i: (0.0, 1e9) for i in (1, 2, 3, 4)},
+            "demand": {i: 5 for i in (1, 2, 3, 4)},
+            "coord": coord, "Q": w6.Q_DEFAULT, "n": 4}
+
+
+def test_w6_evaluator_rejects_overlapping_sorties():
+    """One drone cannot fly two sorties that overlap in time."""
+    inst = _line_instance()
+    route = [0, 1, 2, 3, 4, 0]
+    a = (1, (2,), 3)
+    b = (2, (3,), 4)
+    assert not math.isinf(w6.simulate(inst, route, [a])[1])
+    assert not math.isinf(w6.simulate(inst, route, [b])[1])
+    assert math.isinf(w6.simulate(inst, route, [a, b])[1])
+    assert math.isinf(w6.simulate(inst, route, [b, a])[1])
+
+
+def test_w6_evaluator_rejects_out_of_range_sortie():
+    """A flight longer than the range is not a plan."""
+    inst = _line_instance()
+    route = [0, 1, 2, 3, 4, 0]
+    trip = (1, (4,), 0)          # 1 -> 4 -> 0 covers 70 length units
+    assert math.isinf(w6.simulate(inst, route, [trip], rd=50.0)[1])
+    assert not math.isinf(w6.simulate(inst, route, [trip], rd=100.0)[1])
+
+
+def test_w6_truck_waits_for_a_late_drone():
+    """The truck waits at the recovery node and later arrivals shift with it."""
+    inst = _line_instance()
+    route = [0, 1, 2, 3, 4, 0]
+    trip = (1, (4,), 2)          # lands at t=55, the truck is there at t=40
+    arr, drone = w6.simulate(inst, route, [trip], rd=100.0)
+    assert drone == pytest.approx(55.0)
+    assert arr[-1] == pytest.approx(135.0)
+
+
+def test_w6_evaluator_matches_shared_fstsp_evaluator():
+    """week06.simulate and week07.fstsp_simulate are one physical model."""
+    rng = random.Random(11)
+    for trial in range(60):
+        inst = w6.make_instance(rng.choice([8, 10, 12]), seed=4000 + trial)
+        cust = list(inst["customers"].keys())
+        rng.shuffle(cust)
+        route = [0] + cust + [0]
+        trips = []
+        for _ in range(rng.randint(0, 3)):
+            i = rng.randrange(0, len(route) - 2)
+            j = rng.randrange(i + 1, len(route) - 1)
+            custs = tuple(rng.sample(cust, rng.choice([1, 2])))
+            trips.append((route[i], custs, route[j]))
+        arr, drone = w6.simulate(inst, route, trips)
+        mk = max(arr[-1], drone)
+        ref = f7.fstsp_simulate(inst, route, trips)[-1]
+        if math.isinf(ref):
+            assert math.isinf(mk)
+        else:
+            assert mk == pytest.approx(ref)
+
+
+@pytest.mark.parametrize("tag,inst", SYNTHETIC)
+def test_w6_collaborative_plan_is_physically_executable(tag, inst):
+    """The week06 greedy never returns a plan the evaluator would reject."""
+    r = w6.collaborative(inst)
+    assert r["plan_valid"] is True
+    assert not math.isinf(
+        w6.simulate(inst, r["route"], r["drone_trips"], w6.R_D)[1])
+
