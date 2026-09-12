@@ -4,7 +4,7 @@
 > Task: the project page weights "baseline vs improvement method comparison
 > quality" at 25% and explicitly asks to "test one improvement with fair
 > comparisons". In W6 I reproduced Murray & Chu (2015) as a published baseline
-> and found my V2 (multi-customer flights) was 8–22% shorter than it. This
+> and found my V2 (multi-customer flights) was 10.2–14.2% shorter than it. This
 > week turns that into a *controlled* improvement + ablation study: hold
 > everything fixed, vary two knobs, and decompose *where* the gain comes from.
 > This experiment reuses the same instances and the same FSTSP serial-drone

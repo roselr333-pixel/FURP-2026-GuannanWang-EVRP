@@ -38,7 +38,7 @@ Heuristic logic (Algorithms 1–4):
 
 **Reading the table**:
 - The published method itself helps: handing 2–5 customers to the drone shortens completion time by ~20–27% vs truck-only, consistent with what I expected when tracing the algorithm by hand.
-- My V2, under the same FSTSP setting, is on average 8–22% shorter than the published method and offloads roughly twice as many customers. The reason is straightforward: serving two customers per flight is more efficient than one per flight given the drone is a serial resource — fewer sorties means less waiting.
+- My V2, under the same FSTSP setting, is on average 10.2–14.2% shorter than the published method and offloads roughly twice as many customers. The reason is straightforward: serving two customers per flight is more efficient than one per flight given the drone is a serial resource — fewer sorties means less waiting.
 - Both are far from the absolute numbers of my week06 EV-TW V2 (a different problem with battery/time windows and a faster drone); that comparison is not valid here. This table only addresses the FSTSP setting.
 
 ## 4. Limitations

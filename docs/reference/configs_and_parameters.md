@@ -1,88 +1,114 @@
 # 实验配置与参数说明（中央表）
 
-> 写于 2026-07-24，Guannan Wang。
-> 用途：让评审或同组同学只看这一页就能复现我全部实验，不用翻 7 个脚本里散落的常量。
-> 缺这一页是"可复现性 25%"那条评分项最常扣分的地方（见 `docs/analysis/progress_report.md` §3.2-①）。
+> 写于 2026-07-24，Guannan Wang；2026-09-13 按代码逐项核对后重写。
+> 用途：让评审只看这一页就能复现我的全部实验，不用翻 30 多个脚本里散落的常量。
+> 这一页直接对应"可复现性"那条评分项；下面每个值都标了出处文件。
 
 ---
 
-## 1. 全局共用的算例构造
+## 1. 共用常量
 
-| 项 | 值 | 出处 / 备注 |
-|---|---|---|
-| 客户坐标 | 合成环形布局：仓库在原点 `(0,0)`、客户在仓库周围一个环上随机散布 | `week06_ground_air_evrp_tw.py::make_instance` |
-| 充电站数量 | 4 个（每个客户规模） | 同上；坐标由 `SEED` 唯一确定 |
-| 客户时间窗 | 默认宽窗；`tw_tight=True` 时缩到 width=35 | `week06_ground_air_evrp_tw.py::make_instance(tw_tight=...)` |
-| 单位约定 | 距离 = 速度 × 时间；服务时间 = 5.0；充电时间 = 40.0 | `SERVICE`、`RECHARGE` 常量 |
+所有卡车-无人机实验的模型常量只有一份定义，在 `week06_ground_air_evrp_tw.py`；
+其余脚本一律 `import week06_ground_air_evrp_tw as w6` 后取用（`week07_fstsp_repro.py`、
+`week08_*.py`、`v3_ev_collab.py`、`cpsat_fstsp.py`、`drone_scheduling.py` 都是引用，没有各自重定义）。
 
-合成算例规模：8 / 12 / 16 / 20 客户各 1 实例（单种子 1 个）→ 现在扩到 N=30 / 50（见 §4），并用 10 个种子取均值。
-
-## 2. OR-Tools 求解器（决定性，多种子无意义）
-
-| 脚本 | 关键参数 | 值 | 备注 |
+| 常量 | 值 | 含义 | 出处 |
 |---|---|---|---|
-| `benchmark_official_solomon.py` | `first_solution_strategy` | `PATH_CHEAPEST_ARC` | OR-Tools 决定性算法 |
-| 同上 | `local_search_metaheuristic` | `GUIDED_LOCAL_SEARCH` | |
-| 同上 | `time_limit.seconds` | 10 | 每实例上界 |
-| 同上 | 距离标度 | ×10（按 Solomon 原整数坐标） | 见 `benchmark_official_solomon_output.txt` 头 |
-| `benchmark_evrptw.py` / `week04_evrp_tw.py` | 搜索策略 | 纯搜索 + Cheapest Arc | 用 `SetFixedCostOfAllVehicles(大值)` 优先最小化车辆数 |
-| 同上 | 时间上界 | 5 s | 6 客户小算例 |
+| `V_T` | 1.0 | 卡车速度 | `week06_ground_air_evrp_tw.py` |
+| `V_D` | 2.0 | 无人机速度（卡车的 2 倍） | 同上 |
+| `SERVICE` | 10.0 | 每个客户的服务时间 | 同上 |
+| `RECHARGE` | 40.0 | 充电站满充时间 | 同上 |
+| `RHO` | 1.0 | 卡车单位距离耗电 | 同上 |
+| `R_D` | 160.0 | 无人机单架次航程上限（**所有脚本都是这个值**，FSTSP 模式同样取 `w6.R_D`） | 同上 |
+| `Q_DEFAULT` | 250 | 卡车电池容量 | 同上 |
+| `CAP` | 1000 | 卡车载重（声明值；评估器与启发式都不检查，见 §5） | 同上 |
 
-**为什么不给 OR-Tools 多种子**：OR-Tools 求解是决定性算法（除非显式设随机），多跑 N 次只可能因为 `time_limit` 提前终止而出差异；这里都是按时上界跑完的，重复无信息。所以 56 实例的 OR-Tools 数字就是单一确定值（7.2% gap 来自 `benchmark_official_solomon_results.csv`）。
+单位约定：距离 = 速度 × 时间，所以所有时间量都以距离单位表示。
 
-## 3. GA 求解器（**唯一随机、需多种子**）
+**评估器口径**：单架无人机串行（一架次回收前不能起飞下一个）、卡车在回收点等待、
+架次航程不超限；违反任一条返回 `inf`。这条口径在 2026-09-13 统一到
+`week07_fstsp_repro.fstsp_simulate` 与 `week06_ground_air_evrp_tw.simulate` 两处，
+新旧对照见 `docs/analysis/evaluator_physical_fix_note_zh.md`。
 
-| 项 | 值 | 出处 |
-|---|---|---|
-| `POP_SIZE` | 40 | `baseline_ga_vrptw.py` |
-| `N_ELITE` | 6 | 同上 |
-| `TOURNAMENT` | 4 | 同上 |
-| `MUT_RATE` | 0.30 | 同上 |
-| `TIME_LIMIT_S` | 8（每实例） | 同上 |
-| `penalty` | 1000.0 | `solve_ga` 内：偏离 BKS 车辆数时每车 +1000 |
-| 解码 | Solomon I1 风格：每客户插到使总距离增加最小的可行位 | `decode()` |
-| 局部搜索 | 2-opt intra-route + relocate inter-route（最多 6 pass） | `local_search()` |
-| 初始化种子 | Clarke-Wright savings 构造 → 1 个个体；其逆序 → 第 2 个 | `savings_init()` |
-| 车队规模处理 | 偏 BKS；不足时 `force_fleet` 强拆最长路直到达标 | `force_fleet()` |
-| **旧 SEED** | `20260717`（单一） | `main()` 顶部 `random.seed(SEED)` |
-| **新 SEEDS** | `[20260717, 20260801, 20260815, 20260901, 20261001]`（5 个） | `baseline_ga_vrptw_multi.py` |
+## 2. 算例来源
 
-**关键改动**：把全局 `random.seed(SEED)` 移到 `solve_ga(data, seed, ...)` 内层，每次重置一次；`main()` 接受 `--seeds 20260717 20260801 ...` 风格（CLI 简化：直接读 `os.environ.get("SEEDS")` 或按需多进程串行）。
+| 数据集 | 位置 / 生成方式 | 规模 | 用在哪 |
+|---|---|---|---|
+| 合成环形算例 | `w6.make_instance(n, seed)` | n = 8 – 100 | week06 / 07 / 08 的主线 |
+| 官方 Solomon VRPTW | `src/instances/official_solomon/*.vrp` + `.sol`（BKS） | 56 个实例 | 三基线对比 |
+| 标准 Solomon 派生的 FSTSP 算例 | `fstsp_instances.make_solomon_fstsp(name, n, start)` | 4 族 × n = 10/20/30/50（W8）；4 族 × 3 顾客窗口 × n = 8/12/16/20（W7 消融） | 标准拓扑上的协同实验 |
+| Murray & Chu (2015) 原始 FSTSP 算例 | `src/instances/murray_chu_2015/` | 36 个 10 顾客实例（11 个带文献 OFV） | 论文原始算例对比 |
+| Schneider (2014) E-VRPTW | `src/instances/schneider_evrptw/`、`schneider_evrptw_original/` | 92 个实例（18 个有 BKS 可对照） | 侧线复现 |
 
-## 4. Ground-air / FSTSP 协同实验
+合成算例的构造（`make_instance`）：仓库固定在原点 `(0,0)`；客户取极坐标，
+半径 `r ~ U[15, 30+4n]`、角度 `U[0, 2π)`；4 个充电站固定在 `(±45, 0)`、`(0, ±45)`；
+客户时间窗起点 `e ~ U[0, 120]`、宽度 220（`tw_tight=True` 时宽度 35）；
+需求 `q ~ U{5, …, 15}`。位置、时间窗、需求全部由种子决定，因此可精确复现。
 
-| 项 | 值 | 出处 |
-|---|---|---|
-| `V_T`（卡车速度） | 1.0 | `week06_ground_air_evrp_tw.py` / `week07_fstsp_repro.py` |
-| `V_D`（无人机速度） | 2.0 | 同上 |
-| `R_D`（无人机航程） | 160.0（ground-air）/ 100.0（FSTSP 模式） | `week06` 中 `R_D`，FSTSP 模式由 `R_D_FSTSP` 调小以触发更多约束 |
-| `Q_DEFAULT`（电池容量） | 250 | `week06` |
-| 能量消耗 | 1.0 / 距离单位 | `simulate()` |
-| `SERVICE` | 5.0 | 同上 |
-| `RECHARGE` | 40.0 | 同上 |
-| 客户数规模 | 8 / 12 / 16 / 20（10 种子基 `20260720`） | `week06_ground_air_evrp_tw.py::main` |
-| **新增规模** | 30 / 50（5 种子，2 配置对比 published vs V2 vs V2+LS） | 新增 N=30/50 实验，见 §4 |
-| 单次飞行最多服务客户数 | `max_cust = 2`（改进版可到 3 / 4） | `week07_improvement_ablation.py` |
-| 多次起降 | 同停靠点可多次起飞（`multi_takeoff=True`） | 同上 |
-| 评估器 | 串行无人机（**重要修正**：不能并行程） | `week07_fstsp_repro.py::fstsp_simulate` |
-| 2-opt LS | intra-route 2-opt 改进，**接受条件：makespan 不变差、可行** | 新增 `week07_improvement_ablation.py::v2_with_2opt` |
+标准 Solomon 算例的构造（`fstsp_instances`）：取官方坐标，平移到仓库为原点，
+再等比缩放到与该规模下合成生成器相同的顾客 RMS 半径，模型常量不变。
+仓库里的 Solomon 文件在同一族前缀内共享坐标，所以另加了 `start` 参数滑动顾客窗口，
+以得到同一拓扑下的多组不同顾客集。
 
-## 5. 随机种子统一约定
+## 3. 各实验的规模与种子
 
-| 用途 | 旧基线 | 新基线 |
-|---|---|---|
-| GA 种群 | `20260717` 单一 | `20260717/20260801/20260815/20260901/20261001` 5 个，**取均值** |
-| 合成算例 | `SEED + n`（8/12/16/20） | `SEED + size_index`（也加 N=30/50 偏移） |
-| 多种子 ground-air | `20260720..20260729` 10 个 | 沿用，不再变 |
-| FSTSP 同台 | `20260720..20260729` 10 个 | 沿用，但新增 `seed_base=20260820` 跑 N=30/50 |
+| 脚本 | 规模 | 种子 | 备注 |
+|---|---|---|---|
+| `week06_ground_air_evrp_tw.py` | N = 8/12/16/20 | 10 个：20260720–20260729 | V0（无电池）/ V1（纯电）/ V2（协同）同台 |
+| `week06_largeN.py` | N = 30/50/100 | 5 个：20260820–20260824 | 规模衰减 |
+| `week06_sensitivity.py` | N = 12 | 5 个：20260910–20260914 | 扫 `Q ∈ {120,180,250,350,500}`、`R ∈ {60,90,120,160,200}`、`K ∈ {1,2,3}`、`N ∈ {8,12,16,20,30}` |
+| `week06_multi_objective.py` | N = 12 | 5 个：20260910–20260914 | 加权和 `w ∈ {0, 0.25, 0.5, 0.75, 1.0}`；目标里含无人机能耗代理项 `DRONE_RHO = 0.3` |
+| `week07_fstsp_repro.py` | N = 8/12/16/20 | 10 个：20260720–20260729 | M&C (2015) 插入启发式 vs 我的 V2 |
+| `week07_improvement_ablation.py` | N = 8/12/16/20 | 10 个：20260720–20260729 | 五配置消融（合成算例） |
+| `week07_ablation_std.py` | 4 族 × 3 窗口 × N = 8/12/16/20 = 48 | 确定性 | 同一套启发式与评估器，换 Solomon 拓扑 |
+| `week08_lns.py` | N = 8/12/16/20/30/50 | 10 个：20260720–20260729 | 迭代预算 `{8:300, 12:300, 16:300, 20:400, 30:250, 50:150}`；模拟退火初温 = 当前 makespan 的 5% |
+| `week08_multidrone.py` | 同 `week08_lns` 的 6 个规模 | 10 个：同上 | K = 1/2/3 |
+| `week08_multidrone_std.py` | 4 族 × N = 10/20/30/50 | 确定性（`LNS_SEED = 20260720`） | K = 1/2/3/5；精确调度只跑架次数 ≤ 14 的配置 |
+| `week08_exact_gap.py` | n = 8/10/12 | 5 个：20260720–20260724 | CP-SAT 时间上限 180 s |
+| `week08_mc_benchmark.py` | 36 个原始算例 | `SEED = 20260720` | K = 1/2/3，每架次顾客上限 1/2/3 |
+| `v3_ev_collab.py` | N = 8/12/16/20 | 10 个：20260720–20260729 | K = 1/2/3；greedy 与 greedy + LNS |
+
+种子约定：多种子实验一律用固定种子集，不用系统时间；确定性脚本在日志里注明。
+
+## 4. 求解器设置
+
+| 求解器 | 参数 | 值 | 出处 |
+|---|---|---|---|
+| OR-Tools | `first_solution_strategy` | `PATH_CHEAPEST_ARC` | `benchmark_official_solomon.py` |
+| OR-Tools | `local_search_metaheuristic` | `GUIDED_LOCAL_SEARCH` | 同上 |
+| OR-Tools | 每实例时间上限 | 10 s | 同上 |
+| OR-Tools | 距离标度 | ×10 取整（Solomon 原坐标为整数） | 同上（`DIST_SCALE = 10`） |
+| GA（自写） | `POP_SIZE` / `N_ELITE` / `TOURNAMENT` / `MUT_RATE` | 40 / 6 / 4 / 0.30 | `baseline_ga_vrptw.py` |
+| GA | 每实例时间上限 | 8 s | 同上（`TIME_LIMIT_S = 8`） |
+| GA | 车辆数偏离 BKS 的罚项 | 1000 / 车 | 同上 |
+| GA | 解码与局部搜索 | Solomon I1 插入 + intra-route 2-opt + inter-route relocate | 同上 |
+| GA | 种子 | 5 个：20260717 / 20260801 / 20260815 / 20260901 / 20261001，报表取均值 | 同上 |
+| PyVRP | 版本 | 0.14.0（`baseline_pyvrp_vrptw.py`） | 与官方 `.sol` BKS 对照 |
+| CP-SAT | 时间上限 / workers | 180 s / 8 | `week08_exact_gap.py`、`cpsat_fstsp.solve_exact` |
+
+OR-Tools 与 PyVRP 是决定性求解，重复运行没有统计意义，所以只报单次结果；
+GA 是唯一带随机性的基线，因此报 5 种子均值 ± 标准差。
+
+## 5. 已声明但未启用的项（写报告时要如实说明）
+
+- **`CAP = 1000`（卡车载重）**：常量存在，但 `truck_ev_route`、`simulate` 与各启发式都不检查，
+  客户需求 `q_i` 也没有进入任何约束。
+- **无人机没有能耗模型**：唯一的无人机约束是单架次航程 `R_D`；回收即视为换电池，
+  航程逐架次复位。载荷对续航的影响没有建模。
+- **时间窗是罚项不是硬约束**：V1/V2/V3 报 `tw_viol` 计数，但不因超窗拒绝解。
+- **充电策略是贪心**：电量不足时绕到最近的充电站满充，不优化选哪个站。
 
 ## 6. 路径与文件约定
 
-- **数据/结果**：`src/results/*.csv`、`src/results/*.txt`、`src/results/*.log`
-- **实例缓存**：`src/instances/official_solomon/{C101.vrp, C101.sol, ...}`（首次运行时从 PyVRP/Instances 仓库拉取，已缓存）
-- **实验脚本**：`src/experiments/*.py`
-- **报告/笔记**：`docs/*.md`（提交仓库）和 `learning_guide/*.md`（自学，**不进提交仓库**）
+- **结果**：`src/results/*.csv`（按 `.gitignore` 不入库，靠脚本 + 种子重新生成）、
+  `src/results/*.txt` / `*.log`（日志入仓）
+- **实例**：`src/instances/`
+- **实验脚本**：`src/experiments/`；绘图与仪表盘生成器：`src/tools/`
+- **文档**：`docs/reference/`（本表、证据索引、形式化模型、失败案例）、
+  `docs/analysis/`、`docs/weekly/`、`docs/baselines/`；总索引见 `docs/README.md`
+- **自学笔记**：`learning_guide/`（不进提交仓库）
+- **一键复现**：`run_all.py`；每个数字到脚本的对照见 `REPRODUCE.md`
 
 ---
 
-*这一页之后任何脚本改参数都必须回来更新对应行；忘了更新就是回到了"散落在 7 个脚本里"的老问题。*
+*这一页之后任何脚本改参数，都要回来更新对应行。*
