@@ -1,0 +1,81 @@
+==============================================================================
+V3 (electric truck + drone + charging + time windows) -- core ablation
+==============================================================================
+sizes=[8, 12, 16, 20]  seeds=10 (base 20260720..20260729)
+configs=['cap1', 'v2', 'notakeoff', 'cap3']  anchor=V1 (truck-only EV)
+truck_speed=1.0  drone_speed=2.0  drone_range=160.0  battery=250  recharge=40  service=10
+  hardware: Intel64 Family 6 Model 183 Stepping 1, GenuineIntel | 20 logical cores | RAM 31.8GB
+  env: python 3.13.14 | Windows-11-10.0.26200-SP0
+
+=== size N=8 ===
+  seed 20260720: V1=   497.9  cap1=   315.8  v2=   240.5  notakeoff=   290.2  cap3=   167.0  off(v2)=6/8  t=0.01s
+  seed 20260721: V1=   460.0  cap1=   381.8  v2=   383.1  notakeoff=   383.1  cap3=   255.2  off(v2)=2/8  t=0.02s
+  seed 20260722: V1=   488.6  cap1=   313.0  v2=   224.0  notakeoff=   269.2  cap3=   208.1  off(v2)=4/8  t=0.02s
+  seed 20260723: V1=   549.1  cap1=   251.7  v2=   239.2  notakeoff=   272.7  cap3=   207.4  off(v2)=4/8  t=0.02s
+  seed 20260724: V1=   519.4  cap1=   370.8  v2=   277.3  notakeoff=   382.4  cap3=   281.8  off(v2)=3/8  t=0.02s
+  seed 20260725: V1=   463.2  cap1=   287.7  v2=   242.3  notakeoff=   295.7  cap3=   223.8  off(v2)=4/8  t=0.02s
+  seed 20260726: V1=   541.5  cap1=   430.7  v2=   259.0  notakeoff=   427.7  cap3=   238.8  off(v2)=6/8  t=0.02s
+  seed 20260727: V1=   387.9  cap1=   274.8  v2=   235.7  notakeoff=   271.2  cap3=   186.8  off(v2)=6/8  t=0.02s
+  seed 20260728: V1=   454.2  cap1=   404.7  v2=   252.2  notakeoff=   277.8  cap3=   236.1  off(v2)=5/8  t=0.02s
+  seed 20260729: V1=   496.6  cap1=   350.4  v2=   225.1  notakeoff=   259.0  cap3=   238.6  off(v2)=6/8  t=0.02s
+
+=== size N=12 ===
+  seed 20260720: V1=   673.5  cap1=   597.4  v2=   374.4  notakeoff=   514.6  cap3=   491.0  off(v2)=8/12  t=0.12s
+  seed 20260721: V1=   652.6  cap1=   529.5  v2=   566.6  notakeoff=   571.4  cap3=   389.9  off(v2)=5/12  t=0.15s
+  seed 20260722: V1=   625.9  cap1=   531.2  v2=   338.8  notakeoff=   484.5  cap3=   305.8  off(v2)=6/12  t=0.12s
+  seed 20260723: V1=   799.5  cap1=   593.3  v2=   450.8  notakeoff=   676.2  cap3=   373.2  off(v2)=6/12  t=0.15s
+  seed 20260724: V1=   736.2  cap1=   570.7  v2=   321.2  notakeoff=   412.8  cap3=   328.6  off(v2)=6/12  t=0.11s
+  seed 20260725: V1=   718.6  cap1=   559.0  v2=   393.4  notakeoff=   499.3  cap3=   332.6  off(v2)=6/12  t=0.11s
+  seed 20260726: V1=   788.2  cap1=   606.3  v2=   446.1  notakeoff=   603.6  cap3=   410.1  off(v2)=7/12  t=0.12s
+  seed 20260727: V1=   545.9  cap1=   381.5  v2=   304.6  notakeoff=   333.3  cap3=   269.9  off(v2)=5/12  t=0.12s
+  seed 20260728: V1=   732.5  cap1=   605.8  v2=   505.2  notakeoff=   559.3  cap3=   351.6  off(v2)=6/12  t=0.18s
+  seed 20260729: V1=   674.0  cap1=   534.2  v2=   449.9  notakeoff=   497.2  cap3=   454.5  off(v2)=4/12  t=0.12s
+
+=== size N=16 ===
+  seed 20260720: V1=  1121.4  cap1=   736.4  v2=   815.0  notakeoff=   997.9  cap3=   761.9  off(v2)=7/16  t=0.61s
+  seed 20260721: V1=   950.5  cap1=   694.6  v2=   508.2  notakeoff=   565.7  cap3=   634.4  off(v2)=9/16  t=0.46s
+  seed 20260722: V1=   944.2  cap1=   668.7  v2=   667.8  notakeoff=   711.7  cap3=   644.8  off(v2)=5/16  t=0.60s
+  seed 20260723: V1=   926.6  cap1=   669.8  v2=   577.1  notakeoff=   716.0  cap3=   646.6  off(v2)=7/16  t=0.61s
+  seed 20260724: V1=   956.1  cap1=   636.3  v2=   676.4  notakeoff=   812.4  cap3=   741.6  off(v2)=5/16  t=0.60s
+  seed 20260725: V1=   974.0  cap1=   770.3  v2=   494.0  notakeoff=   584.0  cap3=   625.0  off(v2)=9/16  t=0.47s
+  seed 20260726: V1=   926.3  cap1=   706.8  v2=   667.2  notakeoff=   825.3  cap3=   694.8  off(v2)=5/16  t=0.63s
+  seed 20260727: V1=  1011.0  cap1=   639.6  v2=   724.7  notakeoff=   778.4  cap3=   705.9  off(v2)=4/16  t=0.51s
+  seed 20260728: V1=   909.5  cap1=   778.8  v2=   602.6  notakeoff=   608.8  cap3=   743.8  off(v2)=7/16  t=0.52s
+  seed 20260729: V1=  1039.5  cap1=   896.9  v2=   554.2  notakeoff=   640.1  cap3=   594.1  off(v2)=8/16  t=0.60s
+
+=== size N=20 ===
+  seed 20260720: V1=  1232.0  cap1=   931.0  v2=  1051.8  notakeoff=  1052.7  cap3=   974.0  off(v2)=3/20  t=1.69s
+  seed 20260721: V1=  1000.7  cap1=   784.6  v2=   808.9  notakeoff=   938.3  cap3=   806.3  off(v2)=11/20  t=1.65s
+  seed 20260722: V1=  1397.9  cap1=   981.2  v2=   907.0  notakeoff=   988.4  cap3=   916.8  off(v2)=8/20  t=1.57s
+  seed 20260723: V1=  1407.5  cap1=   972.3  v2=   917.7  notakeoff=  1157.6  cap3=   913.6  off(v2)=9/20  t=1.64s
+  seed 20260724: V1=  1325.3  cap1=   928.7  v2=   869.7  notakeoff=  1085.8  cap3=   765.6  off(v2)=8/20  t=1.60s
+  seed 20260725: V1=  1297.4  cap1=  1062.0  v2=  1049.8  notakeoff=  1125.5  cap3=   893.5  off(v2)=4/20  t=1.41s
+  seed 20260726: V1=  1372.5  cap1=   910.3  v2=   730.8  notakeoff=  1197.0  cap3=   832.9  off(v2)=11/20  t=1.64s
+  seed 20260727: V1=  1255.4  cap1=   996.7  v2=   813.5  notakeoff=  1053.4  cap3=   725.6  off(v2)=7/20  t=1.58s
+  seed 20260728: V1=  1321.9  cap1=   982.1  v2=  1083.9  notakeoff=  1257.1  cap3=  1082.5  off(v2)=3/20  t=1.44s
+  seed 20260729: V1=  1225.2  cap1=   897.5  v2=   955.7  notakeoff=   992.0  cap3=   935.1  off(v2)=5/20  t=1.69s
+
+==============================================================================
+AGGREGATE (mean over seeds per size)
+==============================================================================
+  N=8: V1=   485.8  cap1=   338.1 ( 30.0%)  v2=   257.8 ( 46.4%)  notakeoff=   312.9 ( 35.4%)  cap3=   224.4 ( 53.6%)
+      decomp: multi-customer +16.4pp, multi-takeoff +11.0pp, cap3 +7.2pp
+      TW violations: V1 2.4  cap1 0.3  v2 0.0  notakeoff 0.0  cap3 0.0
+  N=12: V1=   694.7  cap1=   550.9 ( 20.7%)  v2=   415.1 ( 40.1%)  notakeoff=   515.2 ( 26.1%)  cap3=   370.7 ( 46.4%)
+      decomp: multi-customer +19.4pp, multi-takeoff +14.0pp, cap3 +6.3pp
+      TW violations: V1 6.0  cap1 4.0  v2 1.9  notakeoff 2.5  cap3 1.1
+  N=16: V1=   975.9  cap1=   719.8 ( 26.1%)  v2=   628.7 ( 35.6%)  notakeoff=   724.0 ( 25.9%)  cap3=   679.3 ( 30.2%)
+      decomp: multi-customer +9.5pp, multi-takeoff +9.7pp, cap3 -5.4pp
+      TW violations: V1 9.6  cap1 7.9  v2 6.0  notakeoff 6.2  cap3 5.3
+  N=20: V1=  1283.6  cap1=   944.6 ( 26.2%)  v2=   918.9 ( 27.9%)  notakeoff=  1084.8 ( 15.2%)  cap3=   884.6 ( 30.7%)
+      decomp: multi-customer +1.7pp, multi-takeoff +12.7pp, cap3 +2.8pp
+      TW violations: V1 13.5  cap1 10.9  v2 9.7  notakeoff 10.0  cap3 8.9
+
+==============================================================================
+PAIRED WILCOXON (all sizes pooled; negative mean diff = first is better)
+==============================================================================
+  v2 vs cap1 (multi-customer)        n= 40 mean_diff=  -83.24 p=9.43e-05 sig
+  v2 vs notakeoff (stop reuse)       n= 39 mean_diff= -106.77 p=5.46e-08 sig
+  cap3 vs v2 (cap3)                  n= 40 mean_diff=  -15.40 p=0.105 not sig
+
+self-check: V3 evaluator with no sorties == week06 truck-only EV on 40/40 instances (makespan, TW violations, recharges)

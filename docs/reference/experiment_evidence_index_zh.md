@@ -81,6 +81,8 @@ sanity check：abl_cap1（每架 1 顾客）≡ published(M&C 2015) 已发表启
 
 **标准算例复跑**：同一套启发式与评估器搬到官方 Solomon 拓扑（C101/C201/R101/RC101 × 3 个顾客窗口 × N=8/12/16/20 = 48 个实例）上重跑，增益分解为多顾客能力 **+7.2 ~ 8.9 pp**、多次起降 **+1.3 ~ 2.0 pp**、cap3 +3.9 ~ 7.7 pp；`abl_cap1` 仍逐实例等于 published。主增益源与合成算例一致，但增益大小依赖空间分布（均匀的 R101 为 14.1pp，聚类的 C101 为 5.7pp）。出处：`src/results/week07_ablation_std_summary.csv`（`week07_ablation_std.py`），图 `figures/ablation_std.png`，说明 `docs/weekly/week07_ablation_std_note_zh.md`。
 
+**V3（电动 + 时间窗）设定上的同一分解**：把消融搬到卡车有电池、可绕站充电、客户有时间窗的 V3 模型（40 算例 × 4 配置）后，多顾客能力仍是最大的单项增益，但只在中小规模成立——N=8/12 为 **+16.4 / +19.4 pp**，N=16 降到 +9.5 pp，N=20 只剩 **+1.7 pp**（整体 Wilcoxon p=9.4×10⁻⁵）；与此同时「同一停靠点多次起降」从次增益升为同等重要（**+11.0 ~ +14.0 pp**，p=5.5×10⁻⁸），cap3 整体不显著（p=0.105）。四个配置全部 100% 能量可行。也就是说这条归因依赖模型设定，报告里应与 FSTSP 那一组并列陈述。出处：`src/results/v3_ablation_summary.csv`（`v3_ablation.py`），图 `figures/v3_ablation.png`，说明 `docs/weekly/v3_ablation_note_zh.md`。
+
 ---
 
 ## 5. 规模衰减（N=30 / 50 / 100，5 种子）

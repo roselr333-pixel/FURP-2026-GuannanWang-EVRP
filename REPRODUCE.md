@@ -44,6 +44,7 @@ python -m pytest tests/ -q
 | 多目标权衡（距离 −32% / 时长 −34%，两轴占优） | `week06_multi_objective.py` | 5 权重 × 5 种子 | `src/results/week06_multi_objective.csv`、`figures/mo_*.png` |
 | 受控消融（多顾客能力为主增益 +8.6~12.1pp；sanity check 通过） | `week07_improvement_ablation.py` | 40 算例 | `src/results/week07_ablation_summary.csv` |
 | 核心消融搬到标准算例（多顾客能力 +7.2~8.9pp，与合成一致） | `week07_ablation_std.py`（+ `fstsp_instances.py`） | 48 个标准实例；确定性 | `src/results/week07_ablation_std_summary.csv`、`figures/ablation_std.png` |
+| V3（电动+时间窗）上的核心消融（多顾客 +16.4~19.4pp 只在中小规模；停靠点复用升为同等重要） | `v3_ablation.py`（+ `v3_ev_collab.py`） | 40 算例（10 种子 × N=8/12/16/20） | `src/results/v3_ablation_summary.csv`、`figures/v3_ablation.png` |
 | FSTSP 复现（V2 比 M&C 2015 短 10.2–14.2%） | `week07_fstsp_repro.py` | 40 算例 | `src/results/week07_fstsp_*.csv` |
 | 规模衰减（N=50 收益 3.4%、单机调度拒绝 101 万） | `week06_largeN.py` | 5 种子 | `src/results/week06_largeN_summary.csv` |
 | LNS 改进（相对贪心 +12.5~21.3%，缓冲规模衰减） | `week08_lns.py` | 60 算例（10 种子 × N=8/12/16/20/30/50）；确定性 | `src/results/week08_lns_summary.csv`、`figures/lns_vs_greedy.png` |

@@ -29,6 +29,7 @@ import os
 import sys
 import time
 import csv
+import itertools
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import week06_ground_air_evrp_tw as w6
@@ -196,31 +197,48 @@ def ev_lns_k(inst, route, trips, K, q=None):
     return r["makespan"] + TW_PENALTY * r["tw_viol"]
 
 
-def v3_greedy(inst, max_cust=2, rd=R_D):
-    """Route-and-reassign greedy on the EV + TW + drone model."""
+def v3_greedy(inst, max_cust=2, rd=R_D, multi_takeoff=True):
+    """Route-and-reassign greedy on the EV + TW + drone model.
+
+    max_cust      : customers per sortie (1-3)
+    multi_takeoff : when False, a truck stop may serve at most one sortie
+    """
     all_c = list(inst["customers"].keys())
     route = [0] + w6.nn_order(inst, all_c) + [0]
     trips = []
     offloaded = set()
-    protected = set()
+    protected = set()     # launch/recovery nodes; may not be offloaded later
+    blocked = set()       # only used when multi_takeoff is off
     base = ev_collab(inst, route, trips)
     cur_obj = ev_lns(inst, route, trips)   # penalised objective (TW + energy)
+
+    def usable(node):
+        return multi_takeoff or node not in blocked
 
     while True:
         best = None
         for i_pos in range(len(route) - 1):
+            ln = route[i_pos]
+            if not usable(ln):
+                continue
             for j_pos in range(i_pos + 2, len(route)):
-                ln, rn = route[i_pos], route[j_pos]
+                rn = route[j_pos]
+                if not usable(rn):
+                    continue
                 cands = [c for c in route[i_pos + 1:j_pos]
-                         if c != 0 and c not in protected]
+                         if c != 0 and c not in protected and c not in blocked]
                 if not cands:
                     continue
                 subsets = [(c,) for c in cands]
-                if max_cust >= 2:
+                if max_cust >= 2 and len(cands) >= 2:
                     for a in range(len(cands)):
                         for b in range(a + 1, len(cands)):
                             subsets.append((cands[a], cands[b]))
                             subsets.append((cands[b], cands[a]))
+                if max_cust >= 3 and len(cands) >= 3:
+                    for trio in itertools.combinations(cands, 3):
+                        for perm in itertools.permutations(trio):
+                            subsets.append(perm)
                 for custs in subsets:
                     new_route = [x for x in route if x not in custs]
                     new_trips = trips + [(ln, custs, rn)]
@@ -238,6 +256,9 @@ def v3_greedy(inst, max_cust=2, rd=R_D):
         offloaded.update(custs)
         protected.add(ln)
         protected.add(rn)
+        if not multi_takeoff:
+            blocked.add(ln)
+            blocked.add(rn)
         cur_obj = ev_lns(inst, route, trips)
     return route, trips, offloaded
 

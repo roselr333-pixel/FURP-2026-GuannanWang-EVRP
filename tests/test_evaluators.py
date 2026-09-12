@@ -17,6 +17,7 @@ import week07_improvement_ablation as ab
 import fstsp_instances as fi
 import cpsat_fstsp as X
 import v3_ev_collab as v3
+import drone_energy as DE
 
 SYNTHETIC = [("synth-n10", w6.make_instance(10, seed=20260720)),
              ("synth-n12", w6.make_instance(12, seed=20260721))]
@@ -156,6 +157,51 @@ def test_w6_collaborative_plan_is_physically_executable(tag, inst):
     assert r["plan_valid"] is True
     assert not math.isinf(
         w6.simulate(inst, r["route"], r["drone_trips"], w6.R_D)[1])
+
+@pytest.mark.parametrize("tag,inst", SYNTHETIC)
+def test_v3_no_sorties_equals_truck_only_ev(tag, inst):
+    """With an empty sortie set the V3 evaluator is the week06 truck-only EV route."""
+    all_c = list(inst["customers"].keys())
+    v1 = w6.truck_ev_route(inst, all_c, allow_recharge=True)
+    route = [0] + w6.nn_order(inst, all_c) + [0]
+    ev = v3.ev_collab(inst, route, [])
+    assert ev["makespan"] == pytest.approx(v1["makespan"])
+    assert ev["tw_viol"] == v1["tw_viol"]
+    assert ev["recharges"] == v1["recharges"]
+
+def test_drone_energy_reduces_to_range_model():
+    """BETA=0 with E_D=R_D and a non-binding payload cap is the range-only evaluator."""
+    rng = random.Random(5)
+    for trial in range(15):
+        inst = w6.make_instance(rng.choice([8, 10, 12]), seed=7000 + trial)
+        cust = list(inst["customers"].keys())
+        rng.shuffle(cust)
+        route = [0] + cust + [0]
+        trips = []
+        for _ in range(rng.randint(0, 2)):
+            i = rng.randrange(0, len(route) - 2)
+            j = rng.randrange(i + 1, len(route) - 1)
+            custs = tuple(rng.sample(cust, rng.choice([1, 2])))
+            trips.append((route[i], custs, route[j]))
+        mine = DE.makespan(inst, route, trips, beta=0.0, ed=DE.R_D,
+                           p_max=1e9)
+        ref = X.fstsp_makespan_clean(inst, route, trips)
+        if math.isinf(ref):
+            assert math.isinf(mine)
+        else:
+            assert mine == pytest.approx(ref)
+
+
+@pytest.mark.parametrize("tag,inst", SYNTHETIC)
+def test_drone_energy_rejects_overweight_sortie(tag, inst):
+    """A sortie whose payload exceeds the drone capacity is not a plan."""
+    route = [0, 1, 2, 3, 4, 0]
+    trip = (1, (2,), 3)
+    # demands are 5-15, so a capacity of 1 rejects every sortie
+    assert math.isinf(DE.makespan(inst, route, [trip], p_max=1.0))
+    assert not math.isinf(DE.makespan(inst, route, [trip], p_max=1e9))
+
+
 
 def test_fstsp_evaluator_matches_clean_model_on_random_plans():
     """week07.fstsp_simulate and cpsat_fstsp.fstsp_makespan_clean are one model."""

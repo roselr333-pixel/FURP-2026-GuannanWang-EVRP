@@ -40,6 +40,7 @@ separately, not translated from each other.
 | `weekly/week08_exact_gap_note_en.md` / `_zh.md` | exact optimum by CP-SAT and the heuristic gaps |
 | `weekly/week08_mc_benchmark_note_en.md` / `_zh.md` | the paper's original Murray & Chu test instances |
 | `weekly/v3_ev_collab_note_en.md` / `_zh.md` | V3: electric truck + drone + charging stations + time windows |
+| `weekly/v3_ablation_note_en.md` / `_zh.md` | the same core ablation under EV + time windows |
 
 ## Baselines and replications
 
