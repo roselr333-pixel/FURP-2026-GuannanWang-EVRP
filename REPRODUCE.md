@@ -50,6 +50,7 @@ python -m pytest tests/ -q
 | 标准算例 + K=1/2/3/5 + 最优调度 | `week08_multidrone_std.py`（+ `fstsp_instances.py`、`drone_scheduling.py`） | 16 个 Solomon 标准实例；确定性 | `src/results/week08_multidrone_std_summary.csv`、`week08_scheduling.csv`、`figures/multidrone_std.png` |
 | 论文原始算例（M&C 2015；c1K1 的 LNS/OFV=0.901） | `week08_mc_benchmark.py` + `fstsp_mc.py` | 36 个原始 10 顾客实例；确定性 | `src/results/week08_mc_benchmark_raw.csv` |
 | V3（电动卡车+无人机+充电+时间窗；相对纯电卡车 K=1 降 34.7%~53.4%、K=3 达 72.8%） | `v3_ev_collab.py` | 4 规模 × 10 种子 × K=1/2/3；确定性 | `src/results/v3_ev_collab_summary.csv`、`v3_ev_collab_raw.csv` |
+| 精确最优性 gap（CP-SAT 求小规模精确最优，对照我的贪心/LNS） | `week08_exact_gap.py` + `cpsat_fstsp.py` | n=8/10/12 × 5 种子；CP-SAT 上限 180s | `src/results/week08_exact_gap_raw.csv` / `_summary.csv` |
 | 配对显著性检验（Wilcoxon 符号秩） | `stat_tests.py` | 读 W6/W7/W8 的 CSV；numpy 手写、无新依赖 | `src/results/stat_tests.csv` |
 
 ## 4. 说明与边界

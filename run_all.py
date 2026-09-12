@@ -36,6 +36,7 @@ STEPS = [
     ("Std instances + K=1/2/3/5 + sched",   "week08_multidrone_std.py",       "Solomon-derived, optimal drone schedule + LB certificate"),
     ("M&C 2015 original FSTSP benchmark",   "week08_mc_benchmark.py",         "36 original instances, deterministic"),
     ("V3 EV+TW+drone collaboration",        "v3_ev_collab.py",                "4 sizes x 10 seeds, deterministic"),
+    ("Exact optimality gap (CP-SAT)",       "week08_exact_gap.py",            "small n; exact optimum + heuristic gaps"),
     ("Paired significance tests",           "stat_tests.py",                  "Wilcoxon; reads W6/W7/W8 CSVs"),
 ]
 

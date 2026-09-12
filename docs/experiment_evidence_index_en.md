@@ -202,6 +202,16 @@ TW violations and recharges (V1 -> V3l): N=8 is 2.4/0.9 -> 0/0; N=20 is 13.5/2.9
 
 **The electric and time-window constraints amplify the drone's value**: K=1 reaches 34.7%~53.4%, still above the 23%~45% the same methods reach in the FSTSP setting, and K=2/3 push to 57.7%~72.8%, because offloading shortens the truck route and removes most charging detours and late arrivals. **Model correction**: the original single-drone evaluator did not track the single drone's own availability, letting it "serve" several sorties at once (physically impossible) and understating the makespan (the earlier 56.7%~87.8% came from this); after sequential assignment by recovery time the true single-drone reduction is 34.7%~53.4%, and the multiple-drone figures are unaffected. The core FSTSP line (week06/08) uses the separate, correct `drone_scheduling` scheduler and was never affected. Source `v3_ev_collab.py` -> `v3_ev_collab_summary.csv`.
 
+**Exact optimality gap (CP-SAT, small instances)** (note `docs/week08_exact_gap_note_en.md`): CP-SAT computes the exact optimum of the physical FSTSP model (`cpsat_fstsp.solve_exact`; two independent checks: zero range reduces to a truck TSP matching Held-Karp, and n=5 matches an exhaustive enumeration). gap = (heuristic − optimum)/optimum:
+
+| size | proven optimal | greedy gap | LNS gap | original V2 plan valid |
+|---|---:|---:|---:|---:|
+| n=8 | **5/5** | **31.2%** | **16.5%** | 1/5 |
+| n=10 | 0/5 | 56.5% | 25.4% | 0/5 |
+| n=12 | 0/5 | 52.5% | 26.5% | 0/5 |
+
+**The LNS roughly halves the gap**, quantifying the improvement phase. At n≥10 optimality is not proved (the value is an upper bound, so the gap is a lower bound). The shared FSTSP evaluator has a physical defect: it does not check that the drone is back on the truck, so nested/crossing sorties are given a makespan although such a plan is infeasible — measured on 15 instances, the original V2 produces such an invalid plan in 14 of them (the FC-7-2/7-3 defect, on the FSTSP evaluator path). Source `week08_exact_gap.py` + `cpsat_fstsp.py` -> `week08_exact_gap_raw.csv` / `_summary.csv`.
+
 ---
 
 ## 9. Limitations
@@ -213,13 +223,13 @@ Grouped by nature; each item gives its "consequence + next step" so it reads as 
 - **The battery/charging layer is now re-introduced by V3**: V3 (electric truck + drone + charging stations + time windows) is implemented and compared against V1 (see §8); what is still missing is wiring **multiple drones** into V3.
 
 **Algorithmic-scope boundary**
-- **The greedy itself has no local search (W8 adds an improvement phase)**: applying intra-route 2-opt to V2's constructed truck route (accept only strict makespan improvement) yields only 0–1.76% (peak 1.76% at N=16; see `week07_fstsp_with_ls.log`) — showing V2's gain comes from the *collaborative structure* of offloading far-flung customers, not route fine-tuning. With the W8 destroy-and-repair LNS the gain over the greedy is a consistent +9% to +12.6% at every size (Wilcoxon overall p=3.6×10⁻⁹; see §8), beyond pure routing. **How far from global optimum remains unquantified** (unless a MILP bound is added), left for future work.
+- **The greedy itself has no local search (W8 adds an improvement phase)**: applying intra-route 2-opt to V2's constructed truck route (accept only strict makespan improvement) yields only 0–1.76% (peak 1.76% at N=16; see `week07_fstsp_with_ls.log`) — showing V2's gain comes from the *collaborative structure* of offloading far-flung customers, not route fine-tuning. With the W8 destroy-and-repair LNS the gain over the greedy is a consistent +9% to +12.6% at every size (Wilcoxon overall p=3.6×10⁻⁹; see §8), beyond pure routing. **How far from global optimum is now quantified in §8** (CP-SAT exact optimum; n=8 proven: greedy +31.2%, LNS +16.5%).
 
 **Empirical-validation boundaries**
 - **Synthetic instances extended to 100, but the effective collaboration interval lies at N ≤ 50**: my truck-drone experiments use randomly generated synthetic instances and do not adopt the field's standard large-scale benchmark sets (e.g., the Solomon-derived FSTSP instances of Murray & Chu 2015 — which this project reproduced within their parameter range in W7; or the Masmoudi et al. 2018 instance set). At N=100 the synergy collapses to 2.3% and V2 averages 71.4/100 late customers (TW feasibility breaks down); extrapolation to real large scale needs caution. The W8 LNS lifts the N=50 collaboration benefit from the greedy's 17.6% to 28.1%, slowing the decay, but it is still the same synthetic instances and setting, so the boundary is unchanged. **W8 extension 2 re-ran 16 standard instances built from official Solomon topologies (K=1/2/3/5) with the same conclusion**; **the original Murray & Chu (2015) instances were also downloaded** (36 ten-customer instances, see §8), so the results no longer rest on synthetic or rescaled Solomon data alone. What is still missing is standard-benchmark validation at larger sizes (N > 50).
 - **Drone scheduling: provably optimal on about half the configs, unproven at scale**: with the lower bound (the larger of every sortie on its own drone, and total flight divided by K) as a certificate, greedy reaches that bound on 31/64 configs (so it is optimal there) and is only 0.196% above the exact optimum where that is computable (<= 14 sorties). But with many sorties the bound is loose and the possible gain is bounded only by mean 2.46% (max 33.40%) -- **scheduling optimality at large multi-drone scale is not proven**.
 - **Time windows / energy are now covered by V3, which is also extended to multiple drones**: V3 stacks the week06 battery, charging stations and time windows back into the truck-drone model (see §8), reaching 34.7%~53.4% over the truck-only EV baseline at K=1 and 57.7%~72.8% at K=2/3, removing most late arrivals and charging detours. V3 is now tested with K=1/2/3, and time windows are still a penalty in the search rather than a hard constraint (the violation count is reported).
-- **No MILP lower bound replicated**: baselines are anchored to BKS (literature optimum), not a self-proven bound. Computing exact bounds for this NP-hard problem is itself a separate research contribution, beyond this project's scope; absolute quality is therefore literature-anchored, not self-certified.
+- **The exact optimum is now computed at small scale (§8); at larger scale it is still unprovable**: CP-SAT solves the physical FSTSP model exactly — n=8 is proven optimal (greedy +31.2%, LNS +16.5%), while n=10/12 give an upper bound on the optimum within 180s (so those gaps are lower bounds). Exact optima / bounds at larger scale remain open and are the natural next improvement. Baseline absolute quality is still anchored to BKS (literature optimum).
 - **Coarse MO front**: the weighted-sum greedy gives a "partial / inner" front and may miss non-convex Pareto regions; it is not a full Pareto solver (see §3). For a complete front, the natural next step is ε-constraint or NSGA-II (as in peer Xie's P-ACO/NSGA-II).
 
 ---
@@ -241,6 +251,7 @@ Grouped by nature; each item gives its "consequence + next step" so it reads as 
 | Drone scheduling | `drone_scheduling.py` | `week08_scheduling.csv` | — |
 | Original M&C benchmark | `week08_mc_benchmark.py` + `fstsp_mc.py` | `week08_mc_benchmark_raw.csv` | — |
 | V3 (electric + drone + TW) | `v3_ev_collab.py` | `v3_ev_collab_raw.csv` / `_summary.csv` | — |
+| Exact optimality gap (CP-SAT) | `week08_exact_gap.py` + `cpsat_fstsp.py` | `week08_exact_gap_raw.csv` / `_summary.csv` | — |
 | Significance tests | `stat_tests.py` | `stat_tests.csv` | — |
 | Schneider replication | `schneider_evrptw.py` + `schneider_bks_compare.py` + `plot_schneider_routes.py` | `schneider_evrptw_baseline.csv` / `schneider_evrptw_bks_comparison.csv` | `schneider_routes.png` / `schneider_vehcomp.png` |
 | FSTSP reproduction | `week07_fstsp_repro.py` | `week07_fstsp_raw.csv` / `_summary.csv` | — |
