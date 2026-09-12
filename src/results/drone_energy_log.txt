@@ -1,0 +1,55 @@
+==============================================================================
+Core ablation under the drone energy / payload model
+==============================================================================
+instances: synthetic 10 seeds x [8, 12, 16, 20] = 40; standard 4 families x 3 windows x [8, 12, 16, 20] = 48
+BETA values: [0.0, 0.02, 0.04]   ALPHA=1.0  E_D=160.0  P_MAX=30.0
+reference: range-only model is R_D=160.0 (BETA=0, E_D=R_D)
+  hardware: Intel64 Family 6 Model 183 Stepping 1, GenuineIntel | 20 logical cores | RAM 31.8GB
+  env: python 3.13.14 | Windows-11-10.0.26200-SP0
+
+==============================================================================
+BETA = 0.0
+==============================================================================
+  synthetic N= 8: truck=  391.3  pub= 23.9%(ok 1.00)  cap1= 23.9%  v2= 34.5%  notakeoff= 32.1%  cap3= 36.8%   multi-cust +10.6pp  takeoff +2.4pp  cap3 +2.3pp
+  synthetic N=12: truck=  579.4  pub= 18.8%(ok 1.00)  cap1= 18.8%  v2= 29.0%  notakeoff= 25.5%  cap3= 29.2%   multi-cust +10.2pp  takeoff +3.5pp  cap3 +0.2pp
+  synthetic N=16: truck=  774.8  pub= 16.6%(ok 1.00)  cap1= 16.6%  v2= 28.7%  notakeoff= 24.3%  cap3= 33.5%   multi-cust +12.1pp  takeoff +4.4pp  cap3 +4.8pp
+  synthetic N=20: truck= 1022.3  pub= 16.2%(ok 1.00)  cap1= 16.2%  v2= 24.8%  notakeoff= 22.6%  cap3= 25.8%   multi-cust +8.6pp  takeoff +2.2pp  cap3 +1.0pp
+  standard  N= 8: truck=  260.2  pub= 17.2%(ok 1.00)  cap1= 17.2%  v2= 25.7%  notakeoff= 23.0%  cap3= 29.5%   multi-cust +8.5pp  takeoff +2.7pp  cap3 +3.8pp
+  standard  N=12: truck=  402.6  pub= 15.5%(ok 0.83)  cap1= 15.0%  v2= 19.9%  notakeoff= 19.5%  cap3= 21.4%   multi-cust +4.9pp  takeoff +0.4pp  cap3 +1.5pp
+  standard  N=16: truck=  570.3  pub= 14.4%(ok 0.92)  cap1= 13.8%  v2= 20.1%  notakeoff= 18.9%  cap3= 21.2%   multi-cust +6.3pp  takeoff +1.2pp  cap3 +1.1pp
+  standard  N=20: truck=  713.7  pub= 13.0%(ok 0.92)  cap1= 12.8%  v2= 19.6%  notakeoff= 17.3%  cap3= 22.7%   multi-cust +6.8pp  takeoff +2.3pp  cap3 +3.1pp
+
+==============================================================================
+BETA = 0.02
+==============================================================================
+  synthetic N= 8: truck=  391.3  pub= 24.7%(ok 0.90)  cap1= 23.9%  v2= 30.8%  notakeoff= 29.6%  cap3= 34.0%   multi-cust +6.9pp  takeoff +1.2pp  cap3 +3.2pp
+  synthetic N=12: truck=  579.4  pub= 19.3%(ok 0.70)  cap1= 19.4%  v2= 27.6%  notakeoff= 25.2%  cap3= 28.0%   multi-cust +8.2pp  takeoff +2.4pp  cap3 +0.4pp
+  synthetic N=16: truck=  774.8  pub= 15.1%(ok 0.40)  cap1= 17.2%  v2= 29.0%  notakeoff= 22.8%  cap3= 28.5%   multi-cust +11.8pp  takeoff +6.2pp  cap3 -0.5pp
+  synthetic N=20: truck= 1022.3  pub= 13.4%(ok 0.50)  cap1= 15.7%  v2= 23.0%  notakeoff= 19.4%  cap3= 21.5%   multi-cust +7.3pp  takeoff +3.6pp  cap3 -1.5pp
+  standard  N= 8: truck=  260.2  pub= 16.7%(ok 0.92)  cap1= 17.8%  v2= 25.0%  notakeoff= 22.9%  cap3= 28.3%   multi-cust +7.2pp  takeoff +2.1pp  cap3 +3.3pp
+  standard  N=12: truck=  402.6  pub= 12.4%(ok 0.58)  cap1= 15.7%  v2= 22.2%  notakeoff= 20.2%  cap3= 23.7%   multi-cust +6.5pp  takeoff +2.0pp  cap3 +1.5pp
+  standard  N=16: truck=  570.3  pub= 15.1%(ok 0.58)  cap1= 14.2%  v2= 19.5%  notakeoff= 17.9%  cap3= 20.1%   multi-cust +5.3pp  takeoff +1.6pp  cap3 +0.6pp
+  standard  N=20: truck=  713.7  pub= 13.1%(ok 0.42)  cap1= 11.3%  v2= 16.6%  notakeoff= 15.3%  cap3= 21.2%   multi-cust +5.3pp  takeoff +1.3pp  cap3 +4.6pp
+
+==============================================================================
+BETA = 0.04
+==============================================================================
+  synthetic N= 8: truck=  391.3  pub= 21.7%(ok 0.70)  cap1= 21.0%  v2= 34.5%  notakeoff= 29.4%  cap3= 34.0%   multi-cust +13.5pp  takeoff +5.1pp  cap3 -0.5pp
+  synthetic N=12: truck=  579.4  pub= 19.4%(ok 0.60)  cap1= 21.4%  v2= 25.9%  notakeoff= 23.3%  cap3= 25.4%   multi-cust +4.5pp  takeoff +2.6pp  cap3 -0.5pp
+  synthetic N=16: truck=  774.8  pub= 13.1%(ok 0.20)  cap1= 18.7%  v2= 24.2%  notakeoff= 20.9%  cap3= 24.1%   multi-cust +5.5pp  takeoff +3.3pp  cap3 -0.1pp
+  synthetic N=20: truck= 1022.3  pub= 16.4%(ok 0.20)  cap1= 18.2%  v2= 19.1%  notakeoff= 17.0%  cap3= 19.5%   multi-cust +0.9pp  takeoff +2.1pp  cap3 +0.4pp
+  standard  N= 8: truck=  260.2  pub= 16.7%(ok 0.92)  cap1= 17.8%  v2= 23.5%  notakeoff= 21.4%  cap3= 26.8%   multi-cust +5.7pp  takeoff +2.1pp  cap3 +3.3pp
+  standard  N=12: truck=  402.6  pub= 11.5%(ok 0.42)  cap1= 13.6%  v2= 20.4%  notakeoff= 19.0%  cap3= 20.9%   multi-cust +6.8pp  takeoff +1.4pp  cap3 +0.5pp
+  standard  N=16: truck=  570.3  pub= 17.7%(ok 0.42)  cap1= 15.8%  v2= 20.9%  notakeoff= 19.5%  cap3= 23.5%   multi-cust +5.1pp  takeoff +1.4pp  cap3 +2.6pp
+  standard  N=20: truck=  713.7  pub= 12.3%(ok 0.17)  cap1= 13.0%  v2= 17.0%  notakeoff= 14.7%  cap3= 18.5%   multi-cust +4.0pp  takeoff +2.3pp  cap3 +1.5pp
+
+==============================================================================
+MULTI-CUSTOMER GAIN vs PAYLOAD COEFFICIENT (pp, mean over sizes)
+==============================================================================
+  instance set | BETA=0.0 | BETA=0.02 | BETA=0.04
+  synthetic    |  +10.4 |   +8.6 |   +6.1
+  standard     |   +6.6 |   +6.1 |   +5.4
+
+  offload rate of the v2 configuration (customers/instance):
+  synthetic    |    4.2 |    4.3 |    4.0
+  standard     |    3.1 |    3.2 |    3.5

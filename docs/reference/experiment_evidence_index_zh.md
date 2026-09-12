@@ -83,6 +83,8 @@ sanity check：abl_cap1（每架 1 顾客）≡ published(M&C 2015) 已发表启
 
 **V3（电动 + 时间窗）设定上的同一分解**：把消融搬到卡车有电池、可绕站充电、客户有时间窗的 V3 模型（40 算例 × 4 配置）后，多顾客能力仍是最大的单项增益，但只在中小规模成立——N=8/12 为 **+16.4 / +19.4 pp**，N=16 降到 +9.5 pp，N=20 只剩 **+1.7 pp**（整体 Wilcoxon p=9.4×10⁻⁵）；与此同时「同一停靠点多次起降」从次增益升为同等重要（**+11.0 ~ +14.0 pp**，p=5.5×10⁻⁸），cap3 整体不显著（p=0.105）。四个配置全部 100% 能量可行。也就是说这条归因依赖模型设定，报告里应与 FSTSP 那一组并列陈述。出处：`src/results/v3_ablation_summary.csv`（`v3_ablation.py`），图 `figures/v3_ablation.png`，说明 `docs/weekly/v3_ablation_note_zh.md`。
 
+**无人机能耗/载荷模型下的同一消融**：给无人机加上载荷上限 `P_MAX` 与随载荷增长的能耗预算 `E_D`（`BETA=0` 时严格退化为原航程约束，300 个随机计划逐值校验通过）后，多顾客增益被削掉一截但方向不变——合成算例从 **+10.4pp 降到 +6.1pp**（BETA 0→0.04），标准算例从 +6.6pp 降到 +5.4pp；cap3 不再带来增益（−0.5~+0.4pp）。另一个结果是可行性：不感知能耗的已发表启发式计划在 BETA=0.04 时只有 42%（合成）/48%（标准）能量可行，而我的贪心在每一档 BETA 上都是 100% 可行。出处：`src/results/drone_energy_summary.csv`（`drone_energy_ablation.py`），图 `figures/drone_energy.png`，说明 `docs/weekly/drone_energy_note_zh.md`。
+
 ---
 
 ## 5. 规模衰减（N=30 / 50 / 100，5 种子）
