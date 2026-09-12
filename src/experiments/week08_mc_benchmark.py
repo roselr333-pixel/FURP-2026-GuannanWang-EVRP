@@ -20,10 +20,12 @@ Run:
 import os
 import sys
 import csv
+import time
 import statistics
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import fstsp_mc as M
+import sysinfo as SI
 
 MAX_CUSTS = [1, 2]
 DRONES = [1, 2, 3]
@@ -41,6 +43,7 @@ def main():
 
     rows = []
     for name in M.list_instances():
+        t0 = time.perf_counter()
         inst = M.load_mc(name)
         tsp = M.mc_tsp_opt(inst, inst["tau"])
         row = {"instance": name, "uav_speed": inst["uav_speed_declared"],
@@ -62,8 +65,9 @@ def main():
                     (tsp - l) / tsp * 100, 1)
                 if inst["ofv"]:
                     row[f"{tag}_lns_over_ofv"] = round(l / inst["ofv"], 3)
+        row["runtime_s"] = round(time.perf_counter() - t0, 2)
         rows.append(row)
-        print("  " + name)
+        print(f"  {name}  ({row['runtime_s']:.2f}s)")
 
     # some instances carry a published OFV and some do not, so take the union
     # of all keys as the header
@@ -85,6 +89,10 @@ def main():
              f"LNS iters {ITERS}")
     L.append("truck = tau matrix, UAV = tauprime matrix "
              "(calibrated on all 36 instances)")
+    L.extend(SI.env_lines())
+    L.append(f"total wall-clock: {sum(r['runtime_s'] for r in rows):.1f}s "
+             f"over {len(rows)} instances "
+             f"(mean {statistics.mean([r['runtime_s'] for r in rows]):.2f}s/instance)")
     L.append("")
     L.append("mean over instances:")
     hdr = f"  {'config':10s} {'LNS':>8s} {'vs truck TSP':>13s}"

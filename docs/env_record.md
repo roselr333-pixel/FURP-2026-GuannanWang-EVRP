@@ -5,16 +5,19 @@
 
 ## 1. 系统与硬件
 - **操作系统**：Windows 11 (64-bit)
-- **CPU**：20 核（本机逻辑核数，记录于 `week03_experiment_log.txt` 的 Hardware 行）
-- **内存**：本机默认；OR-Tools 小规模算例内存占用 < 200 MB
+- **CPU**：Intel，20 个逻辑核
+- **内存**：32 GB（OR-Tools 小规模算例内存占用 < 200 MB）
+- 每个实验脚本现在会在自己的日志头部打印实测硬件（CPU / 逻辑核数 / 内存 / 平台），便于随结果一起引用。
 
 ## 2. 软件版本（已固定，保证可复现）
 - **Python**：3.13.14（使用 WorkBuddy 管理的隔离解释器，避免污染系统 Python）
 - **包管理器**：`venv` + `pip`
-- **主要依赖**：
+- **主要依赖**（见仓库根 `requirements.txt`）：
   - `ortools==9.15.6755` —— 求解器（VRP / VRPTW / EVRP-TW 基线）
-  - `numpy>=1.26`、`pandas>=2.0` —— 数据处理
+  - `pyvrp==0.14.0` —— 领域标准开源求解器基线
+  - `numpy>=1.26`、`pandas>=2.0` —— 数据处理与显著性检验
   - `matplotlib>=3.7` —— 路线可视化（PNG 图）
+  - `pytest>=8.0` —— `tests/` 下的回归测试（约 1 秒跑完）
 
 ## 3. 安装命令（精确、可复制）
 ```bash
@@ -23,9 +26,8 @@ python -m venv venv
 # Windows 激活：
 venv\Scripts\activate
 
-# 2) 安装固定版本依赖
-pip install -r src/requirements.txt
-# （requirements.txt 含：ortools==9.15.6755, numpy>=1.26, pandas>=2.0, matplotlib>=3.7）
+# 2) 安装固定版本依赖（requirements.txt 在仓库根）
+pip install -r requirements.txt
 ```
 
 ## 4. 运行命令（各周实验）

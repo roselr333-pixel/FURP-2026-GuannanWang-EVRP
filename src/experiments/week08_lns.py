@@ -54,6 +54,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import week06_ground_air_evrp_tw as w6
 import week07_fstsp_repro as f7
 import week07_improvement_ablation as ab
+import sysinfo as SI
 
 V_T = w6.V_T
 V_D = w6.V_D
@@ -295,6 +296,7 @@ def main():
              "sync enforced")
     L.append("methods: truck-only | V2 greedy | V2 greedy + 2-opt | V2 greedy + LNS")
     L.append(f"iterations per size (destroy-repair): {ITERS}")
+    L.extend(SI.env_lines())
     L.append("")
 
     raw_rows = []
@@ -333,6 +335,7 @@ def main():
                 "lns_mk": round(mk_lns, 1),
                 "lns_off": len(l_trips),
                 "lns_iters": iters,
+                "runtime_s": round(rt, 2),
             }
             row["imp_greedy_vs_truck_pct"] = round(
                 (mk_truck - mk_greedy) / mk_truck * 100, 1)

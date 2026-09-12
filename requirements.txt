@@ -8,3 +8,6 @@ pyvrp==0.14.0
 numpy>=1.26
 pandas>=2.0
 matplotlib>=3.7
+
+# Regression tests (tests/)
+pytest>=8.0

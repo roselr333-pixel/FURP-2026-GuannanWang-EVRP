@@ -90,3 +90,8 @@ AGGREGATE (mean over seeds per size)
   N=20: truck= 1022.3  greedy=  714.1 ( 29.9%)  opt2=  706.7  LNS=  624.5 ( 38.5%)  LNS-greedy=11.56%  1.4s/it
   N=30: truck= 1597.7  greedy= 1212.7 ( 24.4%)  opt2= 1201.2  LNS= 1094.2 ( 31.6%)  LNS-greedy= 9.09%  2.2s/it
   N=50: truck= 3114.1  greedy= 2569.1 ( 17.6%)  opt2= 2514.5  LNS= 2233.1 ( 28.1%)  LNS-greedy=12.56%  5.2s/it
+
+
+[raw -> E:\FURP-EVRP\roselr333-pixel-FURP-2026-GuannanWang-EVRP\src\results\week08_lns_raw.csv]
+[summary -> E:\FURP-EVRP\roselr333-pixel-FURP-2026-GuannanWang-EVRP\src\results\week08_lns_summary.csv]
+[log -> E:\FURP-EVRP\roselr333-pixel-FURP-2026-GuannanWang-EVRP\src\results\week08_lns_log.txt]

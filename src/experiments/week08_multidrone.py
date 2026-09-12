@@ -28,6 +28,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import week06_ground_air_evrp_tw as w6
 import week07_fstsp_repro as f7
 import week08_lns as L
+import sysinfo as SI
 
 V_D = w6.V_D
 SERVICE = w6.SERVICE
@@ -143,6 +144,7 @@ def main():
               f"service={SERVICE}")
     L_.append("K-drone evaluator: K parallel serial drones; K=1 == W7/W8 "
               "single-drone evaluator")
+    L_.extend(SI.env_lines())
     L_.append("")
 
     raw_rows = []

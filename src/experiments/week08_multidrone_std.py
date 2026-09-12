@@ -31,6 +31,7 @@ import week08_multidrone as M
 import week08_lns as L
 import drone_scheduling as S
 import fstsp_instances as fi
+import sysinfo as SI
 
 DRONES = [1, 2, 3, 5]
 SIZES = [10, 20, 30, 50]
@@ -60,6 +61,7 @@ def main():
     Lg.append(f"families={fi.FAMILIES}  sizes={SIZES}  drones K={DRONES}")
     Lg.append("instances = Solomon topology, first n customers, rescaled to the "
               "synthetic cloud radius")
+    Lg.extend(SI.env_lines())
     Lg.append("")
 
     raw_rows = []

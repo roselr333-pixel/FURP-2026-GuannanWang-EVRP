@@ -25,3 +25,7 @@ AGGREGATE (mean over seeds per size)
   N=50 truck= 3114.1  K1: LNS= 2233.1 ( 28.1%) g=12.6%  K2: LNS= 2083.0 ( 32.9%) g=12.9%  K3: LNS= 1987.2 ( 36.0%) g=14.2%
 
 Reading: (a) LNS gain vs the K-drone greedy (g); (b) LNS makespan vs truck-only in %; growing K lowers makespan.
+
+[raw -> E:\FURP-EVRP\roselr333-pixel-FURP-2026-GuannanWang-EVRP\src\results\week08_multidrone_raw.csv]
+[summary -> E:\FURP-EVRP\roselr333-pixel-FURP-2026-GuannanWang-EVRP\src\results\week08_multidrone_summary.csv]
+[log -> E:\FURP-EVRP\roselr333-pixel-FURP-2026-GuannanWang-EVRP\src\results\week08_multidrone_log.txt]

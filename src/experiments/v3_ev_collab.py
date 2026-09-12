@@ -33,6 +33,7 @@ import csv
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import week06_ground_air_evrp_tw as w6
 import week08_lns as L
+import sysinfo as SI
 
 V_T = w6.V_T
 V_D = w6.V_D
@@ -264,6 +265,7 @@ def main():
         for s in range(N_SEEDS):
             seed = SEED_BASE + s
             inst = w6.make_instance(n, seed=seed)
+            t0 = time.perf_counter()
 
             # V1: truck-only electric vehicle
             v1 = w6.truck_ev_route(inst, list(inst["customers"].keys()),
@@ -304,6 +306,7 @@ def main():
                     row[f"V3l_K{K}_vs_K1_pct"] = round(
                         (row["V3l_K1_makespan"] - l["makespan"])
                         / row["V3l_K1_makespan"] * 100, 2)
+            row["runtime_s"] = round(time.perf_counter() - t0, 2)
             rows.append(row)
 
     summary = []
@@ -354,8 +357,12 @@ def main():
           "V3 -- electric truck + drone + charging + time windows (K drones)",
           "=" * 78,
           f"sizes={SIZES}  seeds={N_SEEDS}  base {SEED_BASE}  drones K={K_DRONES}",
-          "V1 = truck-only EV | V3g = EV+drone greedy | V3l = EV+drone greedy+LNS",
-          ""]
+          "V1 = truck-only EV | V3g = EV+drone greedy | V3l = EV+drone greedy+LNS"]
+    Lg.extend(SI.env_lines())
+    Lg.append(f"  total wall-clock: {sum(r['runtime_s'] for r in rows):.1f}s "
+              f"over {len(rows)} instances "
+              f"(mean {_mean([r['runtime_s'] for r in rows]):.2f}s/instance)")
+    Lg.append("")
     for s in summary:
         Lg.append(f"  N={s['size']:2d}: V1={s['V1_makespan']:8.1f}  "
                   f"V3g={s['V3g_makespan']:8.1f} ({s['V3g_imp_vs_V1_pct']:5.1f}%)  "
