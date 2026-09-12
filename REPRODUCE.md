@@ -57,6 +57,6 @@ python -m pytest tests/ -q
 ## 4. 说明与边界
 
 - **CSV 按 `.gitignore` 设计不入库**：结果靠脚本 + 种子本地重跑生成；仓库保留的是脚本、日志（`.txt` / `.log`）与图（PNG）。
-- **硬件**：Windows 11 / Python 3.13.14 / OR-Tools 9.15.6755 / Intel 20 逻辑核 / 32GB 内存（每个实验日志头部也会打印实测值；环境细节见 `docs/env_record.md`）。
+- **硬件**：Windows 11 / Python 3.13.14 / OR-Tools 9.15.6755 / Intel 20 逻辑核 / 32GB 内存（每个实验日志头部也会打印实测值；环境细节见 `docs/reference/env_record.md`）。
 - **续航 R 敏感性**在 2026-09-10 修复过一个 bug（之前 `mk_range` 未把续航传给模型，扫描恒为 50.5%）；修复后曲线见上方 §2。
-- **多目标为粗前沿**：加权和贪心，不是完整 NSGA-II / Pareto 求解器（见 `docs/experiment_evidence_index_zh.md` §3）。
+- **多目标为粗前沿**：加权和贪心，不是完整 NSGA-II / Pareto 求解器（见 `docs/reference/experiment_evidence_index_zh.md` §3）。

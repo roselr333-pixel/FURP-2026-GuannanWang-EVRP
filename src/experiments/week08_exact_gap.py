@@ -13,7 +13,7 @@ and reports the gap of each heuristic to the optimum. It also re-evaluates the
 project's V2 / LNS plans with the physical evaluator and records whether the
 sortie sets are valid, so that the reported gap compares like with like (the
 shared evaluator has enforced the same physical rules since 2026-09-13; see
-`docs/evaluator_physical_fix_note_en.md`).
+`docs/analysis/evaluator_physical_fix_note_en.md`).
 
 Proven-optimal runs are flagged; where CP-SAT hits the time limit the returned
 value is an upper bound on the optimum, so the reported gap is then a lower

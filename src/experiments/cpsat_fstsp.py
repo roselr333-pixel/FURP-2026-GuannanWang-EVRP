@@ -22,7 +22,7 @@ Both are defined on the same physically valid model:
 `week07_fstsp_repro.fstsp_simulate` enforces the same rules; the nested-sortie
 gap it used to have (sorties could overlap because the drone's return was never
 checked) was fixed on 2026-09-13, see
-`docs/evaluator_physical_fix_note_en.md`.
+`docs/analysis/evaluator_physical_fix_note_en.md`.
 
 Contents
 --------

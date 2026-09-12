@@ -58,7 +58,7 @@ README.md              this file
 REPRODUCE.md           how to rerun everything + conclusion → script → artifact
 run_all.py             one command to rerun all headline experiments
 requirements.txt       pinned dependencies
-docs/                  reports, notes, evidence index, failure cases
+docs/                  reference / analysis / weekly / baselines (index in docs/README.md)
 src/experiments/       all experiment code
 src/tools/             plotting / dashboard helpers
 src/results/           run logs (CSV outputs are regenerated locally)
@@ -70,13 +70,15 @@ Key documents:
 
 | Document | What it holds |
 |---|---|
-| `docs/progress_report_zh.md` / `_en.md` | mid-project self-review against the brief |
-| `docs/week06_depth_analysis_zh.md` / `_en.md` | the "why it works / when it works" conclusion chain |
-| `docs/experiment_evidence_index_zh.md` / `_en.md` | every citable number with its source and caveats |
-| `docs/formal_model_zh.md` / `_en.md` | the formal model: sets, parameters, variables, objective, hard vs soft constraints, and what is not modelled |
-| `docs/failure_cases_master.md` | 17 failure cases with constraint-level diagnosis |
-| `docs/configs_and_parameters.md` | instances, solver settings, seeds, path conventions |
-| `docs/v3_ev_collab_note_*`, `docs/week08_*_note_*`, `docs/week07_ablation_std_note_*`, `docs/schneider_evrptw_replication_*` | per-experiment notes |
+| `docs/analysis/progress_report_zh.md` / `_en.md` | mid-project self-review against the brief |
+| `docs/analysis/week06_depth_analysis_zh.md` / `_en.md` | the "why it works / when it works" conclusion chain |
+| `docs/reference/experiment_evidence_index_zh.md` / `_en.md` | every citable number with its source and caveats |
+| `docs/reference/formal_model_zh.md` / `_en.md` | the formal model: sets, parameters, variables, objective, hard vs soft constraints, and what is not modelled |
+| `docs/reference/failure_cases_master.md` | 17 failure cases with constraint-level diagnosis |
+| `docs/reference/configs_and_parameters.md` | instances, solver settings, seeds, path conventions |
+| `docs/weekly/*` | weekly notes and per-experiment notes (week 1-8, plus V3) |
+| `docs/baselines/*` | GA baseline report and the Schneider (2014) replication |
+| `docs/README.md` | the full document index |
 
 `src/experiments/` by theme:
 
@@ -107,7 +109,7 @@ Key documents:
 | Drone scheduling | naive rule provably optimal on 64/64 configs |
 | V3 (EV + TW + drone) | K=1 −34.7–53.4%, K=3 up to −72.8% vs truck-only EV |
 
-Full numbers and their caveats: `docs/experiment_evidence_index_zh.md`.
+Full numbers and their caveats: `docs/reference/experiment_evidence_index_zh.md`.
 
 ---
 
@@ -140,7 +142,7 @@ To earn the FURP certificate, all three of the following must hold:
 > FSTSP) and the added innovation (multi-customer drone sorties + stop reuse,
 > LNS, multi-drone, EV+TW integration).
 
-Weekly cadence (progress log in `docs/0-5_weekly.md`, meeting notes in
+Weekly cadence (progress log in `docs/weekly/0-5_weekly.md`, meeting notes in
 `docs/meeting_notes/`):
 
 - update the weekly log every week;

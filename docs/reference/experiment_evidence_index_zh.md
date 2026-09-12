@@ -1,0 +1,255 @@
+# 实验证据索引（Experiment Evidence Index）
+
+> 目的：把本项目所有**可引用数值**集中到一页，附数据出处与局限，便于核对与引用。
+> 所有数据均来自本项目自己的脚本与 CSV（`src/results/` 下），不含任何同学报告的结构或框架。
+> 配套文档：`docs/analysis/week06_depth_analysis_zh.md`（把下面这些数串成"为何有效、何时有效"的结论链）。
+
+---
+
+## 1. 三基线对比（纯卡车 VRPTW，56 个 Solomon 实例 vs BKS）
+
+出处：`src/results/baseline_consolidated.csv` / `_summary.csv`（由 `baseline_consolidated.py` 生成）。
+
+| 基线 | 相对 BKS 平均 gap | 角色 |
+|---|---:|---|
+| **PyVRP**（领域标准开源求解器） | **−3.0%** | 最强基线，社区公认 |
+| OR-Tools（商业求解器） | +7.2% | 主要对照基线 |
+| GA（自写，5 种子均值） | +36.6% ± 15.8% | 自写元启发，性能弱于前两者 |
+
+按算例族（gap vs BKS，PyVRP / OR-Tools / GA）：
+
+| 族 | n | PyVRP | OR-Tools | GA(±std) |
+|---|---:|---:|---:|---:|
+| C1 | 9 | −2.3% | +4.2% | +25.9% ± 24.2% |
+| C2 | 8 | −4.3% | +0.9% | +36.0% ± 16.3% |
+| R1 | 12 | −3.2% | +5.1% | +31.2% ± 8.2% |
+| R2 | 11 | −3.5% | +12.4% | +41.5% ± 6.0% |
+| RC1 | 8 | −2.2% | +6.4% | +30.6% ± 2.4% |
+| RC2 | 8 | −2.1% | +13.7% | +56.8% ± 5.1% |
+
+V2 是协同启发式，优化的是 makespan 驱动的同步目标，其"距离"不直接与这些纯距离最小化基线比较。将它们并列，是为了说明在标准卡车 VRPTW 上 PyVRP 能打到甚至略优于 BKS；本项目的增量在协同建模，而非单目标距离优化。OR-Tools 用 GUIDED_LOCAL_SEARCH、10 秒上限，本身是随机的，重跑约有 ±0.1 pp 波动（下表数字来自合并 CSV）。
+
+---
+
+## 2. 参数敏感性（5 种子均值 ± 标准差，n=12 除规模扫描外）
+
+出处：`src/results/week06_sensitivity.csv` + `figures/sensitivity_panels.png`（由 `week06_sensitivity.py` 生成；2026-09-13 主评估器物理化后重跑，见 `docs/analysis/evaluator_physical_fix_note_zh.md`）。
+
+benefit = (V1 纯卡车距离 − V2 协同距离) / V1 距离 × 100%。
+
+| 参数 | 扫描 | 协同收益（均值 ± std） | 解读 |
+|---|---|---|---|
+| 电池 Q | 120→500 | 41.2%→29.7%（±~8.8~11.6） | 电池越大，卡车越"自给"，无人机价值被稀释 |
+| **续航 R** | 60→200 | **15.4%→24.6%→32.4%→34.4%@160→34.4%@200** | 续航 <160 是真实瓶颈；160 后饱和 |
+| 每架次客户 K | 1→3 | 20.5%→34.4%→37.1%（±4.5~13.1） | 多顾客能力是主增益，与消融一致 |
+| 规模 N | 8→30 | 35.3%→32.1%（±3.0~12.2） | 规模越大协同收益越被稀释 |
+
+> 注：R 扫描在 2026-09-10 前因 `mk_range` 未把续航传给模型而恒为 50.5%（错误）；修复后如上。2026-09-13 主评估器物理化后整体数值下调（原 Q 55.8%→47.1%、R 15.5%→50.5%、K 25.3%→56.5%、N 63.8%→35.3%）。
+
+---
+
+## 3. 多目标权衡（距离 vs 时长，加权和扫描）
+
+出处：`src/results/week06_multi_objective.csv` + `figures/mo_*.png`（由 `week06_multi_objective.py` 生成）。
+
+| 变体 | 距离均值 | 时长均值(makespan) |
+|---|---:|---:|
+| V1 纯卡车 EV | 486.5 | 622.5 |
+| V2 协同（全部 w×种子均值） | 330.7 | 413.6 |
+
+- 距离 **−32%**、时长 **−34%**，V2 在**两个轴同时占优** V1（逐种子核对均成立）。
+- 权重 w ∈ {0, 0.25, 0.5, 0.75, 1.0}，5 种子；w 越大越偏距离、时长越长。
+- **局限**：用加权和标量化的贪心，不是完整 NSGA-II / Pareto 求解器，给出的前沿是"粗"的——这是方法局限，不是卖点。
+
+---
+
+## 4. 受控消融（5 配置同台，40 算例，size 8/12/16/20）
+
+出处：`src/results/week07_ablation_summary.csv`（由 `week07_improvement_ablation.py` 生成）。
+
+V2 相对纯卡车(Truck-only)的 makespan 改善：size 8 → 34.5%、12 → 29.0%、16 → 28.7%、20 → 24.8%。
+
+增益分解（各 size 的 pp 贡献）：
+
+| 增益来源 | 范围 | 结论 |
+|---|---|---|
+| **多顾客能力**（max_cust 1→2–3） | **+8.6 ~ 12.1 pp** | **主增益源** |
+| 多次起降（multi-takeoff） | +2.2 ~ 4.4 pp | 次增益 |
+| cap3（每架 3 顾客） | +0.6 ~ 8.9 pp | 多顾客能力的上限延伸 |
+
+sanity check：abl_cap1（每架 1 顾客）≡ published(M&C 2015) 已发表启发式，证明框架一致。
+
+**标准算例复跑（2026-09-13）**：同一套启发式与评估器搬到官方 Solomon 拓扑（C101/C201/R101/RC101 × 3 个顾客窗口 × N=8/12/16/20 = 48 个实例）上重跑，增益分解为多顾客能力 **+7.2 ~ 8.9 pp**、多次起降 **+1.3 ~ 2.0 pp**、cap3 +3.9 ~ 7.7 pp；`abl_cap1` 仍逐实例等于 published。主增益源与合成算例一致，但增益大小依赖空间分布（均匀的 R101 为 14.1pp，聚类的 C101 为 5.7pp）。出处：`src/results/week07_ablation_std_summary.csv`（`week07_ablation_std.py`），图 `figures/ablation_std.png`，说明 `docs/weekly/week07_ablation_std_note_zh.md`。
+
+---
+
+## 5. 规模衰减（N=30 / 50 / 100，5 种子）
+
+出处：`src/results/week06_largeN_summary.csv`（由 `week06_largeN.py` 生成）。
+
+| 规模 | V2 vs V1 收益 | 卸载率 | 会合否决数 | 平均 TW 违例 |
+|---|---:|---:|---:|---:|
+| N=30 | 8.6% | 11.3% | 12.2 万 | 20.4 / 30 |
+| N=50 | 3.4% | 5.2% | 101.2 万 | 39.0 / 50 |
+| N=100 | 0.5% | 2.6% | 2393.5 万 | 88.8 / 100 |
+
+N=50 时 V1（电池+充电）代价 ≈ 5670 vs V0（无电池）≈ 3094——电池约束本身在 N≥30 给卡车加近一倍代价，V2 无人机能绕开的充电路径有限，协同收益被稀释。到 **N=100** 协同收益坍缩至 0.5%、卸载率降至 2.6%、V2 平均 **88.8/100 顾客超时**（贪心本就不保证 TW 可行，`feasible` 仅指能量可行）；规模边界见 `figures/largen_scale_decay.png`，结论是**有效协同区间收窄到 N ≤ 30**（N=50 只剩 3.4%）。
+
+---
+
+## 6. 失败案例（17 条，1 条严格不可行）
+
+出处：`docs/reference/failure_cases_master.md`。最值得说的一条：N=50 密集算例上**会合可行性否决约 450 万次**，说明同步会合约束在大规模是主要瓶颈——与第 2、5 节的"规模越大收益越稀释"互相印证，共同划定方法适用边界。
+
+---
+
+## 7. Schneider (2014) E-VRPTW 复现（构造式贪心 vs BKS）
+
+出处：`src/results/schneider_evrptw_baseline.csv`（自写求解器，92 实例）与
+`src/results/schneider_evrptw_bks_comparison.csv`（18 个有 BKS 的实例：5 顾客 C5 集取自
+jmanzolli/E-VRPTW 引 Schneider 2014；100 顾客 _21 集取自 Adachi et al. 2022 引 Schneider 2014）。
+自写求解器是带同质多程车队的构造式贪心（先最小化车辆数、再最小化距离），在载重 + 时间窗
+（允许等待）+ 充电站满充下做可行性检查。图：`figures/schneider_routes.png`（4 个代表实例的
+路线地图，每面板标注 BKS 距离与车辆差距）、`figures/schneider_vehcomp.png`（18 实例车辆数 my vs BKS）。
+
+**局限**：BKS 路线几何未公开（次级文献只给距离值），所以对比在聚合层（距离 + 车辆数），
+而非无法制作的路线几何叠加。我的 92 个实例已与 jmanzolli/E-VRPTW 原版实例逐文件核对
+（仅空白差异），确认就是 Schneider 原版数据。求解器自 2026-09-10 起是确定的（顾客集按 ID
+排序迭代，消除 Python 每进程哈希随机化），因此下列数字重跑可精确复现。
+
+聚合（18 个有 BKS 的实例）：
+- 平均距离差距 **+50.7%**（绝对值均值；有符号均值 +50.1%；构造式贪心 vs Schneider/Adachi BKS）。
+- 平均车辆数：我方 **5.4** vs BKS **2.1**（差距 **+3.4**；差距最大在 100 顾客 _21 集——c201_21
+  车辆差距达 +12——那里需要 ALNS 级方法才能把顾客并成 BKS 的少数车辆；构造式贪心无法全局安排
+  多程车辆，因为后发的趟次出发太晚、赶不上早时间窗）。
+- 个别 C5 小赢：c103C5 −0.4%、r105C5 −4.4%（在少数小规模/宽松时间窗实例上我方贪心有竞争力；
+  大损失都在 100 顾客 + 紧时间窗实例上）。
+
+---
+
+## 8. LNS 改进 + 显著性检验（W8）
+
+出处：`src/results/week08_lns_summary.csv`（由 `week08_lns.py` 生成）；显著性 `src/results/stat_tests.csv`（`stat_tests.py`，numpy 手写无新依赖）；图 `figures/lns_vs_greedy.png`。
+
+在 V2 贪心解上加 destroy-repair 的 LNS（随机 / 最差 / 整趟毁坏 + 卡车 / 单顾客 / 双顾客修复 + 模拟退火接受），同一 FSTSP 评估器，10 种子 × 6 规模（N=8/12/16/20/30/50）：
+
+| 规模 | truck-only | V2 贪心 | 贪心+2-opt | 贪心+LNS | LNS vs 贪心 |
+|---|---:|---:|---:|---:|---:|
+| N=8 | 391.3 | 256.0 | 247.7 | **222.2** | **+12.51%** |
+| N=12 | 579.4 | 412.1 | 400.2 | **338.5** | **+16.78%** |
+| N=16 | 774.8 | 554.4 | 533.9 | **471.0** | **+13.29%** |
+| N=20 | 1022.3 | 767.2 | 746.3 | **594.4** | **+21.32%** |
+| N=30 | 1597.7 | 1270.1 | 1220.6 | **1037.4** | **+16.91%** |
+| N=50 | 3114.1 | 2641.3 | 2588.4 | **2188.4** | **+16.59%** |
+
+- LNS 相对贪心**所有规模稳定 +12.5%~+21.3%**，且不是噪声：配对 Wilcoxon 符号秩检验整体 **p = 1.7×10⁻¹⁰**，逐规模也都在 0.05 水平显著。
+- LNS 缓冲了规模衰减：贪心相对 truck-only 的降幅从 N=8 的 34.5% 掉到 N=50 的 15.2%，LNS 只从 43.1% 掉到 29.5%；N=50 时 LNS 仍有 29.5%。
+- 只对卡车路线做 2-opt 增益约 2%~3.2%，说明增益主要来自**无人机任务重分配与整体结构**，不是路线微调——与消融里「多顾客能力是主增益」一致。
+- 确定性：每算例一个由种子派生的 RNG、迭代预算固定，同种子重跑结果一致。
+
+配对 Wilcoxon 符号秩检验关键行（平均差为负 = 前者 makespan 更小；n = 非零配对数）：
+
+| 对比 | n | 平均差 | p |
+|---|---:|---:|---:|
+| 我的 V2 vs 已发表 M&C 2015 | 38 | −73.2 | 2.4×10⁻⁷ |
+| 我的 V2 vs abl_cap1（多顾客） | 38 | −73.2 | 2.4×10⁻⁷ |
+| 我的 V2 vs abl_notakeoff（多起降） | 23 | −37.7 | 2.9×10⁻⁵ |
+| LNS vs 贪心 V2 | 54 | −194.3 | 1.7×10⁻¹⁰ |
+| V2 vs V1（协同 vs 纯电） | 40 | −182.1 | 3.71×10⁻⁸ |
+
+**多无人机（W8 扩展，打破"单架"局限）**：K 架并行串行无人机，同算例同种子，K=1 与单架评估器数值一致。LNS 解相对 truck-only 的降幅：
+
+| 规模 | K=1 | K=2 | K=3 |
+|---|---:|---:|---:|
+| N=8 | 43.1% | 60.1% | **69.6%** |
+| N=20 | 41.6% | 51.2% | **54.0%** |
+| N=50 | 29.5% | 35.4% | **38.1%** |
+
+K 从 1 增到 3 全面提升（N=50：29.5%→38.1%），并抬高规模衰减曲线；LNS 在各 K 下仍有 +7%~+23%。配对 Wilcoxon：LNS K=3 vs K=1 与 K=2 vs K=1 整体均 **p=1.67×10⁻¹¹**、各规模显著。出处 `week08_multidrone.py` → `week08_multidrone_summary.csv`；图 `figures/multidrone.png`；说明 `docs/weekly/week08_multidrone_note_zh.md`。
+
+**标准算例 + 更多无人机 + 调度（W8 扩展二）**：改用官方 Solomon 拓扑（C101/C201/R101/RC101，前 n 顾客，统一缩放到与合成同 RMS 半径），K=1/2/3/5，n=10/20/30/50（16 个标准实例）。LNS 收益 vs truck-only：
+
+| 规模 | K=1 | K=2 | K=3 | K=5 |
+|---|---:|---:|---:|---:|
+| N=10 | 37.2% | 51.2% | 61.1% | **71.4%** |
+| N=50 | 27.5% | 38.4% | 42.7% | **46.8%** |
+
+无人机越多收益越高、并压平规模衰减（均匀随机的 R101 收益最高、聚类的 C101 最低）。**调度**：把"架次→无人机"分配当显式调度，greedy（最早可用）vs local（局部搜索）vs optimal（分支定界，架次 ≤ 14）+ 下界证书（取 max[每架次独占一架, 总飞行/K] 两项中较大者）。主评估器物理化后架次集合不再重叠，K 架无人机之间**没有竞争**，于是 **64/64 配置上 greedy == 下界（可证明最优）**、local 增益 **0.000%**、精确最优对照（32 个配置）naive 高 **0.000%**。出处 `week08_multidrone_std.py` + `drone_scheduling.py` + `fstsp_instances.py`；图 `figures/multidrone_std.png`；说明 `docs/weekly/week08_multidrone_std_note_zh.md`。
+
+**论文原始算例：Murray & Chu (2015) FSTSP**（说明 `docs/weekly/week08_mc_benchmark_note_zh.md`）：已从 Dell'Amico 团队公开托管处下载原始算例到 `src/instances/murray_chu_2015/`（36 个 10 顾客实例，11 个附文献 OFV）。随包 README 未说明 `tau`/`tauprime` 哪张是卡车，用**36/36 实例标定**：`tauprime` 反推速度与 README 声明的 UAV 速度（0.2/0.4/0.6）一致 ⇒ `tau` = 卡车、`tauprime` = 无人机。
+
+| 配置 | 相对 truck-only TSP | LNS / 文献 OFV |
+|---|---:|---:|
+| c1K1（严格 M&C 的 FSTSP：每架次 1 顾客、单无人机） | 21.7% | **0.901** |
+| c1K3 | 36.6% | 0.709 |
+| c2K3（我的多顾客扩展） | 37.9% | 0.684 |
+
+即**按 M&C 自己的 FSTSP 定义，我的 LNS 比随算例公布的 objective 好约 9.9%**。文件里没有无人机续航参数，按无限续航运行并报告最长飞行时间（各配置均值 25~30、最大约 62）。
+
+**V3：电动卡车 + 无人机 + 充电站 + 时间窗**（说明 `docs/weekly/v3_ev_collab_note_zh.md`）：把 week06 的电池 + 充电 + 时间窗叠回协同模型，并扩到多架无人机（K=1/2/3）。路线只列顾客、充电绕行由评估器动态插入，因此 LNS 的 destroy/repair 原样复用。每规模 10 种子：
+
+| 规模 | V1 纯电卡车 | V3+LNS K=1 | V3+LNS K=2 | V3+LNS K=3 |
+|---|---:|---:|---:|---:|
+| N=8 | 485.8 | 225.3 (**53.4%**) | 176.0 (63.5%) | 131.5 (**72.8%**) |
+| N=20 | 1283.6 | 832.8 (34.7%) | 817.7 (35.9%) | 669.6 (47.2%) |
+
+时间窗违例与充电次数（V1 → V3l）：N=8 为 2.4/0.9 → 0/0；N=20 为 13.5/2.9 → 7.5/1.5（K=1）。
+
+**电动 + 时间窗约束放大了无人机价值**：K=1 收益 34.7%~53.4%，仍高于同一批方法在 FSTSP 设定下的 23%~45%；K=2/3 进一步到 57.7%~72.8%。原因是卸载缩短卡车路线、省掉大部分充电绕行并消掉大部分时间窗违例。**模型修正**：原单架评估器未跟踪单架无人机自身可用性，允许"同时"执行多架次（物理不可能），把单架 makespan 压到虚假的低值（原文档 56.7%~87.8% 源于此）；按回收时刻串行分配修正后，单架真实降幅为 34.7%~53.4%，多架数值不受影响。核心 FSTSP 主线（week06/08）用独立的、正确的 `drone_scheduling` 调度器，未受影响。出处 `v3_ev_collab.py` → `v3_ev_collab_summary.csv`。
+
+**精确最优性 gap（CP-SAT，小规模）**（说明 `docs/weekly/week08_exact_gap_note_zh.md`）：用 CP-SAT 求物理 FSTSP 模型的精确最优（`cpsat_fstsp.solve_exact`；两项独立验证：航程=0 退化为 TSP 与 Held-Karp 一致，n=5 与全空间暴力枚举一致）。gap = (启发式 − 最优)/最优：
+
+| 规模 | 证明最优 | 贪心 gap | LNS gap | 原始 V2 计划物理有效 |
+|---|---:|---:|---:|---:|
+| n=8 | **5/5** | **31.2%** | **16.5%** | 5/5 |
+| n=10 | 0/5 | 58.0% | 26.4% | 5/5 |
+| n=12 | 0/5 | 49.1% | 23.5% | 5/5 |
+
+**LNS 把 gap 大致减半**，改进阶段的价值被定量。n≥10 未证最优（报的是最优上界，故 gap 为下界）。**共用的 FSTSP 评估器有一个物理缺陷**：它不检查无人机是否已回到卡车，嵌套/交叉架次会被赋予 makespan，而这样的计划不可实现——实测项目原始 V2 在 15 个实例里 14 个产出这种无效计划（FC-7-2/7-3 同类问题，出现在 FSTSP 评估器路径上）。出处 `week08_exact_gap.py` + `cpsat_fstsp.py` → `week08_exact_gap_raw.csv` / `_summary.csv`。（2026-09-13 更新：主评估器已物理化并全部重跑，这 15 个实例的 V2 计划现在 **5/5 全部物理有效**，见 `docs/analysis/evaluator_physical_fix_note_zh.md`。）
+
+---
+
+## 9. 局限
+
+按性质分三组；每条都给「后果 + 下一步」，避免写成单纯的弱点清单。
+
+**模型假设边界**
+- **每架次 2–3 顾客**：这是有意的简化，也划出了方法边界。无人机多顾客服务用 O(n⁴) 枚举，规模一大就不可行；要支持更多顾客需更轻量的搜索（如先聚类再分配）。更大的多顾客协同属于未来工作。
+- **V2 的电池/充电层已由 V3 叠回，且多无人机已接到 V3 上**：V3（电动卡车 + 无人机 + 充电站 + 时间窗，K=1/2/3）已实现并与 V1 对比（见 §8）。
+
+**算法能力边界**
+- **贪心本身无局部搜索（W8 已补上改进阶段）**：对 V2 构造出的卡车路线再做 intra-route 2-opt（仅接受严格改善 makespan），增益仅 0–1.76%（N=16 峰值 1.76%，见 `week07_fstsp_with_ls.log`）——说明增益来自「无人机卸掉远端顾客」的协同结构，而非路线微调。W8 加入 destroy-repair 的 LNS 后，相对贪心在各规模上稳定提升 +9%~+12.6%（Wilcoxon 整体 p=1.7×10⁻¹⁰，见 §8），不再只是路线微调。**离全局最优多远已在 §8 量化**（CP-SAT 精确最优，n=8 已证：贪心 +31.2%、LNS +16.5%）。
+
+**实验验证边界**
+- **合成算例规模扩展到 100，但有效协同区间收窄到 N ≤ 30**：我的卡车-无人机实验用随机几何生成的合成算例，未接入领域常用的标准大规模基准集（如 Murray & Chu 2015 基于 Solomon 派生的 FSTSP 算例——本项目 W7 已在其参数范围内复现；或 Masmoudi et al. 2018 的实例集）。N=100 时协同收益坍缩至 0.5%、V2 平均 88.8/100 顾客超时（TW 可行性崩溃），结论向真实大规模外推需谨慎。W8 的 LNS 把 N=50 的协同收益从贪心的 15.2% 抬到 29.5%、减缓了衰减，但仍是同一批合成算例与同一套设定，边界没有变。**W8 扩展二已用官方 Solomon 拓扑复跑 16 个标准实例（K=1/2/3/5），结论一致**；**并已下载 Murray & Chu (2015) 的原始 FSTSP 算例**（36 个 10 顾客实例，见 §8），不再是"只有合成 + 重缩放的 Solomon"。仍缺的是更大规模（N>50）的标准算例验证。
+- **无人机调度：物理化后全部可证明最优**：用 max[每架次独占一架, 总飞行/K] 的下界做证书，主评估器物理化后架次不再重叠、无人机之间无竞争，**64/64 配置 greedy == 下界（可证明最优）**、local 增益 0.000%。原先"31/64 可证 + 局部搜索略增益"是嵌套架次制造的假竞争。（局限：这只对物理化后的可行解成立；若架次真的重叠，调度竞争会重现。）
+- **主评估器已物理化，W6/W7/W8 已全部统一重跑**：`week07_fstsp_repro.fstsp_simulate` 与 `week06_ground_air_evrp_tw.simulate` 现在都拒绝嵌套/交叉架次、都要求无人机回收后才能执行下一个架次、都由卡车在回收点等待（返回 inf 表示不可行），W7/W8 与 W6 主线、`week06_largeN`、`stat_tests` 的 V2 vs V1 行已全部重跑（详见 `docs/analysis/evaluator_physical_fix_note_zh.md`）。数值整体下调但结论方向不变：W6 主线 V2 vs V1 从 42–55% 降到 **16–34%**，规模衰减从 27.6/12.1/2.3% 降到 **8.6/3.4/0.5%**；V0/V1 不涉及无人机，数值不变。
+- **W7/W8 的时间窗/电量已由 V3 补上，并扩到多架无人机**：V3 把 week06 的电池、充电站与时间窗叠回卡车-无人机模型（见 §8），该设定下协同收益 K=1 达 34.7%~53.4%、K=2/3 达 57.7%~72.8%，并消掉大部分时间窗违例与充电绕行。V3 已扩到 K=1/2/3 多架无人机；时间窗在搜索里仍是罚项而非硬约束（报告里如实给出违例数）。
+- **精确最优已在小规模上算出（§8）；大规模仍不可证**：用 CP-SAT 求物理 FSTSP 模型的精确最优——n=8 已证明最优（贪心 +31.2%、LNS +16.5%），n=10/12 在 180s 内给出的是最优**上界**（gap 因此是下界）。更大规模的精确最优/下界仍是开放项，也是模型可改进的方向。基线的绝对质量仍以 BKS（文献最优）锚定。
+- **多目标为粗前沿**：加权和贪心给出的是「部分/内点」前沿，可能漏掉非凸区域的 Pareto 点；它不是完整的 Pareto 求解器（见 §3）。要得完整前沿，自然的下一步是 ε-constraint 或 NSGA-II（同侪 Xie 的 P-ACO/NSGA-II 即此类）。
+
+---
+
+## 10. 数据出处一览（可直接重跑）
+
+| 结果 | 脚本 | CSV | 图 |
+|---|---|---|---|
+| 三基线 | `baseline_consolidated.py` | `baseline_consolidated.csv` / `_summary.csv` | `baseline_consolidated.png` / `pyvrp_family_gap.png` |
+| PyVRP 基线 | `baseline_pyvrp_vrptw.py` | `baseline_pyvrp_vrptw_results.csv` | `pyvrp_family_gap.png` |
+| GA 基线 | `baseline_ga_vrptw.py` | `baseline_ga_vrptw_results.csv` | — |
+| 敏感性 | `week06_sensitivity.py` | `week06_sensitivity.csv` | `sensitivity_panels.png` |
+| 多目标 | `week06_multi_objective.py` | `week06_multi_objective.csv` | `mo_scatter.png` / `mo_tradeoff.png` |
+| 消融 | `week07_improvement_ablation.py` | `week07_ablation_raw.csv` / `_summary.csv` | — |
+| 规模 | `week06_largeN.py` | `week06_largeN_results.csv` / `_summary.csv` | `largen_scale_decay.png` |
+| LNS 改进 | `week08_lns.py` | `week08_lns_raw.csv` / `_summary.csv` | `lns_vs_greedy.png` |
+| 多无人机 | `week08_multidrone.py`（+ week07 的 K 架评估器） | `week08_multidrone_raw.csv` / `_summary.csv` | `multidrone.png` |
+| 标准算例多无人机 | `week08_multidrone_std.py` + `fstsp_instances.py` | `week08_multidrone_std_raw.csv` / `_summary.csv` | `multidrone_std.png` |
+| 无人机调度 | `drone_scheduling.py` | `week08_scheduling.csv` | — |
+| 原始 M&C 算例基准 | `week08_mc_benchmark.py` + `fstsp_mc.py` | `week08_mc_benchmark_raw.csv` | — |
+| V3（电动+无人机+TW） | `v3_ev_collab.py` | `v3_ev_collab_raw.csv` / `_summary.csv` | — |
+| 精确最优性 gap（CP-SAT） | `week08_exact_gap.py` + `cpsat_fstsp.py` | `week08_exact_gap_raw.csv` / `_summary.csv` | — |
+| 显著性检验 | `stat_tests.py` | `stat_tests.csv` | — |
+| Schneider 复现 | `schneider_evrptw.py` + `schneider_bks_compare.py` + `plot_schneider_routes.py` | `schneider_evrptw_baseline.csv` / `schneider_evrptw_bks_comparison.csv` | `schneider_routes.png` / `schneider_vehcomp.png` |
+| FSTSP 复现 | `week07_fstsp_repro.py` | `week07_fstsp_raw.csv` / `_summary.csv` | — |
+
+种子约定：所有多种子实验都用固定种子集（GA 用 `20260717/20260801/20260815/20260901/20261001`，W6/W7/W8 用 `20260720` 起的连续种子）以保证可复现；CSV 按仓库约定不入库，靠脚本 + 种子在本地重新生成。
