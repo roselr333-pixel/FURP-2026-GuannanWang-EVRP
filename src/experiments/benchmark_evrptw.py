@@ -9,7 +9,7 @@ instances (not just the hand-made corridor from week04).
 HONESTY NOTE
 ------------
 Same as the VRPTW benchmark: instances are generated in Solomon format (customers)
-plus charging stations we place; exact published E-VRPTW files (Schneider 2014 /
+plus charging stations the script places; exact published E-VRPTW files (Schneider 2014 /
 Montoya 2016) could not be fetched (TLS-blocked hosts), so any BKS column is a
 literature reference only.
 
@@ -152,7 +152,7 @@ def solve_evrptw(inst, battery, allow_recharge, time_limit_s):
 
 def main():
     # variant=2 -> wide time windows, so the bottleneck is the BATTERY/
-    # charging constraint (what we want to demonstrate), not tight schedules.
+    # charging constraint (the behaviour under test), not tight schedules.
     plan = [
         ("C", 2, 25, 2),
         ("C", 2, 50, 3),

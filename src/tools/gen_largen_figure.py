@@ -7,7 +7,7 @@ Three panels (all read from src/results/week06_largeN_summary.csv):
   2. Drone offload rate (%)            -> collapses 11.3 -> 5.2 -> 2.6
   3. Time-window violation rate (%)     -> explodes 68.0 -> 78.0 -> 88.8
 
-This is an honest scale-boundary asset for the final report: as N grows the
+This is the scale-boundary figure for the final report: as N grows the
 drone can offload a shrinking fraction of customers, so the truck dominates and
 both the collaboration advantage and TW feasibility degrade.
 """

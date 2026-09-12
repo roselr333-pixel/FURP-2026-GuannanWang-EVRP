@@ -3,9 +3,9 @@ Baseline A — PyVRP as an additional, research-grade VRPTW solver.
 
 Motivation (benchmarked against Frank/Ziqi, who both use PyVRP): OR-Tools is a
 general CP-SAT solver; PyVRP is the dedicated VRP solver used throughout the
-EVRP literature. Adding it as a third baseline (next to OR-Tools and our
+EVRP literature. Adding it as a third baseline (next to OR-Tools and my
 self-written GA) directly strengthens the "baseline reproduction" part of the
-project. We solve the OFFICIAL SOLOMON VRPTW instances with PyVRP and compare
+project. The script solves the OFFICIAL SOLOMON VRPTW instances with PyVRP and compares
 the total distance to the published BKS.
 
 PyVRP reads VRPLIB Solomon files directly; no model construction needed.

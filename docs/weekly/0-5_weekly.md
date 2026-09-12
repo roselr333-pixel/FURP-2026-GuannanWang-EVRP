@@ -16,13 +16,13 @@ leave emails have **already been sent** (confirmed). Week 5 meeting was attended
 **Deferred items (per current plan — not started yet):** paper reading notes
 ( will add after reading the papers), choosing the paper to replicate
 (planned for 2026-07-08/09), and POMO / GA baselines (to be attempted at a later
-stage). These are marked as future work below.
+stage). These are listed as later tasks below.
 
 ### Lab-deliverable status
 | Lab | Required | Status after catch-up |
 |---|---|---|
 | W1 | smoke test + env record + reflection + plot | ✅ baseline, env record, route PNG, reflection |
-| W2 | recreate a baseline + compare at ≥2 scales | 🟡 OR-Tools baseline recreated & compared at 3 scales (10/20/40); POMO/GA recreation = future work |
+| W2 | recreate a baseline + compare at ≥2 scales | 🟡 OR-Tools baseline recreated & compared at 3 scales (10/20/40); POMO/GA recreation = later task |
 | W3 | fair comparison, ≥3 scales, summary table, report, failure cases | ✅ full harness + report + 3 failure cases |
 | W4 | ≥1 paper note + ≥1 new experiment + method improvement | 🟡 EVRP-TW experiment + 2-opt improvement done; paper notes **deferred** (to be added after reading, planned 2026-07-08/09) |
 | W5 | truck-drone formulation + sync note | ✅ heuristic baseline (depot-only launch) |
@@ -69,8 +69,8 @@ stage). These are marked as future work below.
 - Truck-drone v2 is a greedy heuristic (one customer per trip, no drone battery modelled yet).
 
 **Next steps**
-- Tune the vehicle fixed cost / objective so my solver uses a vehicle count closer to BKS (especially R2/RC2), and re-run the official Schneider / Montoya E-VRPTW set; optionally add a PyVRP baseline for a genuine external comparison.
-- After reading the truck-drone literature, add a drone-battery dimension and allow multiple customers per trip.
+- I will tune the vehicle fixed cost / objective so my solver uses a vehicle count closer to BKS (especially R2/RC2), re-run the official Schneider / Montoya E-VRPTW set, and optionally add a PyVRP baseline for a genuine external comparison.
+- After reading the truck-drone literature, I will add a drone-battery dimension and allow multiple customers per trip.
 
 **Hours spent (optional):** 5h (catch-up) + ~3h (2026-07-14)
 
@@ -97,8 +97,8 @@ stage). These are marked as future work below.
 - OR-Tools dimensions are monotonic, so "recharge" had to be modelled via a *negative* energy transit into charging stations, with `slack_max` set to the battery capacity. Took debugging to get right.
 
 **Next steps**
-- Add the EVRP-TW variant into the Week-3 fair-comparison harness (same instances/scales) so battery + charging are compared head-to-head with CVRP/VRPTW.
-- Choose the paper to replicate (planned 2026-07-08/09) and, after reading, add the paper notes.
+- I will add the EVRP-TW variant into the Week-3 fair-comparison harness (same instances/scales) so battery + charging are compared head-to-head with CVRP/VRPTW.
+- I will choose the paper to replicate (planned 2026-07-08/09) and, after reading, add the paper notes.
 
 **Hours spent (optional):** 15h (plus shared catch-up time)
 
@@ -129,7 +129,7 @@ stage). These are marked as future work below.
 - Instance generation must keep the *same* data across variants for fairness; a 2-opt that ignored time windows would break VRPTW feasibility, so the post-processing checks TW before accepting a move.
 
 **Next steps**
-- Test the 100+ "large" tier; add EVRP-TW and truck-drone variants into this harness; compare against an external baseline (PyVRP, or a GA/POMO baseline — POMO/GA are deferred to a later stage per the current plan).
+- I will test the 100+ "large" tier, add EVRP-TW and truck-drone variants into this harness, and compare against an external baseline (PyVRP, or a GA/POMO baseline — POMO/GA are deferred to a later stage per the current plan).
 
 **Hours spent (optional):** 15h (plus shared catch-up time)
 
@@ -145,14 +145,14 @@ stage). These are marked as future work below.
 - Studied Python and part of the machine-learning / RL background (programming foundation was weak at the start).
 - Looked at POMO but did **not** finish; only did basic learning.
 - *Retrospective (2026-07-07):* POMO was the wrong entry point. The project Lab reserves POMO/RL for students who already understand CVRP + neural training. Switched to the OR-Tools **classical VRPTW** path, which is now the foundation for Weeks 1–5.
-- *Lab deliverable status:* the Lab lists **OR-Tools as a valid starter path** (Step 1, option 1). We recreated the OR-Tools baseline and, in Week 3, compared it across **3 scales (10/20/40)** with a results table — this partially satisfies the Week-2 "recreate a baseline + compare at ≥2 scales" requirement **for the OR-Tools track**.
+- *Lab deliverable status:* the Lab lists **OR-Tools as a valid starter path** (Step 1, option 1). I recreated the OR-Tools baseline and, in Week 3, compared it across **3 scales (10/20/40)** with a results table — this partially satisfies the Week-2 "recreate a baseline + compare at ≥2 scales" requirement **for the OR-Tools track**.
 
 **Challenges & blockers**
 - Paper reading took a long time; many concepts were unfamiliar.
 - Spent time on POMO/ML without ever running a solver — this is what caused the slide in progress.
 
 **Next steps (still open)**
-- The Lab suggests also recreating a **GA** (py-ga-VRPTW) or **POMO** baseline and comparing methodologies. This is **deferred to a later stage** per the current plan; the current comparison is OR-Tools greedy vs OR-Tools + 2-opt.
+- The Lab mentioned recreating a **GA** (py-ga-VRPTW) or **POMO** baseline and comparing methodologies; I have **deferred it to a later stage** per the current plan; the current comparison is OR-Tools greedy vs OR-Tools + 2-opt.
 
 **Hours spent (optional):** 30h
 
@@ -170,6 +170,6 @@ stage). These are marked as future work below.
 - Added a standalone **Environment Record**: `docs/reference/env_record.md` (OS, Python, package manager, ortools version, exact install/run commands, hardware, solver params).
 
 **Next steps**
-- Move to literature + data formats (Week 2) and baseline reproduction on a standard instance (Week 3) — both done in the catch-up sprint.
+- I moved to literature + data formats (Week 2) and baseline reproduction on a standard instance (Week 3) — both done in the catch-up sprint.
 
 **Hours spent (optional):** 10h (setup) + 3h (baseline + plot + env record, 2026-07-07)

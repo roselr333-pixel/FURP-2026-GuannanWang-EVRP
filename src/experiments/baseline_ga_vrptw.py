@@ -4,7 +4,7 @@ Genetic-algorithm (GA) baseline for the official Solomon VRPTW benchmark.
 Purpose: a *self-implemented* metaheuristic baseline to sit next to OR-Tools,
 so the project is not "only ever calling a solver library". The GA solves the
 same 56 official Solomon 100-customer VRPTW instances that
-`benchmark_official_solomon.py` (OR-Tools) solves, and we compare GA vs
+`benchmark_official_solomon.py` (OR-Tools) solves, and I compare GA vs
 OR-Tools vs the published Best-Known Solution (BKS).
 
 Design (kept deliberately simple and explainable):
@@ -273,7 +273,7 @@ def savings_init(data):
 
 
 def force_fleet(routes, target, data):
-    """Split routes (longest first) until we reach `target` feasible routes,
+    """Split routes (longest first) until the loop reaches `target` feasible routes,
     so the GA competes at the same fleet size as the BKS/OR-Tools."""
     routes = [list(r) for r in routes]
     while len(routes) < target:

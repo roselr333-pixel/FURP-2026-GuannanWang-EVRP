@@ -16,7 +16,7 @@ truck. A sortie set that nests one sortie inside another (launch at 0, recover a
 makespan even though one drone cannot fly two overlapping sorties.
 
 Measured on the 15 instances at n=8/10/12, the project's original V2 produces
-such an invalid plan in **14 of 15 cases** (1/5 valid at n=8, 0/5 at n≥10). This (2026-09-13: the main evaluator is now physical and everything was re-run; the V2 plans are now physically valid on 15/15 instances, see `docs/analysis/evaluator_physical_fix_note_en.md`.)
+such an invalid plan in **14 of 15 cases** (1/5 valid at n=8, 0/5 at n≥10); with the main evaluator physical and everything re-run, the V2 plans are now valid on 15/15 instances. This
 is the same class of defect as FC-7-2 / FC-7-3, on the FSTSP evaluator's code
 path.
 

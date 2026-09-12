@@ -1,18 +1,18 @@
 """
 Consolidated baseline comparison for the ground-air EVRP-TW project.
 
-Merges the three truck-only (no-drone) VRPTW baselines we have produced onto
+Merges the three truck-only (no-drone) VRPTW baselines I have produced onto
 the 56 Solomon instances, all referenced to BKS (best known solution):
 
   - OR-Tools   : commercial solver, primary truck baseline
-  - GA         : our own written metaheuristic (5-seed mean), shown honestly
+  - GA         : my own metaheuristic (5-seed mean)
   - PyVRP      : community-standard open-source VRPTW solver (strongest)
 
-The point of consolidation is DEPTH, not more solvers: it lets us state, on one
-table, exactly where each baseline sits relative to BKS, and to position our
+Consolidating them states, on one
+table, exactly where each baseline sits relative to BKS, and positions my
 greedy truck-drone V2 correctly — V2 is a COLLABORATIVE heuristic that optimises
 a makespan-driven objective, so its distance is not directly comparable to these
-truck-only distance-minimising baselines. We report that honestly.
+truck-only distance-minimising baselines. I report that difference.
 
 Paths are resolved relative to this file, so the script runs from any CWD.
 

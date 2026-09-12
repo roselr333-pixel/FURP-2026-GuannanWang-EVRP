@@ -15,7 +15,7 @@ spirit of the Flying Sidekick TSP (Murray & Chu, 2015):
       (a) RANGE:  dist(i,k) + dist(k,j) <= DRONE_RANGE
       (b) RENDEZVOUS: the drone must land at j no later than the truck arrives
           at j  (drone may wait at j, but cannot land after the truck left)
-  * We greedily offload the customer that gives the biggest truck-distance
+  * The greedy offloads the customer that gives the biggest truck-distance
     saving, repeat until no beneficial/feasible trip remains.
 
 Makespan = max(truck completion time, drone completion time). The drone can

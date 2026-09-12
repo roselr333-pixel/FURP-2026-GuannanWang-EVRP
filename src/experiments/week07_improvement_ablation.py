@@ -1,7 +1,7 @@
 """
 Week 7 — Improvement + Ablation.
 
-The "improvement story" we established in week07_fstsp_repro was: my ground-air
+The "improvement story" from week07_fstsp_repro was: my ground-air
 collaborative heuristic (multi-customer drone flights, up to 2 customers per
 sortie, one stop may launch several sorties) beats the published M&C (2015)
 FSTSP heuristic (single-customer flights) by ~8-22% on identical instances.
@@ -10,8 +10,8 @@ This module turns that into the W7 deliverable the project page asks for:
 "test ONE improvement with fair comparisons" + an ablation that shows WHICH
 design choice drives the gain.
 
-We keep ONE shared evaluator (the serial-drone FSTSP completion time from
-week07_fstsp_repro) so every configuration is compared apples-to-apples, and we
+I keep ONE shared evaluator (the serial-drone FSTSP completion time from
+week07_fstsp_repro) so every configuration is compared apples-to-apples, and I
 vary exactly two knobs:
 
   knob A: max customers served by a single drone sortie  -> 1 / 2 / 3
@@ -32,7 +32,7 @@ Five configurations (all on the same 40 instances, same seeds, same evaluator):
                    launches.
   C4  imp_cap3    : my framework, max_cust=3, multi-takeoff ON.
                    A forward "improvement attempt" pushed one step further;
-                   reported honestly (may or may not help).
+                   reported as measured (may or may not help).
 
 Metrics per instance: truck-only completion time (no drone), each config's
 completion time, % improvement vs truck-only, # customers offloaded, runtime.

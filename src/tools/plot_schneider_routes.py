@@ -1,13 +1,13 @@
 """Plot Schneider (2014) E-VRPTW replication route maps + vehicle-count comparison.
 
-Honesty notes:
+Provenance notes:
 - BKS route geometry is NOT publicly available (only distance values from
   jmanzolli/E-VRPTW table and Adachi et al. 2022). So the "comparison" is:
-  (a) route MAPS of our own greedy (depot / stations / customers / recharge detours),
-  each annotated with our distance vs BKS distance and the gap %;
-  (b) a grouped bar of our vehicle count vs BKS vehicle count across the 18 instances
-  we benchmarked. This is an honest internal-vs-literature comparison, not a
-  route-geometry overlay we cannot produce.
+  (a) route MAPS of my constructive greedy (depot / stations / customers / recharge detours),
+  each annotated with my distance vs BKS distance and the gap %;
+  (b) a grouped bar of my vehicle count vs BKS vehicle count across the 18 instances
+  I benchmarked. This is an internal-vs-literature comparison, not a
+  route-geometry overlay I cannot produce.
 """
 import os, sys, csv
 import matplotlib
@@ -78,7 +78,7 @@ legend_elems = [
     Line2D([0], [0], color="#555555", label="Vehicle route (color = vehicle)"),
 ]
 fig.legend(handles=legend_elems, loc="lower center", ncol=4, fontsize=9, frameon=False)
-fig.suptitle("Schneider (2014) E-VRPTW — our constructive-greedy routes\n"
+fig.suptitle("Schneider (2014) E-VRPTW — my constructive-greedy routes\n"
              "(recharge detours show as kinks to a charging station and back)", fontsize=12)
 fig.tight_layout(rect=[0, 0.04, 1, 0.96])
 p1 = os.path.join(FIGDIR, "schneider_routes.png")
@@ -86,21 +86,21 @@ fig.savefig(p1, dpi=130)
 plt.close(fig)
 print("wrote", p1)
 
-# --- Figure 2: vehicle count comparison (our greedy vs BKS) across 18 instances ---
+# --- Figure 2: vehicle count comparison (my greedy vs BKS) across 18 instances ---
 inst_names = sorted(bks.keys())
 my_v = [int(bks[n]["my_vehicles"]) for n in inst_names]
 bk_v = [int(bks[n]["bks_vehicles"]) for n in inst_names]
 y = range(len(inst_names))
 fig2, ax2 = plt.subplots(figsize=(8.5, 9))
 h = 0.4
-ax2.barh([i + h/2 for i in y], my_v, height=h, color="#d62728", label="Our greedy")
+ax2.barh([i + h/2 for i in y], my_v, height=h, color="#d62728", label="My greedy")
 ax2.barh([i - h/2 for i in y], bk_v, height=h, color="#1f77b4", label="Schneider BKS")
 ax2.set_yticks(list(y))
 ax2.set_yticklabels(inst_names, fontsize=7)
 ax2.invert_yaxis()
 ax2.set_xlabel("Number of vehicles")
-ax2.set_title("Vehicle count: our greedy vs Schneider (2014) BKS\n"
-              "(BKS reachable only by an ALNS; our constructive greedy stays above it)", fontsize=10)
+ax2.set_title("Vehicle count: my greedy vs Schneider (2014) BKS\n"
+              "(BKS reachable only by an ALNS; my constructive greedy stays above it)", fontsize=10)
 ax2.legend(fontsize=9)
 fig2.tight_layout()
 p2 = os.path.join(FIGDIR, "schneider_vehcomp.png")

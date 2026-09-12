@@ -1,18 +1,18 @@
 """Schneider (2014) E-VRPTW — instance parser + constructive baseline solver.
 
-Provenance / honesty notes (verified 2026-09-10):
+Provenance notes (verified 2026-09-10):
 - Instances were fetched from a GitHub mirror (EllinorAndRegina/optimizing-the-evrp-using-alns-master-thesis).
-  We confirmed they are the Schneider ORIGINAL data (byte-identical / whitespace-only diff vs the
+  I confirmed they are the Schneider ORIGINAL data (byte-identical / whitespace-only diff vs the
   jmanzolli/E-VRPTW "E-VRPTW Instances" folder, which reports Schneider's CPLEX BKS). So the BKS
-  comparison in schneider_bks_compare.py is valid; we do NOT need the paper PDF to benchmark.
+  comparison in schneider_bks_compare.py is valid; I do NOT need the paper PDF to benchmark.
 - The solver is a *constructive greedy baseline* (feasibility-checked: capacity, time windows with
   waiting, battery with full recharge at stations). It is NOT a competitive metaheuristic.
-- Key modeling choice: we model a homogeneous fleet where a vehicle MAY serve several routes (multi-trip),
+- Key modeling choice: a homogeneous fleet where a vehicle MAY serve several routes (multi-trip),
   returning to the depot and recharging between trips, with the hierarchical objective MINIMISE VEHICLES
   first, then total distance. HONEST CAVEAT (verified 2026-09-10): a constructive greedy cannot globally
-  assign customers to multi-trip vehicles (later trips depart too late to catch early time windows), so our
+  assign customers to multi-trip vehicles (later trips depart too late to catch early time windows), so my
   vehicle count stays well above Schneider's BKS (e.g. c201_21: 15-16 vs 4). The remaining distance gap is
-  therefore honest heuristic-vs-ALNS quality, NOT a modeling mismatch. We report it as such.
+  therefore heuristic-vs-ALNS quality, NOT a modeling mismatch. I report it as such.
 - Recharge-time convention: time to recharge from soc to full = (Q - soc) * g (mirror parameter `g`).
 """
 import os, re, glob, csv, math, time

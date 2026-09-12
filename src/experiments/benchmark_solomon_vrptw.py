@@ -55,7 +55,7 @@ def _feasible_assignment(coords, demands, capacity):
     """Sweep + bin-pack customers into capacity-feasible vehicle groups.
 
     Returns a list of vehicles, each a list of customer node indices (1-based).
-    This guarantees a capacity-feasible starting solution exists, which we then
+    This guarantees a capacity-feasible starting solution exists, which is then
     use to derive time windows (so the instance is never trivially infeasible).
     """
     n = len(coords) - 1

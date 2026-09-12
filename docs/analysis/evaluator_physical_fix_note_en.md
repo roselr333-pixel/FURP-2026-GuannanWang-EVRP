@@ -59,7 +59,7 @@ figures (`lns_vs_greedy`, `multidrone`, `multidrone_std`, `sensitivity_panels`,
 | Scaling decay, offload rate (N=30/50/100) | 62.0% → 42.8% → 23.4% | **11.3% → 5.2% → 2.6%** |
 | Wilcoxon: V2 vs V1 (collaborative vs EV) | n=40, −424.3, p=3.7×10⁻⁸ | **n=40, −182.1, p=3.71×10⁻⁸** |
 
-Takeaways:
+Effects:
 
 - **The direction is unchanged; the magnitudes are smaller.** V2 still beats the
   published M&C heuristic (10–14%), and the ablation attribution (multi-customer

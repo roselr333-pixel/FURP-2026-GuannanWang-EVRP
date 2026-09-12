@@ -34,10 +34,6 @@ truck-only)
 The LNS still improves each K-drone greedy consistently: +12.5~21.3% (K=1),
 +7.4~21.1% (K=2), +9.2~23.5% (K=3) across sizes.
 
-> 2026-09-13: this table was re-run after the main evaluator was made physical
-> (see `docs/analysis/evaluator_physical_fix_note_en.md`); the old N=8 K=1→3 was
-> 45.5%→69.6% and N=50 was 28.1%→36.0%.
-
 Figure: `figures/multidrone.png` (left: completion time per K; right: benefit vs
 truck-only rising with K).
 

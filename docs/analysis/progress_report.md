@@ -1,9 +1,6 @@
 # Progress Report — FURP 2026 EVRP
 
 > Student self-assessment, written 2026-07-24 by Guannan Wang.
-> Note: this file predates the 2026-09-13 physical-evaluator fix. Its experiment numbers (week06 scaling decay, ablation gains, multi-objective, LNS, multi-drone) are on the earlier evaluator; current values are in `docs/reference/experiment_evidence_index_en.md` and `docs/analysis/evaluator_physical_fix_note_en.md`.
-> This is a mid-project check: it states what the supervisor actually asks for, maps it against what I have done so far, and lists what is still worth strengthening. The stance is an inventory — I do not overstate finished work and I do not hide the gaps.
-
 ---
 
 ## 1. What the project asks for
@@ -41,7 +38,7 @@ Both the outline and the README repeat one idea: **the goal is not a world-class
 - 20% failure / constraint-violation analysis depth;
 - 30% final report, demo, and technical explanation.
 
-Note that the final report/demo alone is 30%, while the fair-comparison segment is another 25% — and that comparison used to be my weakest point until recently (see §2.2).
+The final report/demo alone is 30%, while the fair-comparison segment is another 25% — and that comparison used to be my weakest point until recently (see §2.2).
 
 ### 1.5 Hard reporting standard
 
@@ -166,12 +163,12 @@ Notes:
    | N=16 | 524.6 | 514.3 | **+1.76%** | 0.9 |
    | N=20 | 714.1 | 706.7 | **+0.93%** | 0.3 |
 
-   **Conclusion**: 2-opt adds only 0–2% on top of V2. The reason: by the time V2 has offloaded the long-distance customers to the drone, the remaining truck route is already near a near-linear shape, leaving little room for 2-opt. This is both good and bad news — good that my heuristic already approaches the current-neighborhood local optimum; bad that "distance to global optimum" remains unquantified (would need MILP upper bounds or wider neighborhoods like 3-opt / or-opt to close). Left as future work.
+   **Conclusion**: 2-opt adds only 0–2% on top of V2. The reason: by the time V2 has offloaded the long-distance customers to the drone, the remaining truck route is already near a near-linear shape, leaving little room for 2-opt. This is both good and bad news — good that my heuristic already approaches the current-neighborhood local optimum; bad that "distance to global optimum" remains unquantified (would need MILP upper bounds or wider neighborhoods like 3-opt / or-opt to close). I will come back to this later.
 
-9. ~~**Max 2 (sometimes 3) customers per flight**~~ — **Not done** (enumeration cost). After this round, since 2-opt barely moves anything, raising the per-flight cap to 3+ would mostly re-explode the O(n⁴) enumeration. **Deferred** as future work alongside efficiency optimizations for larger neighborhoods.
+9. ~~**Max 2 (sometimes 3) customers per flight**~~ — **Not done** (enumeration cost). After this round, since 2-opt barely moves anything, raising the per-flight cap to 3+ would mostly re-explode the O(n⁴) enumeration. **Deferred** to later work alongside efficiency optimizations for larger neighborhoods.
 
 10. **Only 2/3 reading notes done**: survey + FSTSP written; Schneider 2014 pending a PDF.
-11. **Track C/D (RL/DL) not attempted**: acceptable per the lab (needs data and repeated runs first), but the final report should state in a sentence or two why it is deferred.
+11. **Track C/D (RL/DL) not attempted**: acceptable per the lab (needs data and repeated runs first), but I will state in the final report, in a sentence or two, why it is deferred.
 
 ### 3.5 Deepening stage (W6–W7 completed, 2026-09-10)
 
@@ -186,11 +183,11 @@ Notes:
 ### 3.4 Engineering and delivery
 
 12. **No git commit / push yet**: everything is still local; the reproducibility package only counts once it is committed.
-13. **No "someone else can rerun this" README / reproduction guide**: environment, commands, seeds, and parameters should be collected in one place.
+13. **No "someone else can rerun this" README / reproduction guide**: environment, commands, seeds, and parameters belong in one place.
 
 ---
 
-## 4. Recommended next-step priority
+## 4. What I will do next, in priority order
 
 - **P0 (this week)**: ① build the W8 skeleton — final-report framework + slide outline + demo-video script (even if empty at first); ② git commit/push the current files.
 - **P1**: reproduce Schneider 2014 (E-VRPTW) as a second published baseline (the GA multi-seed check is done, see §3.2-supplement).

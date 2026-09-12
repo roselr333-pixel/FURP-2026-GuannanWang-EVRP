@@ -9,7 +9,7 @@ using OR-Tools, and records:
   - runtime
   - textual route output
 
-It runs TWO phases so you can already see the "baseline vs improvement"
+It runs TWO phases so the "baseline vs improvement" contrast is visible
 story that the project asks for in Week 7:
   Phase A: greedy first solution (fast)
   Phase B: guided local search (better, uses a small time budget)

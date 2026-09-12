@@ -6,7 +6,7 @@ feasibility, runtime logs."
 
 This script loads a small Solomon-format VRPTW instance
 (`src/data/solomon_c101_small.txt`) and solves it with the same OR-Tools
-classical VRPTW approach used in Week 1, so we have a *reproducible* baseline
+classical VRPTW approach used in Week 1, so there is a *reproducible* baseline
 on a standard instance format (not just a hand-made toy).
 
 Run:

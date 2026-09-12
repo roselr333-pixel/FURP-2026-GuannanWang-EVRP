@@ -4,14 +4,14 @@ Week 4 — EVRP-TW: add battery capacity + charging stations.
 Goal (Week 4): "EVRP-TW constraints — metric table with time and battery
 violations."
 
-We extend the classical VRPTW with an electric-vehicle battery constraint.
+This extends the classical VRPTW with an electric-vehicle battery constraint.
 Following the OR-Tools fuel/recharge pattern:
   * cumul variable tracks ENERGY USED (starts at 0 = full battery);
   * travelling an arc adds energy consumed (positive);
   * at CHARGING STATIONS the used-energy is allowed to reset (recharge);
   * the used-energy must never exceed battery capacity (=> battery violation).
 
-We report, for several battery capacities, feasibility and number of recharges.
+It reports, for several battery capacities, feasibility and number of recharges.
 This is the "battery violation table" the project asks for.
 
 Run:

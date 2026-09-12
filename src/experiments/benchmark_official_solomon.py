@@ -8,16 +8,16 @@ locally because the network was blocked at the time), this script downloads the
 which ships each instance together with its published optimal/best-known
 solution (the `.sol` file, whose `Cost` line is the BKS distance).
 
-For every instance we:
+For every instance I:
   1. download & cache the official `.vrp` (instance) and `.sol` (BKS) files,
   2. parse the `.vrp` with `vrplib` (TSPLIB-style VRPTW format),
-  3. solve it with our OR-Tools VRPTW engine (PATH_CHEAPEST_ARC + Guided Local
+  3. solve it with my OR-Tools VRPTW engine (PATH_CHEAPEST_ARC + Guided Local
      Search, with a per-instance time limit),
   4. read the official BKS distance and vehicle count from the `.sol`,
-  5. report our distance / vehicles and the gap to BKS.
+  5. report my distance / vehicles and the gap to BKS.
 
 Distances follow the Solomon convention (real Euclidean distance). OR-Tools is
-an integer solver, so we scale coordinates' distances by DIST_SCALE (=10, one
+an integer solver, so the script scales coordinates' distances by DIST_SCALE (=10, one
 decimal place, matching the one-decimal BKS costs) and divide back when
 reporting.
 

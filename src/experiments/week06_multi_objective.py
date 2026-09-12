@@ -2,18 +2,18 @@
 Week 6 (extension) — Multi-objective trade-off for ground-air EVRP-TW.
 
 Benchmarked against Xie's P-ACO Pareto archive: instead of a single
-distance objective, we report the solution on TWO axes that genuinely
+distance objective, I report the solution on TWO axes that genuinely
 trade off in the synchronous truck-drone model:
     f1 = total distance (truck route length)        -- cost
     f2 = makespan (route completion time)            -- service time
     f3 = total energy (truck + drone, proxy)         -- environment
 
-We do NOT pretend to run a full NSGA-II / Pareto solver. We use an honest
+I do NOT run a full NSGA-II / Pareto solver. I use a
 weighted-sum scalarisation: the greedy insertion score is
     score = w * (distance saving) + (1-w) * (makespan reduction)
 and sweep w in [0, 0.25, 0.5, 0.75, 1.0]. w=0 reproduces the standard V2
 (makespan-driven); w=1 is a distance-only greedy. The cloud of (f1, f2)
-points across w and seeds traces the achievable trade-off front, and we
+points across w and seeds traces the achievable trade-off front, and I
 show V2 dominates the truck-only (V1) baseline on both axes.
 
 Outputs:
@@ -51,7 +51,7 @@ def drone_flight_dist(inst, trips):
 
 
 def my_v2_weighted(inst, w, max_cust=2, multi_takeoff=True, drone_range=None):
-    """Copy of my_v2_param with weighted-sum insertion score (honest MO)."""
+    """Copy of my_v2_param with a weighted-sum insertion score (MO variant)."""
     rd = drone_range if drone_range is not None else w6.R_D
     all_c = list(inst["customers"].keys())
     route = [0] + w6.nn_order(inst, all_c) + [0]

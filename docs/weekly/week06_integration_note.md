@@ -69,9 +69,6 @@ Minimize makespan = max(truck completion time, drone completion time).
 
 ### 4.1 Main comparison (mean over 40 instances)
 
-> Re-run on 2026-09-13 under the physical evaluator; the numbers below are
-> updated to that model (see `docs/analysis/evaluator_physical_fix_note_en.md`).
-
 | Size | V0 (ref. lower) | V1 (base) | V2 (prop.) | V2 vs V1 | mean offload | offload % | V2 feas. |
 |---|---:|---:|---:|---:|---:|---:|---:|
 | 8 | 434.7 | 485.8 | 324.2 | **−33.6%** | 2.5 / 8 | 31.2% | 100% |
@@ -120,8 +117,8 @@ This is not to say learning methods are unimportant — only that, from the "bui
 
 ## 6. Next steps
 
-1. Fold the data and conclusions of this note into the final report and the checkpoint.
-2. Reproduce one paper method (Schneider 2014 or Murray & Chu 2015) and place it in the same comparison table, so my heuristic and a published method sit side by side.
-3. Optionally raise the per-flight customer cap to 3 and optimize the enumeration, or scale up to 30+ customers to see the trend.
+1. I will fold the data and conclusions of this note into the final report and the checkpoint.
+2. I will reproduce one paper method (Schneider 2014 or Murray & Chu 2015) and place it in the same comparison table, so my heuristic and a published method sit side by side.
+3. I may raise the per-flight customer cap to 3 and optimize the enumeration, or scale up to 30+ customers to see the trend.
 
 Files: `src/experiments/week06_ground_air_evrp_tw.py`, `src/results/week06_ground_air_results.csv` (40 raw rows), `src/results/week06_ground_air_summary.csv` (mean table per size), `src/results/week06_failure_cases.csv`.

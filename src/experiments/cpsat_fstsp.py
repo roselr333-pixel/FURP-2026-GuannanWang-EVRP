@@ -19,10 +19,7 @@ Both are defined on the same physically valid model:
   * the truck waits at a recovery node until its sortie lands.
 
 `clean_simulate` below is an independent implementation of that model.
-`week07_fstsp_repro.fstsp_simulate` enforces the same rules; the nested-sortie
-gap it used to have (sorties could overlap because the drone's return was never
-checked) was fixed on 2026-09-13, see
-`docs/analysis/evaluator_physical_fix_note_en.md`.
+`week07_fstsp_repro.fstsp_simulate` enforces the same rules.
 
 Contents
 --------

@@ -39,10 +39,6 @@ drones give a higher benefit (46.8%~71.4% at K=5) and further flatten the
 scaling-decay curve. By family, uniform-random R101 benefits most and clustered
 C101 least -- as expected, dispersed customers suit the drone better.
 
-> 2026-09-13: this table was re-run after the main evaluator was made physical
-> (see `docs/analysis/evaluator_physical_fix_note_en.md`); the old N=10 K=1→5 was
-> 36.7%→71.4% and N=50 was 23.3%→48.6%.
-
 ## 4. Drone scheduling: how far is the naive rule from optimal?
 
 Treating the sortie-to-drone assignment as an explicit scheduling problem, three

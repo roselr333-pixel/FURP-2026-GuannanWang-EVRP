@@ -1,7 +1,7 @@
-"""Compare our constructive E-VRPTW baseline to Schneider (2014) best-known solutions.
+"""Compare my constructive E-VRPTW baseline to Schneider (2014) best-known solutions.
 
 BKS values are Schneider et al. (2014) published best-known solutions, taken from
-open secondary sources (we could not access the original paper PDF):
+open secondary sources (the original paper PDF was not accessible):
   - C5 small instances (5 customers): from jmanzolli/E-VRPTW, which reports the
     Schneider et al. (2014) CPLEX results directly.
   - _21 large instances (100 customers): from Adachi et al. (2022, IEICE NOLTA),

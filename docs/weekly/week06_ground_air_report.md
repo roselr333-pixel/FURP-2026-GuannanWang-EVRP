@@ -9,9 +9,6 @@
 > This file is a v2 iteration of the same code: the previous version offloaded
 > only one customer per instance; this version fixes the drone task allocation
 > so it can actually offload several.
->
-> 2026-09-13: re-run after the physical evaluator fix; the numbers here are
-> updated to that model (see `docs/analysis/evaluator_physical_fix_note_en.md`).
 
 ## 1. What I built
 
@@ -85,9 +82,7 @@ Note: the 8- and 12-customer instances happen to share a near-identical V2
 makespan (~278.6) because both truck sub-routes end at the same charging
 station before returning to the depot, so the final leg takes the same time.
 This is an artifact of the small seeded instances and does not affect the
-comparison. This pilot predates the 2026-09-13 physical-evaluator fix and was
-not re-run; for the current model see §4.2 and
-`docs/analysis/evaluator_physical_fix_note_en.md`.
+comparison.
 
 ### 4.2 Multi-seed robustness (10 seeds × 4 sizes = 40 instances, added 2026-07-23)
 

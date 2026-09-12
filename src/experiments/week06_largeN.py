@@ -4,7 +4,7 @@ week06_ground_air_evrp_tw.py, extending the scale study to N = 30, 50, 100
 with multiple seeds.
 
 Purpose (per progress_report §3.3-①): teacher suggested small/medium/large =
-20/50/100; we have 8/12/16/20 from week06, so we extend to 30 (medium) and 50,
+20/50/100; week06 covers 8/12/16/20, so this extends to 30 (medium) and 50,
 then to 100 (the teacher's "large" target) to check whether the V2 advantage
 holds at scale.
 
@@ -15,7 +15,7 @@ Compares:
 
 Reuses week06's make_instance / truck_ev_route / collaborative unchanged.
 
-NOTE on feasibility (kept honest across all sizes): `feasible` here means
+NOTE on feasibility (same convention at every size): `feasible` here means
 ENERGY/battery feasibility only. The greedy does NOT guarantee time-window
 feasibility, so `tw_viol` counts customers served after their due time. This is
 reported per size — at large N both V1 and V2 accumulate many late deliveries,
@@ -122,7 +122,7 @@ def main():
         m_sync = sum(acc[n]["sync"]) / len(acc[n]["sync"])
         m_twv = sum(acc[n]["twv"]) / len(acc[n]["twv"])
         m_rechg = sum(acc[n]["rechg"]) / len(acc[n]["rechg"])
-        # compare to week06 N=20 reference (we know the V2 advantage)
+        # compare to the week06 N=20 reference (the V2 advantage)
         srow = {
             "size": n,
             "n_instances": len(SEEDS),

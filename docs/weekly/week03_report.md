@@ -7,7 +7,7 @@
 
 ## 1. Experimental Setup
 
-**Question we answer.** Does a simple 2-opt post-processing step (the "improved"
+**Question.** Does a simple 2-opt post-processing step (the "improved"
 method) reduce total distance compared with OR-Tools' greedy first solution (the
 "baseline"), and does the gain change with instance size?
 
@@ -29,7 +29,7 @@ due to the method, not the data. Demands 5–15 per customer; vehicle capacity 1
 20→27, 40→47 (deterministic).
 
 **Stopping / metrics.** Greedy baseline: 1 s. Improved: 4 s guided local search.
-For every run we record: instance, size, method, variant, feasibility, objective
+For every run I record: instance, size, method, variant, feasibility, objective
 (total distance), runtime, number of vehicles, time-window violations, and seed.
 
 **Hardware.** Windows / Python 3.13.14 / OR-Tools 9.15.6755 / 20 CPUs.
@@ -84,9 +84,9 @@ valid solution.
 makes more sub-optimal local choices as the instance grows, so there is more for
 2-opt to fix. The baseline runtime also grows (0.009 → 0.038 s) but stays tiny.
 
-**Limitations.** (a) Instances are random and small (≤40); we have not yet tested
+**Limitations.** (a) Instances are random and small (≤40); I have not yet tested
 the 100+ "large" tier the lab mentions. (b) The "improved" method is only a
-route-internal 2-opt, not a full metaheuristic; gains are modest. (c) We compare
+route-internal 2-opt, not a full metaheuristic; gains are modest. (c) I compare
 *within* the OR-Tools track (greedy vs 2-opt); a cross-solver comparison (e.g.,
 PyVRP, or a GA/POMO baseline from Week 2) is **deferred to a later stage** per
 the current plan.

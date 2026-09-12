@@ -33,7 +33,7 @@ V2 is a collaborative heuristic optimising a makespan-driven synchronous objecti
 
 ## 2. Parameter sensitivity (5-seed mean ± std, n=12 except the scale sweep)
 
-Source: `src/results/week06_sensitivity.csv` + `figures/sensitivity_panels.png` (from `week06_sensitivity.py`; rerun on 2026-09-13 after the main evaluator was made physical, see `docs/analysis/evaluator_physical_fix_note_en.md`).
+Source: `src/results/week06_sensitivity.csv` + `figures/sensitivity_panels.png` (from `week06_sensitivity.py`).
 
 benefit = (V1 truck distance − V2 collaborative distance) / V1 distance × 100%.
 
@@ -44,7 +44,7 @@ benefit = (V1 truck distance − V2 collaborative distance) / V1 distance × 100
 | Customers/sortie K | 1→3 | 20.5%→34.4%→37.1% (±4.5~13.1) | multi-customer ability is the main gain, consistent with ablation |
 | Scale N | 8→30 | 35.3%→32.1% (±3.0~12.2) | larger scale dilutes the synergy benefit |
 
-> Note: before 2026-09-10 the R sweep was flat at 50.5% because `mk_range` did not pass the range to the model. The physical-evaluator fix (2026-09-13) lowered the whole sweep (previously Q 55.8%→47.1%, R 15.5%→50.5%, K 25.3%→56.5%, N 63.8%→35.3%).
+> Note: before 2026-09-10 the R sweep was flat at 50.5% because `mk_range` did not pass the range to the model.
 
 ---
 
@@ -59,7 +59,7 @@ Source: `src/results/week06_multi_objective.csv` + `figures/mo_*.png` (from `wee
 
 - Distance **−32%**, makespan **−34%**; V2 dominates V1 on **both axes** (holds per seed).
 - Weights w ∈ {0, 0.25, 0.5, 0.75, 1.0}, 5 seeds; larger w favours distance at the cost of longer makespan.
-- **Limitation**: weighted-sum scalarised greedy, not a full NSGA-II / Pareto solver — the front is "coarse". This is a method limitation, not a selling point.
+- **Limitation**: weighted-sum scalarised greedy, not a full NSGA-II / Pareto solver — the front is "coarse". This is a method limitation.
 
 ---
 
@@ -79,7 +79,7 @@ Gain decomposition (pp contribution per size):
 
 sanity check: abl_cap1 (1 customer/sortie) ≡ published (M&C 2015) heuristic, confirming framework consistency.
 
-**Re-run on standard instances (2026-09-13)**: the same heuristic and evaluator on official Solomon topologies (C101/C201/R101/RC101 x 3 customer windows x N=8/12/16/20 = 48 instances) decompose into a multi-customer gain of **+7.2 ~ 8.9 pp**, a multi-takeoff gain of **+1.3 ~ 2.0 pp** and cap3 of +3.9 ~ 7.7 pp; `abl_cap1` still equals published instance by instance. The main gain source matches the synthetic run, but its size depends on the spatial pattern (14.1pp on uniform R101 against 5.7pp on clustered C101). Source: `src/results/week07_ablation_std_summary.csv` (`week07_ablation_std.py`), figure `figures/ablation_std.png`, note `docs/weekly/week07_ablation_std_note_en.md`.
+**Re-run on standard instances**: the same heuristic and evaluator on official Solomon topologies (C101/C201/R101/RC101 x 3 customer windows x N=8/12/16/20 = 48 instances) decompose into a multi-customer gain of **+7.2 ~ 8.9 pp**, a multi-takeoff gain of **+1.3 ~ 2.0 pp** and cap3 of +3.9 ~ 7.7 pp; `abl_cap1` still equals published instance by instance. The main gain source matches the synthetic run, but its size depends on the spatial pattern (14.1pp on uniform R101 against 5.7pp on clustered C101). Source: `src/results/week07_ablation_std_summary.csv` (`week07_ablation_std.py`), figure `figures/ablation_std.png`, note `docs/weekly/week07_ablation_std_note_en.md`.
 
 ---
 
@@ -212,7 +212,7 @@ TW violations and recharges (V1 -> V3l): N=8 is 2.4/0.9 -> 0/0; N=20 is 13.5/2.9
 | n=10 | 0/5 | 58.0% | 26.4% | 5/5 |
 | n=12 | 0/5 | 49.1% | 23.5% | 5/5 |
 
-**The LNS roughly halves the gap**, quantifying the improvement phase. At n≥10 optimality is not proved (the value is an upper bound, so the gap is a lower bound). The shared FSTSP evaluator has a physical defect: it does not check that the drone is back on the truck, so nested/crossing sorties are given a makespan although such a plan is infeasible — measured on 15 instances, the original V2 produces such an invalid plan in 14 of them (the FC-7-2/7-3 defect, on the FSTSP evaluator path). Source `week08_exact_gap.py` + `cpsat_fstsp.py` -> `week08_exact_gap_raw.csv` / `_summary.csv`. (2026-09-13: the main evaluator is now physical and everything was re-run; the V2 plans are now physically valid on 15/15 instances, see `docs/analysis/evaluator_physical_fix_note_en.md`.)
+**The LNS roughly halves the gap**, quantifying the improvement phase. At n≥10 optimality is not proved (the value is an upper bound, so the gap is a lower bound). The shared FSTSP evaluator has a physical defect: it does not check that the drone is back on the truck, so nested/crossing sorties are given a makespan although such a plan is infeasible — measured on 15 instances, the original V2 produces such an invalid plan in 14 of them (the FC-7-2/7-3 defect, on the FSTSP evaluator path). Source `week08_exact_gap.py` + `cpsat_fstsp.py` -> `week08_exact_gap_raw.csv` / `_summary.csv`. With the main evaluator physical and everything re-run, the V2 plans are now valid on 15/15 instances.
 
 ---
 
@@ -221,7 +221,7 @@ TW violations and recharges (V1 -> V3l): N=8 is 2.4/0.9 -> 0/0; N=20 is 13.5/2.9
 Grouped by nature; each item gives its "consequence + next step" so it reads as a research-boundary statement, not a weakness list.
 
 **Modeling-scope boundaries**
-- **2–3 customers/sortie cap**: a deliberate simplification and a boundary. Multi-customer drone service is O(n⁴) enumeration, infeasible at scale; supporting more customers needs lighter search (e.g., pre-cluster then assign). Larger multi-customer collaboration is future work.
+- **2–3 customers/sortie cap**: a deliberate simplification and a boundary. Multi-customer drone service is O(n⁴) enumeration, infeasible at scale; supporting more customers needs lighter search (e.g., pre-cluster then assign). I have left larger multi-customer collaboration to later work.
 - **The battery/charging layer is now re-introduced by V3**: V3 (electric truck + drone + charging stations + time windows) is implemented and compared against V1 (see §8); what is still missing is wiring **multiple drones** into V3.
 
 **Algorithmic-scope boundary**

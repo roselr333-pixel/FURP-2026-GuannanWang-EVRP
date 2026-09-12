@@ -1,61 +1,34 @@
-# `/src` — your work goes here
+# `/src` — code, experiments and results
 
-Put all your code, scripts, notebooks, experiment configs, and project materials in this folder.
-
-**Research Track reminder:** your project should reproduce a cited paper and add **at least 10% innovation** (something new on top of the replication). Organise this folder however suits your project, but keep it tidy enough that a reviewer can follow what you did.
-
-## Layout
+Everything in the project runs from this folder. The repository-level `README.md`
+describes the project itself; this file is the map of the code.
 
 ```
-/src
- ├── README.md                 ← this file
- ├── requirements.txt          ← exact pinned dependencies (reproducibility)
- ├── data/                     ← datasets (or links if too large to commit)
- ├── experiments/
- │    └── week01_baseline.py   ← Week 1 OR-Tools VRPTW smoke test
- └── results/
-      └── week01_baseline_output.txt  ← solver output evidence
+src/
+ ├── experiments/     one script per experiment (theme table in the root README)
+ ├── tools/           plotting helpers and the progress-dashboard generator
+ ├── instances/       Solomon files, the Schneider E-VRPTW sets, the Murray & Chu FSTSP instances
+ ├── results/         run logs; the CSVs are regenerated locally and stay out of git
+ ├── data/            small derived inputs
+ └── requirements.txt pinned dependencies
 ```
 
-## Environment setup (reproducible)
-
-This project uses an **isolated virtual environment** so it never pollutes your system Python.
+## How I run it
 
 ```bash
-# 1. Create the venv (use your Python 3.13 interpreter)
-python -m venv venv
-# Windows:
-venv\Scripts\activate
-
-# 2. Install pinned dependencies
-pip install -r src/requirements.txt
+# from the repository root, with the project virtual environment active
+python -m pytest tests/ -q              # regression tests (about 12 s)
+python run_all.py                       # rerun every headline experiment
+python src/experiments/week08_lns.py    # or a single experiment
 ```
 
-> Pinned version used for the Week 1 baseline: `ortools==9.15.6755` on Python 3.13 (Windows).
+Each experiment prints its machine and environment in the log header
+(`sysinfo`) and records per-instance runtime (`runtime_s`) in its CSV, so a
+rerun on another machine can be compared directly. `REPRODUCE.md` maps every
+headline number to the script and artifact behind it.
 
-## How to run the Week 1 baseline
+## Environment
 
-```bash
-# From the repository root:
-python src/experiments/week01_baseline.py
-```
-
-Expected output (small VRPTW, 1 depot + 5 customers, 2 vehicles):
-
-```
-STATUS: FEASIBLE
-PHASE A — greedy first solution (PATH_CHEAPEST_ARC)
-  Objective (total distance): 108
-  Runtime: 0.0052 s
-PHASE B — guided local search (3 s budget)
-  Objective (total distance): 108
-  Runtime: 3.0002 s
-```
-
-The script also writes full output to `src/results/week01_baseline_output.txt`.
-
-## What comes next
-
-- **Week 3:** reproduce this baseline on a *standard* benchmark (e.g. a Solomon VRPTW instance or a PyVRP CVRP instance) and log objective / feasibility / runtime.
-- **Week 4:** add battery capacity + charging stations → turn the VRPTW into **EVRP-TW**.
-- **Week 5+:** model truck-drone synchronization, then a learning/hybrid method, then improvement + ablation.
+The project runs in an isolated virtual environment with the versions pinned in
+`requirements.txt`. `docs/reference/env_record.md` records the exact package
+versions, hardware and commands used for the reported runs.

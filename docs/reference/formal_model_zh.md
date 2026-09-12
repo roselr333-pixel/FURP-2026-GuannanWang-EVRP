@@ -90,7 +90,7 @@ $$r_k = \max\bigl(a_{\text{pos}(j_k)},\ \lambda_k + \phi_k\bigr) \quad(\text{回
 
 $$w_k = r_k - a_{\text{pos}(j_k)}, \qquad a_p \mathrel{+}= w_k \ \ \forall p \ge \text{pos}(j_k) \quad(\text{卡车在回收点等待})$$
 
-也就是说：**无人机晚到，卡车就在回收点等它**，等待量顺延到后续所有到达时刻。这是与
+**无人机晚到，卡车就在回收点等它**，等待量顺延到后续所有到达时刻。这是与
 Murray & Chu (2015) 一致的会合处理；本项目早期版本把每个架次的降落时刻独立取最大值
 （允许一架无人机同时飞两个架次），已在 `docs/analysis/evaluator_physical_fix_note_zh.md` 中修正。
 

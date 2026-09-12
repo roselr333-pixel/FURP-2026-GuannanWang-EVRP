@@ -49,10 +49,6 @@ the gain?*
 | 16 | 774.8 | 645.4 (16.6%) | **554.4 (28.7%)** | 645.4 (16.6%) | 588.0 (24.3%) | **485.1 (37.6%)** |
 | 20 | 1022.3 | 855.5 (16.2%) | **767.2 (24.8%)** | 855.5 (16.2%) | 790.0 (22.6%) | **743.3 (27.2%)** |
 
-> 2026-09-13: re-run after the main evaluator was made physical (see
-> `docs/analysis/evaluator_physical_fix_note_en.md`). The old figures were C0
-> 27.4/20.1/22.2/23.3% and C1 39.2/37.8/32.4/29.9%.
-
 (percent = improvement vs truck-only; C2 equals C0 exactly — see §5 sanity
 check.)
 

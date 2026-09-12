@@ -22,4 +22,4 @@ Constraint notes (simplified baseline):
   - drone launched/recovered at depot (no mid-route rendezvous yet);
   - synchronization = both depart depot at t=0;
   - energy/service-time for drone and truck not yet modelled (Week 4 battery
-    idea can be extended to the truck; drone battery is future work).
+    idea can be extended to the truck; drone battery is left to later work).

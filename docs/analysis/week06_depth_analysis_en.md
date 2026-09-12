@@ -23,7 +23,7 @@ This is the single most important point to make, and two **independent** experim
 
 The two experiments use different instance sets and different angles, but point at the same
 conclusion — which means the conclusion is **stable**, not an artifact of one run. This is where the
-project earns its "depth": instead of reporting one flattering final number, it uses controlled
+project pairs two independent experiments instead of reporting one flattering number, and it uses controlled
 experiments to surface the mechanism that actually matters.
 
 **The same ablation re-run on official Solomon topologies** (48 standard instances: C1/C2/R1/RC1 x N=8/12/16/20 x 3 customer windows) gives a multi-customer gain of **+7.2 ~ 8.9 percentage points** and a multi-takeoff gain of **+1.3 ~ 2.0 pp**, with `abl_cap1` still equal to published instance by instance. The main gain source is the same on both geometries; by family the magnitude varies a lot (14.1pp on the uniform R topology, 5.7-5.8pp on the clustered C1/C2 topologies), so how much the multi-customer ability buys depends on the spatial pattern. See `docs/weekly/week07_ablation_std_note_en.md`.
@@ -32,7 +32,7 @@ experiments to surface the mechanism that actually matters.
 
 ## 2. The applicability window: collaboration pays most when customers are spread out, range is ample, and scale is moderate
 
-Putting the four physical-parameter sweeps together lets us characterise the **applicability
+Putting the four physical-parameter sweeps together characterises the **applicability
 boundary** of the synergy (all 5-seed means; error bands in `figures/sensitivity_panels.png`):
 
 | Parameter | Sweep | Synergy benefit | Reading |
@@ -66,7 +66,7 @@ Using a weighted-sum sweep (w ∈ {0, 0.25, 0.5, 0.75, 1.0}, 5 seeds) I get:
 - i.e. distance **−32%**, makespan **−34%** — V2 dominates V1 on **both axes**, a genuine Pareto improvement.
 
 **Note**: this uses a weighted-sum scalarised greedy, not a full NSGA-II / Pareto solver, so
-the front produced is "coarse". This is a *limitation* of the method, not a selling point — it is
+the front produced is "coarse". This is a *limitation* of the method; it is
 written into the limitations section below.
 
 ---
@@ -129,7 +129,7 @@ conclusion and together with it delimits where the method works.
 ## 7. Summary
 
 Not in a fancier method (the greedy framework was never swapped) — but in stringing the
-conclusions into one **coherent chain**:
+conclusions together:
 
 > Controlled ablation locates the main gain source (multi-customer ability) → sensitivity confirms
 > it from an independent angle (K sweep) → four parameters characterise the applicability window
@@ -140,8 +140,8 @@ conclusions into one **coherent chain**:
 > decay) → multiple drones (K=1/2/3, N=50 benefit 29.5%→38.1%) → limitations stated plainly
 > (scale boundary / synthetic instances / no TW-energy).
 
-This chain lets every conclusion be traced back to an experiment, rather than resting on "I think
-so". That is what depth means, and it is the spine the final report should follow.
+Every conclusion traces back to an experiment rather than to "I think
+so"; the final report will follow that order.
 
 ---
 

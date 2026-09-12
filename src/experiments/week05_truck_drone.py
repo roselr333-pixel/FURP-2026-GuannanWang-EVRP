@@ -14,7 +14,7 @@ This is a SIMPLIFIED HEURISTIC BASELINE (the project explicitly allows
   * Makespan = max(truck completion time, drone completion time) — they operate
     in parallel and must both finish (return to depot) before the job is done.
 
-We compare truck-ONLY vs truck+drone makespan to show the collaboration benefit.
+This compares truck-ONLY vs truck+drone makespan to show the collaboration benefit.
 
 Run:
   python src/experiments/week05_truck_drone.py
@@ -115,7 +115,7 @@ def main():
     lines.append("  - drone launched/recovered at depot (no mid-route rendezvous yet);")
     lines.append("  - synchronization = both depart depot at t=0;")
     lines.append("  - energy/service-time for drone and truck not yet modelled (Week 4 battery")
-    lines.append("    idea can be extended to the truck; drone battery is future work).")
+    lines.append("    idea can be extended to the truck; drone battery is left to later work).")
 
     text = "\n".join(lines)
     with open(out_path, "w") as fh:

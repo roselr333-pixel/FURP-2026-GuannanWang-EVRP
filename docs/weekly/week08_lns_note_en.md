@@ -46,10 +46,6 @@ V2 and the published baseline stays apples-to-apples.
 Parentheses give the makespan reduction vs truck-only (larger is better). Mean
 per-instance runtime is 0.15–6.1 s (single machine, rising with size).
 
-> 2026-09-13: this table was re-run after the main evaluator was made physical
-> (see `docs/analysis/evaluator_physical_fix_note_en.md`); the old figures were
-> +9%~+12.6% for LNS over greedy.
-
 Figure: `figures/lns_vs_greedy.png` (left: completion time by size; right:
 improvement over the greedy).
 

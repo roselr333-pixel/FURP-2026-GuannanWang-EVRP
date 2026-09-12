@@ -83,11 +83,11 @@ Why the gap exists (stated plainly, no overclaiming):
    slightly higher distance (176.05)**; my 2-vehicle solution is 175.4 (slightly shorter) but uses more
    vehicles, so by the paper's objective mine is worse — as expected.
 
-## 6. Limitations and next steps (explicit)
+## 6. Limitations and planned tasks
 
-- RC1 tight time windows leave 1 customer unserved → needs heavier insertion search or ALNS.
+- RC1 tight time windows leave 1 customer unserved; closing that would need heavier insertion search or ALNS.
 - **Multi-trip is modelled, but global vehicle-count minimization (assigning customers to a multi-trip
-  fleet) is not implemented** — the key lever for closing the gap to BKS, left as extension (this is
+  fleet) is not implemented** — the key lever for closing the gap to BKS; I have left it as a later extension (this is
   exactly what peers Ziqi / Frank do with ALNS / metaheuristics).
 - Constructive heuristic only; no exact lower bound (MILP). Computing one is a separate contribution,
   outside this project's scope.

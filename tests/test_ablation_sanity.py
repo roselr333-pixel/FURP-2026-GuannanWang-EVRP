@@ -4,7 +4,7 @@ The ablation claims the only difference between my V2 method and the published
 Murray & Chu (2015) heuristic is the multi-customer capability: run my
 framework with max_cust=1 and multi-takeoff on, and it should reproduce the
 published baseline exactly. If that ever breaks, the whole gain decomposition
-(multi-customer / multi-takeoff) is meaningless, so it is worth a hard test.
+(multi-customer / multi-takeoff) is meaningless, so it is guarded by a hard test.
 """
 
 import pytest

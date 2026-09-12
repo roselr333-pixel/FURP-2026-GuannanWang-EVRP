@@ -153,11 +153,11 @@ v2 also beats v1 by **28.8%** — directly removing the "depot-only" simplificat
 ### 2.8 Literature reading — EVRP survey note
 
 On 2026-07-13 I read Erdelić & Carić (2019), *A Survey on the Electric Vehicle Routing Problem: Variants and Solution Approaches* (*Journal of Advanced Transportation*, open access, 48 pp.), and wrote a structured note following the lab template (problem / method / reusable idea / reproducibility / open questions / one-line summary). It is saved in my private study folder and ready to copy into this repo. Three takeaways I connected to my own code:
-- My EVRP-TW recharge (the negative-energy `slack_max` trick) matches the early **full-recharge + linear-charging** assumption in Schneider 2014 — a valid but simplified baseline. The survey flags **partial recharging** and **nonlinear CC-CV charging** as the more realistic next steps.
+- My EVRP-TW recharge (the negative-energy `slack_max` trick) matches the early **full-recharge + linear-charging** assumption in Schneider 2014 — a valid but simplified baseline. The survey flags **partial recharging** and **nonlinear CC-CV charging** as more realistic directions that I have not implemented yet.
 - The survey is an EV-only review and does **not** cover truck-drone (FSTSP); my v2 sits outside its taxonomy, so I will read Murray & Chu 2015 separately.
 - It confirmed that my hierarchical objective (min vehicles, then distance) is the standard BEV choice, because BEVs are expensive to buy.
 
-Note file: `learning_guide/papers/01_survey_evrp.md` (to be copied to `docs/papers/` on cleanup).
+Note file: `docs/paper note/01_survey_evrp.md`.
 
 ### 2.9 External baseline — self-built Genetic Algorithm (GA)
 

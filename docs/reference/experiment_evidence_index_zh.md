@@ -33,7 +33,7 @@ V2 是协同启发式，优化的是 makespan 驱动的同步目标，其"距离
 
 ## 2. 参数敏感性（5 种子均值 ± 标准差，n=12 除规模扫描外）
 
-出处：`src/results/week06_sensitivity.csv` + `figures/sensitivity_panels.png`（由 `week06_sensitivity.py` 生成；2026-09-13 主评估器物理化后重跑，见 `docs/analysis/evaluator_physical_fix_note_zh.md`）。
+出处：`src/results/week06_sensitivity.csv` + `figures/sensitivity_panels.png`（由 `week06_sensitivity.py` 生成）。
 
 benefit = (V1 纯卡车距离 − V2 协同距离) / V1 距离 × 100%。
 
@@ -44,7 +44,7 @@ benefit = (V1 纯卡车距离 − V2 协同距离) / V1 距离 × 100%。
 | 每架次客户 K | 1→3 | 20.5%→34.4%→37.1%（±4.5~13.1） | 多顾客能力是主增益，与消融一致 |
 | 规模 N | 8→30 | 35.3%→32.1%（±3.0~12.2） | 规模越大协同收益越被稀释 |
 
-> 注：R 扫描在 2026-09-10 前因 `mk_range` 未把续航传给模型而恒为 50.5%（错误）；修复后如上。2026-09-13 主评估器物理化后整体数值下调（原 Q 55.8%→47.1%、R 15.5%→50.5%、K 25.3%→56.5%、N 63.8%→35.3%）。
+> 注：R 扫描在 2026-09-10 前因 `mk_range` 未把续航传给模型而恒为 50.5%（错误）；修复后如上。
 
 ---
 
@@ -59,7 +59,7 @@ benefit = (V1 纯卡车距离 − V2 协同距离) / V1 距离 × 100%。
 
 - 距离 **−32%**、时长 **−34%**，V2 在**两个轴同时占优** V1（逐种子核对均成立）。
 - 权重 w ∈ {0, 0.25, 0.5, 0.75, 1.0}，5 种子；w 越大越偏距离、时长越长。
-- **局限**：用加权和标量化的贪心，不是完整 NSGA-II / Pareto 求解器，给出的前沿是"粗"的——这是方法局限，不是卖点。
+- **局限**：用加权和标量化的贪心，不是完整 NSGA-II / Pareto 求解器，给出的前沿是"粗"的——这是方法局限。
 
 ---
 
@@ -79,7 +79,7 @@ V2 相对纯卡车(Truck-only)的 makespan 改善：size 8 → 34.5%、12 → 29
 
 sanity check：abl_cap1（每架 1 顾客）≡ published(M&C 2015) 已发表启发式，证明框架一致。
 
-**标准算例复跑（2026-09-13）**：同一套启发式与评估器搬到官方 Solomon 拓扑（C101/C201/R101/RC101 × 3 个顾客窗口 × N=8/12/16/20 = 48 个实例）上重跑，增益分解为多顾客能力 **+7.2 ~ 8.9 pp**、多次起降 **+1.3 ~ 2.0 pp**、cap3 +3.9 ~ 7.7 pp；`abl_cap1` 仍逐实例等于 published。主增益源与合成算例一致，但增益大小依赖空间分布（均匀的 R101 为 14.1pp，聚类的 C101 为 5.7pp）。出处：`src/results/week07_ablation_std_summary.csv`（`week07_ablation_std.py`），图 `figures/ablation_std.png`，说明 `docs/weekly/week07_ablation_std_note_zh.md`。
+**标准算例复跑**：同一套启发式与评估器搬到官方 Solomon 拓扑（C101/C201/R101/RC101 × 3 个顾客窗口 × N=8/12/16/20 = 48 个实例）上重跑，增益分解为多顾客能力 **+7.2 ~ 8.9 pp**、多次起降 **+1.3 ~ 2.0 pp**、cap3 +3.9 ~ 7.7 pp；`abl_cap1` 仍逐实例等于 published。主增益源与合成算例一致，但增益大小依赖空间分布（均匀的 R101 为 14.1pp，聚类的 C101 为 5.7pp）。出处：`src/results/week07_ablation_std_summary.csv`（`week07_ablation_std.py`），图 `figures/ablation_std.png`，说明 `docs/weekly/week07_ablation_std_note_zh.md`。
 
 ---
 
@@ -99,7 +99,7 @@ N=50 时 V1（电池+充电）代价 ≈ 5670 vs V0（无电池）≈ 3094——
 
 ## 6. 失败案例（17 条，1 条严格不可行）
 
-出处：`docs/reference/failure_cases_master.md`。最值得说的一条：N=50 密集算例上**会合可行性否决约 450 万次**，说明同步会合约束在大规模是主要瓶颈——与第 2、5 节的"规模越大收益越稀释"互相印证，共同划定方法适用边界。
+出处：`docs/reference/failure_cases_master.md`。最明显的一条：N=50 密集算例上**单机调度拒绝约 101 万次**，说明同步会合约束在大规模是主要瓶颈，与第 2、5 节的"规模越大收益越稀释"指向同一个边界。
 
 ---
 
@@ -205,7 +205,7 @@ K 从 1 增到 3 全面提升（N=50：29.5%→38.1%），并抬高规模衰减�
 | n=10 | 0/5 | 58.0% | 26.4% | 5/5 |
 | n=12 | 0/5 | 49.1% | 23.5% | 5/5 |
 
-**LNS 把 gap 大致减半**，改进阶段的价值被定量。n≥10 未证最优（报的是最优上界，故 gap 为下界）。**共用的 FSTSP 评估器有一个物理缺陷**：它不检查无人机是否已回到卡车，嵌套/交叉架次会被赋予 makespan，而这样的计划不可实现——实测项目原始 V2 在 15 个实例里 14 个产出这种无效计划（FC-7-2/7-3 同类问题，出现在 FSTSP 评估器路径上）。出处 `week08_exact_gap.py` + `cpsat_fstsp.py` → `week08_exact_gap_raw.csv` / `_summary.csv`。（2026-09-13 更新：主评估器已物理化并全部重跑，这 15 个实例的 V2 计划现在 **5/5 全部物理有效**，见 `docs/analysis/evaluator_physical_fix_note_zh.md`。）
+**LNS 把 gap 大致减半**，改进阶段的价值被定量。n≥10 未证最优（报的是最优上界，故 gap 为下界）。**共用的 FSTSP 评估器有一个物理缺陷**：它不检查无人机是否已回到卡车，嵌套/交叉架次会被赋予 makespan，而这样的计划不可实现——实测项目原始 V2 在 15 个实例里 14 个产出这种无效计划（FC-7-2/7-3 同类问题，出现在 FSTSP 评估器路径上）。出处 `week08_exact_gap.py` + `cpsat_fstsp.py` → `week08_exact_gap_raw.csv` / `_summary.csv`。主评估器物理化并全部重跑后，这 15 个实例的 V2 计划现在 **5/5 物理有效**。
 
 ---
 
