@@ -79,6 +79,8 @@ Gain decomposition (pp contribution per size):
 
 sanity check: abl_cap1 (1 customer/sortie) ≡ published (M&C 2015) heuristic, confirming framework consistency.
 
+**Re-run on standard instances (2026-09-13)**: the same heuristic and evaluator on official Solomon topologies (C101/C201/R101/RC101 x 3 customer windows x N=8/12/16/20 = 48 instances) decompose into a multi-customer gain of **+7.2 ~ 8.9 pp**, a multi-takeoff gain of **+1.3 ~ 2.0 pp** and cap3 of +3.9 ~ 7.7 pp; `abl_cap1` still equals published instance by instance. The main gain source matches the synthetic run, but its size depends on the spatial pattern (14.1pp on uniform R101 against 5.7pp on clustered C101). Source: `src/results/week07_ablation_std_summary.csv` (`week07_ablation_std.py`), figure `figures/ablation_std.png`, note `docs/week07_ablation_std_note_en.md`.
+
 ---
 
 ## 5. Scale decay (N=30 / 50 / 100, 5 seeds)

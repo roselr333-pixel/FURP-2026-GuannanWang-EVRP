@@ -67,15 +67,24 @@ def _synthetic_rms(n):
     return math.sqrt((a * a + a * b + b * b) / 3.0)
 
 
-def make_solomon_fstsp(name, n):
+def make_solomon_fstsp(name, n, start=0):
     """Build a FSTSP instance from Solomon instance `name` (e.g. 'C101') using
-    its first n customers. Coordinates are translated (depot -> origin) and
-    scaled so the customer RMS radius matches the synthetic generator at n."""
+    `n` of its customers beginning at `start` (default: the first n, which is
+    the paper convention). Coordinates are translated (depot -> origin) and
+    scaled so the customer RMS radius matches the synthetic generator at n.
+
+    `start` exists because the Solomon files in this repo share coordinates
+    within a family prefix, so "the first n customers" gives only one point set
+    per family; sliding the window produces genuinely different customer sets
+    from the same official topology."""
     coords, demands = parse_solomon(os.path.join(SOLOMON_DIR, name + ".vrp"))
     depot_xy = coords[1]
-    cust_nodes = [i for i in range(2, len(coords) + 1)][:n]
+    all_nodes = [i for i in range(2, len(coords) + 1)]
+    cust_nodes = all_nodes[start:start + n]
     if len(cust_nodes) < n:
-        raise ValueError(f"{name} has only {len(cust_nodes)} customers")
+        raise ValueError(
+            f"{name} has only {len(all_nodes)} customers; "
+            f"asked for n={n} starting at {start}")
 
     # translate depot to origin and measure the current RMS radius
     raw = {i: (coords[i][0] - depot_xy[0], coords[i][1] - depot_xy[1])
@@ -93,7 +102,8 @@ def make_solomon_fstsp(name, n):
     return {
         "depot": depot, "customers": customers, "stations": {},
         "tw": tw, "demand": demand, "coord": coord,
-        "Q": w6.Q_DEFAULT, "n": n, "source": f"Solomon {name} (first {n})",
+        "Q": w6.Q_DEFAULT, "n": n,
+        "source": f"Solomon {name} (customers {start + 1}-{start + n})",
     }
 
 

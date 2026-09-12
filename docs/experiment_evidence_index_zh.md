@@ -79,6 +79,8 @@ V2 相对纯卡车(Truck-only)的 makespan 改善：size 8 → 34.5%、12 → 29
 
 sanity check：abl_cap1（每架 1 顾客）≡ published(M&C 2015) 已发表启发式，证明框架一致。
 
+**标准算例复跑（2026-09-13）**：同一套启发式与评估器搬到官方 Solomon 拓扑（C101/C201/R101/RC101 × 3 个顾客窗口 × N=8/12/16/20 = 48 个实例）上重跑，增益分解为多顾客能力 **+7.2 ~ 8.9 pp**、多次起降 **+1.3 ~ 2.0 pp**、cap3 +3.9 ~ 7.7 pp；`abl_cap1` 仍逐实例等于 published。主增益源与合成算例一致，但增益大小依赖空间分布（均匀的 R101 为 14.1pp，聚类的 C101 为 5.7pp）。出处：`src/results/week07_ablation_std_summary.csv`（`week07_ablation_std.py`），图 `figures/ablation_std.png`，说明 `docs/week07_ablation_std_note_zh.md`。
+
 ---
 
 ## 5. 规模衰减（N=30 / 50 / 100，5 种子）

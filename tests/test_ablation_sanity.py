@@ -17,7 +17,10 @@ import fstsp_instances as fi
 CASES = [("synth-n10", w6.make_instance(10, seed=20260720)),
          ("synth-n12", w6.make_instance(12, seed=20260721)),
          ("C101-n10", fi.make_solomon_fstsp("C101", 10)),
-         ("R101-n10", fi.make_solomon_fstsp("R101", 10))]
+         ("R101-n10", fi.make_solomon_fstsp("R101", 10)),
+         ("C201-n12", fi.make_solomon_fstsp("C201", 12)),
+         ("RC101-n16", fi.make_solomon_fstsp("RC101", 16)),
+         ("R101-n12-w1", fi.make_solomon_fstsp("R101", 12, start=12))]
 
 
 @pytest.mark.parametrize("tag,inst", CASES)
