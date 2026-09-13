@@ -85,7 +85,7 @@ Key documents:
 | Theme | Scripts |
 |---|---|
 | Baselines | `week01_baseline`, `week03_experiment`, `week03_reproduce`, `benchmark_*`, `baseline_consolidated`, `baseline_pyvrp_vrptw`, `baseline_ga_vrptw` |
-| EVRP-TW core model | `week04_evrp_tw`, `week06_ground_air_evrp_tw` |
+| EVRP-TW core model | `week04_evrp_tw`, `week06_ground_air_evrp_tw`, `std_evrp_instances` (Schneider adapter), `week06_standard_instances` |
 | Truck–drone | `week05_truck_drone(_v2)`, `week07_fstsp_repro`, `week07_improvement_ablation` |
 | W8 improvements | `week08_lns`, `week08_multidrone`, `week08_multidrone_std`, `drone_scheduling`, `fstsp_instances`, `week08_mc_benchmark`, `fstsp_mc`, `v3_ev_collab` |
 | Analysis | `week06_sensitivity`, `week06_multi_objective`, `week06_largeN`, `week06_capacity_study`, `stat_tests` |
@@ -109,6 +109,7 @@ Key documents:
 | Drone scheduling | naive rule provably optimal on 64/64 configs |
 | V3 (EV + TW + drone) | vs truck-only EV: K=1 33.5–52.4% shorter, K=3 up to 72.5% |
 | Truck capacity (CAP=1000, now enforced) | free for N≤50; binds on 1/5 of the N=100 instances, where one serial drone cannot repair the overload |
+| Same model on standard data (Schneider 2014) | collaboration gain 41.0–54.8% (synthetic reference: 24.8–34.5%), so the synthetic result is conservative |
 
 Full numbers and their caveats: `docs/reference/experiment_evidence_index_zh.md`.
 
@@ -152,6 +153,7 @@ experiments that produce their CSVs. Numbers, sources and caveats for all of the
 | `figures/multidrone.png` | How much do extra drones help (synthetic instances)? | N=50: 29.5% (K=1) → 38.1% (K=3) | `src/tools/plot_multidrone.py` |
 | `figures/multidrone_std.png` | Same question on standard instances, plus the scheduler | K=1→5 raises the gain to 46.8–71.4%; naive scheduler optimal on 64/64 configs | `src/tools/plot_multidrone_std.py` |
 | `figures/exact_gap.png` | How far is the heuristic from the exact optimum? | n=8 (proven optimal): greedy +31.2%, LNS +16.5% | `src/tools/plot_exact_gap.py` |
+| `figures/std_instances.png` | Do the synthetic conclusions transfer to standard instances? | Schneider (2014) data: gain 41.0–54.8% vs 24.8–34.5% synthetic, late customers 17.0→7.7 at N=20; the paper's own C=200 binds the single truck from N=12 | `src/tools/gen_std_instances_figure.py` |
 | `figures/capacity_binding.png` | Is the declared truck capacity binding? | free for N≤50 at CAP=1000; binds on 1/5 of the N=100 instances, where V0/V1/V2 all become infeasible | `src/tools/gen_capacity_figure.py` |
 | `figures/schneider_routes.png`, `figures/schneider_vehcomp.png` | How close is my EVRP-TW to Schneider (2014)? | 18/18 fully served, distance +50.7%, 5.4 vs 2.1 vehicles (multi-trip is why) | `src/tools/plot_schneider_routes.py` |
 | `src/results/week01_routes.png` | Week-1 smoke test | 5-customer VRPTW, both phases feasible | `week01_baseline.py` |

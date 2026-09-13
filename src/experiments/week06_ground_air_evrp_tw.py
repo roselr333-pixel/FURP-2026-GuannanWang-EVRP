@@ -111,6 +111,8 @@ def truck_ev_route(inst, cust_ids, allow_recharge, q=None):
     cap = inst.get("cap", CAP)
     truck_demand = sum(inst["demand"][c] for c in cust_ids)
     cap_inf = truck_demand > cap
+    svc = inst.get("service", SERVICE)
+    rc = inst.get("recharge", RECHARGE)
     rho = RHO
     order = nn_order(inst, cust_ids)
     route = [0]
@@ -131,8 +133,8 @@ def truck_ev_route(inst, cust_ids, allow_recharge, q=None):
                 route.append(s)
                 battery = Q
                 recharges += 1
-                charge_time += RECHARGE
-                t += ds / V_T + RECHARGE
+                charge_time += rc
+                t += ds / V_T + rc
                 d = dist(inst, s, node)
                 if battery - d * rho < 0:
                     energy_inf = True
@@ -147,7 +149,7 @@ def truck_ev_route(inst, cust_ids, allow_recharge, q=None):
                     t = inst["tw"][node][0]
                 if t > inst["tw"][node][1]:
                     tw_viol += 1
-                t += SERVICE
+                t += svc
 
     for c in order:
         travel_to(c)
@@ -182,8 +184,8 @@ def node_extra(inst, node):
     if node == 0:
         return 0.0
     if node in inst["stations"]:
-        return RECHARGE
-    return SERVICE
+        return inst.get("recharge", RECHARGE)
+    return inst.get("service", SERVICE)
 
 
 def route_positions(route):
@@ -237,6 +239,7 @@ def simulate(inst, route, drone_trips, rd=None, check_cap=True):
     an overloaded route.
     """
     rd = R_D if rd is None else rd
+    svc = inst.get("service", SERVICE)
     full = route[:]
     arr = [0.0] * len(full)
     for p in range(1, len(full)):
@@ -267,7 +270,7 @@ def simulate(inst, route, drone_trips, rd=None, check_cap=True):
         # the drone has to be back on the truck when it reaches the launch node
         if drone_free > arr[i_pos] + 1e-9:
             return arr, math.inf
-        flight = drone_dist / V_D + SERVICE * len(custs)
+        flight = drone_dist / V_D + svc * len(custs)
         landing = arr[i_pos] + flight
         truck_at_rec = arr[j_pos]
         recovery = max(truck_at_rec, landing)
@@ -288,16 +291,17 @@ def _customer_list_is_feasible(inst, ln, custs, rn, launch_time, rd):
     time windows (sequential service in the given order). Physical scheduling
     feasibility itself is decided by `simulate`.
     """
+    svc = inst.get("service", SERVICE)
     legs = [ln] + list(custs) + [rn]
     drone_dist = sum(dist(inst, legs[i], legs[i + 1])
                      for i in range(len(legs) - 1))
     if drone_dist > rd:
         return False
-    t = launch_time + dist(inst, ln, custs[0]) / V_D + SERVICE
+    t = launch_time + dist(inst, ln, custs[0]) / V_D + svc
     if t < inst["tw"][custs[0]][0] or t > inst["tw"][custs[0]][1]:
         return False
     for idx in range(1, len(custs)):
-        t += dist(inst, custs[idx - 1], custs[idx]) / V_D + SERVICE
+        t += dist(inst, custs[idx - 1], custs[idx]) / V_D + svc
         k = custs[idx]
         if t < inst["tw"][k][0] or t > inst["tw"][k][1]:
             return False
@@ -318,7 +322,8 @@ def collaborative(inst, drone_range=None, cap=None):
     search first repairs the overload (cheapest makespan first) and only then
     maximises the makespan gain.
     """
-    rd = drone_range if drone_range is not None else R_D
+    rd = (drone_range if drone_range is not None
+          else inst.get("drone_range", R_D))
     if cap is not None and cap != inst.get("cap", CAP):
         inst = {**inst, "cap": cap}
     cap = inst.get("cap", CAP)
@@ -428,10 +433,11 @@ def collaborative(inst, drone_range=None, cap=None):
 
     # truck time-window violations on the final V2 route
     tw_viol_truck = 0
+    svc = inst.get("service", SERVICE)
     for p, n in enumerate(v2_route):
         if n in inst["stations"] or n == 0:
             continue
-        arrival = arr2[p] - SERVICE
+        arrival = arr2[p] - svc
         if arrival > inst["tw"][n][1]:
             tw_viol_truck += 1
 
@@ -439,11 +445,11 @@ def collaborative(inst, drone_range=None, cap=None):
     tw_viol_drone = 0
     for ln, custs, rn in drone_trips:
         i_pos = 0 if ln == 0 else v2_route.index(ln)
-        t = arr2[i_pos] + dist(inst, ln, custs[0]) / V_D + SERVICE
+        t = arr2[i_pos] + dist(inst, ln, custs[0]) / V_D + svc
         if t < inst["tw"][custs[0]][0] or t > inst["tw"][custs[0]][1]:
             tw_viol_drone += 1
         for idx in range(1, len(custs)):
-            t += dist(inst, custs[idx - 1], custs[idx]) / V_D + SERVICE
+            t += dist(inst, custs[idx - 1], custs[idx]) / V_D + svc
             if t < inst["tw"][custs[idx]][0] or t > inst["tw"][custs[idx]][1]:
                 tw_viol_drone += 1
 
@@ -462,7 +468,8 @@ def collaborative(inst, drone_range=None, cap=None):
         else float("inf"),
         "truck_makespan": truck_mk, "drone_makespan": drone_mk,
         "total_dist": truck_dist + drone_dist,
-        "recharges": rechg, "charge_time": rechg * RECHARGE,
+        "recharges": rechg, "charge_time": rechg * inst.get("recharge",
+                                                             RECHARGE),
         "tw_viol": tw_viol_truck + tw_viol_drone,
         "energy_inf": v1["energy_inf"], "sync_rejected": sync_rejected,
         "plan_valid": plan_valid,

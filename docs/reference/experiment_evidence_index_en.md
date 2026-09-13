@@ -117,6 +117,25 @@ Three readings:
 - **When the cap binds, the drone cannot rescue the plan.** V2 leaves 64.7% (N=8) to 97.2% (N=100) of the demand on the truck, i.e. one serial drone removes only 35.3% → 2.8% of it, so every binding cell in the study stays infeasible. In practice the constraint behaves like a hard "total demand ≤ cap" bound; the natural fixes are a load-aware LNS or several drones.
 - **Capacity and energy are separate gates.** At N=100 V1/V2 are energy-feasible in 0 of 5 instances (the truck route fails the battery/recharge model), so the N=100 feasibility collapse must not be attributed to capacity alone.
 
+## 5c. Do the synthetic conclusions transfer? (Schneider 2014 data)
+
+Source: `src/results/week06_std_evrp_summary.csv` (`week06_standard_instances.py`), figure `figures/std_instances.png`.
+
+Every W6 number above comes from random geometry. `std_evrp_instances.make_evrp` converts the original **Schneider (2014) E-VRPTW instances** — real coordinates, real time windows, the real charging stations and the paper's own vehicle parameters — into the W6 instance format (time unit = minutes because the paper sets `v = 1`; service 90 min; battery `Q/r` = 79.7 distance units; full recharge `Q·g` = 270 min; capacity `C` = 200; drone range = 2.5 × the instance's mean depot-customer distance). The same evaluators and variants are then re-run: 6 families × 4 customer subsets = **24 samples per size**.
+
+| N | standard gain | synthetic reference | late customers V1 → V2 | V2 offload | V2 recharges |
+|---|---:|---:|---:|---:|---:|
+| 8 | **54.8%** | 34.5% | 5.17 → 0.96 | 17.2% | 0.96 |
+| 12 | **48.8%** | 29.0% | 8.79 → 2.92 | 13.9% | 1.42 |
+| 16 | **43.7%** | 28.7% | 12.71 → 4.96 | 13.8% | 1.96 |
+| 20 | **41.0%** | 24.8% | 16.96 → 7.71 | 11.7% | 2.17 |
+
+- **The synthetic gain is conservative.** With the W6 capacity the same model is 1.5-1.7x better on standard data at every size, and the ordering (benefit shrinking with N) is unchanged.
+- **The drone also repairs time windows**: late customers fall by 4.2 / 5.9 / 7.8 / 9.3 per instance. The synthetic instances show the same direction, but Schneider's much tighter windows make it a headline effect.
+- **The paper's fleet capacity exposes the single-truck assumption**: with the paper's own `C = 200` the truck is capacity-infeasible on 0/24 samples at N=8, 7/24 at N=12 and 12/24 at N=16/20 (V2 feasibility 100 / 100 / 58 / 50%); with the W6 default `CAP = 1000` all 96 samples are feasible. This is the §5b boundary, re-measured on standard data.
+- Caveat: these are one-truck runs on instances designed for a fleet (`m` = 7-30 vehicles), so they measure the relative value of the drone under real geometry, windows and battery — not a Schneider-equivalent solution cost (that comparison is in `docs/baselines/schneider_evrptw_replication_en.md`).
+
+
 
 ---
 
@@ -272,6 +291,7 @@ Grouped by nature; each item gives its "consequence + next step" so it reads as 
 | Ablation | `week07_improvement_ablation.py` | `week07_ablation_raw.csv` / `_summary.csv` | — |
 | Scale | `week06_largeN.py` | `week06_largeN_results.csv` / `_summary.csv` | `largen_scale_decay.png` |
 | Capacity | `week06_capacity_study.py` | `week06_capacity_raw.csv` / `_summary.csv` | `capacity_binding.png` |
+| Standard instances | `week06_standard_instances.py` + `std_evrp_instances.py` | `week06_std_evrp_raw.csv` / `_summary.csv` | `std_instances.png` |
 | LNS improvement | `week08_lns.py` | `week08_lns_raw.csv` / `_summary.csv` | `lns_vs_greedy.png` |
 | Multi-drone | `week08_multidrone.py` (+ week07 K-drone evaluator) | `week08_multidrone_raw.csv` / `_summary.csv` | `multidrone.png` |
 | Multi-drone (standard) | `week08_multidrone_std.py` + `fstsp_instances.py` | `week08_multidrone_std_raw.csv` / `_summary.csv` | `multidrone_std.png` |

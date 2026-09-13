@@ -5,6 +5,10 @@
 > 基准做的**自写构造式复现**。它补在我原有卡车–无人机 EVRP 项目之外，用来展示我也独立实现
 > 了带充电站的标准电动车 VRPTW（E-VRPTW）模型，并与文献 BKS 对照。所有数字来自
 > `src/experiments/schneider_evrptw.py` 与 `schneider_bks_compare.py`，可一键重跑。
+>
+> **同一批原始算例文件**也供卡车–无人机模型使用：`std_evrp_instances.make_evrp` 把它们转成
+> week-6 的 EVRP-TW 实例格式，`week06_standard_instances.py` 则在真实坐标、时间窗、充电站与电池上
+> 重跑 V0/V1/V2 主线（见证据索引 §5c）。
 
 ## 1. 模型（E-VRPTW，满充瞬时充电）
 

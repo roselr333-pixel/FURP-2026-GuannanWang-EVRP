@@ -117,6 +117,25 @@ N=50 时 V1（电池+充电）代价 ≈ 5670 vs V0（无电池）≈ 3094——
 - **一旦 binding，无人机救不回来**：V2 留在卡车上的需求从 N=8 的 64.7% 升到 N=100 的 97.2%，即单架串行无人机只能卸下 35.3%→2.8%；研究里所有 binding 单元最终仍不可行。实际上这条约束接近"总需求 ≤ cap"的硬界，可行的修法是"载重感知的 LNS"或增加无人机。
 - **载重与电量是两道独立的门**：N=100 时 V1/V2 的能量可行性是 0/5（卡车路线本身过不了电池+充电模型），所以 N=100 的可行性崩塌不能只归因于载重。
 
+## 5c. 合成结论能外推到标准算例吗？（Schneider 2014 原始数据）
+
+出处：`src/results/week06_std_evrp_summary.csv`（`week06_standard_instances.py`），图 `figures/std_instances.png`。
+
+上面所有 W6 数字都来自随机几何。`std_evrp_instances.make_evrp` 把 **Schneider (2014) 原始 E-VRPTW 算例**（真实坐标、真实时间窗、真实充电站、论文自己的车辆参数）转成 W6 的实例字典（时间单位＝分钟，因为论文取 `v = 1`；服务时间 90 分钟；电池 `Q/r` = 79.7 个距离单位；完整充电 `Q·g` = 270 分钟；载重 `C` = 200；无人机航程 = 该实例"仓库-顾客平均距离"的 2.5 倍）。随后用同一套评估器与变体重跑：6 个族 × 4 个顾客子集 = **每个规模 24 个样本**。
+
+| N | 标准算例增益 | 合成参照 | 超时顾客 V1 → V2 | V2 卸载率 | V2 充电次数 |
+|---|---:|---:|---:|---:|---:|
+| 8 | **54.8%** | 34.5% | 5.17 → 0.96 | 17.2% | 0.96 |
+| 12 | **48.8%** | 29.0% | 8.79 → 2.92 | 13.9% | 1.42 |
+| 16 | **43.7%** | 28.7% | 12.71 → 4.96 | 13.8% | 1.96 |
+| 20 | **41.0%** | 24.8% | 16.96 → 7.71 | 11.7% | 2.17 |
+
+- **合成算例的结论是保守的**：同一模型在标准数据上每个规模都好 1.5–1.7 倍，而且"规模越大收益越小"的顺序不变。
+- **无人机同时修复了时间窗**：每个实例的超时顾客数下降 4.2 / 5.9 / 7.8 / 9.3。合成算例方向相同，但 Schneider 的时间窗紧得多，效果因此变成显性结论。
+- **论文自己的车队载重暴露了"单卡车"假设**：用论文的 `C = 200` 时，N=8 有 0/24、N=12 有 7/24、N=16/20 各 12/24 个样本的卡车本身不可行（V2 可行性 100 / 100 / 58 / 50%）；用 W6 默认 `CAP = 1000` 时 96 个样本全部可行。这就是 §5b 的边界在标准数据上的复现。
+- 边界说明：这些是"单卡车"跑在"为车队设计"（`m` = 7–30 辆车）的算例上，衡量的是真实几何/时间窗/电池下无人机的**相对**价值，不等于 Schneider 等价解的代价（后者见 `docs/baselines/schneider_evrptw_replication_zh.md`）。
+
+
 
 ---
 
@@ -265,6 +284,7 @@ K 从 1 增到 3 全面提升（N=50：29.5%→38.1%），并抬高规模衰减�
 | 消融 | `week07_improvement_ablation.py` | `week07_ablation_raw.csv` / `_summary.csv` | — |
 | 规模 | `week06_largeN.py` | `week06_largeN_results.csv` / `_summary.csv` | `largen_scale_decay.png` |
 | 载重 | `week06_capacity_study.py` | `week06_capacity_raw.csv` / `_summary.csv` | `capacity_binding.png` |
+| 标准算例 | `week06_standard_instances.py` + `std_evrp_instances.py` | `week06_std_evrp_raw.csv` / `_summary.csv` | `std_instances.png` |
 | LNS 改进 | `week08_lns.py` | `week08_lns_raw.csv` / `_summary.csv` | `lns_vs_greedy.png` |
 | 多无人机 | `week08_multidrone.py`（+ week07 的 K 架评估器） | `week08_multidrone_raw.csv` / `_summary.csv` | `multidrone.png` |
 | 标准算例多无人机 | `week08_multidrone_std.py` + `fstsp_instances.py` | `week08_multidrone_std_raw.csv` / `_summary.csv` | `multidrone_std.png` |

@@ -47,6 +47,14 @@ boundary** of the synergy (all 5-seed means; error bands in `figures/sensitivity
 V2 averages **88.6 / 100 late customers** (time-window feasibility collapses, because the greedy was
 never TW-feasible by construction). Full curves in `figures/largen_scale_decay.png`.
 
+**Standard-instance check (Schneider 2014, 24 samples per size)**: the same evaluators and
+variants on real coordinates, real time windows, real stations and the paper's own battery give a
+*larger* collaboration gain than the synthetic reference — **54.8 / 48.8 / 43.7 / 41.0%** at
+N=8/12/16/20 against 34.5 / 29.0 / 28.7 / 24.8% — and the drone also cuts late customers from
+5.2 / 8.8 / 12.7 / 17.0 to 1.0 / 2.9 / 5.0 / 7.7. The synthetic line therefore *under-states* the
+collaboration benefit; what breaks the single-truck model on this data is the paper's own fleet
+capacity (C=200), not the geometry (`figures/std_instances.png`, evidence index §5c).
+
 **Overall conclusion**: truck–drone collaboration pays most when "customers are dispersed, drone
 range is unconstrained, and the problem scale is moderate"; once the scale is large enough that the
 battery constraint nearly doubles the truck's cost, the collaboration dividend is diluted (the
@@ -122,7 +130,7 @@ conclusion and together with it delimits where the method works.
 - **Synthetic instances extended to 100, but the effective window narrows to N ≤ 30**: I did not adopt
   the field's standard large-scale benchmark sets (e.g., the Solomon-derived FSTSP instances of
   Murray & Chu 2015 — which this project reproduced within their parameter range in W7; or the
-  Masmoudi et al. 2018 set). At N=100 the synergy collapses to 0.5% and V2 averages 88.8/100 late
+  Masmoudi et al. 2018 set) — although the W6 main line itself is now also cross-checked on the original Schneider (2014) E-VRPTW instances (`week06_standard_instances.py`), where the benefit is larger. At N=100 the synergy collapses to 0.5% and V2 averages 88.8/100 late
   customers (TW feasibility breaks down); extrapolation needs caution. W8 extension 2 re-ran 16
   standard instances built from official Solomon topologies (K=1/2/3/5) with a consistent
   conclusion, so the results no longer rest on random geometry alone.

@@ -6,6 +6,10 @@
 > also implemented the standard electric VRPTW with recharging stations from scratch and can
 > benchmark it against the literature BKS. All numbers come from
 > `src/experiments/schneider_evrptw.py` and `schneider_bks_compare.py` and are reproducible.
+>
+> The **same original instance files** also feed the truck–drone model: `std_evrp_instances.make_evrp`
+> converts them into the week-6 EVRP-TW format, and `week06_standard_instances.py` re-runs the
+> V0/V1/V2 line on real coordinates, time windows, stations and battery (evidence index §5c).
 
 ## 1. Model (E-VRPTW, full recharge, instantaneous)
 

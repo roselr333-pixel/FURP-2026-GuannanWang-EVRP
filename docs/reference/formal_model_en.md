@@ -33,7 +33,7 @@ Sections 2-5 describe the core model, section 6 the variant differences.
 |---|---|
 | $0$ | depot, start and end of the truck route |
 | $C = \{1,\dots,n\}$ | customers |
-| $S$ | charging stations (four in the synthetic instances; empty in FSTSP-mode instances) |
+| $S$ | charging stations (four in the synthetic instances, 2-21 in the Schneider-derived ones; empty in FSTSP-mode instances) |
 | $V = \{0\} \cup C \cup S$ | nodes |
 | $A = \{(a,b) : a,b \in V,\ a \neq b\}$ | arcs |
 | $C_{\text{truck}}$ | customers served by the truck |
