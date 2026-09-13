@@ -95,9 +95,28 @@ Source: `src/results/week06_largeN_summary.csv` (from `week06_largeN.py`).
 |---|---:|---:|---:|---:|
 | N=30 | 8.6% | 11.3% | 0.122 M | 20.4 / 30 |
 | N=50 | 3.4% | 5.2% | 1.012 M | 39.0 / 50 |
-| N=100 | 0.5% | 2.6% | 23.935 M | 88.8 / 100 |
+| N=100 | 0.5% | 2.8% | 22.531 M | 88.6 / 100 |
 
-At N=50 the V1 (battery+recharge) cost ≈ 5670 vs V0 (no battery) ≈ 3094 — the battery constraint alone nearly doubles the truck cost for N≥30, and the drone can only bypass a limited amount of recharge routing, so the synergy benefit is diluted. At **N=100** the synergy collapses to 0.5%, offload rate drops to 2.6%, and V2 averages **88.8/100 late customers** — the greedy cannot meet time windows at this scale (it was never TW-feasible by construction; `feasible` here means energy-only). The scale boundary is shown in `figures/largen_scale_decay.png`; the reading is that the *effective* collaboration interval narrows to **N ≤ 30** (only 3.4% is left at N=50).
+At N=50 the V1 (battery+recharge) cost ≈ 5670 vs V0 (no battery) ≈ 3094 — the battery constraint alone nearly doubles the truck cost for N≥30, and the drone can only bypass a limited amount of recharge routing, so the synergy benefit is diluted. At **N=100** the synergy collapses to 0.5%, offload rate drops to 2.8%, and V2 averages **88.6/100 late customers** — the greedy cannot meet time windows at this scale (it was never TW-feasible by construction; `feasible` here means energy-only). The scale boundary is shown in `figures/largen_scale_decay.png`; the reading is that the *effective* collaboration interval narrows to **N ≤ 30** (only 3.4% is left at N=50). One of the five N=100 instances is also capacity-infeasible (demand 1081 > CAP=1000, see §5b), so that row averages the other four.
+
+## 5b. Truck capacity (CAP=1000, now enforced)
+
+Source: `src/results/week06_capacity_summary.csv` (`week06_capacity_study.py`), figure `figures/capacity_binding.png`.
+
+`CAP` used to be declared but unchecked, so every ground-air number above was computed on a capacity-free model. It is now enforced — the demand carried on the truck route may not exceed the cap, and offloading a customer to the drone removes its demand from the truck — and the collaborative greedy repairs an overload (cheapest feasible offload first) before it maximises the makespan gain.
+
+| Cap | Sizes where it binds | V2 repairs the overload | Demand range |
+|---|---|---:|---:|
+| **1000 (declared)** | N=100, 1 of 5 instances (demand 1081) | 0% of the binding cells | 81 … 994 units for N=8 … N=100 |
+| 600 | N=100, 5/5 | 0% | same |
+| 400 | N=50, 5/5; N=100, 5/5 | 0% | same |
+
+Three readings:
+
+- **The declared cap is free where the published results live.** Total demand is at most 533 units on the N≤50 seeds, so the W6 headline (N=8–20) re-runs byte-identical and the N=30/50 rows above are unchanged; only the N=100 instance with demand 1081 exceeds 1000, and it is capacity-infeasible for V0, V1 and V2 (V2 repairs 1081 → 1026, still above the cap). That instance is therefore excluded from the N=100 row, which averages the other four.
+- **When the cap binds, the drone cannot rescue the plan.** V2 leaves 64.7% (N=8) to 97.2% (N=100) of the demand on the truck, i.e. one serial drone removes only 35.3% → 2.8% of it, so every binding cell in the study stays infeasible. In practice the constraint behaves like a hard "total demand ≤ cap" bound; the natural fixes are a load-aware LNS or several drones.
+- **Capacity and energy are separate gates.** At N=100 V1/V2 are energy-feasible in 0 of 5 instances (the truck route fails the battery/recharge model), so the N=100 feasibility collapse must not be attributed to capacity alone.
+
 
 ---
 
@@ -252,6 +271,7 @@ Grouped by nature; each item gives its "consequence + next step" so it reads as 
 | Multi-objective | `week06_multi_objective.py` | `week06_multi_objective.csv` | `mo_scatter.png` / `mo_tradeoff.png` |
 | Ablation | `week07_improvement_ablation.py` | `week07_ablation_raw.csv` / `_summary.csv` | — |
 | Scale | `week06_largeN.py` | `week06_largeN_results.csv` / `_summary.csv` | `largen_scale_decay.png` |
+| Capacity | `week06_capacity_study.py` | `week06_capacity_raw.csv` / `_summary.csv` | `capacity_binding.png` |
 | LNS improvement | `week08_lns.py` | `week08_lns_raw.csv` / `_summary.csv` | `lns_vs_greedy.png` |
 | Multi-drone | `week08_multidrone.py` (+ week07 K-drone evaluator) | `week08_multidrone_raw.csv` / `_summary.csv` | `multidrone.png` |
 | Multi-drone (standard) | `week08_multidrone_std.py` + `fstsp_instances.py` | `week08_multidrone_std_raw.csv` / `_summary.csv` | `multidrone_std.png` |

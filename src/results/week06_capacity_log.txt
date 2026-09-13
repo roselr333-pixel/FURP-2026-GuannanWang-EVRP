@@ -1,0 +1,90 @@
+==============================================================================
+TRUCK CAPACITY STUDY — is the declared CAP binding?
+==============================================================================
+sizes=[8, 12, 16, 20, 30, 50, 100]  seeds=5 (base 20260720)  caps=[1000, 600, 400] + unlimited reference
+declared CAP=1000  demand per customer ~ U[5, 15]  truck_speed=1.0  drone_range=160.0
+capacity rule: demand carried on the truck route <= cap (V2 may offload customers to the drone)
+
+=== N=8 ===
+  seed 20260720: total demand=  85  cap1000=free  cap600=free  cap400=free
+  seed 20260721: total demand=  86  cap1000=free  cap600=free  cap400=free
+  seed 20260722: total demand=  86  cap1000=free  cap600=free  cap400=free
+  seed 20260723: total demand=  73  cap1000=free  cap600=free  cap400=free
+  seed 20260724: total demand=  75  cap1000=free  cap600=free  cap400=free
+
+=== N=12 ===
+  seed 20260720: total demand= 123  cap1000=free  cap600=free  cap400=free
+  seed 20260721: total demand= 118  cap1000=free  cap600=free  cap400=free
+  seed 20260722: total demand= 130  cap1000=free  cap600=free  cap400=free
+  seed 20260723: total demand= 105  cap1000=free  cap600=free  cap400=free
+  seed 20260724: total demand= 130  cap1000=free  cap600=free  cap400=free
+
+=== N=16 ===
+  seed 20260720: total demand= 163  cap1000=free  cap600=free  cap400=free
+  seed 20260721: total demand= 151  cap1000=free  cap600=free  cap400=free
+  seed 20260722: total demand= 171  cap1000=free  cap600=free  cap400=free
+  seed 20260723: total demand= 166  cap1000=free  cap600=free  cap400=free
+  seed 20260724: total demand= 147  cap1000=free  cap600=free  cap400=free
+
+=== N=20 ===
+  seed 20260720: total demand= 214  cap1000=free  cap600=free  cap400=free
+  seed 20260721: total demand= 212  cap1000=free  cap600=free  cap400=free
+  seed 20260722: total demand= 204  cap1000=free  cap600=free  cap400=free
+  seed 20260723: total demand= 190  cap1000=free  cap600=free  cap400=free
+  seed 20260724: total demand= 184  cap1000=free  cap600=free  cap400=free
+
+=== N=30 ===
+  seed 20260720: total demand= 323  cap1000=free  cap600=free  cap400=free
+  seed 20260721: total demand= 295  cap1000=free  cap600=free  cap400=free
+  seed 20260722: total demand= 309  cap1000=free  cap600=free  cap400=free
+  seed 20260723: total demand= 291  cap1000=free  cap600=free  cap400=free
+  seed 20260724: total demand= 327  cap1000=free  cap600=free  cap400=free
+
+=== N=50 ===
+  seed 20260720: total demand= 471  cap1000=free  cap600=free  cap400=bind
+  seed 20260721: total demand= 490  cap1000=free  cap600=free  cap400=bind
+  seed 20260722: total demand= 496  cap1000=free  cap600=free  cap400=bind
+  seed 20260723: total demand= 493  cap1000=free  cap600=free  cap400=bind
+  seed 20260724: total demand= 499  cap1000=free  cap600=free  cap400=bind
+
+=== N=100 ===
+  seed 20260720: total demand= 993  cap1000=free  cap600=bind  cap400=bind
+  seed 20260721: total demand= 957  cap1000=free  cap600=bind  cap400=bind
+  seed 20260722: total demand=1081  cap1000=bind  cap600=bind  cap400=bind
+  seed 20260723: total demand= 942  cap1000=free  cap600=bind  cap400=bind
+  seed 20260724: total demand= 999  cap1000=free  cap600=bind  cap400=bind
+
+==============================================================================
+SUMMARY (mean over the 5 seeds; makespans only over feasible runs)
+==============================================================================
+  N | cap | demand | binds | V1_feas | V2_feas | V1_mk | V2_mk | gain% | V2_load | load% | off | V1_energy% | cap_repaired% | cost_vs_free%
+    8 | 1000 |   81.0 | 0/5 | 100% | 100% |    503.0 |    322.6 |  36.1 |   52.4 |  64.7% |  2.8 |    100% |        0% |    0.0
+    8 |  600 |   81.0 | 0/5 | 100% | 100% |    503.0 |    322.6 |  36.1 |   52.4 |  64.7% |  2.8 |    100% |        0% |    0.0
+    8 |  400 |   81.0 | 0/5 | 100% | 100% |    503.0 |    322.6 |  36.1 |   52.4 |  64.7% |  2.8 |    100% |        0% |    0.0
+   12 | 1000 |  121.2 | 0/5 | 100% | 100% |    697.5 |    536.2 |  23.2 |   94.2 |  77.7% |  2.6 |    100% |        0% |    0.0
+   12 |  600 |  121.2 | 0/5 | 100% | 100% |    697.5 |    536.2 |  23.2 |   94.2 |  77.7% |  2.6 |    100% |        0% |    0.0
+   12 |  400 |  121.2 | 0/5 | 100% | 100% |    697.5 |    536.2 |  23.2 |   94.2 |  77.7% |  2.6 |    100% |        0% |    0.0
+   16 | 1000 |  159.6 | 0/5 | 100% | 100% |    979.8 |    800.6 |  18.2 |  138.6 |  86.8% |  2.0 |    100% |        0% |    0.0
+   16 |  600 |  159.6 | 0/5 | 100% | 100% |    979.8 |    800.6 |  18.2 |  138.6 |  86.8% |  2.0 |    100% |        0% |    0.0
+   16 |  400 |  159.6 | 0/5 | 100% | 100% |    979.8 |    800.6 |  18.2 |  138.6 |  86.8% |  2.0 |    100% |        0% |    0.0
+   20 | 1000 |  200.8 | 0/5 | 100% | 100% |   1272.7 |   1080.6 |  14.5 |  174.8 |  87.1% |  2.6 |    100% |        0% |    0.0
+   20 |  600 |  200.8 | 0/5 | 100% | 100% |   1272.7 |   1080.6 |  14.5 |  174.8 |  87.1% |  2.6 |    100% |        0% |    0.0
+   20 |  400 |  200.8 | 0/5 | 100% | 100% |   1272.7 |   1080.6 |  14.5 |  174.8 |  87.1% |  2.6 |    100% |        0% |    0.0
+   30 | 1000 |  309.0 | 0/5 | 100% | 100% |   2353.0 |   2118.4 |  10.3 |  269.2 |  87.1% |  4.0 |    100% |        0% |    0.0
+   30 |  600 |  309.0 | 0/5 | 100% | 100% |   2353.0 |   2118.4 |  10.3 |  269.2 |  87.1% |  4.0 |    100% |        0% |    0.0
+   30 |  400 |  309.0 | 0/5 | 100% | 100% |   2353.0 |   2118.4 |  10.3 |  269.2 |  87.1% |  4.0 |    100% |        0% |    0.0
+   50 | 1000 |  489.8 | 0/5 | 100% | 100% |   6102.6 |   5900.7 |   3.3 |  465.4 |  95.0% |  2.8 |    100% |        0% |    0.0
+   50 |  600 |  489.8 | 0/5 | 100% | 100% |   6102.6 |   5900.7 |   3.3 |  465.4 |  95.0% |  2.8 |    100% |        0% |    0.0
+   50 |  400 |  489.8 | 5/5 |   0% |   0% |          |          |       |  451.0 |  92.1% |  3.0 |    100% |        0% |       
+  100 | 1000 |  994.4 | 1/5 |   0% |   0% |  36071.3 |  35888.1 |       |  966.8 |  97.2% |  2.4 |      0% |        0% |    0.0
+  100 |  600 |  994.4 | 5/5 |   0% |   0% |          |          |       |  957.0 |  96.2% |  2.8 |      0% |        0% |       
+  100 |  400 |  994.4 | 5/5 |   0% |   0% |          |          |       |  957.0 |  96.2% |  2.8 |      0% |        0% |       
+
+==============================================================================
+FINDINGS
+==============================================================================
+  1. At the declared CAP=1000 the constraint is free for N in [8, 12, 16, 20, 30, 50] and binds in 1 instance(s) at N in [100]; a cap below the total demand binds for every larger size.
+  2. When the cap binds, the truck-only variants are infeasible by construction and V2 removes enough demand to satisfy the cap in 0% of the binding cells (cap=400@N=50: 0%, cap=1000@N=100: 0%, cap=600@N=100: 0%, cap=400@N=100: 0%).
+  3. The repair ceiling is the drone, not the search: V2 leaves 64.7% (N=8) to 97.2% (N=100) of the demand on the truck, so one serial drone only removes a modest share. In practice the capacity constraint behaves like a hard "total demand <= cap" bound.
+  4. Capacity and energy are separate gates at N=100: V1/V2 are energy-feasible in 0%/0% of the instances, so the N=100 feasibility drop is not caused by capacity alone.
+  5. Natural fixes: a load-aware LNS (destroy-repair that treats the cap as a hard constraint), or several drones, which multiply the demand that can leave the truck.

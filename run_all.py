@@ -43,6 +43,7 @@ STEPS = [
     ("Drone energy/payload sweep",           "drone_energy_ablation.py",       "88 instances x BETA in {0, 0.02, 0.04}"),
     ("Exact optimality gap (CP-SAT)",       "week08_exact_gap.py",            "small n; exact optimum + heuristic gaps"),
     ("Paired significance tests",           "stat_tests.py",                  "Wilcoxon; reads W6/W7/W8 CSVs"),
+    ("Capacity study (is CAP binding?)",    "week06_capacity_study.py",       "declared CAP=1000 and 600/400 vs total demand"),
     # ---- week 1-5 experiments (small; included so one command covers them) ----
     ("Week 1 VRPTW smoke test",             "week01_baseline.py",             "5 customers; greedy + guided local search"),
     ("Week 3 fair comparison",              "week03_experiment.py",           "baseline vs 2-opt at n=10/20/40 + failure cases"),
@@ -65,6 +66,7 @@ STEPS = [
     ("Figure: multi-drone",                 "src/tools/plot_multidrone.py",         "reads week08_multidrone_summary.csv"),
     ("Figure: multi-drone (standard)",      "src/tools/plot_multidrone_std.py",     "reads week08_multidrone_std_summary.csv"),
     ("Figure: exact optimality gap",        "src/tools/plot_exact_gap.py",          "reads week08_exact_gap_summary.csv"),
+    ("Figure: capacity binding",            "src/tools/gen_capacity_figure.py",     "reads week06_capacity_summary.csv"),
     ("Figure: Schneider routes + vehicles", "src/tools/plot_schneider_routes.py",   "reads the Schneider comparison CSV"),
 ]
 

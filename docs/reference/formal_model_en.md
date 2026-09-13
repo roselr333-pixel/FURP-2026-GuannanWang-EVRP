@@ -61,7 +61,7 @@ customer radius).
 | $K$ | number of drones | 1 (main line); 1-5 (week-8 extension) |
 | $[e_i, l_i]$ | customer time window | width 220 synthetic, 35 for the tight-window cases |
 | $q_i$ | customer demand | 5-15 |
-| $\mathrm{CAP}$ | truck capacity | 1000 (declared; not enforced by the evaluator) |
+| $\mathrm{CAP}$ | truck capacity per route | 1000 (enforced: the demand carried on the truck route) |
 | $w$ | multi-objective weight | 0, 0.25, 0.5, 0.75, 1.0 |
 
 ---
@@ -172,8 +172,13 @@ Implemented and reflected in the results:
 
 Not modelled, or simplified:
 
-- **capacity is not enforced**: the parameter $\mathrm{CAP}$ exists but neither the
-  evaluator nor the heuristics check it, and $q_i$ enters no constraint;
+- **capacity is enforced on the truck, not on the drone**: the demand carried by
+  the truck route may not exceed $\mathrm{CAP} = 1000$, and offloading a customer to
+  the drone removes its demand from the truck. The declared value is free for
+  $N \le 50$ at the generated demands and binds on part of the $N = 100$ instances;
+  because one serial drone can only take ~10-20% of the demand off the truck, a
+  much tighter cap stays infeasible (study: `week06_capacity_study.py`,
+  `figures/capacity_binding.png`);
 - **no drone energy or payload model**: only the range $R$ limits a flight;
 - **recharging is not optimised**: the policy is fixed at "nearest station, full charge";
 - **time windows are not hard**: both the main line and V3 count violations;

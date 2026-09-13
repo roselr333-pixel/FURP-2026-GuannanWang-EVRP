@@ -43,8 +43,8 @@ boundary** of the synergy (all 5-seed means; error bands in `figures/sensitivity
 | Customer scale N (distance dim.) | 8 → 30 | 35.3% → 32.1% | distance-dim benefit dilutes with scale |
 
 **Scale extension (time dimension, N=30/50/100, 5 seeds)**: V2's makespan advantage over V1 goes
-8.6% → 3.4% → 0.5%, while the offload rate falls 11.3% → 5.2% → 2.6% monotonically; at N=100
-V2 averages **88.8 / 100 late customers** (time-window feasibility collapses, because the greedy was
+8.6% → 3.4% → 0.5%, while the offload rate falls 11.3% → 5.2% → 2.8% monotonically; at N=100
+V2 averages **88.6 / 100 late customers** (time-window feasibility collapses, because the greedy was
 never TW-feasible by construction). Full curves in `figures/largen_scale_decay.png`.
 
 **Overall conclusion**: truck–drone collaboration pays most when "customers are dispersed, drone
@@ -114,6 +114,11 @@ conclusion and together with it delimits where the method works.
 - **Drone count**: all results use a single truck; the W8 extension tests "single drone" up to
   K=1/2/3 (K=1→3 lifts the N=50 benefit from 29.5% to 38.1%), but still on the FSTSP evaluator
   (no time windows or energy).
+- **Truck capacity is now enforced, and it is the binding limit at N=100**: with `CAP=1000`
+  the constraint is free for N≤50 but one of the five N=100 instances (demand 1081) becomes
+  infeasible for all three variants; with a cap below the total demand the single-drone greedy
+  cannot repair the overload — it leaves 64.7% (N=8) to 97.2% (N=100) of the demand on the
+  truck (`week06_capacity_study.py`, figure `figures/capacity_binding.png`).
 - **Synthetic instances extended to 100, but the effective window narrows to N ≤ 30**: I did not adopt
   the field's standard large-scale benchmark sets (e.g., the Solomon-derived FSTSP instances of
   Murray & Chu 2015 — which this project reproduced within their parameter range in W7; or the

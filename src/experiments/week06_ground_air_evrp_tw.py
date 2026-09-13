@@ -42,13 +42,13 @@ RECHARGE = 40      # full recharge time at a station (battery swap assumption)
 RHO = 1.0          # energy consumed per distance unit
 R_D = 160.0        # drone max flight length per trip (multi-customer total)
 Q_DEFAULT = 250    # truck battery capacity
-CAP = 1000         # vehicle capacity (kept high so capacity is non-binding)
+CAP = 1000         # truck load capacity (enforced: demand carried on the route)
 
 
 # ---------------------------------------------------------------------------
 # instance generation (seeded -> reproducible)
 # ---------------------------------------------------------------------------
-def make_instance(n, seed, tw_tight=False, q=None):
+def make_instance(n, seed, tw_tight=False, q=None, cap=None):
     rng = random.Random(seed)
     depot = (0.0, 0.0)
     customers = {}
@@ -73,6 +73,7 @@ def make_instance(n, seed, tw_tight=False, q=None):
         "depot": depot, "customers": customers, "stations": stations,
         "tw": tw, "demand": demand, "coord": coord,
         "Q": q if q is not None else Q_DEFAULT, "n": n,
+        "cap": CAP if cap is None else cap,
     }
 
 
@@ -100,8 +101,16 @@ def nn_order(inst, cust_ids):
 
 
 def truck_ev_route(inst, cust_ids, allow_recharge, q=None):
-    """Greedy EV truck route over cust_ids. Returns a dict of results."""
+    """Greedy EV truck route over cust_ids. Returns a dict of results.
+
+    Capacity: the truck may carry at most `inst["cap"]` (default CAP) units of
+    demand, so a customer set whose total demand exceeds it is infeasible
+    (`cap_inf`); the route and travel distance are still reported.
+    """
     Q = q if q is not None else inst["Q"]
+    cap = inst.get("cap", CAP)
+    truck_demand = sum(inst["demand"][c] for c in cust_ids)
+    cap_inf = truck_demand > cap
     rho = RHO
     order = nn_order(inst, cust_ids)
     route = [0]
@@ -148,15 +157,25 @@ def truck_ev_route(inst, cust_ids, allow_recharge, q=None):
     route.append(0)
 
     return {
-        "route": route, "makespan": t, "recharges": recharges,
+        "route": route,
+        "makespan": float("inf") if cap_inf else t,
+        "recharges": recharges,
         "charge_time": charge_time, "tw_viol": tw_viol,
-        "energy_inf": energy_inf, "total_dist": route_distance(inst, route),
+        "energy_inf": energy_inf, "cap_inf": cap_inf,
+        "truck_load": truck_demand, "capacity": cap,
+        "total_dist": route_distance(inst, route),
     }
 
 
 def route_distance(inst, route):
     return sum(dist(inst, route[i], route[i + 1])
                for i in range(len(route) - 1))
+
+
+def truck_load(inst, route):
+    """Demand the truck carries along `route` (depot and stations carry none)."""
+    return sum(inst["demand"][n] for n in route
+               if n != 0 and n not in inst["stations"])
 
 
 def node_extra(inst, node):
@@ -198,7 +217,7 @@ def _overlaps(i_pos, j_pos, intervals):
     return any(not (j_pos <= a or i_pos >= b) for a, b in intervals)
 
 
-def simulate(inst, route, drone_trips, rd=None):
+def simulate(inst, route, drone_trips, rd=None, check_cap=True):
     """
     Truck arrival times + drone mission finish time for a single-drone plan.
 
@@ -213,7 +232,9 @@ def simulate(inst, route, drone_trips, rd=None):
     is infeasible (drone finish time math.inf) when a launch does not precede
     its recovery, when a flight is longer than the range rd, when a sortie
     would start while the drone is still in the air, or when the launch or
-    recovery node is not on the route.
+    recovery node is not on the route. With `check_cap=False` the truck load is
+    not checked, which the search needs in order to measure a partial repair of
+    an overloaded route.
     """
     rd = R_D if rd is None else rd
     full = route[:]
@@ -221,6 +242,9 @@ def simulate(inst, route, drone_trips, rd=None):
     for p in range(1, len(full)):
         d = dist(inst, full[p - 1], full[p])
         arr[p] = arr[p - 1] + d / V_T + node_extra(inst, full[p])
+
+    if check_cap and truck_load(inst, full) > inst.get("cap", CAP):
+        return arr, math.inf
 
     if not drone_trips:
         return arr, 0.0
@@ -280,7 +304,7 @@ def _customer_list_is_feasible(inst, ln, custs, rn, launch_time, rd):
     return True
 
 
-def collaborative(inst, drone_range=None):
+def collaborative(inst, drone_range=None, cap=None):
     """
     Greedy improvement on top of the V1 truck route.
 
@@ -288,8 +312,16 @@ def collaborative(inst, drone_range=None):
       - drone trips can carry up to 2 customers per flight;
       - one launch/land node may be reused for several trips;
       - repeatedly picks the best feasible offload until no more gain.
+
+    Capacity: offloading a customer also removes its demand from the truck, so
+    when the route carries more than `cap` (default `inst["cap"]`) the same
+    search first repairs the overload (cheapest makespan first) and only then
+    maximises the makespan gain.
     """
     rd = drone_range if drone_range is not None else R_D
+    if cap is not None and cap != inst.get("cap", CAP):
+        inst = {**inst, "cap": cap}
+    cap = inst.get("cap", CAP)
     all_c = list(inst["customers"].keys())
     v1 = truck_ev_route(inst, all_c, allow_recharge=True)
     v1_route = v1["route"][:]
@@ -302,10 +334,15 @@ def collaborative(inst, drone_range=None):
     while True:
         # current truck route after removing offloaded customers
         route = [n for n in v1_route if n not in offloaded]
-        arr_cur, drone_cur = simulate(inst, route, drone_trips, rd)
+        # capacity is handled by the acceptance rule below rather than by the
+        # evaluator, so that a partial repair of an overloaded route is still
+        # measurable
+        arr_cur, drone_cur = simulate(inst, route, drone_trips, rd,
+                                      check_cap=False)
         if math.isinf(drone_cur):
             break
         mk_current = max(arr_cur[-1], drone_cur)
+        repairing = truck_load(inst, route) > cap
         accepted = _accepted_sortie_intervals(route, drone_trips)
 
         best = None
@@ -326,18 +363,29 @@ def collaborative(inst, drone_range=None):
                 if not candidates:
                     continue
 
-                def consider(custs, ln=ln, rn=rn):
-                    """Keep this sortie only if the physical plan improves."""
+                def consider(custs, ln=ln, rn=rn, span=j_idx - i_idx):
+                    """Keep this sortie if it repairs an overloaded truck, or if
+                    it improves the makespan of an already feasible plan."""
                     nonlocal best, sync_rejected
                     test_route = [n for n in route if n not in custs]
                     new_trips = drone_trips + [(ln, list(custs), rn)]
-                    a2, d2 = simulate(inst, test_route, new_trips, rd)
+                    a2, d2 = simulate(inst, test_route, new_trips, rd,
+                                      check_cap=False)
                     if math.isinf(d2):
                         sync_rejected += 1
                         return
-                    gain = mk_current - max(a2[-1], d2)
-                    if gain > 0 and (best is None or gain > best[0]):
-                        best = (gain, ln, rn, custs)
+                    if repairing:
+                        # repair objective: take as much demand off the truck as
+                        # possible and keep the drone's airborne interval short,
+                        # so that further repairs remain schedulable
+                        score = -truck_load(inst, test_route) * 1000.0 - span
+                        if best is None or score > best[0]:
+                            best = (score, ln, rn, custs)
+                    else:
+                        mk_after = max(a2[-1], d2)
+                        gain = mk_current - mk_after
+                        if gain > 0 and (best is None or gain > best[0]):
+                            best = (gain, ln, rn, custs)
 
                 # single-customer trips
                 for k in candidates:
@@ -374,7 +422,8 @@ def collaborative(inst, drone_range=None):
     # final V2 route: original V1 route with offloaded customers removed
     v2_route = [n for n in v1_route if n not in offloaded]
     arr2, drone_mk = simulate(inst, v2_route, drone_trips, rd)
-    plan_valid = not math.isinf(drone_mk)
+    cap_inf = truck_load(inst, v2_route) > cap
+    plan_valid = (not math.isinf(drone_mk)) and not cap_inf
     truck_mk = arr2[-1]
 
     # truck time-window violations on the final V2 route
@@ -417,6 +466,8 @@ def collaborative(inst, drone_range=None):
         "tw_viol": tw_viol_truck + tw_viol_drone,
         "energy_inf": v1["energy_inf"], "sync_rejected": sync_rejected,
         "plan_valid": plan_valid,
+        "cap_inf": cap_inf, "truck_load": truck_load(inst, v2_route),
+        "capacity": cap,
         "offloaded": len(offloaded), "n_customers": inst["n"],
     }
 
@@ -429,22 +480,32 @@ def run_variant(inst, kind):
     if kind == "V0":
         r = truck_ev_route(inst, all_c, allow_recharge=False, q=10 ** 9)
         return {"makespan": r["makespan"], "total_dist": r["total_dist"],
-                "feasible": not r["energy_inf"], "tw_viol": r["tw_viol"],
-                "energy_viol": 0, "recharges": 0, "charge_time": 0.0,
-                "sync_viol": 0, "offloaded": 0, "plan_valid": True}
+                "feasible": not (r["energy_inf"] or r["cap_inf"]),
+                "tw_viol": r["tw_viol"],
+                "energy_viol": 0, "cap_viol": 1 if r["cap_inf"] else 0,
+                "truck_load": r["truck_load"], "capacity": r["capacity"],
+                "recharges": 0, "charge_time": 0.0,
+                "sync_viol": 0, "offloaded": 0,
+                "plan_valid": not r["cap_inf"]}
     if kind == "V1":
         r = truck_ev_route(inst, all_c, allow_recharge=True)
         return {"makespan": r["makespan"], "total_dist": r["total_dist"],
-                "feasible": not r["energy_inf"], "tw_viol": r["tw_viol"],
+                "feasible": not (r["energy_inf"] or r["cap_inf"]),
+                "tw_viol": r["tw_viol"],
                 "energy_viol": 1 if r["energy_inf"] else 0,
+                "cap_viol": 1 if r["cap_inf"] else 0,
+                "truck_load": r["truck_load"], "capacity": r["capacity"],
                 "recharges": r["recharges"], "charge_time": r["charge_time"],
-                "sync_viol": 0, "offloaded": 0, "plan_valid": True}
+                "sync_viol": 0, "offloaded": 0,
+                "plan_valid": not r["cap_inf"]}
     # V2 collaborative
     r = collaborative(inst)
     return {"makespan": r["makespan"], "total_dist": r["total_dist"],
             "feasible": (not r["energy_inf"]) and r["plan_valid"],
             "tw_viol": r["tw_viol"],
             "energy_viol": 1 if r["energy_inf"] else 0,
+            "cap_viol": 1 if r["cap_inf"] else 0,
+            "truck_load": r["truck_load"], "capacity": r["capacity"],
             "recharges": r["recharges"], "charge_time": r["charge_time"],
             "sync_viol": r["sync_rejected"], "offloaded": r["offloaded"],
             "plan_valid": r["plan_valid"]}
@@ -504,7 +565,9 @@ def main():
                 vd[kind] = res
                 for k, v in res.items():
                     row[f"{kind}_{k}"] = v
-            if row["V1_makespan"] > 0:
+            if (math.isfinite(row["V1_makespan"])
+                    and math.isfinite(row["V2_makespan"])
+                    and row["V1_makespan"] > 0):
                 imp = (row["V1_makespan"] - row["V2_makespan"]) / \
                     row["V1_makespan"] * 100
                 row["imp_v2_vs_v1_pct"] = round(imp, 2)
@@ -538,7 +601,10 @@ def main():
     for n in SIZES:
         v0, v1, v2 = acc[n]["V0"], acc[n]["V1"], acc[n]["V2"]
         imp = _mean([(r1["makespan"] - r2["makespan"]) / r1["makespan"] * 100
-                     for r1, r2 in zip(v1, v2) if r1["makespan"] > 0])
+                     for r1, r2 in zip(v1, v2)
+                     if math.isfinite(r1["makespan"])
+                     and math.isfinite(r2["makespan"])
+                     and r1["makespan"] > 0])
         off_rate = _mean([r["offloaded"] / n * 100 for r in v2])
         srow = {
             "size": n,
@@ -558,6 +624,11 @@ def main():
             "V2_recharges_mean": round(_mean([r["recharges"] for r in v2]), 1),
             "V2_tw_viol_mean": round(_mean([r["tw_viol"] for r in v2]), 1),
             "V2_runtime_mean": round(_mean([r["runtime"] for r in v2]), 4),
+            "capacity": v1[0]["capacity"],
+            "V1_cap_viol_rate": round(_rate([r["cap_viol"] for r in v1]), 3),
+            "V2_cap_viol_rate": round(_rate([r["cap_viol"] for r in v2]), 3),
+            "V1_truck_load_mean": round(_mean([r["truck_load"] for r in v1]), 1),
+            "V2_truck_load_mean": round(_mean([r["truck_load"] for r in v2]), 1),
         }
         summary_rows.append(srow)
         L.append(

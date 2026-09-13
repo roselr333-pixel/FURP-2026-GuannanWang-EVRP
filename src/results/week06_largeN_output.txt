@@ -6,35 +6,35 @@ truck_speed=1.0  drone_speed=2.0  drone_range=160.0  battery=250  recharge=40s
 variants: V0 truck-only(no EV) | V1 truck EV | V2 ground-air collab
 
 === size N=30 ===
-  seed 20260820: V0=  1538.9 V1=  2386.8 V2=  2183.0  imp=  8.5%  off=4/30  syncRej=109369  twv=24  0.25s
-  seed 20260821: V0=  1940.9 V1=  2597.7 V2=  2412.4  imp=  7.1%  off=2/30  syncRej=117392  twv=20  0.36s
-  seed 20260822: V0=  1641.8 V1=  2174.2 V2=  1984.5  imp=  8.7%  off=3/30  syncRej=117728  twv=21  0.31s
-  seed 20260823: V0=  1569.4 V1=  2057.5 V2=  1850.4  imp= 10.1%  off=4/30  syncRej=108205  twv=17  0.47s
-  seed 20260824: V0=  1688.6 V1=  2295.0 V2=  2097.1  imp=  8.6%  off=4/30  syncRej=156466  twv=20  0.38s
+  seed 20260820: V0=  1538.9 V1=  2386.8 V2=  2183.0  imp=  8.5%  off=4/30  syncRej=109369  twv=24  feas=111  cap=-  0.20s
+  seed 20260821: V0=  1940.9 V1=  2597.7 V2=  2412.4  imp=  7.1%  off=2/30  syncRej=117392  twv=20  feas=111  cap=-  0.28s
+  seed 20260822: V0=  1641.8 V1=  2174.2 V2=  1984.5  imp=  8.7%  off=3/30  syncRej=117728  twv=21  feas=111  cap=-  0.28s
+  seed 20260823: V0=  1569.4 V1=  2057.5 V2=  1850.4  imp= 10.1%  off=4/30  syncRej=108205  twv=17  feas=111  cap=-  0.39s
+  seed 20260824: V0=  1688.6 V1=  2295.0 V2=  2097.1  imp=  8.6%  off=4/30  syncRej=156466  twv=20  feas=111  cap=-  0.36s
 
 === size N=50 ===
-  seed 20260820: V0=  3240.3 V1=  5677.2 V2=  5419.6  imp=  4.5%  off=4/50  syncRej=1401620  twv=40  3.52s
-  seed 20260821: V0=  2948.0 V1=  6063.6 V2=  5905.1  imp=  2.6%  off=2/50  syncRej=901623  twv=37  3.09s
-  seed 20260822: V0=  3260.7 V1=  5725.3 V2=  5511.0  imp=  3.7%  off=2/50  syncRej=918213  twv=41  3.10s
-  seed 20260823: V0=  3055.2 V1=  5718.2 V2=  5496.9  imp=  3.9%  off=2/50  syncRej=960086  twv=38  3.99s
-  seed 20260824: V0=  2965.5 V1=  5125.2 V2=  5010.6  imp=  2.2%  off=3/50  syncRej=880433  twv=39  3.23s
+  seed 20260820: V0=  3240.3 V1=  5677.2 V2=  5419.6  imp=  4.5%  off=4/50  syncRej=1401620  twv=40  feas=111  cap=-  2.37s
+  seed 20260821: V0=  2948.0 V1=  6063.6 V2=  5905.1  imp=  2.6%  off=2/50  syncRej=901623  twv=37  feas=111  cap=-  1.71s
+  seed 20260822: V0=  3260.7 V1=  5725.3 V2=  5511.0  imp=  3.7%  off=2/50  syncRej=918213  twv=41  feas=111  cap=-  1.70s
+  seed 20260823: V0=  3055.2 V1=  5718.2 V2=  5496.9  imp=  3.9%  off=2/50  syncRej=960086  twv=38  feas=111  cap=-  2.12s
+  seed 20260824: V0=  2965.5 V1=  5125.2 V2=  5010.6  imp=  2.2%  off=3/50  syncRej=880433  twv=39  feas=111  cap=-  1.83s
 
 === size N=100 ===
-  seed 20260820: V0=  8206.3 V1= 36939.8 V2= 36742.6  imp=  0.5%  off=2/100  syncRej=23560702  twv=91  68.43s
-  seed 20260821: V0=  8326.5 V1= 34929.9 V2= 34700.3  imp=  0.7%  off=4/100  syncRej=23859526  twv=86  72.89s
-  seed 20260822: V0=  7942.0 V1= 34655.0 V2= 34453.5  imp=  0.6%  off=3/100  syncRej=28010345  twv=91  82.61s
-  seed 20260823: V0=  7331.8 V1= 30636.5 V2= 30437.2  imp=  0.7%  off=2/100  syncRej=24587431  twv=87  77.45s
-  seed 20260824: V0=  7674.1 V1= 33219.8 V2= 33130.4  imp=  0.3%  off=2/100  syncRej=19654686  twv=89  63.85s
+  seed 20260820: V0=  8206.3 V1= 36939.8 V2= 36742.6  imp=  0.5%  off=2/100  syncRej=23560702  twv=91  feas=100  cap=-  40.28s
+  seed 20260821: V0=  8326.5 V1= 34929.9 V2= 34700.3  imp=  0.7%  off=4/100  syncRej=23859526  twv=86  feas=100  cap=-  42.62s
+  seed 20260822: V0=     inf V1=     inf V2=     inf  imp=  n/a   off=4/100  syncRej=20996926  twv=90  feas=000  cap=Y  36.23s
+  seed 20260823: V0=  7331.8 V1= 30636.5 V2= 30437.2  imp=  0.7%  off=2/100  syncRej=24587431  twv=87  feas=100  cap=-  45.06s
+  seed 20260824: V0=  7674.1 V1= 33219.8 V2= 33130.4  imp=  0.3%  off=2/100  syncRej=19654686  twv=89  feas=100  cap=-  36.59s
 
 ==============================================================================
 AGGREGATE (mean over seeds per size)
 ==============================================================================
   [V2 mean TW violations = 20.4 / 30 customers]
-  N=30: V0=  1675.9 V1=  2302.2 V2=  2105.5  V2_vs_V1=  8.6%  off=3.4/30  twv=20.4
+  N=30: V0=  1675.9 V1=  2302.2 V2=  2105.5  V2_vs_V1=  8.6%  off=3.4/30  twv=20.4  feas(V0/V1/V2)=100/100/100%  cap_infeasible=0/5
   [V2 mean TW violations = 39.0 / 50 customers]
-  N=50: V0=  3093.9 V1=  5661.9 V2=  5468.6  V2_vs_V1=  3.4%  off=2.6/50  twv=39.0
-  [V2 mean TW violations = 88.8 / 100 customers]
-  N=100: V0=  7896.1 V1= 34076.2 V2= 33892.8  V2_vs_V1=  0.5%  off=2.6/100  twv=88.8
+  N=50: V0=  3093.9 V1=  5661.9 V2=  5468.6  V2_vs_V1=  3.4%  off=2.6/50  twv=39.0  feas(V0/V1/V2)=100/100/100%  cap_infeasible=0/5
+  [V2 mean TW violations = 88.6 / 100 customers]
+  N=100: V0=  7884.7 V1= 33931.5 V2= 33752.6  V2_vs_V1=  0.5%  off=2.8/100  twv=88.6  feas(V0/V1/V2)=80/0/0%  cap_infeasible=1/5
 
-Total runtime: 383.9s
+Total runtime: 212.0s
 ==============================================================================

@@ -95,9 +95,28 @@ sanity check：abl_cap1（每架 1 顾客）≡ published(M&C 2015) 已发表启
 |---|---:|---:|---:|---:|
 | N=30 | 8.6% | 11.3% | 12.2 万 | 20.4 / 30 |
 | N=50 | 3.4% | 5.2% | 101.2 万 | 39.0 / 50 |
-| N=100 | 0.5% | 2.6% | 2393.5 万 | 88.8 / 100 |
+| N=100 | 0.5% | 2.8% | 2253.2 万 | 88.6 / 100 |
 
-N=50 时 V1（电池+充电）代价 ≈ 5670 vs V0（无电池）≈ 3094——电池约束本身在 N≥30 给卡车加近一倍代价，V2 无人机能绕开的充电路径有限，协同收益被稀释。到 **N=100** 协同收益坍缩至 0.5%、卸载率降至 2.6%、V2 平均 **88.8/100 顾客超时**（贪心本就不保证 TW 可行，`feasible` 仅指能量可行）；规模边界见 `figures/largen_scale_decay.png`，结论是**有效协同区间收窄到 N ≤ 30**（N=50 只剩 3.4%）。
+N=50 时 V1（电池+充电）代价 ≈ 5670 vs V0（无电池）≈ 3094——电池约束本身在 N≥30 给卡车加近一倍代价，V2 无人机能绕开的充电路径有限，协同收益被稀释。到 **N=100** 协同收益坍缩至 0.5%、卸载率降至 2.8%、V2 平均 **88.6/100 顾客超时**（贪心本就不保证 TW 可行，`feasible` 仅指能量可行）；规模边界见 `figures/largen_scale_decay.png`，结论是**有效协同区间收窄到 N ≤ 30**（N=50 只剩 3.4%）。另外 N=100 有 1 个算例在 CAP=1000 下不可行（需求 1081，见 §5b），该行取其余 4 个的均值。
+
+## 5b. 卡车载重（CAP=1000，已启用）
+
+出处：`src/results/week06_capacity_summary.csv`（`week06_capacity_study.py`），图 `figures/capacity_binding.png`。
+
+`CAP` 之前只是声明、没有检查，所以上面所有地面-空中结果都是在"无载重"模型上得到的。现在已启用：卡车路线承载的需求之和不得超过 cap，顾客被无人机卸载后其需求也随之离开卡车；协同贪心会先修复超载（选代价最小的可行卸载），再追求 makespan 增益。
+
+| cap | 在哪些规模 binding | V2 能否修复超载 | 需求范围 |
+|---|---:|---:|---:|
+| **1000（声明值）** | N=100：5 个算例中 1 个（需求 1081） | binding 单元中 0% | N=8→100 为 81~994 |
+| 600 | N=100：5/5 | 0% | 同上 |
+| 400 | N=50：5/5；N=100：5/5 | 0% | 同上 |
+
+三点结论：
+
+- **声明值在已发表结果的区间内不 binding**：N≤50 的种子上总需求最多 533，所以 W6 主线（N=8–20）重跑逐位不变、上表 N=30/50 两行也不变；只有 N=100 中需求 1081 的那一个算例超过 1000，而它对本族三个变体都不可行（V2 只能从 1081 修到 1026）。该算例被排除在 N=100 那一行之外，该行是其余 4 个的均值。
+- **一旦 binding，无人机救不回来**：V2 留在卡车上的需求从 N=8 的 64.7% 升到 N=100 的 97.2%，即单架串行无人机只能卸下 35.3%→2.8%；研究里所有 binding 单元最终仍不可行。实际上这条约束接近"总需求 ≤ cap"的硬界，可行的修法是"载重感知的 LNS"或增加无人机。
+- **载重与电量是两道独立的门**：N=100 时 V1/V2 的能量可行性是 0/5（卡车路线本身过不了电池+充电模型），所以 N=100 的可行性崩塌不能只归因于载重。
+
 
 ---
 
@@ -245,6 +264,7 @@ K 从 1 增到 3 全面提升（N=50：29.5%→38.1%），并抬高规模衰减�
 | 多目标 | `week06_multi_objective.py` | `week06_multi_objective.csv` | `mo_scatter.png` / `mo_tradeoff.png` |
 | 消融 | `week07_improvement_ablation.py` | `week07_ablation_raw.csv` / `_summary.csv` | — |
 | 规模 | `week06_largeN.py` | `week06_largeN_results.csv` / `_summary.csv` | `largen_scale_decay.png` |
+| 载重 | `week06_capacity_study.py` | `week06_capacity_raw.csv` / `_summary.csv` | `capacity_binding.png` |
 | LNS 改进 | `week08_lns.py` | `week08_lns_raw.csv` / `_summary.csv` | `lns_vs_greedy.png` |
 | 多无人机 | `week08_multidrone.py`（+ week07 的 K 架评估器） | `week08_multidrone_raw.csv` / `_summary.csv` | `multidrone.png` |
 | 标准算例多无人机 | `week08_multidrone_std.py` + `fstsp_instances.py` | `week08_multidrone_std_raw.csv` / `_summary.csv` | `multidrone_std.png` |

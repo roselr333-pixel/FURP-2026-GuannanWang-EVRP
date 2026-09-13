@@ -55,6 +55,7 @@ python -m pytest tests/ -q
 | V3（电动卡车+无人机+充电+时间窗；相对纯电卡车 K=1 降 33.5%~52.4%、K=3 达 72.5%） | `v3_ev_collab.py` | 4 规模 × 10 种子 × K=1/2/3；确定性 | `src/results/v3_ev_collab_summary.csv`、`v3_ev_collab_raw.csv` |
 | 精确最优性 gap（CP-SAT 求小规模精确最优，对照我的贪心/LNS） | `week08_exact_gap.py` + `cpsat_fstsp.py` | n=8/10/12 × 5 种子；CP-SAT 上限 180s | `src/results/week08_exact_gap_raw.csv` / `_summary.csv` |
 | 配对显著性检验（Wilcoxon 符号秩） | `stat_tests.py` | 读 W6/W7/W8 的 CSV；numpy 手写、无新依赖 | `src/results/stat_tests.csv` |
+| 卡车载重是否 binding（CAP=1000 已启用） | `week06_capacity_study.py` | 7 个规模 × 5 种子 × cap ∈ {1000, 600, 400} | `src/results/week06_capacity_summary.csv`、`figures/capacity_binding.png` |
 
 ## 3b. 图（`figures/`）→ 生成脚本
 
@@ -74,6 +75,7 @@ python -m pytest tests/ -q
 | `multidrone.png` | 多无人机（合成算例）的收益 | `src/tools/plot_multidrone.py` | `week08_multidrone_summary.csv` |
 | `multidrone_std.png` | 标准算例 + 调度器的结果 | `src/tools/plot_multidrone_std.py` | `week08_multidrone_std_summary.csv`、`week08_scheduling.csv` |
 | `exact_gap.png` | 启发式离精确最优有多远 | `src/tools/plot_exact_gap.py` | `week08_exact_gap_summary.csv` |
+| `capacity_binding.png` | 声明的卡车载重是否 binding | `src/tools/gen_capacity_figure.py` | `week06_capacity_summary.csv` |
 | `schneider_routes.png` / `schneider_vehcomp.png` | 与 Schneider (2014) 的差距 | `src/tools/plot_schneider_routes.py` | `schneider_evrptw_bks_comparison.csv` |
 | `src/results/week01_routes.png` | W1 冒烟测试的路线 | `week01_baseline.py` | — |
 | `src/results/week03_route_n20_vrptw_improved.png` | W3 公平对比里 2-opt 的路线 | `week03_experiment.py` | — |
