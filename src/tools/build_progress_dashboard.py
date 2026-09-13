@@ -5,7 +5,6 @@ All figures are inlined as base64 so the dashboard is fully portable / previewab
 """
 import base64
 import os
-import datetime
 
 REPO = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 FIGDIR = os.path.join(REPO, "figures")

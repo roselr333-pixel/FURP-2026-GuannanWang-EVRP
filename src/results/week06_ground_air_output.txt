@@ -1,5 +1,5 @@
 ==============================================================================
-WEEK 6 v2 ¡ª GROUND-AIR COLLABORATIVE EVRP-TW (multi-seed experiment)
+WEEK 6 v2 â€” GROUND-AIR COLLABORATIVE EVRP-TW (multi-seed experiment)
 ==============================================================================
 seeds=10 (base 20260720..20260729)  sizes=[8, 12, 16, 20]
 truck_speed=1.0  drone_speed=2.0  drone_range=160.0  battery=250  recharge=40s
@@ -66,7 +66,7 @@ AGGREGATE (mean over seeds per size)
 ==============================================================================
 FAILURE CASES (>=3, constraint-level diagnosis)
 ==============================================================================
-  FC1 [truck-only EV, recharge OFF, battery=120]: energy violation (cannot cover distance even with one charge). Next: route becomes infeasible; fix: allow recharge at stations or raise battery capacity.
+  FC1 [truck-only EV, recharge OFF, battery=120]: energy violation (energy_inf=True: cannot cover distance even with one charge). Next: route becomes infeasible; fix: allow recharge at stations or raise battery capacity.
   FC2 [collaborative, drone_range=40 (tiny)]: only 2 customers offloaded; V2 makespan 588.9 ~ V1, drone contributes little. Next: fix: larger drone range, or accept degraded-to-baseline behaviour.
   FC3 [truck EV, tight time windows (width=35)]: 10 customers served outside their window. Next: fix: relax windows, add vehicles, or prioritise TW in insertion.
   FC4 [collaborative, 16 customers]: 7871 drone trips refused by the single-drone schedule (range, launch order, or a drone still in flight). Next: fix: reorder truck route or launch earlier; shows sync is active.

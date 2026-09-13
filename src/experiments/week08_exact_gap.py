@@ -25,7 +25,6 @@ Run:
 import os
 import sys
 import csv
-import time
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import week06_ground_air_evrp_tw as w6
@@ -127,11 +126,11 @@ def main():
         for k in r:
             if k not in fields:
                 fields.append(k)
-    with open(out_raw, "w", newline="") as f:
+    with open(out_raw, "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=fields)
         w.writeheader()
         w.writerows(rows)
-    with open(out_sum, "w", newline="") as f:
+    with open(out_sum, "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=list(summary[0].keys()))
         w.writeheader()
         w.writerows(summary)
@@ -157,7 +156,7 @@ def main():
                   f"LNS {srow['lns_gap_proven_mean_pct']:.2f}% | "
                   f"raw V2 plan valid {srow['raw_v2_valid']}/{srow['n_instances']}")
     text = "\n".join(Lg)
-    with open(out_txt, "w") as f:
+    with open(out_txt, "w", encoding="utf-8") as f:
         f.write(text)
     print(text)
     print(f"\n[raw -> {out_raw}]\n[summary -> {out_sum}]\n[log -> {out_txt}]")

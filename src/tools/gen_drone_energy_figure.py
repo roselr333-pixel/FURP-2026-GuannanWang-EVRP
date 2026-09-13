@@ -28,7 +28,7 @@ def _mean(v):
     return sum(v) / len(v) if v else 0.0
 
 
-with open(RES, newline="") as f:
+with open(RES, newline="", encoding="utf-8") as f:
     rows = list(csv.DictReader(f))
 
 betas = sorted({float(r["beta"]) for r in rows})

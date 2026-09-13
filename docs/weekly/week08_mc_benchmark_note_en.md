@@ -40,27 +40,27 @@ the collaboration benefit can be read against drone speed.
 
 | config | LNS | vs truck-only TSP | LNS / literature OFV |
 |---|---:|---:|---:|
-| c1K1 (**exactly M&C's FSTSP**: one customer per sortie, one drone) | 51.31 | 21.7% | **0.901** |
-| c1K2 | 44.88 | 31.6% | 0.794 |
-| c1K3 | 41.56 | 36.6% | 0.709 |
-| c2K1 (my multi-customer extension, up to 2 per sortie) | 49.89 | 24.1% | 0.895 |
-| c2K2 | 43.06 | 34.5% | 0.743 |
-| c2K3 | 40.74 | 37.9% | 0.684 |
+| c1K1 (**exactly M&C's FSTSP**: one customer per sortie, one drone) | 50.86 | 22.3% | **0.924** |
+| c1K2 | 44.77 | 31.7% | 0.795 |
+| c1K3 | 41.11 | 37.2% | 0.692 |
+| c2K1 (my multi-customer extension, up to 2 per sortie) | 49.60 | 24.4% | 0.900 |
+| c2K2 | 42.83 | 34.7% | 0.734 |
+| c2K3 | 40.56 | 38.2% | 0.678 |
 
 ("LNS / literature OFV" is averaged over the 11 instances that ship an OFV;
 values below 1 mean better than the published objective.)
 
 - **Under M&C's own FSTSP definition (one customer per sortie, one drone) my
-  LNS reaches 0.901 of the published objective**, i.e. about 9.9% better than
+  LNS reaches 0.924 of the published objective**, i.e. about 7.6% better than
   the objective values distributed with the instances.
-- Multiple drones keep adding: 21.7% with one drone up to 36.6% with three
+- Multiple drones keep adding: 22.3% with one drone up to 37.2% with three
   (relative to the truck-only TSP).
 
 ## 5. Two things that must be stated
 
 - **The instance files contain no drone endurance parameter**, so endurance is
   unlimited here, and the longest flight in each solution is reported: mean
-  25-30 and a maximum of about 62 per configuration. If the literature applied
+  about 25-29 and a maximum of about 69 per configuration. If the literature applied
   an endurance limit, some long legs might not qualify.
 - **The literature OFV comes from M&C's heuristics** (their MILP could not solve
   these 10-customer instances within 30 minutes), so "better than OFV" is

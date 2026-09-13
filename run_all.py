@@ -9,7 +9,8 @@ Usage:
 Each script writes its own CSV / log under src/results/ and figures under
 figures/ (repo root). Scripts are ordered so that dependents (e.g.
 baseline_consolidated.py reads the three baseline CSVs) are produced first.
-A full run takes roughly 40-60 minutes; the self-written GA baseline is the slow one.
+A full run takes roughly 1.5-2 hours on this machine; the self-written GA
+baseline (70-90 min for its 5 seeds) is the slow one.
 """
 import subprocess
 import sys
@@ -24,7 +25,7 @@ PY = os.environ.get("PYTHON", sys.executable)
 STEPS = [
     ("OR-Tools vs BKS (56 Solomon)",        "benchmark_official_solomon.py",  "7.2% mean gap; deterministic"),
     ("PyVRP vs BKS (56 Solomon)",           "baseline_pyvrp_vrptw.py",        "-3.0% mean gap; deterministic"),
-    ("Self-written GA vs BKS (56)",         "baseline_ga_vrptw.py",           "LONG ~35 min, 5 seeds"),
+    ("Self-written GA vs BKS (56)",         "baseline_ga_vrptw.py",           "LONG ~70-90 min, 5 seeds"),
     ("3-baseline consolidation",            "baseline_consolidated.py",       "reads the 3 CSVs above"),
     ("Parameter sensitivity",               "week06_sensitivity.py",          "5 seeds x 4 params (R fixed 09-10)"),
     ("Multi-objective tradeoff",            "week06_multi_objective.py",      "weighted-sum, 5 weights x 5 seeds"),
@@ -36,6 +37,9 @@ STEPS = [
     ("Std instances + K=1/2/3/5 + sched",   "week08_multidrone_std.py",       "Solomon-derived, optimal drone schedule + LB certificate"),
     ("M&C 2015 original FSTSP benchmark",   "week08_mc_benchmark.py",         "36 original instances, deterministic"),
     ("V3 EV+TW+drone collaboration",        "v3_ev_collab.py",                "4 sizes x 10 seeds, deterministic"),
+    ("V3 ablation (4 configs, EV+TW)",      "v3_ablation.py",                 "40 instances, same seeds as V3"),
+    ("Std-instance ablation (W7 ext)",      "week07_ablation_std.py",         "48 standard instances, deterministic"),
+    ("Drone energy/payload sweep",           "drone_energy_ablation.py",       "88 instances x BETA in {0, 0.02, 0.04}"),
     ("Exact optimality gap (CP-SAT)",       "week08_exact_gap.py",            "small n; exact optimum + heuristic gaps"),
     ("Paired significance tests",           "stat_tests.py",                  "Wilcoxon; reads W6/W7/W8 CSVs"),
 ]
@@ -54,7 +58,9 @@ def main():
         print(f"[RUN ] {label}  ({note})")
         try:
             r = subprocess.run([PY, path], cwd=REPO,
-                               capture_output=True, text=True)
+                               capture_output=True, text=True,
+                               encoding="utf-8", errors="replace",
+                               env={**os.environ, "PYTHONIOENCODING": "utf-8"})
             dt = time.time() - t0
             if r.returncode == 0:
                 print(f"  OK   ({dt:.1f}s)")

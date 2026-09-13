@@ -5,25 +5,25 @@ instances: 36   max_cust [1, 2]   K [1, 2, 3]   LNS iters 200
 truck = tau matrix, UAV = tauprime matrix (calibrated on all 36 instances)
   hardware: Intel64 Family 6 Model 183 Stepping 1, GenuineIntel | 20 logical cores | RAM 31.8GB
   env: python 3.13.14 | Windows-11-10.0.26200-SP0
-total wall-clock: 15.1s over 36 instances (mean 0.42s/instance)
+total wall-clock: 24.5s over 36 instances (mean 0.68s/instance)
 
 mean over instances:
   config          LNS  vs truck TSP   LNS/OFV   (n=11 with published OFV)
-  c1K1          51.31         21.7%     0.901
-  c1K2          44.88         31.6%     0.794
-  c1K3          41.56         36.6%     0.709
-  c2K1          49.89         24.1%     0.895
-  c2K2          43.06         34.5%     0.743
-  c2K3          40.74         37.9%     0.684
+  c1K1          50.86         22.3%     0.924
+  c1K2          44.77         31.7%     0.795
+  c1K3          41.11         37.2%     0.692
+  c2K1          49.60         24.4%     0.900
+  c2K2          42.83         34.7%     0.734
+  c2K3          40.56         38.2%     0.678
 
 max drone flight time in the LNS solutions (no endurance is given
 in the distributed files, so endurance is unlimited here):
-  c1K1       mean  24.89  max  43.92
-  c1K2       mean  25.44  max  60.48
-  c1K3       mean  26.86  max  60.48
-  c2K1       mean  29.87  max  62.56
-  c2K2       mean  28.92  max  60.48
-  c2K3       mean  29.47  max  51.32
+  c1K1       mean  24.71  max  43.92
+  c1K2       mean  26.19  max  60.48
+  c1K3       mean  26.13  max  60.48
+  c2K1       mean  28.76  max  69.33
+  c2K2       mean  28.86  max  48.15
+  c2K3       mean  27.71  max  51.32
 
 Reading: LNS/OFV < 1 means better than the objective value
 published with the instances. c1 = M&C's own FSTSP (one customer

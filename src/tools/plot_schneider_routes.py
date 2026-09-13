@@ -26,7 +26,7 @@ os.makedirs(FIGDIR, exist_ok=True)
 # --- read BKS comparison numbers ---
 cmp_path = os.path.join(EXP, "..", "results", "schneider_evrptw_bks_comparison.csv")
 bks = {}
-with open(cmp_path) as f:
+with open(cmp_path, encoding="utf-8") as f:
     for row in csv.DictReader(f):
         bks[row["instance"]] = row
 
@@ -34,7 +34,7 @@ def coords_seq(node_by_id, ids):
     return [(node_by_id[i]["x"], node_by_id[i]["y"]) for i in ids]
 
 def plot_routes(ax, inst, res, title):
-    nbi = node_by_id = res["node_by_id"]
+    nbi = res["node_by_id"]
     depot = inst["depot"]
     # draw customers
     for c in inst["customers"]:

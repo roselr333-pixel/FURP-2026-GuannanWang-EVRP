@@ -76,7 +76,7 @@ def wilcoxon_signed_rank(a, b):
 def _read(path):
     if not os.path.exists(path):
         return None
-    with open(path, newline="") as f:
+    with open(path, newline="", encoding="utf-8") as f:
         return list(csv.DictReader(f))
 
 
@@ -188,7 +188,7 @@ def main():
     fields = ["comparison", "scope", "col_a", "col_b", "n_pairs", "n_nonzero",
               "mean_diff", "median_diff", "w_plus", "w_minus", "z", "p_value",
               "sig_0.05"]
-    with open(out_csv, "w", newline="") as f:
+    with open(out_csv, "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=fields)
         w.writeheader()
         for row in out_rows:
@@ -196,7 +196,7 @@ def main():
 
     text = "\n".join(log)
     out_txt = os.path.join(res, "stat_tests_log.txt")
-    with open(out_txt, "w") as f:
+    with open(out_txt, "w", encoding="utf-8") as f:
         f.write(text)
     print(text)
     print(f"\n[{len(out_rows)} tests -> {out_csv}]")

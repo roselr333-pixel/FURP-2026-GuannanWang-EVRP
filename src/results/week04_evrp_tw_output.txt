@@ -10,10 +10,10 @@ BATTERY VIOLATION TABLE (recharge allowed at stations)
          100 |      True |          1 |      5.001
          150 |      True |          1 |      5.001
          200 |      True |          1 |      5.001
-         250 |      True |          1 |      5.000
+         250 |      True |          1 |      5.001
 
 Comparison — NO recharge allowed (pure EV):
-  battery=100: feasible=False, runtime=0.003s
-  battery=150: feasible=False, runtime=0.004s
-  battery=200: feasible=True, runtime=5.000s
-  battery=250: feasible=True, runtime=5.000s
+  battery=100: feasible=False, runtime=0.008s
+  battery=150: feasible=False, runtime=0.011s
+  battery=200: feasible=True, runtime=5.001s
+  battery=250: feasible=True, runtime=5.001s

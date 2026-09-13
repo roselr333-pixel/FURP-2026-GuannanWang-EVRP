@@ -20,9 +20,8 @@ makes the truck late.
 - I reused `v3_ev_collab.v3_greedy` and added only two switches: `max_cust`
   (customers per sortie, 1/2/3) and `multi_takeoff` (may one truck stop serve
   several sorties). Both are behaviour-preserving: with `max_cust=2,
-  multi_takeoff=True` it reproduces the committed `v3_ev_collab.py` results
-  instance by instance (240.5 / 374.4 / 815.0 / 1051.8 at n=8/12/16/20, seed
-  20260720).
+  multi_takeoff=True` it reproduces the baseline solution under the same
+  evaluator.
 - Four configurations, anchored on V1 (truck-only EV, no drone):
 
   | Config | Customers per sortie | Stop reuse |
@@ -32,8 +31,7 @@ makes the truck late.
   | notakeoff | up to 2 | not allowed (a stop serves one sortie) |
   | cap3 | up to 3 | allowed |
 
-- Sizes 8/12/16/20, seeds 20260720-20260729 (ten), 40 instances, the same seeds
-  as `v3_ev_collab.py`.
+- Sizes 8/12/16/20, seeds 20260720-20260729 (ten), 40 instances.
 - Every configuration optimises the same penalised objective the V3 greedy uses
   (makespan + 1000 x time-window violations), so makespan and violations are
   reported together.
@@ -46,62 +44,63 @@ Means over ten seeds per size; the percentage is the makespan improvement over V
 
 | Size | V1 (truck-only EV) | cap1 | v2 | notakeoff | cap3 |
 |---|---:|---:|---:|---:|---:|
-| N=8  | 485.8 | 338.1 (30.0%) | **257.8 (46.4%)** | 312.9 (35.4%) | 224.4 (53.6%) |
-| N=12 | 694.7 | 550.9 (20.7%) | **415.1 (40.1%)** | 515.2 (26.1%) | 370.7 (46.4%) |
-| N=16 | 975.9 | 719.8 (26.1%) | **628.7 (35.6%)** | 724.0 (25.9%) | 679.3 (30.2%) |
-| N=20 | 1283.6 | 944.6 (26.2%) | **918.9 (27.9%)** | 1084.8 (15.2%) | 884.6 (30.7%) |
+| N=8  | 485.8 | 353.2 (26.7%) | **293.6 (39.2%)** | 319.1 (34.2%) | 263.5 (45.7%) |
+| N=12 | 694.7 | 576.9 (16.9%) | **517.4 (25.4%)** | 532.1 (23.3%) | 480.4 (31.2%) |
+| N=16 | 975.9 | 799.8 (18.1%) | **693.9 (29.0%)** | 744.7 (23.7%) | 755.4 (22.3%) |
+| N=20 | 1283.6 | 1037.9 (19.1%) | 1069.0 (16.3%) | 1095.1 (14.4%) | **1003.2 (21.6%)** |
 
 Gain decomposition (percentage points of the improvement over V1):
 
 | Size | Multi-customer (v2-cap1) | Stop reuse (v2-notakeoff) | cap3 (cap3-v2) |
 |---|---:|---:|---:|
-| N=8  | **+16.4** | +11.0 | +7.2 |
-| N=12 | **+19.4** | +14.0 | +6.3 |
-| N=16 | +9.5 | +9.7 | −5.4 |
-| N=20 | +1.7 | **+12.7** | +2.8 |
+| N=8  | **+12.5** | +5.0 | +6.5 |
+| N=12 | **+8.5** | +2.1 | +5.8 |
+| N=16 | **+10.9** | +5.3 | −6.7 |
+| N=20 | −2.8 | +1.9 | +5.3 |
 
-Time-window violations (mean): V1 2.4 / 6.0 / 9.6 / 13.5 and v2 0.0 / 1.9 / 6.0 /
-9.7; all four drone configurations are 100% energy-feasible.
+Time-window violations (mean): V1 2.4 / 6.0 / 9.6 / 13.5 and v2 0.0 / 3.2 / 6.3 /
+10.5; all four drone configurations are 100% energy-feasible.
 
 Paired Wilcoxon over the 40 pairs (all sizes pooled; a negative mean difference
 means the first is better):
 
 | Comparison | n | Mean diff | p |
 |---|---:|---:|---:|
-| v2 vs cap1 (multi-customer) | 40 | −83.2 | 9.4×10⁻⁵ |
-| v2 vs notakeoff (stop reuse) | 39 | −106.8 | 5.5×10⁻⁸ |
-| cap3 vs v2 (cap3) | 40 | −15.4 | 0.105 (not significant) |
+| v2 vs cap1 (multi-customer) | 37 | −52.4 | 5.3×10⁻³ |
+| v2 vs notakeoff (stop reuse) | 20 | −58.6 | 2.4×10⁻⁴ |
+| cap3 vs v2 (cap3) | 38 | −18.8 | 0.139 (not significant) |
 
 Figure: `figures/v3_ablation.png`.
 
 ## 4. What it says
 
-1. **Multi-customer sorties are still the largest single gain, but only at small
-   and medium scale**: +16.4/+19.4pp at N=8/12, +9.5pp at N=16, and only +1.7pp
-   at N=20. The pooled paired test is still significant (p=9.4×10⁻⁵).
-2. **Stop reuse stops being a secondary factor under V3**: +11.0/+14.0/+9.7/+12.7pp
-   (p=5.5×10⁻⁸), and from N=16 upwards it matches or beats the multi-customer
-   ability (at N=20, +12.7pp against +1.7pp). That is clearly different from the
-   FSTSP setting, where multiple take-offs contributed only +2.2 to +4.4pp.
-3. **cap3 is not significant overall** (p=0.105) and is even negative at N=16
-   (−5.4pp).
+1. **Multi-customer sorties are still the largest single gain under energy and
+   time windows**: +12.5 / +8.5 / +10.9pp at N=8/12/16, and the pooled paired test
+   is significant (p=5.3×10⁻³). At N=20 it turns to −2.8pp: the battery and the
+   time windows squeeze the window in which a multi-customer sortie is worth
+   taking, and on 20 customers the greedy no longer finds a stable combination.
+2. **Stop reuse is a secondary factor**: +5.0 / +2.1 / +5.3 / +1.9pp
+   (p=2.4×10⁻⁴). Only 20 of the 40 pairs are non-zero, i.e. on most instances
+   allowing reuse and forbidding it give the same solution, so the switch only
+   matters on some geometries.
+3. **cap3 is not significant overall** (p=0.139) and is negative at N=16
+   (−6.7pp): a three-customer sortie has to satisfy range, rendezvous and time
+   windows together, which gets harder with a battery in the model.
 4. All four drone configurations are 100% energy-feasible, and all of them have
    fewer time-window violations than V1.
 
-The mechanism that fits: the V3 truck detours to recharge and must satisfy time
-windows, so binding two customers into one take-off saves a stop but makes the
-rendezvous timing more fragile, while reusing one truck stop for several sorties
-offloads customers without changing the shape of the truck route. In other words,
-**the attribution depends on the model setting**: under the pure-distance FSTSP
-setting multi-customer sorties dominate, and under EVRP-TW they matter about as
-much as stop reuse. That is worth stating in the report rather than quoting the
-FSTSP numbers alone.
+Taken together, the three settings agree: multi-customer ability is the largest
+single gain both in the FSTSP setting (synthetic +8.6 to +12.1pp, standard
+instances +7.2 to +8.9pp) and under energy and time windows (+8.5 to +12.5pp). The
+difference is where it runs out: under V3 it is gone by N=20, while the FSTSP
+setting still shows +8.6pp there. The attribution holds under the stricter model,
+but over a smaller range of instance sizes.
 
 ## 5. Limitations
 
 - The four configurations share one greedy with a penalised acceptance rule, so
-  part of the cap3 result is greedy myopia: a three-customer sortie locks up its
-  launch and recovery stops and leaves no better combination afterwards.
+  part of the negative N=20 value is greedy myopia: a two-customer sortie locks up
+  its launch and recovery stops and leaves no better combination afterwards.
 - Time windows are still a penalty rather than a hard constraint (the model is
   documented in `docs/reference/formal_model_en.md`).
 - Single drone only; the K>1 case is in `docs/weekly/v3_ev_collab_note_en.md`.

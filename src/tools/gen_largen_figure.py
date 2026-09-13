@@ -24,7 +24,7 @@ RES = os.path.join(HERE, "src", "results", "week06_largeN_summary.csv")
 FIG = os.path.join(HERE, "figures", "largen_scale_decay.png")
 
 sizes, imp, off_rate, tw_rate = [], [], [], []
-with open(RES, newline="") as f:
+with open(RES, newline="", encoding="utf-8") as f:
     for row in csv.DictReader(f):
         n = int(row["size"])
         sizes.append(n)

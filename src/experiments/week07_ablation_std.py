@@ -177,7 +177,7 @@ def main():
     L.append("=" * 78)
     syn_path = os.path.join(res_dir, "week07_ablation_summary.csv")
     if os.path.exists(syn_path):
-        with open(syn_path) as f:
+        with open(syn_path, encoding="utf-8") as f:
             syn = {int(r["size"]): r for r in csv.DictReader(f)}
         L.append("  size | synthetic gain (pp)                  | "
                  "standard gain (pp)")
@@ -205,17 +205,17 @@ def main():
                  "week07_improvement_ablation.py first)")
     L.append("")
 
-    with open(out_raw, "w", newline="") as f:
+    with open(out_raw, "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=list(raw_rows[0].keys()))
         w.writeheader()
         w.writerows(raw_rows)
-    with open(out_summary, "w", newline="") as f:
+    with open(out_summary, "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=list(summary_rows[0].keys()))
         w.writeheader()
         w.writerows(summary_rows)
 
     text = "\n".join(L)
-    with open(out_txt, "w") as f:
+    with open(out_txt, "w", encoding="utf-8") as f:
         f.write(text)
     print(text)
     print(f"\n[raw -> {out_raw}]")

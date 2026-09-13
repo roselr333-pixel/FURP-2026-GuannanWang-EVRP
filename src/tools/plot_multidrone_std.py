@@ -28,10 +28,10 @@ def main():
     os.makedirs(figdir, exist_ok=True)
 
     with open(os.path.join(res, "week08_multidrone_std_summary.csv"),
-              newline="") as f:
+              newline="", encoding="utf-8") as f:
         rows = list(csv.DictReader(f))
     rows.sort(key=lambda r: int(r["size"]))
-    with open(os.path.join(res, "week08_scheduling.csv"), newline="") as f:
+    with open(os.path.join(res, "week08_scheduling.csv"), newline="", encoding="utf-8") as f:
         sched = list(csv.DictReader(f))
 
     sizes = [r["size"] for r in rows]

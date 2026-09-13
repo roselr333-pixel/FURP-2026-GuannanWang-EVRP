@@ -24,7 +24,7 @@ def load_solomon(path):
     nodes = []
     n_vehicles = None
     capacity = None
-    with open(path) as fh:
+    with open(path, encoding="utf-8") as fh:
         lines = [ln.strip() for ln in fh if ln.strip()]
     i = 0
     while i < len(lines):
@@ -133,14 +133,14 @@ def main():
     lines.append("=" * 64)
     lines.append("WEEK 3 — BASELINE REPRODUCTION ON STANDARD INSTANCE")
     lines.append("=" * 64)
-    lines.append(f"Instance: Solomon-format VRPTW (src/data/solomon_c101_small.txt)")
+    lines.append("Instance: Solomon-format VRPTW (src/data/solomon_c101_small.txt)")
     lines.append(f"  nodes={n} (depot + {n-1} customers), vehicles={num_vehicles}, cap={vehicle_cap}")
 
     if solution is None:
         lines.append("STATUS: NO SOLUTION FOUND (infeasible)")
         lines.append(f"Runtime: {elapsed:.4f} s")
         text = "\n".join(lines)
-        with open(out_path, "w") as fh:
+        with open(out_path, "w", encoding="utf-8") as fh:
             fh.write(text)
         print(text)
         return
@@ -166,7 +166,7 @@ def main():
     lines.append(f"Vehicles used: {used} / {num_vehicles}")
     lines.append("=" * 64)
     text = "\n".join(lines)
-    with open(out_path, "w") as fh:
+    with open(out_path, "w", encoding="utf-8") as fh:
         fh.write(text)
     print(text)
     print(f"\n[output saved to {out_path}]")

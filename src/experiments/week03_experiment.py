@@ -89,7 +89,6 @@ def solve(coords, demand, tw, variant, method, n, seed):
     di = routing.RegisterTransitCallback(dem_cb)
     routing.AddDimensionWithVehicleCapacity(di, 0, [VEHICLE_CAP] * NUM_VEHICLES,
                                             True, "Capacity")
-    cap_dim = routing.GetDimensionOrDie("Capacity")
 
     # time (for VRPTW)
     if variant == "VRPTW":
@@ -125,6 +124,7 @@ def solve(coords, demand, tw, variant, method, n, seed):
     result = {
         "feasible": False, "objective": None, "vehicles": 0,
         "tw_violations": 0, "routes": [], "coords": coords,
+        "runtime": round(elapsed, 4),
     }
     if solution is None:
         return result
@@ -295,14 +295,15 @@ def main():
                     "variant": variant,
                     "feasible": feas,
                     "objective": obj,
-                    "runtime": round(_RT, 3),
+                    "runtime": res["runtime"],
                     "vehicles": res["vehicles"],
                     "tw_viol": twv,
                     "seed": SEED_BASE + size,
                     "notes": note_for(res, variant),
                 })
                 log.append("  n{}-{}-{}: feasible={}, objective={}, vehicles={}, tw_viol={}, runtime={}s".format(
-                    size, variant, method, feas, obj, res["vehicles"], twv, round(_RT, 3)))
+                    size, variant, method, feas, obj, res["vehicles"], twv,
+            res["runtime"]))
 
     # ---- cleaned summary table (lab format) ----
     header = ["Instance", "Size", "Method", "Variant", "Feasible",
@@ -372,9 +373,6 @@ def note_for(res, variant):
     return "ok"
 
 
-_RT = 0.0
-
-
 def plot_routes(routes, coords, path):
     plt.figure(figsize=(6, 6))
     cx, cy = coords[0]
@@ -393,15 +391,6 @@ def plot_routes(routes, coords, path):
     plt.savefig(path, dpi=110)
     plt.close()
 
-
-# patch solve() to record runtime globally for the table
-_orig_solve = solve
-def solve(*a, **k):
-    global _RT
-    t0 = time.perf_counter()
-    res = _orig_solve(*a, **k)
-    _RT = time.perf_counter() - t0
-    return res
 
 
 if __name__ == "__main__":

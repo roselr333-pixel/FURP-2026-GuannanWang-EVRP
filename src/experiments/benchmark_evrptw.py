@@ -138,7 +138,6 @@ def solve_evrptw(inst, battery, allow_recharge, time_limit_s):
         if routing.IsEnd(sol.Value(routing.NextVar(idx))):
             continue
         veh += 1
-        prev = None
         while not routing.IsEnd(idx):
             node = manager.IndexToNode(idx)
             nxt = sol.Value(routing.NextVar(idx))
@@ -187,7 +186,7 @@ def main():
                          res["vehicles"], res["distance"], f"{rt:.2f}"])
 
     csv_path = os.path.join(RES_DIR, "benchmark_evrptw_results.csv")
-    with open(csv_path, "w", newline="") as f:
+    with open(csv_path, "w", newline="", encoding="utf-8") as f:
         w = csv.writer(f)
         w.writerow(["instance", "battery", "allow_recharge", "status",
                     "vehicles", "distance", "runtime_s"])
@@ -199,7 +198,7 @@ def main():
     log.append(" battery/charging constraint is real and the model handles it.")
     log.append("=" * 72)
     txt_path = os.path.join(RES_DIR, "benchmark_evrptw_output.txt")
-    with open(txt_path, "w") as f:
+    with open(txt_path, "w", encoding="utf-8") as f:
         f.write("\n".join(log))
     print("\n".join(log))
     print(f"\n[CSV -> {csv_path}]")

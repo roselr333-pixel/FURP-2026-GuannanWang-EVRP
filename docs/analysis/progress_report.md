@@ -78,7 +78,7 @@ Every experiment I run speaks to this question.
   - OR-Tools on the official Solomon 56 set: 56/56 feasible, average gap 7.2% vs BKS;
   - self-written GA (permutation coding + Solomon I1 insertion decoding + OX crossover + tournament + elitism): 56/56 runs complete; 5-seed check gives avg gap 36.6%±15.8% (best-of-5 31.2%) — reported as weaker than OR-Tools, a "self-built baseline" rather than an improvement.
 - **W4 EVRP-TW constraints**: electric-vehicle + charging experiments done, and charging count / charging time / energy violations are reported inside the later week06 script, but not yet assembled into a dedicated scoring-facing violation table.
-- **W5 truck-drone formulation**: v2 lets the drone ride the truck and launch/recover at any node; on a small instance it is 49.8% shorter than truck-only and 28.8% shorter than the old "depot-only" drone version, confirming that arbitrary-node launch/recovery genuinely relaxes the constraint.
+- **W5 truck-drone formulation**: v2 lets the drone ride the truck and launch/recover at any node; on a small instance it is 17.9% shorter than truck-only. Under a physical single-drone schedule it is 17.8% slower than v1's depot-only model (270.6) on that six-customer instance: a carried drone has to be recovered by the truck and can fly one sortie at a time, and that overhead is only repaid at larger sizes (W6-W8).
 - **W6 hybrid method (Track B)**: one greedy core runs V0 (truck-only, no EV) / V1 (truck EV baseline) / V2 (collaborative EV). 4 sizes (8/12/16/20) × 10 seeds = 40 instances, all feasible; V2 improves over V1 by **42–55%** on average, with a 65–72% average offload rate. The Week 6 Integration Note (Track B, 4 sections, EN+ZH) is written.
 - **P1 paper reproduction (Murray & Chu 2015 FSTSP)**: implemented the paper's Section 3.3 insertion heuristic and ran it head-to-head with my V2 on the same 40 instances under the same serial-drone evaluator — my multi-customer extension averages **8.5–22.3%** shorter than the published heuristic, and cap3 goes further at **11.4–28.2%** shorter. This is the "published baseline → my extension" fair comparison the project page asks for.
 - **W7 improvement + ablation**: five configurations vary only two knobs (max customers per flight / whether a stop may host multiple launches). The V2 gain over baseline decomposes into: multi-customer ability (+6.6~+17.7pp, main source), multi-takeoff (+4.1~+7.3pp, secondary), and cap3 further (+2.3~+8.7pp). `abl_cap1` matches `published` exactly, proving the framework correctly degrades to the published heuristic when multi-customer is switched off (sanity check passed).
@@ -158,12 +158,12 @@ Notes:
 
    | Size | V2 makespan | V2 + 2-opt makespan | 2-opt gain | avg 2-opt moves per instance |
    |---|---:|---:|---:|---:|
-   | N=8  | 236.8 | 235.0 | **+0.90%** | 0.3 |
-   | N=12 | 359.3 | 359.3 | **0.00%** | 0.0 |
-   | N=16 | 524.6 | 514.3 | **+1.76%** | 0.9 |
-   | N=20 | 714.1 | 706.7 | **+0.93%** | 0.3 |
+   | N=8  | 256.0 | 247.7 | **+2.98%** | 1.0 |
+   | N=12 | 412.1 | 400.2 | **+3.07%** | 1.3 |
+   | N=16 | 554.4 | 533.9 | **+3.08%** | 2.1 |
+   | N=20 | 767.2 | 746.3 | **+2.49%** | 1.9 |
 
-   **Conclusion**: 2-opt adds only 0–2% on top of V2. The reason: by the time V2 has offloaded the long-distance customers to the drone, the remaining truck route is already near a near-linear shape, leaving little room for 2-opt. This is both good and bad news — good that my heuristic already approaches the current-neighborhood local optimum; bad that "distance to global optimum" remains unquantified (would need MILP upper bounds or wider neighborhoods like 3-opt / or-opt to close). I will come back to this later.
+   **Conclusion**: 2-opt adds only 2.5–3.1% on top of V2. The reason: by the time V2 has offloaded the long-distance customers to the drone, the remaining truck route is already near a near-linear shape, leaving little room for 2-opt. This is both good and bad news — good that my heuristic already approaches the current-neighborhood local optimum; bad that "distance to global optimum" remains unquantified (would need MILP upper bounds or wider neighborhoods like 3-opt / or-opt to close). I will come back to this later.
 
 9. ~~**Max 2 (sometimes 3) customers per flight**~~ — **Not done** (enumeration cost). After this round, since 2-opt barely moves anything, raising the per-flight cap to 3+ would mostly re-explode the O(n⁴) enumeration. **Deferred** to later work alongside efficiency optimizations for larger neighborhoods.
 

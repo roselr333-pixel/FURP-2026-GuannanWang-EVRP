@@ -27,7 +27,7 @@
 | 多次起降增益 | +4.1~7.3 pp | **+2.2~4.4 pp** |
 | `abl_cap1 == published`（sanity check） | 通过 | **仍通过（逐实例精确相等）** |
 | LNS 相对贪心 | +9~12.6% | **+12.5~21.3%** |
-| 2-opt 相对贪心 | 0–1.76% | **1.97–3.22%** |
+| 2-opt 相对贪心 | 0–1.76% | **2.5–3.1%** |
 | 多无人机（N=50，K=1 → K=3，vs truck） | 28.1% → 36.0% | **29.5% → 38.1%** |
 | 标准算例（N=10 / N=50，K=5） | 71.4% / 48.6% | **71.4% / 46.8%** |
 | 调度：可证朴素规则最优的配置数 | 31/64 | **64/64** |
@@ -65,11 +65,33 @@
 
 同时把 `collaborative` 的接受准则从「移除客户能降低**卡车** makespan」改成「**加上这架次后整条计划的 makespan 变小**」，并对候选架次加上单机串行的位置检查。两处合起来保证启发式不会产出评估器会拒绝的计划（重跑后 `V2_plan_valid_rate = 1.0`）。
 
-对齐验证：用 400 个随机路线 + 随机架次集合，`week06_ground_air_evrp_tw.simulate` 与 `week07_fstsp_repro.fstsp_simulate` 的 makespan 逐一相等（不可行判定也一致），回归测试见 §5。
+对齐验证：用 400 个随机路线 + 随机架次集合，`week06_ground_air_evrp_tw.simulate` 与 `week07_fstsp_repro.fstsp_simulate` 的 makespan 逐一相等（不可行判定也一致），回归测试见 §6。
 
 影响范围：`week06_ground_air_evrp_tw`（主线）、`week06_largeN`、`stat_tests` 的 "V2 vs V1" 一行已全部重跑；V0/V1 不涉及无人机，数值逐位不变（例如 N=50 的 V1 仍是 5661.9）。`week06_sensitivity` 与 `week06_multi_objective` 走的是 `fstsp_makespan`，不受这次改动影响。新旧数字见 §3 后 5 行。结论方向同样不变：协同收益仍随规模单调衰减，而且塌得更快（N=50 只剩 3.4%），有效协同区间收窄到 N ≤ 30。
 
-## 5. 产物
+## 5. 第三轮：无人机调度可用性检查（V3 / W5 / M&C）
+
+前两轮之后又发现同一类缺陷的第四处：**评估器在发射时不检查分配到的无人机是否已经回到卡车**。
+
+- `v3_ev_collab.ev_collab_k` 已经按 `avail[d]` 串行分配，但 `launch = max(arr[i_pos], avail[d])` 在无人机未就位时只是把发射推迟到它空闲，而卡车早已离开那个节点；同时 `v3_greedy` 的候选枚举也不要求架次区间互不重叠。实测 V3 的 **40/40** 个算例都产出了物理不可行的架次集合。
+- 同一缺陷也在 `week05_truck_drone_v2.simulate`（`drone_free = max(...)`，与第一轮的 `week06` 同形）、`fstsp_mc.mc_simulate`（M&C 原始算例基准）与 `drone_scheduling.simulate`（W8 调度）里出现。
+
+修法：四处评估器都补上"发射时无人机必须在卡车上"（`avail[d] > arr[i_pos]` 或回收点在发射点之前 → 不可行），`v3_greedy` 再加一道架次区间不重叠的预筛。
+
+重跑后的变化：
+
+| 指标 | 旧 | 新 |
+|---|---|---|
+| V3 单架 LNS 降幅（K=1） | 34.7%~53.4% | **33.5%~52.4%** |
+| V3 贪心 V3g 降幅 | 27.9%~46.4% | **16.3%~39.2%** |
+| V3 消融：多顾客能力（N=8/12/16/20，pp） | +16.4 / +19.4 / +9.5 / +1.7 | **+12.5 / +8.5 / +10.9 / −2.8** |
+| W5 v2 flexible makespan（6 顾客） | 277.3（−49.8% vs truck-only） | **318.9（−17.9%）** |
+
+W5 那一行还牵出两个相关问题：`depot_only_drone` 用卡车速度给无人机计时、并且用了与 `week05_truck_drone.py` 不同的巡回构造，导致同一基线在两个脚本里分别给出 389.5 与 270.6；两处都修好后两个脚本一致（270.6）。另外在修正后的单机物理口径下，W5 的"任意节点起降"变体在这个 6 顾客算例上**慢于**"无人机独立跑仓库巡回"的 v1 模型（318.9 对 270.6）——携带式模型的价值要到 W6–W8 的更大规模才体现。
+
+结论方向不变：V3 的协同收益仍显著（K=1 33.5%~52.4%，K=2/3 到 44.5%~72.5%），V3 消融也仍指向"多顾客能力是主增益源"（+8.5~12.5pp，N=20 转为 −2.8pp）。
+
+## 6. 产物
 
 - 第一轮改动：`src/experiments/week07_fstsp_repro.py`（`fstsp_simulate` / `fstsp_simulate_multi`）
 - 第一轮回归测试：`tests/test_evaluators.py::test_heuristic_plans_are_physically_valid`（启发式的解必须物理可行，且与 `cpsat_fstsp.fstsp_makespan_clean` 数值一致）
@@ -78,3 +100,7 @@
 - 第二轮改动：`src/experiments/week06_ground_air_evrp_tw.py`（`simulate` / `collaborative` / `run_variant` / 汇总列）
 - 第二轮回归测试：`tests/test_evaluators.py::test_w6_evaluator_rejects_overlapping_sorties`、`::test_w6_evaluator_rejects_out_of_range_sortie`、`::test_w6_truck_waits_for_a_late_drone`、`::test_w6_evaluator_matches_shared_fstsp_evaluator`、`::test_w6_collaborative_plan_is_physically_executable`
 - 第二轮重跑的日志与 CSV：`src/results/week06_ground_air_*`、`week06_largeN_*`、`stat_tests*`
+- 第三轮改动：`src/experiments/v3_ev_collab.py`（`ev_collab_k` 的 `schedule_inf` + `v3_greedy` 的区间预筛）、`week05_truck_drone_v2.py`、`fstsp_mc.py`、`drone_scheduling.py`
+- 第三轮回归测试：`tests/test_evaluators.py::test_v3_rejects_overlapping_sorties`、`::test_v3_greedy_produces_a_feasible_schedule`
+- 失败案例：`docs/reference/failure_cases_master.md` 的 FC-7-5
+- 第三轮重跑的日志与 CSV：`src/results/v3_ev_collab_*`、`v3_ablation_*`、`week05_truck_drone_v2_output.txt`

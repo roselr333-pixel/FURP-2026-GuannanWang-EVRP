@@ -61,7 +61,11 @@ def simulate(inst, route, trips_sorted, assign, K):
         i_pos = 0 if ln == 0 else route.index(ln)
         j_pos = len(route) - 1 if rn == 0 else route.index(rn)
         flight = _legs_and_flight(inst, ln, cust, rn)
-        launch = max(arr[i_pos], avail[d])
+        # the drone assigned to this sortie has to be back on the truck when it
+        # reaches the launch node, otherwise the assignment is not realisable
+        if i_pos >= j_pos or avail[d] > arr[i_pos] + 1e-9:
+            return float("inf")
+        launch = arr[i_pos]
         recovery = max(arr[j_pos], launch + flight)
         avail[d] = recovery
         wait = recovery - arr[j_pos]

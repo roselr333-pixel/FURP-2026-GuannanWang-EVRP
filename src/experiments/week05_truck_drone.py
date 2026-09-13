@@ -22,7 +22,6 @@ Run:
 
 import os
 import math
-from collections import defaultdict
 
 # instance: depot + customers (coordinates, Euclidean distances)
 DEPOSIT = (0, 0)
@@ -118,7 +117,7 @@ def main():
     lines.append("    idea can be extended to the truck; drone battery is left to later work).")
 
     text = "\n".join(lines)
-    with open(out_path, "w") as fh:
+    with open(out_path, "w", encoding="utf-8") as fh:
         fh.write(text)
     print(text)
     print(f"\n[output saved to {out_path}]")

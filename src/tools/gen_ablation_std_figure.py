@@ -30,7 +30,7 @@ def _read(name):
     path = os.path.join(RES, name)
     if not os.path.exists(path):
         return []
-    with open(path, newline="") as f:
+    with open(path, newline="", encoding="utf-8") as f:
         return list(csv.DictReader(f))
 
 

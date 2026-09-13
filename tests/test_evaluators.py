@@ -169,6 +169,30 @@ def test_v3_no_sorties_equals_truck_only_ev(tag, inst):
     assert ev["tw_viol"] == v1["tw_viol"]
     assert ev["recharges"] == v1["recharges"]
 
+def test_v3_rejects_overlapping_sorties():
+    """The V3 evaluator must refuse a set in which the drone is still airborne."""
+    inst = w6.make_instance(8, seed=20260720)
+    route = [0, 1, 2, 3, 4, 5, 6, 7, 8, 0]
+    a = (1, (2,), 5)
+    b = (3, (4,), 6)          # launched and recovered inside a's interval
+    ka = v3.ev_collab(inst, route, [a])
+    kb = v3.ev_collab(inst, route, [b])
+    kab = v3.ev_collab(inst, route, [a, b])
+    assert ka["schedule_inf"] is False
+    assert kb["schedule_inf"] is False
+    assert kab["schedule_inf"] is True
+    assert math.isinf(kab["makespan"])
+
+
+@pytest.mark.parametrize("tag,inst", SYNTHETIC)
+def test_v3_greedy_produces_a_feasible_schedule(tag, inst):
+    """The V3 greedy never returns a sortie set the evaluator would reject."""
+    route, trips, _ = v3.v3_greedy(inst, max_cust=2)
+    r = v3.ev_collab(inst, route, trips)
+    assert r["schedule_inf"] is False
+    assert not math.isinf(r["makespan"])
+
+
 def test_drone_energy_reduces_to_range_model():
     """BETA=0 with E_D=R_D and a non-binding payload cap is the range-only evaluator."""
     rng = random.Random(5)

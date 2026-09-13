@@ -41,26 +41,26 @@ For every run I record: instance, size, method, variant, feasibility, objective
 |---|---:|---|---|---|---:|---:|---:|---:|---:|
 | n10 | 10 | baseline | CVRP | Yes | 363 | 0.009 | 2 | - | 17 |
 | n10 | 10 | improved | CVRP | Yes | 363 | 4.001 | 2 | - | 17 |
-| n10 | 10 | baseline | VRPTW | Yes | 377 | 0.004 | 2 | 0 | 17 |
+| n10 | 10 | baseline | VRPTW | Yes | 377 | 0.007 | 2 | 0 | 17 |
 | n10 | 10 | improved | VRPTW | Yes | 366 | 4.001 | 2 | 0 | 17 |
-| n20 | 20 | baseline | CVRP | Yes | 436 | 0.007 | 2 | - | 27 |
+| n20 | 20 | baseline | CVRP | Yes | 436 | 0.015 | 2 | - | 27 |
 | n20 | 20 | improved | CVRP | Yes | 436 | 4.001 | 2 | - | 27 |
-| n20 | 20 | baseline | VRPTW | Yes | 448 | 0.009 | 3 | 0 | 27 |
-| n20 | 20 | improved | VRPTW | Yes | 448 | 4.001 | 3 | 0 | 27 |
-| n40 | 40 | baseline | CVRP | Yes | 682 | 0.029 | 4 | - | 47 |
-| n40 | 40 | improved | CVRP | Yes | 616 | 4.002 | 4 | - | 47 |
-| n40 | 40 | baseline | VRPTW | Yes | 616 | 0.038 | 4 | 0 | 47 |
-| n40 | 40 | improved | VRPTW | Yes | 616 | 4.002 | 4 | 0 | 47 |
+| n20 | 20 | baseline | VRPTW | Yes | 448 | 0.018 | 3 | 0 | 27 |
+| n20 | 20 | improved | VRPTW | Yes | 448 | 4.000 | 3 | 0 | 27 |
+| n40 | 40 | baseline | CVRP | Yes | 682 | 0.067 | 4 | - | 47 |
+| n40 | 40 | improved | CVRP | Yes | 616 | 4.000 | 4 | - | 47 |
+| n40 | 40 | baseline | VRPTW | Yes | 616 | 0.087 | 4 | 0 | 47 |
+| n40 | 40 | improved | VRPTW | Yes | 616 | 4.000 | 4 | 0 | 47 |
 
 ### Aggregated table
 | Size | Method | Feasible Rate | Avg Objective | Avg Runtime (s) |
 |---|---|---:|---:|---:|
-| 10 | baseline | 100% | 370.0 | 0.006 |
+| 10 | baseline | 100% | 370.0 | 0.008 |
 | 10 | improved | 100% | 364.5 | 4.001 |
-| 20 | baseline | 100% | 442.0 | 0.008 |
-| 20 | improved | 100% | 442.0 | 4.001 |
-| 40 | baseline | 100% | 649.0 | 0.034 |
-| 40 | improved | 100% | 616.0 | 4.002 |
+| 20 | baseline | 100% | 442.0 | 0.016 |
+| 20 | improved | 100% | 442.0 | 4.000 |
+| 40 | baseline | 100% | 649.0 | 0.077 |
+| 40 | improved | 100% | 616.0 | 4.000 |
 
 ## 3. Discussion
 

@@ -17,7 +17,7 @@ venv/Scripts/python -m pip install -r requirements.txt
 python run_all.py
 ```
 
-脚本会按依赖顺序跑完所有 headline 实验，逐个打印 `OK / FAIL` 与耗时。GA 基线最慢，整轮约 40–60 分钟。也可以单独跑任意一个脚本，例如：
+脚本会按依赖顺序跑完所有 headline 实验，逐个打印 `OK / FAIL` 与耗时。GA 基线最慢（本机单跑约 70–90 分钟），整轮约 1.5–2 小时。也可以单独跑任意一个脚本，例如：
 
 ```bash
 python src/experiments/week06_sensitivity.py
@@ -39,20 +39,20 @@ python -m pytest tests/ -q
 
 | 报告中的结论 | 脚本 | 种子 / 参数 | 主要产物 |
 |---|---|---|---|
-| 三基线 vs BKS（PyVRP −3.0% / OR-Tools +7.2% / GA +36.6%±15.8%） | `benchmark_official_solomon.py` + `baseline_pyvrp_vrptw.py` + `baseline_ga_vrptw.py` → `baseline_consolidated.py` | GA 5 种子；OR-Tools / PyVRP 决定性 | `src/results/baseline_consolidated.csv`、`figures/baseline_gap_by_family.png` |
+| 三基线 vs BKS（PyVRP −3.0% / OR-Tools +7.2% / GA +36.6%±15.8%） | `benchmark_official_solomon.py` + `baseline_pyvrp_vrptw.py` + `baseline_ga_vrptw.py` → `baseline_consolidated.py` | GA 5 种子；OR-Tools / PyVRP 决定性 | `src/results/baseline_consolidated.csv`、`figures/baseline_consolidated.png` |
 | 参数敏感性（电池 / 续航 / 每架次 / 规模） | `week06_sensitivity.py` | 5 种子；n=12 | `src/results/week06_sensitivity.csv`、`figures/sensitivity_panels.png` |
 | 多目标权衡（距离 −32% / 时长 −34%，两轴占优） | `week06_multi_objective.py` | 5 权重 × 5 种子 | `src/results/week06_multi_objective.csv`、`figures/mo_*.png` |
 | 受控消融（多顾客能力为主增益 +8.6~12.1pp；sanity check 通过） | `week07_improvement_ablation.py` | 40 算例 | `src/results/week07_ablation_summary.csv` |
 | 核心消融搬到标准算例（多顾客能力 +7.2~8.9pp，与合成一致） | `week07_ablation_std.py`（+ `fstsp_instances.py`） | 48 个标准实例；确定性 | `src/results/week07_ablation_std_summary.csv`、`figures/ablation_std.png` |
-| V3（电动+时间窗）上的核心消融（多顾客 +16.4~19.4pp 只在中小规模；停靠点复用升为同等重要） | `v3_ablation.py`（+ `v3_ev_collab.py`） | 40 算例（10 种子 × N=8/12/16/20） | `src/results/v3_ablation_summary.csv`、`figures/v3_ablation.png` |
+| V3（电动+时间窗）上的核心消融（多顾客 +8.5~12.5pp 是主增益；N=20 转为 −2.8pp） | `v3_ablation.py`（+ `v3_ev_collab.py`） | 40 算例（10 种子 × N=8/12/16/20） | `src/results/v3_ablation_summary.csv`、`figures/v3_ablation.png` |
 | 无人机能耗/载荷模型下的消融（多顾客增益 +10.4→+6.1pp；不感知能耗的基线计划大量不可行） | `drone_energy_ablation.py`（+ `drone_energy.py`） | 88 实例 × BETA ∈ {0, 0.02, 0.04} | `src/results/drone_energy_summary.csv`、`figures/drone_energy.png` |
 | FSTSP 复现（V2 比 M&C 2015 短 10.2–14.2%） | `week07_fstsp_repro.py` | 40 算例 | `src/results/week07_fstsp_*.csv` |
 | 规模衰减（N=50 收益 3.4%、单机调度拒绝 101 万） | `week06_largeN.py` | 5 种子 | `src/results/week06_largeN_summary.csv` |
 | LNS 改进（相对贪心 +12.5~21.3%，缓冲规模衰减） | `week08_lns.py` | 60 算例（10 种子 × N=8/12/16/20/30/50）；确定性 | `src/results/week08_lns_summary.csv`、`figures/lns_vs_greedy.png` |
 | 多无人机（K=1/2/3；K=1→3 时 N=50 收益 29.5%→38.1%） | `week08_multidrone.py` | 同 60 算例 × K=1/2/3；确定性 | `src/results/week08_multidrone_summary.csv`、`figures/multidrone.png` |
 | 标准算例 + K=1/2/3/5 + 最优调度 | `week08_multidrone_std.py`（+ `fstsp_instances.py`、`drone_scheduling.py`） | 16 个 Solomon 标准实例；确定性 | `src/results/week08_multidrone_std_summary.csv`、`week08_scheduling.csv`、`figures/multidrone_std.png` |
-| 论文原始算例（M&C 2015；c1K1 的 LNS/OFV=0.901） | `week08_mc_benchmark.py` + `fstsp_mc.py` | 36 个原始 10 顾客实例；确定性 | `src/results/week08_mc_benchmark_raw.csv` |
-| V3（电动卡车+无人机+充电+时间窗；相对纯电卡车 K=1 降 34.7%~53.4%、K=3 达 72.8%） | `v3_ev_collab.py` | 4 规模 × 10 种子 × K=1/2/3；确定性 | `src/results/v3_ev_collab_summary.csv`、`v3_ev_collab_raw.csv` |
+| 论文原始算例（M&C 2015；c1K1 的 LNS/OFV=0.924） | `week08_mc_benchmark.py` + `fstsp_mc.py` | 36 个原始 10 顾客实例；确定性 | `src/results/week08_mc_benchmark_raw.csv` |
+| V3（电动卡车+无人机+充电+时间窗；相对纯电卡车 K=1 降 33.5%~52.4%、K=3 达 72.5%） | `v3_ev_collab.py` | 4 规模 × 10 种子 × K=1/2/3；确定性 | `src/results/v3_ev_collab_summary.csv`、`v3_ev_collab_raw.csv` |
 | 精确最优性 gap（CP-SAT 求小规模精确最优，对照我的贪心/LNS） | `week08_exact_gap.py` + `cpsat_fstsp.py` | n=8/10/12 × 5 种子；CP-SAT 上限 180s | `src/results/week08_exact_gap_raw.csv` / `_summary.csv` |
 | 配对显著性检验（Wilcoxon 符号秩） | `stat_tests.py` | 读 W6/W7/W8 的 CSV；numpy 手写、无新依赖 | `src/results/stat_tests.csv` |
 

@@ -42,7 +42,7 @@ figures (`lns_vs_greedy`, `multidrone`, `multidrone_std`, `sensitivity_panels`,
 | multi-takeoff gain | +4.1~7.3 pp | **+2.2~4.4 pp** |
 | `abl_cap1 == published` (sanity check) | passes | **still passes (per-instance equality)** |
 | LNS over greedy | +9~12.6% | **+12.5~21.3%** |
-| 2-opt over greedy | 0–1.76% | **1.97–3.22%** |
+| 2-opt over greedy | 0–1.76% | **2.5–3.1%** |
 | Multi-drone (N=50, K=1 → K=3, vs truck) | 28.1% → 36.0% | **29.5% → 38.1%** |
 | Standard instances (N=10 / N=50, K=5) | 71.4% / 48.6% | **71.4% / 46.8%** |
 | Scheduling: configs where naive is provably optimal | 31/64 | **64/64** |
@@ -103,7 +103,7 @@ plans the evaluator would reject: the re-run reports
 Cross-validation: over 400 random routes with random sortie sets,
 `week06_ground_air_evrp_tw.simulate` and `week07_fstsp_repro.fstsp_simulate`
 return the same makespan, including the same infeasibility verdicts; the
-regression tests are listed in section 5.
+regression tests are listed in section 6.
 
 Scope: the W6 headline, `week06_largeN` and the "V2 vs V1" row of
 `stat_tests` were re-run. V0/V1 involve no drone and are bit-for-bit unchanged
@@ -113,7 +113,50 @@ five rows of section 3. The direction is unchanged as well: the benefit still
 decays monotonically with scale, and now faster (only 3.4% left at N=50), so the
 effective collaboration interval narrows to N ≤ 30.
 
-## 5. Artifacts
+## 5. Third round: drone-availability checks (V3 / W5 / M&C)
+
+After the first two rounds a fourth instance of the same class of defect turned up:
+**an evaluator that does not check, at launch time, whether the drone assigned to
+a sortie is back on the truck**.
+
+- `v3_ev_collab.ev_collab_k` already assigned sorties sequentially through
+  `avail[d]`, but `launch = max(arr[i_pos], avail[d])` merely delayed the launch
+  until the drone was free when it was not on board, although the truck had
+  already left that node; `v3_greedy` also did not require sortie intervals to
+  be disjoint. Measured: **40/40** V3 instances produced a physically invalid
+  sortie set.
+- The same defect was present in `week05_truck_drone_v2.simulate`
+  (`drone_free = max(...)`, the same shape as the week06 evaluator of round 2),
+  in `fstsp_mc.mc_simulate` (the M&C original-instance benchmark) and in
+  `drone_scheduling.simulate` (the W8 scheduling experiment).
+
+The fix: all four evaluators now require the drone to be on the truck at the
+launch node (`avail[d] > arr[i_pos]`, or a recovery before its launch, is
+infeasible), and `v3_greedy` gained a disjoint-interval pre-filter.
+
+What changed on the re-run:
+
+| Quantity | Old | New |
+|---|---|---|
+| V3 single-drone LNS reduction (K=1) | 34.7%~53.4% | **33.5%~52.4%** |
+| V3 greedy (V3g) reduction | 27.9%~46.4% | **16.3%~39.2%** |
+| V3 ablation: multi-customer gain (N=8/12/16/20, pp) | +16.4 / +19.4 / +9.5 / +1.7 | **+12.5 / +8.5 / +10.9 / −2.8** |
+| W5 v2 flexible makespan (6 customers) | 277.3 (−49.8% vs truck-only) | **318.9 (−17.9%)** |
+
+The W5 row also exposed two related problems: `depot_only_drone` timed the drone
+with the *truck* speed and used a different tour construction from
+`week05_truck_drone.py`, so the same baseline was reported as 389.5 in one script
+and 270.6 in the other; both are fixed and the two scripts now agree (270.6). Note
+that under the corrected single-drone schedule the W5 "any-node" variant is
+**slower** than v1's depot-loop model on that six-customer instance (318.9 against
+270.6) — the carried-drone model pays off at the larger sizes of W6-W8.
+
+The direction is unchanged: the V3 collaboration gain is still substantial (K=1
+33.5%~52.4%, K=2/3 up to 44.5%~72.5%), and the V3 ablation still points at
+multi-customer ability as the main gain source (+8.5 to +12.5pp, turning to −2.8pp
+at N=20).
+
+## 6. Artifacts
 
 - Round 1 change: `src/experiments/week07_fstsp_repro.py` (`fstsp_simulate` / `fstsp_simulate_multi`)
 - Round 1 regression test: `tests/test_evaluators.py::test_heuristic_plans_are_physically_valid`
@@ -122,3 +165,7 @@ effective collaboration interval narrows to N ≤ 30.
 - Round 2 change: `src/experiments/week06_ground_air_evrp_tw.py` (`simulate` / `collaborative` / `run_variant` / summary columns)
 - Round 2 regression tests: `tests/test_evaluators.py::test_w6_evaluator_rejects_overlapping_sorties`, `::test_w6_evaluator_rejects_out_of_range_sortie`, `::test_w6_truck_waits_for_a_late_drone`, `::test_w6_evaluator_matches_shared_fstsp_evaluator`, `::test_w6_collaborative_plan_is_physically_executable`
 - Round 2 re-run logs and CSVs: `src/results/week06_ground_air_*`, `week06_largeN_*`, `stat_tests*`
+- Round 3 change: `src/experiments/v3_ev_collab.py` (`schedule_inf` in `ev_collab_k` + the interval pre-filter in `v3_greedy`), `week05_truck_drone_v2.py`, `fstsp_mc.py`, `drone_scheduling.py`
+- Round 3 regression tests: `tests/test_evaluators.py::test_v3_rejects_overlapping_sorties`, `::test_v3_greedy_produces_a_feasible_schedule`
+- Failure case: FC-7-5 in `docs/reference/failure_cases_master.md`
+- Round 3 re-run logs and CSVs: `src/results/v3_ev_collab_*`, `v3_ablation_*`, `week05_truck_drone_v2_output.txt`

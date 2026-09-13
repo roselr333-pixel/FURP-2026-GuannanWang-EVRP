@@ -144,7 +144,7 @@ def generate_solomon(family, n_customers, variant, seed):
 
 def write_solomon_file(path, inst):
     """Write instance in the classic Solomon text format."""
-    with open(path, "w") as f:
+    with open(path, "w", encoding="utf-8") as f:
         f.write("VEHICLE\n")
         f.write("NUMBER     CAPACITY\n")
         f.write(f"{inst['capacity']}          {inst['capacity']}\n")
@@ -256,8 +256,8 @@ def main():
     log.append("=" * 70)
     log.append(f"Solver: OR-Tools {ORTOOLS_VERSION} | instances generated "
                f"in Solomon format (seed-derived time windows).")
-    log.append(f"Objective priority: minimise vehicles, then distance "
-               f"(fixed cost per vehicle = 1,000,000).")
+    log.append("Objective priority: minimise vehicles, then distance "
+               "(fixed cost per vehicle = 1,000,000).")
     log.append("")
     log.append(f"{'instance':<18}{'cust':>5}{'veh':>5}{'dist':>9}{'time_s':>9}")
     log.append("-" * 70)
@@ -280,7 +280,7 @@ def main():
 
     # write CSV
     csv_path = os.path.join(RES_DIR, "benchmark_vrptw_results.csv")
-    with open(csv_path, "w", newline="") as f:
+    with open(csv_path, "w", newline="", encoding="utf-8") as f:
         w = csv.writer(f)
         w.writerow(["instance", "customers", "vehicles", "distance", "runtime_s"])
         w.writerows(rows)
@@ -301,7 +301,7 @@ def main():
     log.append("=" * 70)
 
     txt_path = os.path.join(RES_DIR, "benchmark_vrptw_output.txt")
-    with open(txt_path, "w") as f:
+    with open(txt_path, "w", encoding="utf-8") as f:
         f.write("\n".join(log))
     print("\n".join(log))
     print(f"\n[CSV -> {csv_path}]")

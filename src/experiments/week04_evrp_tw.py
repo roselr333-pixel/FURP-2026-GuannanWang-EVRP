@@ -170,7 +170,7 @@ def main():
         lines.append(f"  battery={cap}: feasible={feasible}, runtime={elapsed:.3f}s")
 
     text = "\n".join(lines)
-    with open(out_path, "w") as fh:
+    with open(out_path, "w", encoding="utf-8") as fh:
         fh.write(text)
     print(text)
     print(f"\n[output saved to {out_path}]")

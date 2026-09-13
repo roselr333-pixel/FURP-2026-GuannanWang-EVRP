@@ -27,7 +27,7 @@ def main():
     figdir = os.path.join(here, "figures")
     os.makedirs(figdir, exist_ok=True)
 
-    with open(os.path.join(res, "week08_lns_summary.csv"), newline="") as f:
+    with open(os.path.join(res, "week08_lns_summary.csv"), newline="", encoding="utf-8") as f:
         rows = list(csv.DictReader(f))
     rows.sort(key=lambda r: int(r["size"]))
     sizes = [r["size"] for r in rows]

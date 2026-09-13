@@ -181,7 +181,7 @@
 | 可行 | 是（但数字虚低） |
 | 违反约束 | **物理**：与 FC-7-2 同一缺陷——`ev_collab` 的无人机循环以卡车到达发射节点的时刻 `arr[i_pos]` 作为发射时刻，未跟踪单架无人机自身可用性，允许同一架无人机"同时"执行多个架次 |
 | 从哪一步开始不可行 | 评估：所有无人机行程的结束时间都当作独立、可并行，没考虑一架无人机必须先回收才能起飞下一趟 |
-| 下一步怎么修 | 把 V3 评估器重写为 `ev_collab_k`（K 架同构无人机，按回收时刻 `avail[d]` 串行分配），单架即 K=1 特例，物理正确。修正后单架真实降幅 34.7%~53.4%（N=8 makespan 回到 225.3，与 FC-7-2 的"240+"量级一致），K=2/3 新增 57.7%~72.8%。核心 FSTSP 主线（week06/08 的 `drone_scheduling`）本就串行，从未受影响。 |
+| 下一步怎么修 | 把 V3 评估器重写为 `ev_collab_k`（K 架同构无人机，按回收时刻 `avail[d]` 串行分配），单架即 K=1 特例。修正后单架真实降幅 33.5%~52.4%（N=8 makespan 230.6，与 FC-7-2 的"240+"量级一致），K=2/3 为 44.5%~72.5%。核心 FSTSP 主线（week06/08 的 `drone_scheduling`）本就串行，从未受影响。 |
 
 ### FC-7-4 【FSTSP 评估器允许"嵌套架次"（单架仍被当并行）】——已修
 
@@ -194,7 +194,20 @@
 | 可行 | 否（物理上）——但评估器返回有限值 |
 | 违反约束 | **物理**：与 FC-7-2/7-3 同一缺陷，出现在 FSTSP 主评估器路径。`fstsp_simulate` 用 `drone_avail` 把架次串行化，但**不检查无人机是否已回到卡车**：当架次 A（0→…→2）内部又嵌套架次 B（12→10）时，评估器仍按 `drone_avail` 顺序计算时间，而一架无人机不可能同时执行两个重叠架次 |
 | 从哪一步开始不可行 | 评估：`launch = max(arr[i_pos], drone_avail)` 允许在"无人机仍在飞上一个架次"时就从某个卡车节点起飞；嵌套/交叉架次因此被接受 |
-| 怎么修 | **已修**：`fstsp_simulate` / `fstsp_simulate_multi` 现在强制物理有效性（发射节点须在回收节点之前、飞行 ≤ 航程、发射时无人机须已回到卡车），违反即返回 inf；启发式因此自动拒绝造成嵌套的移动，产出的解物理可行。回归测试见 `tests/test_evaluators.py::test_heuristic_plans_are_physically_valid`。W7/W8 及依赖该评估器的 W6 灵敏度/多目标已全部重跑，数值下调但结论方向不变（旧→新对照见 `docs/analysis/evaluator_physical_fix_note_zh.md`）。**未覆盖**：`week06_ground_air_evrp_tw.py` 自带的并行评估器（W6 主结果与 `week06_largeN`）未改动，仍为旧口径。 |
+| 怎么修 | **已修**：`fstsp_simulate` / `fstsp_simulate_multi` 现在强制物理有效性（发射节点须在回收节点之前、飞行 ≤ 航程、发射时无人机须已回到卡车），违反即返回 inf；启发式因此自动拒绝造成嵌套的移动，产出的解物理可行。回归测试见 `tests/test_evaluators.py::test_heuristic_plans_are_physically_valid`。W7/W8 及依赖该评估器的 W6 灵敏度/多目标已全部重跑，数值下调但结论方向不变（旧→新对照见 `docs/analysis/evaluator_physical_fix_note_zh.md`）。`week06_ground_air_evrp_tw.py` 的自带评估器随后也按同一口径改写并重跑（W6 主结果与 `week06_largeN`），V0/V1 数值不变。 |
+
+### FC-7-5 【V3 / W5 / M&C 评估器：发射时不检查无人机是否已回收】——已修
+
+| 字段 | 内容 |
+|---|---|
+| 案例 ID | FC-7-5 |
+| 样例 | V3（N=8/12/16/20，10 种子，共 40 算例）、`week05_truck_drone_v2.py` 的 6 顾客算例、M&C 原始 36 算例（K=1/2/3） |
+| 求解器 | `v3_ev_collab.ev_collab_k`、`week05_truck_drone_v2.simulate`、`fstsp_mc.mc_simulate`、`drone_scheduling.simulate` |
+| 目标值 | V3 的 **40/40** 个算例产出的架次集合都物理不可行：贪心允许架次区间重叠，评估器又只把发射时刻推迟到无人机空闲 |
+| 可行 | 否（物理上）——但评估器返回有限 makespan |
+| 违反约束 | **物理**：与 FC-7-3/7-4 同一类缺陷但成因不同。`ev_collab_k` 已经按 `avail[d]` 串行分配，却**不检查发射时分配到的无人机是否已经回到卡车**：`launch = max(arr[i_pos], avail[d])` 把发射推迟到无人机空闲，而卡车早已离开那个节点；同时贪心的候选枚举也不要求架次区间互不重叠 |
+| 从哪一步开始不可行 | 评估与搜索：发射时刻被推迟而不是判不可行；候选接受时也不检查区间重叠 |
+| 下一步怎么修 | **已修**：`ev_collab_k` 在 `avail[d] > arr[i_pos]`（或回收点早于发射点）时返回 `schedule_inf` 并把 makespan 置为 `inf`，`ev_lns` / `ev_lns_k` 把不可行解当 `inf` 拒绝；`v3_greedy` 增加架次区间不重叠的预筛。`week05_truck_drone_v2.simulate`、`fstsp_mc.mc_simulate`、`drone_scheduling.simulate` 也补上了同一条检查。V3 主实验与 V3 消融已重跑（单架 LNS 降幅 33.5%~52.4%，V3g 16.3%~39.2%）。回归测试见 `tests/test_evaluators.py::test_v3_rejects_overlapping_sorties` 与 `::test_v3_greedy_produces_a_feasible_schedule`。 |
 
 ---
 
@@ -202,14 +215,14 @@
 
 | 维度 | 出现频次 | 占比 |
 |---|---:|---:|
-| 严格不可行（能量/TW/会合） | 1 / 18 案例 | 6% |
-| 部分违反（TW 紧、约束否决） | 4 / 18 | 22% |
-| 弱结果（绝对值大但可行） | 8 / 18 | 44% |
-| sanity check / 实现 bug | 5 / 18 | 28% |
+| 严格不可行（能量/TW/会合） | 1 / 13 案例 | 8% |
+| 部分违反（航程短、TW 紧、约束否决） | 3 / 13 | 23% |
+| 弱结果（绝对值大但可行） | 4 / 13 | 31% |
+| sanity check / 实现 bug | 5 / 13 | 38% |
 
 **结论**：
 - 真正"路线跑不通"的只有 FC-1 一例（且已在标准设置下规避）；
 - 大部分"失败"是**距离偏长**或**约束过紧**导致的"弱"——这正是 EVRP/VRPTW 难度的真实形态；
-- 5 条 sanity check 类"失败"全是**我自己实现的 bug**（FC-7-1/7-2/7-3/7-4 及早期一例），不是方法问题；**四条均已修**（FC-7-4 已把主评估器物理化并重跑 W7/W8）。
+- sanity check 类里 FC-7-1 是检查通过（框架一致），其余四条（FC-7-2/7-3/7-4/7-5）都是**我自己实现的 bug**，不是方法问题，**均已修**。
 
 > 把弱结果都摆出来不是为了自嘲，而是让评分方能看清：W1–W5 的"GA 比 OR-Tools 差 30pp"不是实验失败，是**研究叙事的一部分**（证明我的 V2 比工业级基线还好的对照基线）。

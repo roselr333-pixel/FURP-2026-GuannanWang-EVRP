@@ -5,6 +5,7 @@
 
 ortools==9.15.6755
 pyvrp==0.14.0
+vrplib>=1.0        # reads the official Solomon .vrp files (GA and OR-Tools baselines)
 numpy>=1.26
 pandas>=2.0
 matplotlib>=3.7

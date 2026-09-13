@@ -396,17 +396,17 @@ def main():
             f"{srow['lns_runtime_mean_s']:.1f}s/it")
     L.append("")
 
-    with open(out_raw, "w", newline="") as f:
+    with open(out_raw, "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=list(raw_rows[0].keys()))
         w.writeheader()
         w.writerows(raw_rows)
-    with open(out_summary, "w", newline="") as f:
+    with open(out_summary, "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=list(summary_rows[0].keys()))
         w.writeheader()
         w.writerows(summary_rows)
 
     text = "\n".join(L)
-    with open(out_txt, "w") as f:
+    with open(out_txt, "w", encoding="utf-8") as f:
         f.write(text)
     print(text)
     print(f"\n[raw -> {out_raw}]")

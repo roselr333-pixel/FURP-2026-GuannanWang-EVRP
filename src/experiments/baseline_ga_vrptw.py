@@ -371,14 +371,14 @@ def solve_ga(data, time_limit=TIME_LIMIT_S, penalty=1000.0, seed=None):
         fits.append(f)
         ress.append(res)
 
-    best, bestkey = None, (10 ** 9, 10 ** 9)
+    bestkey = (10 ** 9, 10 ** 9)
     start = time.time()
     gen = 0
     while time.time() - start < time_limit:
         gen += 1
         order = sorted(range(len(pop)), key=lambda i: fits[i])
         if ress[order[0]] < bestkey:
-            bestkey, best = ress[order[0]], pop[order[0]][:]
+            bestkey = ress[order[0]]
         newpop = [pop[order[i]] for i in range(N_ELITE)]
         newfits = [fits[order[i]] for i in range(N_ELITE)]
         newress = [ress[order[i]] for i in range(N_ELITE)]
@@ -396,7 +396,7 @@ def solve_ga(data, time_limit=TIME_LIMIT_S, penalty=1000.0, seed=None):
 
     order = sorted(range(len(pop)), key=lambda i: fits[i])
     if ress[order[0]] < bestkey:
-        bestkey, best = ress[order[0]], pop[order[0]][:]
+        bestkey = ress[order[0]]
     return bestkey, gen
 
 

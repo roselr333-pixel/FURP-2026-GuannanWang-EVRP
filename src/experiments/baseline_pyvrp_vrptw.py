@@ -19,7 +19,7 @@ import csv
 import time
 
 import pyvrp
-from pyvrp.stop import MaxIterations, MaxRuntime
+from pyvrp.stop import MaxIterations
 
 import baseline_ga_vrptw as bg
 
@@ -39,11 +39,16 @@ def solve_one(name):
     res = pyvrp.solve(data, stop=MaxIterations(3000), seed=SEED)
     cost = res.cost()
     feas = res.is_feasible()
+    # PyVRP 0.14 exposes the route count on the best solution (res.summary is a
+    # function, not an object, so res.summary.num_routes would always fail)
     n_routes = None
     try:
-        n_routes = res.summary.num_routes
+        n_routes = res.best.num_routes()
     except Exception:
-        pass
+        try:
+            n_routes = len(res.best.routes())
+        except Exception:
+            pass
     return cost, feas, n_routes
 
 
@@ -63,7 +68,8 @@ def main():
                      "pyvrp_cost": round(cost, 1),
                      "pyvrp_gap_pct": round(gap, 2),
                      "pyvrp_vehicles": nr,
-                     "pyvrp_feasible": feas})
+                     "pyvrp_feasible": feas,
+                     "runtime_s": round(time.time() - t0, 3)})
         print(f"{name:<9}{bks:>9.1f}{cost:>9.1f}{gap:>9.1f}"
               f"{str(nr):>5}{str(feas):>6}")
     # family + overall mean gap
@@ -79,17 +85,20 @@ def main():
     with open(CSV_PATH, "w", newline="", encoding="utf-8") as fh:
         w = csv.DictWriter(fh, fieldnames=["instance", "family", "bks_cost",
                                            "pyvrp_cost", "pyvrp_gap_pct",
-                                           "pyvrp_vehicles", "pyvrp_feasible"])
+                                           "pyvrp_vehicles", "pyvrp_feasible",
+                                           "runtime_s"])
         w.writeheader()
         for r in rows:
             w.writerow(r)
         w.writerow({"instance": "OVERALL", "family": "", "bks_cost": "",
                     "pyvrp_cost": "", "pyvrp_gap_pct": round(overall, 2),
-                    "pyvrp_vehicles": "", "pyvrp_feasible": ""})
+                    "pyvrp_vehicles": "", "pyvrp_feasible": "",
+                    "runtime_s": ""})
         for f, gm in fam_mean.items():
             w.writerow({"instance": f"FAM_{f}", "family": f, "bks_cost": "",
                         "pyvrp_cost": "", "pyvrp_gap_pct": round(gm, 2),
-                        "pyvrp_vehicles": "", "pyvrp_feasible": ""})
+                        "pyvrp_vehicles": "", "pyvrp_feasible": "",
+                        "runtime_s": ""})
     print(f"wrote {CSV_PATH}")
 
     # bar chart of family mean gaps

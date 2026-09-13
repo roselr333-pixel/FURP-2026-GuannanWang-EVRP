@@ -21,7 +21,6 @@ Outputs:
 """
 import os
 import csv
-import itertools
 import statistics
 import matplotlib
 matplotlib.use("Agg")

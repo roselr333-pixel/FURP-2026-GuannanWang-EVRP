@@ -21,7 +21,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 INST_DIR = os.path.join(HERE, "..", "..", "instances", "schneider_evrptw")
 
 def parse_instance(path):
-    with open(path) as f:
+    with open(path, encoding="utf-8") as f:
         lines = [ln.strip() for ln in f if ln.strip()]
     params = {}
     data_lines = []
@@ -200,7 +200,7 @@ def main():
         print(f"{inst['name']:12s} cust={res['n_customers']:3d} stn={res['n_stations']:2d} "
               f"veh={res['vehicles']:3d} trips={res['trips']:3d} dist={res['distance']:8.1f} "
               f"t={elapsed:5.2f}s unserved={res.get('unserved',0)}")
-    with open(out, "w", newline="") as f:
+    with open(out, "w", newline="", encoding="utf-8") as f:
         w = csv.writer(f)
         w.writerow(["instance", "n_customers", "n_stations", "vehicles", "trips",
                     "total_distance", "solve_time_s", "unserved"])

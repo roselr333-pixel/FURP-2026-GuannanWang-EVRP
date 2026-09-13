@@ -27,7 +27,6 @@ Run:
 
 import os
 import math
-from collections import defaultdict
 
 # same instance as week05 (so the comparison is fair)
 DEPOT = (0, 0)
@@ -69,15 +68,19 @@ def nn_tour(points):
     return route
 
 
-def truck_makespan(route):
-    """route = list of customer ids (no depot). Returns (makespan, travel)."""
+def truck_makespan(route, speed=None):
+    """route = list of customer ids (no depot). Returns (makespan, travel).
+
+    `speed` defaults to the truck speed; pass DRONE_SPEED when timing the drone's
+    own depot loop, otherwise the drone is charged the truck's (slower) pace.
+    """
     if not route:
         return 0.0, 0.0
     travel = dist(DEPOT, CUSTOMERS[route[0]])
     for a, b in zip(route, route[1:]):
         travel += dist(CUSTOMERS[a], CUSTOMERS[b])
     travel += dist(CUSTOMERS[route[-1]], DEPOT)
-    return travel / TRUCK_SPEED + len(route) * SERVICE_TIME, travel
+    return travel / (speed or TRUCK_SPEED) + len(route) * SERVICE_TIME, travel
 
 
 def depot_only_drone():
@@ -85,8 +88,12 @@ def depot_only_drone():
     order = sorted(CUSTOMERS, key=lambda c: -dist(DEPOT, CUSTOMERS[c]))
     drone_set = set(order[: len(order) // 2])
     truck_set = set(order[len(order) // 2:])
-    d_mk, _ = truck_makespan(list(drone_set))
-    t_mk, _ = truck_makespan(list(truck_set))
+    # same construction as week05_truck_drone.py: nearest-neighbour tours, each
+    # vehicle timed at its own speed, so the two scripts report one baseline
+    d_route = nn_tour({c: CUSTOMERS[c] for c in drone_set})
+    t_route = nn_tour({c: CUSTOMERS[c] for c in truck_set})
+    d_mk, _ = truck_makespan(d_route, DRONE_SPEED)
+    t_mk, _ = truck_makespan(t_route)
     return max(d_mk, t_mk), drone_set, truck_set
 
 
@@ -109,14 +116,25 @@ def simulate(route, drone_trips):
         arr[p] = arr[p - 1] + d / TRUCK_SPEED + (SERVICE_TIME if cur != 0 else 0)
 
     drone_free = 0.0
-    for ln, k, rn in drone_trips:
+    trips_in_launch_order = sorted(
+        drone_trips, key=lambda t: 0 if t[0] == 0 else full.index(t[0]))
+    for ln, k, rn in trips_in_launch_order:
         i_pos = 0 if ln == 0 else full.index(ln)
         j_pos = (len(full) - 1) if rn == 0 else full.index(rn)
-        launch = arr[i_pos]
         trip = (dist(coord(ln), coord(k)) +
                 dist(coord(k), coord(rn))) / DRONE_SPEED + SERVICE_TIME
-        landing = launch + trip
-        drone_free = max(drone_free, landing)
+        # the launch node precedes the recovery node, and the drone has to be
+        # back on the truck when it reaches the launch node: one drone cannot
+        # fly two sorties at the same time (an infeasible set returns inf)
+        if i_pos >= j_pos or drone_free > arr[i_pos] + 1e-9:
+            return arr, float("inf")
+        landing = arr[i_pos] + trip
+        recovery = max(arr[j_pos], landing)
+        drone_free = recovery
+        wait = recovery - arr[j_pos]
+        if wait > 0:
+            for p in range(j_pos, len(arr)):
+                arr[p] += wait
     return arr, drone_free
 
 
@@ -130,6 +148,11 @@ def flexible_drone():
         # nodes already used as a launch/recover point must stay on the truck
         # route, so they can no longer be offloaded to the drone.
         used_endpoints = {n for (ln, _, rn) in drone_trips for n in (ln, rn)}
+        # one drone is serial: a new sortie may not overlap an accepted one
+        accepted = []
+        for (ln0, _k0, rn0) in drone_trips:
+            accepted.append((0 if ln0 == 0 else full.index(ln0),
+                             len(full) - 1 if rn0 == 0 else full.index(rn0)))
         # distance of a sub-path through a list of nodes
         def seg_dist(nodes):
             s = 0.0
@@ -138,13 +161,15 @@ def flexible_drone():
                     dist(CUSTOMERS[a], DEPOT) if b == 0 else dist(CUSTOMERS[a], CUSTOMERS[b]))
             return s
 
-        inner = route  # positions 1..len(route) in `full` map to route indices
         for pk in range(len(route)):
             k = route[pk]
             if k in used_endpoints:
                 continue
             for i_pos in range(0, pk + 1):          # launch before/at k
                 for j_pos in range(pk + 2, len(full)):  # recover after k
+                    if any(not (j_pos <= a or i_pos >= b)
+                           for a, b in accepted):
+                        continue
                     # original sub-path i_pos..j_pos (includes k)
                     orig = full[i_pos:j_pos + 1]
                     # new sub-path with k removed
@@ -170,8 +195,10 @@ def flexible_drone():
         drone_trips.append((full[i_pos], k, full[j_pos]))  # store node ids
 
     arr, drone_free = simulate(route, drone_trips)
-    truck_mk, truck_travel = truck_makespan(route)
-    collab = max(truck_mk, drone_free)
+    _, truck_travel = truck_makespan(route)
+    # the truck may wait at a recovery node, so its own arrival array (not the
+    # waiting-free truck_makespan) is what bounds the completion time
+    collab = max(arr[-1], drone_free)
     return collab, route, drone_trips, truck_travel, drone_free
 
 
@@ -180,8 +207,9 @@ def main():
     out_path = os.path.join(here, "src", "results", "week05_truck_drone_v2_output.txt")
     os.makedirs(os.path.dirname(out_path), exist_ok=True)
 
-    # baselines
-    truck_mk, truck_travel = truck_makespan(list(CUSTOMERS.keys()))
+    # baselines (nearest-neighbour truck tour, exactly as week05_truck_drone.py,
+    # so the two scripts report the same truck-only reference)
+    truck_mk, truck_travel = truck_makespan(nn_tour(CUSTOMERS))
     depot_mk, drone_set, truck_set = depot_only_drone()
 
     # v2
@@ -201,15 +229,18 @@ def main():
     L.append(f"V2 FLEXIBLE DRONE makespan : {collab:.1f}")
     L.append(f"  truck serves {sorted(route)} (travel={t_travel:.1f})")
     L.append(f"  drone makespan (last landing) = {d_free:.1f}")
-    L.append(f"  drone trips (launch node -> customer -> recover node):")
+    L.append("  drone trips (launch node -> customer -> recover node):")
     for (ln, k, rn) in trips:
         L.append(f"    node {ln} -> customer {k} -> node {rn}")
     L.append("")
     imp_vs_truck = (truck_mk - collab) / truck_mk * 100
     imp_vs_depot = (depot_mk - collab) / depot_mk * 100
     L.append(f"Improvement vs truck-only      : {imp_vs_truck:.1f}%")
-    L.append(f"Improvement vs depot-only drone: {imp_vs_depot:.1f}% "
-             f"(shows the limitation is removed)")
+    L.append(f"Improvement vs depot-only drone: {imp_vs_depot:.1f}%")
+    L.append(f"  (the depot-only model finishes at {depot_mk:.1f}; the carried "
+             f"drone has to be recovered by the truck and cannot fly two "
+             f"sorties at once, which on an instance this small costs more "
+             f"than the mid-route rendezvous buys.)")
     L.append("")
     L.append("What changed vs the old model:")
     L.append("  - drone is no longer confined to a depot loop;")
@@ -219,7 +250,7 @@ def main():
     L.append("=" * 70)
 
     text = "\n".join(L)
-    with open(out_path, "w") as f:
+    with open(out_path, "w", encoding="utf-8") as f:
         f.write(text)
     print(text)
     print(f"\n[output saved to {out_path}]")

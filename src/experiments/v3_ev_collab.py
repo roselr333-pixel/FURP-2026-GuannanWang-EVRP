@@ -128,6 +128,7 @@ def ev_collab_k(inst, route, trips, K, assign=None, q=None):
     drone_free = 0.0
     tw_viol = truck_tw
     offloaded = 0
+    schedule_inf = False
     for idx, (ln, custs, rn) in enumerate(ts):
         d = assign[idx]
         i_pos = 0 if ln == 0 else path.index(ln)
@@ -135,6 +136,11 @@ def ev_collab_k(inst, route, trips, K, assign=None, q=None):
         flight, fsum = _trip_flight(inst, ln, custs, rn)
         if fsum > R_D:
             energy_inf = True
+        # the launch node comes before the recovery node, and the drone assigned
+        # to this sortie has to be back on the truck when it reaches the launch
+        # node -- one drone cannot fly two sorties at the same time
+        if i_pos >= j_pos or avail[d] > arr[i_pos] + 1e-9:
+            schedule_inf = True
         # per-customer time windows along this sortie (sequential service)
         launch = max(arr[i_pos], avail[d])
         tt = launch
@@ -157,12 +163,14 @@ def ev_collab_k(inst, route, trips, K, assign=None, q=None):
             for p in range(j_pos, len(arr)):
                 arr[p] += wait
 
+    invalid = energy_inf or schedule_inf
     return {
-        "makespan": max(arr[-1], drone_free),
+        "makespan": float("inf") if invalid else max(arr[-1], drone_free),
         "truck_makespan": arr[-1],
         "drone_makespan": drone_free,
         "tw_viol": tw_viol,
         "energy_inf": energy_inf,
+        "schedule_inf": schedule_inf,
         "recharges": recharges,
         "total_dist": sum(dist(inst, path[k], path[k + 1])
                           for k in range(len(path) - 1)),
@@ -184,7 +192,7 @@ def ev_lns(inst, route, drone_trips):
     energy-infeasible solutions rejected outright and time-window violations
     heavily penalised."""
     r = ev_collab(inst, route, drone_trips)
-    if r["energy_inf"]:
+    if r["energy_inf"] or r["schedule_inf"]:
         return float("inf")
     return r["makespan"] + TW_PENALTY * r["tw_viol"]
 
@@ -192,7 +200,7 @@ def ev_lns(inst, route, drone_trips):
 def ev_lns_k(inst, route, trips, K, q=None):
     """Scalar objective for the LNS on the K-drone model."""
     r = ev_collab_k(inst, route, trips, K, q=q)
-    if r["energy_inf"]:
+    if r["energy_inf"] or r["schedule_inf"]:
         return float("inf")
     return r["makespan"] + TW_PENALTY * r["tw_viol"]
 
@@ -209,14 +217,32 @@ def v3_greedy(inst, max_cust=2, rd=R_D, multi_takeoff=True):
     offloaded = set()
     protected = set()     # launch/recovery nodes; may not be offloaded later
     blocked = set()       # only used when multi_takeoff is off
-    base = ev_collab(inst, route, trips)
     cur_obj = ev_lns(inst, route, trips)   # penalised objective (TW + energy)
 
     def usable(node):
         return multi_takeoff or node not in blocked
 
+    def accepted_intervals():
+        """Truck-route intervals already claimed by accepted sorties.
+
+        One drone is one serial resource, so a new sortie may not overlap an
+        accepted one; sharing an endpoint is fine (the drone is back on the
+        truck there). The evaluator enforces the same rule, so this only keeps
+        obviously-invalid candidates from being evaluated.
+        """
+        first = {}
+        for idx, node in enumerate(route):
+            first.setdefault(node, idx)
+        out = []
+        for ln0, _c, rn0 in trips:
+            if ln0 in first and rn0 in first:
+                out.append((0 if ln0 == 0 else first[ln0],
+                            len(route) - 1 if rn0 == 0 else first[rn0]))
+        return out
+
     while True:
         best = None
+        accepted = accepted_intervals()
         for i_pos in range(len(route) - 1):
             ln = route[i_pos]
             if not usable(ln):
@@ -224,6 +250,8 @@ def v3_greedy(inst, max_cust=2, rd=R_D, multi_takeoff=True):
             for j_pos in range(i_pos + 2, len(route)):
                 rn = route[j_pos]
                 if not usable(rn):
+                    continue
+                if any(not (j_pos <= a or i_pos >= b) for a, b in accepted):
                     continue
                 cands = [c for c in route[i_pos + 1:j_pos]
                          if c != 0 and c not in protected and c not in blocked]
@@ -365,11 +393,11 @@ def main():
         for k in r:
             if k not in fields:
                 fields.append(k)
-    with open(out_raw, "w", newline="") as f:
+    with open(out_raw, "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=fields)
         w.writeheader()
         w.writerows(rows)
-    with open(out_sum, "w", newline="") as f:
+    with open(out_sum, "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=list(summary[0].keys()))
         w.writeheader()
         w.writerows(summary)
@@ -397,7 +425,7 @@ def main():
             + f", TWv {s[f'V3l_K{K}_tw_viol']:.1f}, rc {s[f'V3l_K{K}_recharges']:.1f})"
             for K in K_DRONES))
     text = "\n".join(Lg)
-    with open(out_txt, "w") as f:
+    with open(out_txt, "w", encoding="utf-8") as f:
         f.write(text)
     print(text)
     print(f"\n[raw -> {out_raw}]\n[summary -> {out_sum}]\n[log -> {out_txt}]")

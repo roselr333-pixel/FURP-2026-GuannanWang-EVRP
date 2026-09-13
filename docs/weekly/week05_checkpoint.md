@@ -49,9 +49,9 @@
 | W3 Solomon c101 (9 nodes) | OR-Tools VRPTW | Yes | dist = 54 | 5.0 | only 1 of 3 vehicles used |
 | W4 EVRP-TW (battery 100, recharge) | OR-Tools + battery dim | Yes | 1 recharge | 5.0 | feasible from cap 100 upward |
 | W4 EVRP-TW (battery 100, **no** recharge) | pure EV | **No** | – | 0.003 | infeasible |
-| W5 truck-only | heuristic | Yes | makespan 388.6 (v1) / 552.1 (v2) | – | baseline |
+| W5 truck-only | heuristic | Yes | makespan 388.6 | – | baseline |
 | W5 truck + drone (v1, depot-only) | parallel heuristic | Yes | makespan 270.6 | – | **−30.4%** vs truck-only |
-| W5 truck + drone (v2, any node) | FSTSP-style heuristic | Yes | makespan 277.3 | – | **−49.8%** vs truck-only, **−28.8%** vs v1 |
+| W5 truck + drone (v2, any node) | FSTSP-style heuristic | Yes | makespan 318.9 | – | **−17.9%** vs truck-only; 17.8% slower than v1 |
 
 ### 2.2 Week 3 fair comparison — my greedy vs my greedy + 2-opt
 
@@ -59,16 +59,16 @@
 |---|---|---|---:|---:|---:|---:|
 | n10 | CVRP | baseline | Yes | 363 | 0.009 | – |
 | n10 | CVRP | improved (2-opt) | Yes | 363 | 4.001 | 0% |
-| n10 | VRPTW | baseline | Yes | 377 | 0.004 | – |
+| n10 | VRPTW | baseline | Yes | 377 | 0.007 | – |
 | n10 | VRPTW | improved | Yes | 366 | 4.001 | **−2.9%** |
-| n20 | CVRP | baseline | Yes | 436 | 0.007 | – |
+| n20 | CVRP | baseline | Yes | 436 | 0.015 | – |
 | n20 | CVRP | improved | Yes | 436 | 4.001 | 0% |
-| n20 | VRPTW | baseline | Yes | 448 | 0.009 | – |
-| n20 | VRPTW | improved | Yes | 448 | 4.001 | 0% |
-| n40 | CVRP | baseline | Yes | 682 | 0.029 | – |
-| n40 | CVRP | improved | Yes | 616 | 4.002 | **−9.7%** |
-| n40 | VRPTW | baseline | Yes | 616 | 0.038 | – |
-| n40 | VRPTW | improved | Yes | 616 | 4.002 | 0% |
+| n20 | VRPTW | baseline | Yes | 448 | 0.018 | – |
+| n20 | VRPTW | improved | Yes | 448 | 4.000 | 0% |
+| n40 | CVRP | baseline | Yes | 682 | 0.067 | – |
+| n40 | CVRP | improved | Yes | 616 | 4.000 | **−9.7%** |
+| n40 | VRPTW | baseline | Yes | 616 | 0.087 | – |
+| n40 | VRPTW | improved | Yes | 616 | 4.000 | 0% |
 
 **What this tells me:** 2-opt never breaks feasibility. It cuts distance on the largest CVRP case (−9.7%) and on the tight-time-window small case (−2.9%), and the gain grows as the instance gets bigger. On already-tight instances (n20 / n40 VRPTW) 2-opt finds no better move — which makes sense, because most improving moves would violate a time window.
 
@@ -132,7 +132,7 @@ I extended the benchmark with charging stations and the battery dimension (negat
 | EVRPTW-C2-25-S2 | 100 | Yes | **No** | – | – | – |
 | EVRPTW-C2-25-S2 | 300 | Yes | Yes | 2 | 2 | 578 |
 | EVRPTW-C2-50-S3 | 100 | Yes | **No** | – | – | – |
-| EVRPTW-C2-50-S3 | 300 | Yes | Yes | 3 | 4 | 850 |
+| EVRPTW-C2-50-S3 | 300 | Yes | Yes | 3 | 4 | 856 |
 | EVRPTW-R2-50-S3 | 100 | Yes | **No** | – | – | – |
 | EVRPTW-R2-50-S3 | 300 | Yes | Yes | 3 | 4 | 1300 |
 
@@ -144,11 +144,11 @@ The v2 heuristic carries the drone on the truck and launches it at any node `i` 
 
 | Model | Makespan | Improvement vs truck-only |
 |---|---:|---:|
-| Truck-only | 552.1 | – |
-| v1 (depot-only drone) | 389.5 | −29.5% |
-| **v2 (any-node drone)** | **277.3** | **−49.8%** |
+| Truck-only | 388.6 | – |
+| v1 (depot-only drone, its own tour) | 270.6 | −30.4% |
+| **v2 (any-node drone, one sortie at a time)** | **318.9** | **−17.9%** |
 
-v2 also beats v1 by **28.8%** — directly removing the "depot-only" simplification. Example drone trips found: `node 1 → customer 5 → node 3`, `depot → customer 2 → node 6`, `node 3 → customer 4 → depot`.
+On this six-customer instance v2 is **17.8% slower** than v1: the carried drone has to be recovered by the truck and can fly only one sortie at a time, and that overhead is not yet repaid by the mid-route rendezvous (it is, at the larger sizes of W6-W8). Example drone trips found: `node 1 → customer 5 → node 3`, `node 3 → customer 4 → depot`.
 
 ### 2.8 Literature reading — EVRP survey note
 

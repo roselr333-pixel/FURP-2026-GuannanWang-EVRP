@@ -27,7 +27,6 @@ import os
 import sys
 import time
 import csv
-import random
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import week06_ground_air_evrp_tw as w6
@@ -148,18 +147,18 @@ def main():
     L.append("=" * 78)
 
     # ---- write csv ----
-    with open(out_raw, "w", newline="") as f:
+    with open(out_raw, "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=list(rows[0].keys()))
         w.writeheader()
         for row in rows:
             w.writerow(row)
-    with open(out_summary, "w", newline="") as f:
+    with open(out_summary, "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=list(summary[0].keys()))
         w.writeheader()
         for row in summary:
             w.writerow(row)
     text = "\n".join(L)
-    with open(out_txt, "w") as f:
+    with open(out_txt, "w", encoding="utf-8") as f:
         f.write(text)
     print(text)
     print(f"\n[raw -> {out_raw}]")

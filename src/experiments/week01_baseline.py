@@ -145,7 +145,7 @@ def main():
     lines.append("=" * 64)
     lines.append(f"Instance: small VRPTW (1 depot + 5 customers, {NUM_VEHICLES} vehicles)")
     lines.append(f"Solver: OR-Tools {ORTOOLS_VERSION}")
-    lines.append(f"OS: Windows | Python: 3.13 | Package manager: venv + pip")
+    lines.append("OS: Windows | Python: 3.13 | Package manager: venv + pip")
 
     # ---- Phase A: greedy first solution ----
     t0 = time.perf_counter()
@@ -155,7 +155,7 @@ def main():
         lines.append("STATUS: NO SOLUTION FOUND (infeasible)")
         lines.append(f"Phase A runtime: {t_a:.4f} s")
         text = "\n".join(lines)
-        with open(out_path, "w") as fh:
+        with open(out_path, "w", encoding="utf-8") as fh:
             fh.write(text)
         print(text)
         return
@@ -189,11 +189,11 @@ def main():
     lines.append(f"Improvement from local search: {improvement} units ({pct:.1f}% shorter)")
     lines.append("Constraint check:")
     lines.append(f"  Capacity per vehicle <= {VEHICLE_CAPACITY}: enforced by solver")
-    lines.append(f"  Time windows: enforced by solver")
+    lines.append("  Time windows: enforced by solver")
     lines.append("=" * 64)
 
     text = "\n".join(lines)
-    with open(out_path, "w") as fh:
+    with open(out_path, "w", encoding="utf-8") as fh:
         fh.write(text)
     print(text)
     print(f"\n[output saved to {out_path}]")

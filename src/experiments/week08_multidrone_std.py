@@ -167,21 +167,21 @@ def main():
     else:
         Lg.append("  (no configs small enough for the exact scheduler)")
 
-    with open(out_raw, "w", newline="") as f:
+    with open(out_raw, "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=list(raw_rows[0].keys()))
         w.writeheader()
         w.writerows(raw_rows)
-    with open(out_summary, "w", newline="") as f:
+    with open(out_summary, "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=list(summary_rows[0].keys()))
         w.writeheader()
         w.writerows(summary_rows)
-    with open(out_sched, "w", newline="") as f:
+    with open(out_sched, "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=list(sched_rows[0].keys()))
         w.writeheader()
         w.writerows(sched_rows)
 
     text = "\n".join(Lg)
-    with open(out_txt, "w") as f:
+    with open(out_txt, "w", encoding="utf-8") as f:
         f.write(text)
     print(text)
     print(f"\n[raw -> {out_raw}]")

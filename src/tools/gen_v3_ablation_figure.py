@@ -25,7 +25,7 @@ FIG = os.path.join(HERE, "figures", "v3_ablation.png")
 
 CH = {1: "#2c7fb8", 2: "#7fcdbb", 3: "#fdae6b", 4: "#d7301f"}
 
-with open(RES, newline="") as f:
+with open(RES, newline="", encoding="utf-8") as f:
     rows = sorted(csv.DictReader(f), key=lambda r: int(r["size"]))
 
 sizes = [int(r["size"]) for r in rows]

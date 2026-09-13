@@ -580,7 +580,8 @@ def main():
     r1 = truck_ev_route(inst_f1, list(inst_f1["customers"].keys()),
                         allow_recharge=False, q=120)
     fc1 = ("FC1", "truck-only EV, recharge OFF, battery=120",
-           "energy violation (cannot cover distance even with one charge)",
+           f"energy violation (energy_inf={r1['energy_inf']}: cannot cover "
+           f"distance even with one charge)",
            "route becomes infeasible; fix: allow recharge at stations or "
            "raise battery capacity")
     failures.append(fc1)
@@ -619,14 +620,14 @@ def main():
 
     # ---- write csv ----
     fieldnames = list(raw_rows[0].keys())
-    with open(out_raw, "w", newline="") as f:
+    with open(out_raw, "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=fieldnames)
         w.writeheader()
         for row in raw_rows:
             w.writerow(row)
 
     sfields = list(summary_rows[0].keys())
-    with open(out_summary, "w", newline="") as f:
+    with open(out_summary, "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=sfields)
         w.writeheader()
         for row in summary_rows:
@@ -634,14 +635,14 @@ def main():
 
     # failure table csv
     fc_csv = os.path.join(res_dir, "week06_failure_cases.csv")
-    with open(fc_csv, "w", newline="") as f:
+    with open(fc_csv, "w", newline="", encoding="utf-8") as f:
         w = csv.writer(f)
         w.writerow(["id", "setting", "observed_problem", "next_step"])
         for fc in failures:
             w.writerow(fc)
 
     text = "\n".join(L)
-    with open(out_txt, "w") as f:
+    with open(out_txt, "w", encoding="utf-8") as f:
         f.write(text)
     print(text)
     print(f"\n[raw results -> {out_raw}]")

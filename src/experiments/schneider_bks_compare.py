@@ -30,7 +30,7 @@ SRC.update({k: "Adachi et al. (2022, IEICE), cit. Schneider (2014)" for k in
             ["c201_21", "c206_21", "r201_21", "r206_21", "rc201_21", "rc206_21"]})
 
 rows = []
-with open(BASE) as f:
+with open(BASE, encoding="utf-8") as f:
     for row in csv.DictReader(f):
         name = row["instance"]
         if name not in BKS:
@@ -44,7 +44,7 @@ with open(BASE) as f:
                      round(my_d, 2), round(my_time, 3), bk_v, bk_d, round(dgap, 1),
                      my_v - bk_v, uns, SRC[name]])
 
-with open(OUT, "w", newline="") as f:
+with open(OUT, "w", newline="", encoding="utf-8") as f:
     w = csv.writer(f)
     w.writerow(["instance", "n_customers", "n_stations", "my_vehicles", "my_trips",
                 "my_distance", "my_solve_time_s", "bks_vehicles", "bks_distance",

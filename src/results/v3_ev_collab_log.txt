@@ -5,13 +5,13 @@ sizes=[8, 12, 16, 20]  seeds=10  base 20260720  drones K=[1, 2, 3]
 V1 = truck-only EV | V3g = EV+drone greedy | V3l = EV+drone greedy+LNS
   hardware: Intel64 Family 6 Model 183 Stepping 1, GenuineIntel | 20 logical cores | RAM 31.8GB
   env: python 3.13.14 | Windows-11-10.0.26200-SP0
-  total wall-clock: 192.7s over 40 instances (mean 4.82s/instance)
+  total wall-clock: 406.7s over 40 instances (mean 10.17s/instance)
 
-  N= 8: V1=   485.8  V3g=   257.8 ( 46.4%)  LNS gain 11.64%  TWviol V1=2.4  rechg 0.9
-      K1:    225.3 ( 53.4% vs V1, TWv 0.0, rc 0.0)  K2:    176.0 ( 63.5% vs V1, 21.53% vs K1, TWv 0.0, rc 0.0)  K3:    131.5 ( 72.8% vs V1, 41.52% vs K1, TWv 0.0, rc 0.0)
-  N=12: V1=   694.7  V3g=   415.1 ( 40.1%)  LNS gain  5.38%  TWviol V1=6.0  rechg 1.3
-      K1:    386.8 ( 44.4% vs V1, TWv 0.8, rc 0.2)  K2:    292.6 ( 57.7% vs V1, 22.93% vs K1, TWv 0.1, rc 0.0)  K3:    220.8 ( 68.0% vs V1, 41.86% vs K1, TWv 0.0, rc 0.0)
-  N=16: V1=   975.9  V3g=   628.7 ( 35.6%)  LNS gain  1.96%  TWviol V1=9.6  rechg 2.1
-      K1:    606.1 ( 37.7% vs V1, TWv 3.9, rc 1.0)  K2:    499.6 ( 48.7% vs V1, 17.39% vs K1, TWv 2.1, rc 0.7)  K3:    399.4 ( 59.0% vs V1, 33.84% vs K1, TWv 0.6, rc 0.4)
-  N=20: V1=  1283.6  V3g=   918.9 ( 27.9%)  LNS gain  8.01%  TWviol V1=13.5  rechg 2.9
-      K1:    832.8 ( 34.7% vs V1, TWv 7.5, rc 1.5)  K2:    817.7 ( 35.9% vs V1,  1.70% vs K1, TWv 4.4, rc 1.5)  K3:    669.6 ( 47.2% vs V1, 19.51% vs K1, TWv 3.0, rc 1.3)
+  N= 8: V1=   485.8  V3g=   293.6 ( 39.2%)  LNS gain 18.94%  TWviol V1=2.4  rechg 0.9
+      K1:    230.6 ( 52.4% vs V1, TWv 0.0, rc 0.0)  K2:    170.8 ( 64.6% vs V1, 25.59% vs K1, TWv 0.0, rc 0.0)  K3:    133.4 ( 72.5% vs V1, 41.74% vs K1, TWv 0.0, rc 0.0)
+  N=12: V1=   694.7  V3g=   517.4 ( 25.4%)  LNS gain 25.97%  TWviol V1=6.0  rechg 1.3
+      K1:    382.3 ( 45.0% vs V1, TWv 0.6, rc 0.4)  K2:    267.5 ( 61.4% vs V1, 28.77% vs K1, TWv 0.0, rc 0.0)  K3:    220.9 ( 68.1% vs V1, 41.19% vs K1, TWv 0.0, rc 0.0)
+  N=16: V1=   975.9  V3g=   693.9 ( 29.0%)  LNS gain 12.87%  TWviol V1=9.6  rechg 2.1
+      K1:    590.4 ( 39.3% vs V1, TWv 4.2, rc 1.0)  K2:    505.6 ( 47.9% vs V1, 13.58% vs K1, TWv 2.3, rc 0.8)  K3:    429.8 ( 55.5% vs V1, 26.52% vs K1, TWv 0.7, rc 0.8)
+  N=20: V1=  1283.6  V3g=  1069.0 ( 16.3%)  LNS gain 20.34%  TWviol V1=13.5  rechg 2.9
+      K1:    850.5 ( 33.5% vs V1, TWv 6.9, rc 1.7)  K2:    707.1 ( 44.5% vs V1, 15.98% vs K1, TWv 4.8, rc 1.5)  K3:    661.0 ( 48.3% vs V1, 21.02% vs K1, TWv 3.0, rc 1.3)

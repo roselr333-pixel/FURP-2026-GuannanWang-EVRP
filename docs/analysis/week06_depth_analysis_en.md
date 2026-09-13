@@ -92,7 +92,7 @@ not single-objective distance optimisation.
 
 ## 5. Failure-case analysis
 
-Among the 17 failure cases, the most telling is this: on N=50 dense instances, the
+Among the failure cases, the most telling one is this: on N=50 dense instances, the
 **synchronous-feasibility rejection count reaches ~1.01 million**. This shows that the synchronous
 rendezvous constraint (the drone must rejoin the truck path at some point) is the main bottleneck at
 large scale — exactly corroborating the "benefit dilutes with scale" finding from §2, and jointly
@@ -151,6 +151,6 @@ so"; the final report will follow that order.
 - `src/results/week06_multi_objective.csv` + `figures/mo_*.png` (multi-objective trade-off)
 - `src/results/baseline_consolidated.csv` + `figures/baseline_consolidated.png` (three baselines)
 - `src/results/week06_largeN_*.csv` (N=30/50/100 decay) + `figures/largen_scale_decay.png`
-- `docs/reference/failure_cases_master.md` (17 failure cases)
+- `docs/reference/failure_cases_master.md` (13 failure cases)
 - `src/results/schneider_evrptw_bks_comparison.csv` + `figures/schneider_routes.png` /
   `figures/schneider_vehcomp.png` (Schneider 2014 E-VRPTW replication, my routes vs BKS)

@@ -38,6 +38,15 @@ Per-family mean gap (GA vs BKS):
 | RC1 | 8 | 29.9% | 19.5% | 39.3% |
 | RC2 | 8 | 55.1% | 35.0% | 68.9% |
 
+**A note on the budget.** The stopping rule above is wall-clock (8 s per
+instance), not a fixed number of generations, and later reruns of the same
+baseline use five seeds instead of one. How many generations fit into those 8 s
+therefore depends on the machine, and the five-seed mean gap I measured across
+reruns is 36.6%, 36.7%, 40.2% and 41.0% — so the exact percentage carries a few
+points of run-to-run uncertainty. The comparison it supports (the GA stays far
+behind OR-Tools at 7.2% and PyVRP at −3.0%) does not change, but "36.6%" should be
+read as "around 40%", not as a figure reproducible to the decimal.
+
 ## 4. What the numbers tell me
 
 - **GA is worse than OR-Tools on every instance** (`ga_minus_ortools_gap` is positive for all 56). This is expected: OR-Tools uses industrial-grade guided local search, while my GA is a basic textbook metaheuristic.

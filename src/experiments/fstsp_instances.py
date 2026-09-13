@@ -37,7 +37,7 @@ def parse_solomon(path):
     both dicts keyed by 1-based node id (node 1 is the depot)."""
     coords, demands = {}, {}
     section = None
-    with open(path) as f:
+    with open(path, encoding="utf-8") as f:
         for raw in f:
             line = raw.strip()
             if not line:

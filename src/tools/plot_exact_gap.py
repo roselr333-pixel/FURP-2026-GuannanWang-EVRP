@@ -21,7 +21,7 @@ FIG = os.path.join(HERE, "figures")
 
 def main():
     path = os.path.join(RES, "week08_exact_gap_summary.csv")
-    with open(path, newline="") as f:
+    with open(path, newline="", encoding="utf-8") as f:
         rows = list(csv.DictReader(f))
     sizes = [r["size"] for r in rows]
     greedy = [float(r["greedy_gap_mean_pct"]) for r in rows]

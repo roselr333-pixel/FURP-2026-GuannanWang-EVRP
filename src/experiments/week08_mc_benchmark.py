@@ -76,7 +76,7 @@ def main():
         for k in r:
             if k not in fields:
                 fields.append(k)
-    with open(out_raw, "w", newline="") as f:
+    with open(out_raw, "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=fields)
         w.writeheader()
         w.writerows(rows)
@@ -124,7 +124,7 @@ def main():
     L.append("per sortie); c2 = my multi-customer extension.")
 
     text = "\n".join(L)
-    with open(out_txt, "w") as f:
+    with open(out_txt, "w", encoding="utf-8") as f:
         f.write(text)
     print()
     print(text)

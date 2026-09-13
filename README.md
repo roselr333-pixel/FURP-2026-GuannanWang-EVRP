@@ -74,7 +74,7 @@ Key documents:
 | `docs/analysis/week06_depth_analysis_zh.md` / `_en.md` | the "why it works / when it works" conclusion chain |
 | `docs/reference/experiment_evidence_index_zh.md` / `_en.md` | every citable number with its source and caveats |
 | `docs/reference/formal_model_zh.md` / `_en.md` | the formal model: sets, parameters, variables, objective, hard vs soft constraints, and what is not modelled |
-| `docs/reference/failure_cases_master.md` | 17 failure cases with constraint-level diagnosis |
+| `docs/reference/failure_cases_master.md` | 13 failure cases with constraint-level diagnosis |
 | `docs/reference/configs_and_parameters.md` | instances, solver settings, seeds, path conventions |
 | `docs/weekly/*` | weekly notes and per-experiment notes (week 1-8, plus V3) |
 | `docs/baselines/*` | GA baseline report and the Schneider (2014) replication |
@@ -103,7 +103,7 @@ Key documents:
 | Ablation | multi-customer sorties +8.6–12.1 pp (main), stop reuse +2.2–4.4 pp |
 | LNS vs greedy V2 | +12.5–21.3%, paired Wilcoxon p = 1.7×10⁻¹⁰ |
 | Distance from the exact optimum (CP-SAT, small n) | n=8 proven optimal: greedy +31.2%, LNS +16.5% |
-| Murray & Chu (2015) replication | V2 10.2–14.2% shorter; c1K1 LNS / published OFV = 0.901 |
+| Murray & Chu (2015) replication | V2 10.2–14.2% shorter; c1K1 LNS / published OFV = 0.924 |
 | Schneider (2014) replication | distance +50.7% vs BKS, mean vehicles 5.4 vs 2.1 |
 | Multi-drone (standard instances) | K=1→5 raises the gain to 46.8–71.4% |
 | Drone scheduling | naive rule provably optimal on 64/64 configs |
@@ -123,9 +123,10 @@ python run_all.py                 # rerun every headline experiment
 python -m pytest tests/ -q        # regression tests (about one second)
 ```
 
-See `REPRODUCE.md` for the conclusion → script → artifact map. Every experiment
-prints its machine/environment in the log header and records per-instance
-runtime (`runtime_s`) in its CSV.
+See `REPRODUCE.md` for the conclusion → script → artifact map. The experiment
+scripts print their machine/environment in the log header and record per-instance
+runtime (`runtime_s`) in their CSV; the baseline scripts report wall-clock time in
+their logs instead.
 
 ---
 

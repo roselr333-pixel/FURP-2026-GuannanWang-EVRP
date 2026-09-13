@@ -80,7 +80,7 @@
 
 ## 5. 失败案例分析
 
-17 条失败案例里最明显的是：在 N=50 的密集算例上，**会合可行性否决次数达到
+失败案例里最明显的一条是：在 N=50 的密集算例上，**会合可行性否决次数达到
 约 101 万次**。这说明同步会合约束（无人机必须回到卡车路径上的某点汇合）在
 大规模下是主要瓶颈，说明同步模型的现实代价就在这里，也解释了第 2 节里
 "规模越大协同收益越被稀释"的现象。它和敏感性结论指向同一个边界，
@@ -119,4 +119,4 @@
 - `src/results/week06_multi_objective.csv` + `figures/mo_*.png`（多目标权衡）
 - `src/results/baseline_consolidated.csv` + `figures/baseline_consolidated.png`（三基线整合）
 - `src/results/week06_largeN_*.csv`（N=30/50/100 规模衰减）+ `figures/largen_scale_decay.png`
-- `docs/reference/failure_cases_master.md`（17 条失败案例）
+- `docs/reference/failure_cases_master.md`（13 条失败案例）

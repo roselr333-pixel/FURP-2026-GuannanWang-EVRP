@@ -32,7 +32,6 @@ import os
 import csv
 import math
 import statistics
-import glob
 
 _HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.dirname(os.path.dirname(_HERE))
@@ -50,17 +49,17 @@ def load_mc(name):
     matrices, the UAV-eligible customers and the literature OFV (or None)."""
     d = os.path.join(MC_DIR, name)
     nodes = [[c.strip() for c in r]
-             for r in csv.reader(open(os.path.join(d, "nodes.csv"))) if r]
+             for r in csv.reader(open(os.path.join(d, "nodes.csv"), encoding="utf-8")) if r]
     tau = [[float(x) for x in r]
-           for r in csv.reader(open(os.path.join(d, "tau.csv"))) if r]
+           for r in csv.reader(open(os.path.join(d, "tau.csv"), encoding="utf-8")) if r]
     taup = [[float(x) for x in r]
-            for r in csv.reader(open(os.path.join(d, "tauprime.csv"))) if r]
+            for r in csv.reader(open(os.path.join(d, "tauprime.csv"), encoding="utf-8")) if r]
     cprime = [int(x) for x in next(csv.reader(
-        open(os.path.join(d, "Cprime.csv"))))]
+        open(os.path.join(d, "Cprime.csv"), encoding="utf-8")))]
     ofv = None
     p = os.path.join(d, "FSTSP_OFV.csv")
     if os.path.exists(p):
-        txt = open(p).read().strip()
+        txt = open(p, encoding="utf-8").read().strip()
         if txt:
             ofv = float(txt)
 
@@ -155,6 +154,11 @@ def mc_simulate(inst, route, trips, truck_m, drone_m, K=1, service=0.0):
         flight += drone_m[prev][rn]
         starts = [max(arr[i_pos], avail[k]) for k in range(K)]
         k = min(range(K), key=lambda z: (starts[z], z))
+        # the launch node comes before the recovery node, and the drone assigned
+        # to this sortie has to be back on the truck when it reaches the launch
+        # node -- one drone cannot fly two sorties at the same time
+        if i_pos >= j_pos or starts[k] > arr[i_pos] + 1e-9:
+            return None
         recovery = max(arr[j_pos], starts[k] + flight)
         avail[k] = recovery
         wait = recovery - arr[j_pos]
@@ -180,11 +184,6 @@ def mc_tsp(inst, truck_m, service=0.0):
         cur = c
     t += truck_m[cur][inst["end"]]
     return t
-
-
-if __name__ == "__main__":
-    print("Murray & Chu (2015) instances found:", len(list_instances()))
-    calibrate()
 
 
 # ---------------------------------------------------------------------------
@@ -391,3 +390,8 @@ def mc_lns(inst, K=1, max_cust=2, iters=200, seed=0, endurance=None,
                 best_route, best_trips, best_mk = r2[:], list(t2), new_mk
         T *= alpha
     return best_route, best_trips, best_mk
+
+
+if __name__ == "__main__":
+    print("Murray & Chu (2015) instances found:", len(list_instances()))
+    calibrate()

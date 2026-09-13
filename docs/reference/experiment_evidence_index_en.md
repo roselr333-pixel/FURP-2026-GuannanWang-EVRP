@@ -81,7 +81,7 @@ sanity check: abl_cap1 (1 customer/sortie) ≡ published (M&C 2015) heuristic, c
 
 **Re-run on standard instances**: the same heuristic and evaluator on official Solomon topologies (C101/C201/R101/RC101 x 3 customer windows x N=8/12/16/20 = 48 instances) decompose into a multi-customer gain of **+7.2 ~ 8.9 pp**, a multi-takeoff gain of **+1.3 ~ 2.0 pp** and cap3 of +3.9 ~ 7.7 pp; `abl_cap1` still equals published instance by instance. The main gain source matches the synthetic run, but its size depends on the spatial pattern (14.1pp on uniform R101 against 5.7pp on clustered C101). Source: `src/results/week07_ablation_std_summary.csv` (`week07_ablation_std.py`), figure `figures/ablation_std.png`, note `docs/weekly/week07_ablation_std_note_en.md`.
 
-**The same decomposition on the V3 model (electric + time windows)**: moved onto the model where the truck has a battery, may detour to recharge and customers have time windows (40 instances x 4 configs), the multi-customer ability is still the largest single gain but only at small and medium scale — **+16.4 / +19.4 pp** at N=8/12, +9.5 pp at N=16 and only **+1.7 pp** at N=20 (pooled Wilcoxon p=9.4×10⁻⁵). Meanwhile reusing one truck stop for several sorties rises from a secondary factor to an equally important one (**+11.0 to +14.0 pp**, p=5.5×10⁻⁸), and cap3 is not significant overall (p=0.105). All four configurations are 100% energy-feasible. The attribution therefore depends on the model setting and should be stated alongside the FSTSP numbers. Source: `src/results/v3_ablation_summary.csv` (`v3_ablation.py`), figure `figures/v3_ablation.png`, note `docs/weekly/v3_ablation_note_en.md`.
+**The same decomposition on the V3 model (electric + time windows)**: moved onto the model where the truck has a battery, may detour to recharge and customers have time windows (40 instances x 4 configs), multi-customer ability is still the largest single gain — **+12.5 / +8.5 / +10.9 pp** at N=8/12/16 (pooled Wilcoxon p=5.3×10⁻³) — and turns to **−2.8 pp** at N=20. Reusing one truck stop for several sorties is only a secondary factor (**+1.9 to +5.3 pp**, p=2.4×10⁻⁴, non-zero on just 20 of 40 pairs), and cap3 is not significant (p=0.139). All four configurations are 100% energy-feasible. The attribution matches the FSTSP setting — multi-customer ability is the main gain source — except that under V3 it runs out by N=20. Source: `src/results/v3_ablation_summary.csv` (`v3_ablation.py`), figure `figures/v3_ablation.png`, note `docs/weekly/v3_ablation_note_en.md`.
 
 **The same ablation under a drone energy / payload model**: adding a payload capacity `P_MAX` and an energy budget `E_D` that grows with the load on board (with `BETA=0` this reduces exactly to the old range limit, verified value-for-value on 300 random plans) erodes the multi-customer gain without changing its direction — from **+10.4pp down to +6.1pp** on the synthetic set (BETA 0 to 0.04) and from +6.6pp to +5.4pp on the standard set — while cap3 stops paying (−0.5 to +0.4pp). Feasibility is the other result: the energy-unaware published heuristic is only 42% (synthetic) / 48% (standard) energy-feasible at BETA=0.04, while my greedy is 100% feasible at every BETA. Source: `src/results/drone_energy_summary.csv` (`drone_energy_ablation.py`), figure `figures/drone_energy.png`, note `docs/weekly/drone_energy_note_en.md`.
 
@@ -101,7 +101,7 @@ At N=50 the V1 (battery+recharge) cost ≈ 5670 vs V0 (no battery) ≈ 3094 — 
 
 ---
 
-## 6. Failure cases (17 entries, 1 strictly infeasible)
+## 6. Failure cases (13 entries, 1 strictly infeasible)
 
 Source: `docs/reference/failure_cases_master.md`. The most telling: on N=50 dense instances the **sync-feasibility rejection reaches ~4.5 million**, showing the synchronous rendezvous constraint is the main bottleneck at large scale — corroborating the "benefit dilutes with scale" finding in §2/§5 and jointly bounding the method's applicability.
 
@@ -191,22 +191,22 @@ More drones give a higher benefit and flatten the scaling decay (uniform-random 
 
 | config | vs truck-only TSP | LNS / literature OFV |
 |---|---:|---:|
-| c1K1 (exactly M&C's FSTSP: one customer per sortie, one drone) | 21.7% | **0.901** |
-| c1K3 | 36.6% | 0.709 |
-| c2K3 (my multi-customer extension) | 37.9% | 0.684 |
+| c1K1 (exactly M&C's FSTSP: one customer per sortie, one drone) | 22.3% | **0.924** |
+| c1K3 | 37.2% | 0.692 |
+| c2K3 (my multi-customer extension) | 38.2% | 0.678 |
 
-So **under M&C's own FSTSP definition my LNS beats the objective shipped with the instances by about 9.9%**. The files carry no drone endurance, so endurance is unlimited and the longest flight per solution is reported (mean 25-30, max about 62).
+So **under M&C's own FSTSP definition my LNS beats the objective shipped with the instances by about 7.6%**. The files carry no drone endurance, so endurance is unlimited and the longest flight per solution is reported (mean 25-29, max about 69).
 
 **V3: electric truck + drone + charging + time windows** (note `docs/weekly/v3_ev_collab_note_en.md`): the week06 battery, charging stations and time windows are stacked back into the collaborative model and extended to multiple drones (K=1/2/3). The route lists customers only and charging detours are inserted by the evaluator, so the LNS destroy/repair is reused as is. 10 seeds per size:
 
 | size | V1 truck EV | V3 + LNS K=1 | V3 + LNS K=2 | V3 + LNS K=3 |
 |---|---:|---:|---:|---:|
-| N=8 | 485.8 | 225.3 (**53.4%**) | 176.0 (63.5%) | 131.5 (**72.8%**) |
-| N=20 | 1283.6 | 832.8 (34.7%) | 817.7 (35.9%) | 669.6 (47.2%) |
+| N=8 | 485.8 | 230.6 (**52.4%**) | 170.8 (64.6%) | 133.4 (**72.5%**) |
+| N=20 | 1283.6 | 850.5 (33.5%) | 707.1 (44.5%) | 661.0 (48.3%) |
 
-TW violations and recharges (V1 -> V3l): N=8 is 2.4/0.9 -> 0/0; N=20 is 13.5/2.9 -> 7.5/1.5 (K=1).
+TW violations and recharges (V1 -> V3l): N=8 is 2.4/0.9 -> 0/0; N=20 is 13.5/2.9 -> 6.9/1.7 (K=1).
 
-**The electric and time-window constraints amplify the drone's value**: K=1 reaches 34.7%~53.4%, still above the 23%~45% the same methods reach in the FSTSP setting, and K=2/3 push to 57.7%~72.8%, because offloading shortens the truck route and removes most charging detours and late arrivals. **Model correction**: the original single-drone evaluator did not track the single drone's own availability, letting it "serve" several sorties at once (physically impossible) and understating the makespan (the earlier 56.7%~87.8% came from this); after sequential assignment by recovery time the true single-drone reduction is 34.7%~53.4%, and the multiple-drone figures are unaffected. The core FSTSP line (week06/08) uses the separate, correct `drone_scheduling` scheduler and was never affected. Source `v3_ev_collab.py` -> `v3_ev_collab_summary.csv`.
+**The electric and time-window constraints amplify the drone's value**: K=1 reaches **33.5%~52.4%**, still above the 23%~45% the same methods reach in the FSTSP setting, and K=2/3 push to **44.5%~72.5%**, because offloading shortens the truck route and removes most charging detours and late arrivals. **Evaluator corrections**: this evaluator has been corrected twice, both times for treating one drone as if it could fly several sorties at once — (1) the original single-drone evaluator did not track the drone's own availability (the earlier 56.7%~87.8% came from this), and now assigns sorties sequentially through `avail[d]`; (2) sequential assignment still lacked the check that the drone assigned to a sortie is back on the truck at the launch node, so the code merely delayed the launch although the truck had already left that node — such plans are now infeasible (`schedule_inf`, infinite makespan). After both corrections the single-drone reduction is 33.5%~52.4%. The core FSTSP line (week06/08) uses the separate `fstsp_simulate` / `drone_scheduling`, never affected. Source `v3_ev_collab.py` -> `v3_ev_collab_summary.csv`.
 
 **Exact optimality gap (CP-SAT, small instances)** (note `docs/weekly/week08_exact_gap_note_en.md`): CP-SAT computes the exact optimum of the physical FSTSP model (`cpsat_fstsp.solve_exact`; two independent checks: zero range reduces to a truck TSP matching Held-Karp, and n=5 matches an exhaustive enumeration). gap = (heuristic − optimum)/optimum:
 
@@ -229,7 +229,7 @@ Grouped by nature; each item gives its "consequence + next step" so it reads as 
 - **The battery/charging layer is now re-introduced by V3**: V3 (electric truck + drone + charging stations + time windows) is implemented and compared against V1 (see §8); what is still missing is wiring **multiple drones** into V3.
 
 **Algorithmic-scope boundary**
-- **The greedy itself has no local search (W8 adds an improvement phase)**: applying intra-route 2-opt to V2's constructed truck route (accept only strict makespan improvement) yields only 0–1.76% (peak 1.76% at N=16; see `week07_fstsp_with_ls.log`) — showing V2's gain comes from the *collaborative structure* of offloading far-flung customers, not route fine-tuning. With the W8 destroy-and-repair LNS the gain over the greedy is a consistent +9% to +12.6% at every size (Wilcoxon overall p=1.7×10⁻¹⁰; see §8), beyond pure routing. **How far from global optimum is now quantified in §8** (CP-SAT exact optimum; n=8 proven: greedy +31.2%, LNS +16.5%).
+- **The greedy itself has no local search (W8 adds an improvement phase)**: applying intra-route 2-opt to V2's constructed truck route (accept only strict makespan improvement) yields only 2.5–3.1% (peak 3.08% at N=16; see `week07_fstsp_log.txt`) — showing V2's gain comes from the *collaborative structure* of offloading far-flung customers, not route fine-tuning. With the W8 destroy-and-repair LNS the gain over the greedy is a consistent +9% to +12.6% at every size (Wilcoxon overall p=1.7×10⁻¹⁰; see §8), beyond pure routing. **How far from global optimum is now quantified in §8** (CP-SAT exact optimum; n=8 proven: greedy +31.2%, LNS +16.5%).
 
 **Empirical-validation boundaries**
 - **Synthetic instances extended to 100, but the effective collaboration interval narrows to N ≤ 30**: my truck-drone experiments use randomly generated synthetic instances and do not adopt the field's standard large-scale benchmark sets (e.g., the Solomon-derived FSTSP instances of Murray & Chu 2015 — which this project reproduced within their parameter range in W7; or the Masmoudi et al. 2018 instance set). At N=100 the synergy collapses to 0.5% and V2 averages 88.8/100 late customers (TW feasibility breaks down); extrapolation to real large scale needs caution. The W8 LNS lifts the N=50 collaboration benefit from the greedy's 15.2% to 29.5%, slowing the decay, but it is still the same synthetic instances and setting, so the boundary is unchanged. **W8 extension 2 re-ran 16 standard instances built from official Solomon topologies (K=1/2/3/5) with the same conclusion**; **the original Murray & Chu (2015) instances were also downloaded** (36 ten-customer instances, see §8), so the results no longer rest on synthetic or rescaled Solomon data alone. What is still missing is standard-benchmark validation at larger sizes (N > 50).
