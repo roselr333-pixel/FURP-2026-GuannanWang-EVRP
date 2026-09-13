@@ -263,13 +263,17 @@ TW violations and recharges (V1 -> V3l): N=8 is 2.4/0.9 -> 0/0; N=20 is 13.5/2.9
 
 **Exact optimality gap (CP-SAT, small instances)** (note `docs/weekly/week08_exact_gap_note_en.md`): CP-SAT computes the exact optimum of the physical FSTSP model (`cpsat_fstsp.solve_exact`; two independent checks: zero range reduces to a truck TSP matching Held-Karp, and n=5 matches an exhaustive enumeration). gap = (heuristic − optimum)/optimum:
 
-| size | proven optimal | greedy gap | LNS gap | original V2 plan valid |
-|---|---:|---:|---:|---:|
-| n=8 | **5/5** | **31.2%** | **16.5%** | 5/5 |
-| n=10 | 0/5 | 58.0% | 26.4% | 5/5 |
-| n=12 | 0/5 | 49.1% | 23.5% | 5/5 |
+| size | proven optimal | feasible plan found | greedy gap | LNS gap | certified dual bound |
+|---|---:|---:|---:|---:|---:|
+| n=8 | **5/5** | 5/5 | **31.2%** | **16.5%** | 5/5 |
+| n=10 | 0/5 | 5/5 | 52.5% | 21.8% | 0/5 |
+| n=12 | 0/5 | 5/5 | 44.7% | 20.1% | 0/5 |
+| n=14 | 0/5 | 4/5 | 40.1% | 21.0% | 0/5 |
+| n=16 | 0/5 | 4/5 | 30.4% | 9.8% | 0/5 |
 
-**The LNS roughly halves the gap**, quantifying the improvement phase. At n≥10 optimality is not proved (the value is an upper bound, so the gap is a lower bound). The shared FSTSP evaluator has a physical defect: it does not check that the drone is back on the truck, so nested/crossing sorties are given a makespan although such a plan is infeasible — measured on 15 instances, the original V2 produces such an invalid plan in 14 of them (the FC-7-2/7-3 defect, on the FSTSP evaluator path). Source `week08_exact_gap.py` + `cpsat_fstsp.py` -> `week08_exact_gap_raw.csv` / `_summary.csv`. With the main evaluator physical and everything re-run, the V2 plans are now valid on 15/15 instances.
+The run is warm-started (the best heuristic plan is passed both as an objective cut-off and as an `AddHint`), 120 s per instance at n=8 and 60 s from n=10 on. The n=8 row is unchanged against the cold run (same five optima), so the hint does not disturb the model.
+
+**The LNS roughly halves the gap**, quantifying the improvement phase — and the warm start showed the sharper point: from n=10 on the CP-SAT plan is itself **8.8-17.5% below the best plan my greedy and LNS find**, so the gap is real and the lever is the search, not more solver time. Optimality is proved only at n=8; from n=10 on the certified dual bound is trivial (`0.0` on all 20 instances, and only 27.6 against an incumbent of 217 in a separate 300 s probe), which is exactly where the proof stops. The shared FSTSP evaluator has a physical defect: it does not check that the drone is back on the truck, so nested/crossing sorties are given a makespan although such a plan is infeasible — measured on 15 instances, the original V2 produces such an invalid plan in 14 of them (the FC-7-2/7-3 defect, on the FSTSP evaluator path). Source `week08_exact_gap.py` + `cpsat_fstsp.py` -> `week08_exact_gap_raw.csv` / `_summary.csv`. With the main evaluator physical and everything re-run, the V2 plans are now valid on 15/15 instances.
 
 ---
 
@@ -289,7 +293,7 @@ Grouped by nature; each item gives its "consequence + next step" so it reads as 
 - **Drone scheduling: provably optimal on every config after the physical fix**: with the lower bound (the larger of every sortie on its own drone, and total flight divided by K) as a certificate, greedy reaches that bound on **64/64 configs** and local search adds **0.000%** once the sortie sets no longer overlap (physical evaluator). The earlier "31/64 + a small local gain" was a false contention created by nested sorties. (Limitation: this holds for physically valid, non-overlapping sortie sets; if sorties did overlap, contention would return.)
 - **Both shared evaluators are now physical, and W6/W7/W8 were re-run**: `week07_fstsp_repro.fstsp_simulate` and `week06_ground_air_evrp_tw.simulate` both reject nested/crossing sorties, both require the drone to be recovered before the next sortie, and both make the truck wait at the recovery node (returning inf for an infeasible plan). W7/W8, the W6 headline, `week06_largeN` and the V2-vs-V1 row of `stat_tests` were re-run (see `docs/analysis/evaluator_physical_fix_note_en.md`). The numbers are lower but the direction is unchanged: the W6 headline V2-vs-V1 advantage falls from 42-55% to **16-34%**, and the scaling decay from 27.6/12.1/2.3% to **8.6/3.4/0.5%**. V0/V1 involve no drone and are unchanged.
 - **Time windows / energy are now covered by V3, which is also extended to multiple drones**: V3 stacks the week06 battery, charging stations and time windows back into the truck-drone model (see §8), reaching 34.7%~53.4% over the truck-only EV baseline at K=1 and 57.7%~72.8% at K=2/3, removing most late arrivals and charging detours. V3 is now tested with K=1/2/3, and time windows are still a penalty in the search rather than a hard constraint (the violation count is reported).
-- **The exact optimum is now computed at small scale (§8); at larger scale it is still unprovable**: CP-SAT solves the physical FSTSP model exactly — n=8 is proven optimal (greedy +31.2%, LNS +16.5%), while n=10/12 give an upper bound on the optimum within 180s (so those gaps are lower bounds). Exact optima / bounds at larger scale remain open and are the natural next improvement. Baseline absolute quality is still anchored to BKS (literature optimum).
+- **The exact optimum is now computed at small scale; from n=10 the proof stops**: CP-SAT solves the physical FSTSP model — n=8 is proven optimal (greedy +31.2%, LNS +16.5%), while at n=10-16 the warm-started solver returns feasible plans that beat my heuristics by 8.8-17.5% but the certified dual bound collapses to 0, so those gaps stay lower bounds on the true gap within 180s (so those gaps are lower bounds). Exact optima / bounds at larger scale remain open and are the natural next improvement. Baseline absolute quality is still anchored to BKS (literature optimum).
 - **Coarse MO front**: the weighted-sum greedy gives a "partial / inner" front and may miss non-convex Pareto regions; it is not a full Pareto solver (see §3). For a complete front, the natural next step is ε-constraint or NSGA-II (as in peer Xie's P-ACO/NSGA-II).
 
 ---

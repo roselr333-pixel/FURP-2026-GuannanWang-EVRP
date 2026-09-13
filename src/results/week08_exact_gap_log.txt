@@ -1,15 +1,28 @@
 ==============================================================================
-Exact optimality gap on small instances (CP-SAT)
+Exact optimality gap on small instances (CP-SAT, warm-started)
 ==============================================================================
-sizes=[8, 10, 12] seeds=5 base 20260720 max_cust=2 time_limit=180s
+sizes=[8, 10, 12, 14, 16] seeds=5 base 20260720 max_cust=2 workers=8
+per-size time limit (s): n=8:120, n=10:60, n=12:60, n=14:60, n=16:60
   hardware: Intel64 Family 6 Model 183 Stepping 1, GenuineIntel | 20 logical cores | RAM 31.8GB
   env: python 3.13.14 | Windows-11-10.0.26200-SP0
 
-gap = (heuristic - optimum) / optimum; the optimum is the physical
-FSTSP model optimum (no overlapping sorties). Where the run is not
-proven optimal the value is an upper bound on the optimum, so the
-gap is a lower bound on the true gap.
+The best plan my heuristics found is passed to CP-SAT both as an
+objective cut-off and as a hint, so the solver starts feasible and
+only has to prove optimality.
 
-  N= 8: proven 5/5 | greedy gap  31.24% | LNS gap  16.51% | proven-only: greedy 31.24%, LNS 16.51% | raw V2 plan valid 5/5
-  N=10: proven 0/5 | greedy gap  58.01% | LNS gap  26.43% | proven-only: greedy 0.00%, LNS 0.00% | raw V2 plan valid 5/5
-  N=12: proven 0/5 | greedy gap  49.12% | LNS gap  23.52% | proven-only: greedy 0.00%, LNS 0.00% | raw V2 plan valid 5/5
+gap = (heuristic - best feasible plan) / best feasible plan. Where
+optimality is not proved the best feasible plan is an upper bound on
+the optimum, so that gap is a LOWER bound on the true gap. The
+certified gap uses the dual bound instead (shifted by the 1/SC
+discretisation), so it is an UPPER bound on the true gap. In practice
+the dual bound stays far below the primal (e.g. 27.6 against an
+incumbent of 217 at n=10 in 300s), so the column documents how weak
+the relaxation still is rather than certifying a useful gap.
+cp_sat_improved_pct = how much the CP-SAT plan beats the best plan my
+heuristics found (0.00 means the heuristic plan was not improved on).
+
+  N= 8: proven 5/5 | feasible 5/5 | dual bound non-trivial 5/5 | greedy gap  31.24% | LNS gap  16.51% | certified LNS gap 16.56 | raw V2 plan valid 5/5
+  N=10: proven 0/5 | feasible 5/5 | dual bound non-trivial 0/5 | greedy gap  52.52% | LNS gap  21.84% | certified LNS gap  | raw V2 plan valid 5/5
+  N=12: proven 0/5 | feasible 5/5 | dual bound non-trivial 0/5 | greedy gap  44.73% | LNS gap  20.11% | certified LNS gap  | raw V2 plan valid 5/5
+  N=14: proven 0/5 | feasible 4/5 | dual bound non-trivial 0/5 | greedy gap  40.12% | LNS gap  20.99% | certified LNS gap  | raw V2 plan valid 5/5
+  N=16: proven 0/5 | feasible 4/5 | dual bound non-trivial 0/5 | greedy gap  30.40% | LNS gap   9.77% | certified LNS gap  | raw V2 plan valid 5/5

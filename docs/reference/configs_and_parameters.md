@@ -75,7 +75,7 @@
 | `week08_lns.py` | N = 8/12/16/20/30/50 | 10 个：20260720–20260729 | 迭代预算 `{8:300, 12:300, 16:300, 20:400, 30:250, 50:150}`；模拟退火初温 = 当前 makespan 的 5% |
 | `week08_multidrone.py` | 同 `week08_lns` 的 6 个规模 | 10 个：同上 | K = 1/2/3 |
 | `week08_multidrone_std.py` | 4 族 × N = 10/20/30/50 | 确定性（`LNS_SEED = 20260720`） | K = 1/2/3/5；精确调度只跑架次数 ≤ 14 的配置 |
-| `week08_exact_gap.py` | n = 8/10/12 | 5 个：20260720–20260724 | CP-SAT 时间上限 180 s |
+| `week08_exact_gap.py` | n = 8/10/12/14/16 | 5 个：20260720–20260724 | CP-SAT 每规模时间上限 30/60/90/90/120 s；把启发式最优解同时传成目标上界与 `AddHint` 热启动 |
 | `week08_mc_benchmark.py` | 36 个原始算例 | `SEED = 20260720` | K = 1/2/3，每架次顾客上限 1/2/3 |
 | `v3_ev_collab.py` | N = 8/12/16/20 | 10 个：20260720–20260729 | K = 1/2/3；greedy 与 greedy + LNS |
 
@@ -95,7 +95,8 @@
 | GA | 解码与局部搜索 | Solomon I1 插入 + intra-route 2-opt + inter-route relocate | 同上 |
 | GA | 种子 | 5 个：20260717 / 20260801 / 20260815 / 20260901 / 20261001，报表取均值 | 同上 |
 | PyVRP | 版本 | 0.14.0（`baseline_pyvrp_vrptw.py`） | 与官方 `.sol` BKS 对照 |
-| CP-SAT | 时间上限 / workers | 180 s / 8 | `week08_exact_gap.py`、`cpsat_fstsp.solve_exact` |
+| CP-SAT | 时间上限 / workers | 每规模 30–120 s / 8 | `week08_exact_gap.py`、`cpsat_fstsp.solve_exact` |
+| CP-SAT | 热启动 | `upper_bound`（目标截断）+ `hint`（路线/架次/位序） | `cpsat_fstsp.solve_exact` |
 | Schneider 局部搜索 | `improve` / `improve_moves` / `improve_budget` | True / 400 步 / 60 s | `schneider_evrptw.py` → `schneider_improve.improve_solution` |
 | 无人机能耗（主线） | `beta` / `ed` / `p_max` | 0.00、0.02 / 160 / 30 | `drone_energy_mainline.py`（V3 与 W8，K=1/2/3） |
 | 无人机能耗（消融） | `beta` | 0.00 / 0.02 / 0.04 | `drone_energy_ablation.py` |
@@ -120,7 +121,7 @@ PyVRP 固定了 seed，重复运行结果一致；OR-Tools 用 `GUIDED_LOCAL_SEA
 ## 6. 路径与文件约定
 
 - **结果**：`src/results/*.csv`（按 `.gitignore` 不入库，靠脚本 + 种子重新生成）、
-  `src/results/*.txt` / `*.log`（日志入仓）
+  `src/results/*.txt` / `*.log`（日志入仓；全部 UTF-8，用 PowerShell 的 `Tee-Object` 存日志时要显式指定编码）
 - **实例**：`src/instances/`
 - **实验脚本**：`src/experiments/`；绘图与仪表盘生成器：`src/tools/`
 - **文档**：`docs/reference/`（本表、证据索引、形式化模型、失败案例）、

@@ -103,7 +103,7 @@ Key documents:
 | V2 (collaborative) vs truck-only EV | 24.8–34.5% lower completion time |
 | Ablation | multi-customer sorties +8.6–12.1 pp (main), stop reuse +2.2–4.4 pp |
 | LNS vs greedy V2 | +12.5–21.3%, paired Wilcoxon p = 1.7×10⁻¹⁰ |
-| Distance from the exact optimum (CP-SAT, small n) | n=8 proven optimal: greedy +31.2%, LNS +16.5% |
+| Distance from the exact optimum (CP-SAT, warm-started) | n=8 proven optimal: greedy +31.2%, LNS +16.5%; from n=10 the exact model's own plan beats my heuristics by 8.8–17.5%, but its dual bound collapses to 0, so the proof stops there |
 | Murray & Chu (2015) replication | V2 10.2–14.2% shorter; c1K1 LNS / published OFV = 0.924 |
 | Schneider (2014) replication | distance +21.3% vs BKS after local search (+52.7% constructive), mean vehicles 3.3 vs 2.1 |
 | Multi-drone (standard instances) | K=1→5 raises the gain to 46.8–71.4% |
@@ -155,7 +155,7 @@ experiments that produce their CSVs. Numbers, sources and caveats for all of the
 | `figures/lns_vs_greedy.png` | Does the improvement phase pay off? | +12.5–21.3% over the greedy (paired Wilcoxon p=1.7×10⁻¹⁰) | `src/tools/plot_lns.py` |
 | `figures/multidrone.png` | How much do extra drones help (synthetic instances)? | N=50: 29.5% (K=1) → 38.1% (K=3) | `src/tools/plot_multidrone.py` |
 | `figures/multidrone_std.png` | Same question on standard instances, plus the scheduler | K=1→5 raises the gain to 46.8–71.4%; naive scheduler optimal on 64/64 configs | `src/tools/plot_multidrone_std.py` |
-| `figures/exact_gap.png` | How far is the heuristic from the exact optimum? | n=8 (proven optimal): greedy +31.2%, LNS +16.5% | `src/tools/plot_exact_gap.py` |
+| `figures/exact_gap.png` | How far is the heuristic from the exact optimum, and where does the proof stop? | n=8 (proven optimal): greedy +31.2%, LNS +16.5%; from n=10 the primal beats my heuristics by 8.8–17.5% while the dual bound stays at 0 | `src/tools/plot_exact_gap.py` |
 | `figures/std_instances.png` | Do the synthetic conclusions transfer to standard instances? | Schneider (2014) data: gain 41.0–54.8% vs 24.8–34.5% synthetic, late customers 17.0→7.7 at N=20; the paper's own C=200 binds the single truck from N=12 | `src/tools/gen_std_instances_figure.py` |
 | `figures/capacity_binding.png` | Is the declared truck capacity binding? | free for N≤50 at CAP=1000; binds on 1/5 of the N=100 instances, where V0/V1/V2 all become infeasible | `src/tools/gen_capacity_figure.py` |
 | `figures/schneider_routes.png`, `figures/schneider_vehcomp.png` | How close is my EVRP-TW to Schneider (2014)? | 18/18 fully served, distance +21.3% after local search (was +52.7% constructive), 3.3 vs 2.1 vehicles | `src/tools/plot_schneider_routes.py` |
@@ -171,7 +171,7 @@ python -m venv venv
 venv/Scripts/python -m pip install -r requirements.txt
 
 python run_all.py                 # rerun every experiment and every figure
-python -m pytest tests/ -q        # 149 regression tests, about 16 s
+python -m pytest tests/ -q        # 151 regression tests, about 30 s
 ```
 
 See `REPRODUCE.md` for the conclusion → script → artifact map. The experiment

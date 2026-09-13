@@ -182,6 +182,8 @@ Notes:
 
 21. ~~**The drone had no energy or payload model**~~ ✅ **Delivered**: `drone_energy.py` gives the drone a payload capacity and a payload-dependent energy budget (`BETA` swept 0 → 0.04); `drone_energy_ablation.py` re-runs the core ablation under it (multi-customer gain +10.4 → +6.1 pp, while the energy-unaware published heuristic is only 42–48% feasible), and `drone_energy_mainline.py` puts the same gates on the V3 and W8 evaluators — the gains survive there (V3 K=1 33.5–53.0%, K=3 up to 72.4%) for 1.5–8.1% more makespan. Both evaluators keep the range-only model as the default, so the earlier numbers are unchanged.
 
+22. ~~**"How far is the heuristic from the optimum" was only answered at n=8**~~ ✅ **Delivered**: `cpsat_fstsp.solve_exact` now takes a warm start (`upper_bound` + `AddHint`), and `week08_exact_gap.py` runs n=8/10/12/14/16 x 5 seeds. The n=8 optimum is reproduced exactly (greedy +31.2%, LNS +16.5%); the warm start returns a feasible plan on 23/25 instances where the cold search could return none; from n=10 on CP-SAT's own plan is **8.8-17.5% below my best heuristic plan**, while its certified dual bound stays at 0, so optimality is unprovable there without a stronger relaxation.
+
 ### 3.4 Engineering and delivery
 
 12. **No git commit / push yet**: everything is still local; the reproducibility package only counts once it is committed.

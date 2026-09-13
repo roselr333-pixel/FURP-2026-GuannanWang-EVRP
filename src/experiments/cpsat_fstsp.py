@@ -203,15 +203,22 @@ def _candidate_sorties(inst, max_cust, rd):
 
 
 def solve_exact(inst, max_cust=2, rd=R_D, time_limit=120.0, num_workers=8,
-                log=False, upper_bound=None):
+                log=False, upper_bound=None, hint=None):
     """Exact minimum completion time of the physical FSTSP model.
 
     `upper_bound` (a makespan in real units) pins the objective at or below a
     known heuristic value, which prunes the search a lot.
 
+    `hint` is a known feasible plan `(route, trips)` (typically a heuristic
+    solution). It is fed to the solver with `AddHint` so that the search starts
+    from that plan and only has to prove optimality; pass the same plan's
+    makespan as `upper_bound` for the two to reinforce each other.
+
     Returns a dict with: makespan (None if no solution found), proven (whether
-    the optimum was proved), route, trips, status, wall_s, bound, n_sorties.
-    The truck route is [0, ...customers..., 0]; trips are (launch, custs, recover).
+    the optimum was proved), route, trips, status, wall_s, bound (the certified
+    lower bound on the optimum, in real units, valid on every status),
+    n_sorties. The truck route is [0, ...customers..., 0]; trips are
+    (launch, custs, recover).
     """
     from ortools.sat.python import cp_model
 
@@ -298,6 +305,9 @@ def solve_exact(inst, max_cust=2, rd=R_D, time_limit=120.0, num_workers=8,
     if upper_bound is not None:
         model.Add(t[end] <= int(round(upper_bound * SC)))
 
+    if hint is not None:
+        _add_hint(model, hint, x, u, y, q, sorties, end, C)
+
     model.Minimize(t[end])
 
     solver = cp_model.CpSolver()
@@ -336,6 +346,33 @@ def solve_exact(inst, max_cust=2, rd=R_D, time_limit=120.0, num_workers=8,
             "route": route, "trips": trips, "status": name,
             "wall_s": round(wall, 2), "bound": bound,
             "n_sorties": len(sorties)}
+
+
+def _add_hint(model, hint, x, u, y, q, sorties, end, C):
+    """Feed a known feasible plan to the solver as a starting point.
+
+    Only the route arcs, the position variables, the truck/drone assignment and
+    the selected sorties are hinted; CP-SAT completes the rest (times, airborne
+    flags) by propagation, so the hint never has to be exhaustive.
+    """
+    hroute, htrips = hint
+    hr = [0] + [c for c in hroute if c != 0] + [end]
+    for p in range(len(hr) - 1):
+        if (hr[p], hr[p + 1]) in x:
+            model.AddHint(x[(hr[p], hr[p + 1])], 1)
+    on_truck = set(hr) - {end}
+    for pos, v in enumerate(hr):
+        model.AddHint(u[v], pos)
+    for c in C:
+        model.AddHint(y[c], 1 if c in on_truck else 0)
+    wanted = {}
+    for ln, cs, rn in htrips:
+        j = end if rn == 0 else rn
+        cl = tuple(cs) if isinstance(cs, (list, tuple)) else (cs,)
+        wanted[(ln, cl, j)] = True
+    for k, (i, cs, j, _d) in enumerate(sorties):
+        if (i, tuple(cs), j) in wanted:
+            model.AddHint(q[k], 1)
 
 
 def _rounding_tolerance(route, trips, sc=SC):

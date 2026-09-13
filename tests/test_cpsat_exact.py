@@ -106,6 +106,35 @@ def test_exact_is_below_clean_greedy(n):
     assert res["makespan"] is not None
     assert res["makespan"] <= X.fstsp_makespan_clean(inst, gr, gt) + 1e-6
 
+def test_hint_plan_is_recovered():
+    """A plan passed as a hint must be usable as a starting point: with its
+    makespan as the objective cut-off, the solver must return a plan at least as
+    good, and the returned plan must re-evaluate physically."""
+    inst = w6.make_instance(6, seed=20260720)
+    gr, gt, _ = X.clean_greedy(inst, max_cust=2)
+    mk = X.fstsp_makespan_clean(inst, gr, gt)
+    res = X.solve_exact(inst, max_cust=2, time_limit=10, num_workers=4,
+                        upper_bound=mk, hint=(gr, gt))
+    assert res["route"] is not None
+    assert res["makespan"] <= mk + X._rounding_tolerance(gr, gt)
+    chk = X.fstsp_makespan_clean(inst, res["route"], res["trips"])
+    assert abs(chk - res["makespan"]) <= X._rounding_tolerance(
+        res["route"], res["trips"])
+
+
+def test_truck_only_hint_still_finds_a_plan():
+    """Even a hint with no sorties at all must not stop the solver from using the
+    drone: the objective cut-off is what bounds the search."""
+    inst = w6.make_instance(6, seed=20260721)
+    gr, gt, _ = X.clean_greedy(inst, max_cust=2)
+    mk = X.fstsp_makespan_clean(inst, gr, gt)
+    truck_route = [0] + sorted(inst["customers"].keys()) + [0]
+    res = X.solve_exact(inst, max_cust=2, time_limit=10, num_workers=4,
+                        upper_bound=mk, hint=(truck_route, []))
+    assert res["route"] is not None
+    assert res["makespan"] <= mk + X._rounding_tolerance(gr, gt)
+
+
 def test_objective_matches_physical_re_evaluation():
     """The CP-SAT objective is rounded to 1/SC, so the reconstructed plan must
     re-evaluate to it within the discretisation bound. The self-test in

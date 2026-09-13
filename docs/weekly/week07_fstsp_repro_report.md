@@ -43,7 +43,7 @@ Heuristic logic (Algorithms 1–4):
 
 ## 4. Limitations
 
-- **Heuristic only, no MILP.** The paper's MILP provides optimal bounds for small instances and validates heuristic quality; I have not implemented it, so I cannot yet say how far my heuristic is from optimum — only that it beats the published heuristic.
+- **Heuristic only, no MILP.** The paper's MILP provides optimal bounds for small instances and validates heuristic quality; I have not implemented it. Instead I built my own CP-SAT model of the same physical model and measured the distance to the optimum on small instances (optimality proven at n=8, feasible-only from n=10 on; the warm-started solver also beats my own LNS there). So this limitation is now "quantified at small scale, open at larger scale" rather than unmeasured (see `docs/weekly/week08_exact_gap_note_en.md`).
 - **Synthetic, small instances.** Customers are placed on a ring (week06 generator), not the paper's real/standard instances; sizes stop at 20. Robustness needs larger, more realistic instances.
 - **Single seed group.** 10 seeds from one base; a different initialization could shift results slightly.
 - **No battery / time windows.** Deliberate (to align with the paper); this is exactly the part my week06 EV-TW V2 adds back, so do not compare against week06's absolute makespan.

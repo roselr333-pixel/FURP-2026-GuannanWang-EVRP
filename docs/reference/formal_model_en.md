@@ -180,7 +180,8 @@ Implemented and reflected in the results:
 - multi-customer sorties (1-3 customers) and reuse of one stop for several sorties;
 - a payload capacity and a payload-dependent energy budget for the drone, as
   optional gates on both the main-line (V3) and the K-drone (week-8) evaluators;
-- exact optima on small instances (CP-SAT, up to $n = 12$).
+- exact optima on small instances (CP-SAT, warm-started and run up to $n = 16$;
+  optimality is proven up to $n = 8$, beyond that the dual bound is too weak).
 
 Not modelled, or simplified:
 

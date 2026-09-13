@@ -1,33 +1,56 @@
-n=8 seed=20260720: OPT=158.49 (OPTIMAL, 32.06s) | greedy 46.9% LNS 15.27% | raw V2 valid=yes
-n=8 seed=20260721: OPT=204.21 (OPTIMAL, 14.74s) | greedy 0.04% LNS 0.04% | raw V2 valid=yes
-n=8 seed=20260722: OPT=173.38 (OPTIMAL, 19.18s) | greedy 51.53% LNS 30.82% | raw V2 valid=yes
-n=8 seed=20260723: OPT=211.88 (OPTIMAL, 19.29s) | greedy 11.38% LNS 11.38% | raw V2 valid=yes
-n=8 seed=20260724: OPT=218.77 (OPTIMAL, 8.74s) | greedy 46.33% LNS 25.03% | raw V2 valid=yes
-n=10 seed=20260720: OPT=217.23 (FEASIBLE, 180.14s) | greedy 78.57% LNS 17.62% | raw V2 valid=yes
-n=10 seed=20260721: OPT=249.76 (FEASIBLE, 180.18s) | greedy 49.97% LNS 28.8% | raw V2 valid=yes
-n=10 seed=20260722: OPT=200.97 (FEASIBLE, 180.15s) | greedy 60.21% LNS 45.68% | raw V2 valid=yes
-n=10 seed=20260723: OPT=237.0 (FEASIBLE, 180.14s) | greedy 57.93% LNS 23.47% | raw V2 valid=yes
-n=10 seed=20260724: OPT=252.24 (FEASIBLE, 180.26s) | greedy 43.38% LNS 16.58% | raw V2 valid=yes
-n=12 seed=20260720: OPT=277.69 (FEASIBLE, 180.17s) | greedy 57.25% LNS 21.73% | raw V2 valid=yes
-n=12 seed=20260721: OPT=302.51 (FEASIBLE, 180.18s) | greedy 31.22% LNS 20.7% | raw V2 valid=yes
-n=12 seed=20260722: OPT=259.06 (FEASIBLE, 180.46s) | greedy 55.18% LNS 28.81% | raw V2 valid=yes
-n=12 seed=20260723: OPT=293.95 (FEASIBLE, 180.14s) | greedy 69.88% LNS 14.31% | raw V2 valid=yes
-n=12 seed=20260724: OPT=317.74 (FEASIBLE, 180.15s) | greedy 32.06% LNS 32.06% | raw V2 valid=yes
+n=8 seed=20260720: best feasible=158.49 (OPTIMAL, 36.79s, phys valid=yes) | bound=158.49 (nontrivial) | CP-SAT beats heuristics by 13.25% | greedy 46.9% LNS 15.27% certified 15.33% | raw V2 valid=yes
+n=8 seed=20260721: best feasible=204.21 (OPTIMAL, 14.75s, phys valid=yes) | bound=204.21 (nontrivial) | CP-SAT beats heuristics by 0.04% | greedy 0.04% LNS 0.04% certified 0.08% | raw V2 valid=yes
+n=8 seed=20260722: best feasible=173.38 (OPTIMAL, 32.44s, phys valid=yes) | bound=173.38 (nontrivial) | CP-SAT beats heuristics by 23.56% | greedy 51.53% LNS 30.82% certified 30.88% | raw V2 valid=yes
+n=8 seed=20260723: best feasible=211.88 (OPTIMAL, 17.99s, phys valid=yes) | bound=211.88 (nontrivial) | CP-SAT beats heuristics by 10.22% | greedy 11.38% LNS 11.38% certified 11.43% | raw V2 valid=yes
+n=8 seed=20260724: best feasible=218.77 (OPTIMAL, 18.34s, phys valid=yes) | bound=218.77 (nontrivial) | CP-SAT beats heuristics by 20.02% | greedy 46.33% LNS 25.03% certified 25.08% | raw V2 valid=yes
+n=10 seed=20260720: best feasible=222.45 (FEASIBLE, 60.15s, phys valid=yes) | bound=0.0 (trivial) | CP-SAT beats heuristics by 12.94% | greedy 74.38% LNS 14.86% certified % | raw V2 valid=yes
+n=10 seed=20260721: best feasible=250.72 (FEASIBLE, 60.13s, phys valid=yes) | bound=0.0 (trivial) | CP-SAT beats heuristics by 22.06% | greedy 49.39% LNS 28.31% certified % | raw V2 valid=yes
+n=10 seed=20260722: best feasible=218.78 (FEASIBLE, 60.58s, phys valid=yes) | bound=0.0 (trivial) | CP-SAT beats heuristics by 25.27% | greedy 47.17% LNS 33.82% certified % | raw V2 valid=yes
+n=10 seed=20260723: best feasible=237.0 (FEASIBLE, 60.15s, phys valid=yes) | bound=0.0 (trivial) | CP-SAT beats heuristics by 19.01% | greedy 57.93% LNS 23.47% certified % | raw V2 valid=yes
+n=10 seed=20260724: best feasible=270.47 (FEASIBLE, 60.12s, phys valid=yes) | bound=0.0 (trivial) | CP-SAT beats heuristics by 8.02% | greedy 33.72% LNS 8.72% certified % | raw V2 valid=yes
+n=12 seed=20260720: best feasible=295.27 (FEASIBLE, 60.17s, phys valid=yes) | bound=0.0 (trivial) | CP-SAT beats heuristics by 12.65% | greedy 47.89% LNS 14.48% certified % | raw V2 valid=yes
+n=12 seed=20260721: best feasible=314.05 (FEASIBLE, 60.11s, phys valid=yes) | bound=0.0 (trivial) | CP-SAT beats heuristics by 13.99% | greedy 26.4% LNS 16.26% certified % | raw V2 valid=yes
+n=12 seed=20260722: best feasible=280.6 (FEASIBLE, 60.53s, phys valid=yes) | bound=0.0 (trivial) | CP-SAT beats heuristics by 15.91% | greedy 43.27% LNS 18.92% certified % | raw V2 valid=yes
+n=12 seed=20260723: best feasible=295.87 (FEASIBLE, 60.14s, phys valid=yes) | bound=0.0 (trivial) | CP-SAT beats heuristics by 11.95% | greedy 68.78% LNS 13.57% certified % | raw V2 valid=yes
+n=12 seed=20260724: best feasible=305.62 (FEASIBLE, 60.13s, phys valid=yes) | bound=0.0 (trivial) | CP-SAT beats heuristics by 27.16% | greedy 37.3% LNS 37.3% certified % | raw V2 valid=yes
+n=14 seed=20260720: best feasible=366.19 (FEASIBLE, 60.17s, phys valid=yes) | bound=0.0 (trivial) | CP-SAT beats heuristics by 13.85% | greedy 78.01% LNS 16.07% certified % | raw V2 valid=yes
+n=14 seed=20260721: best feasible=360.67 (FEASIBLE, 60.2s, phys valid=yes) | bound=0.0 (trivial) | CP-SAT beats heuristics by 18.64% | greedy 35.63% LNS 22.9% certified % | raw V2 valid=yes
+n=14 seed=20260722: best feasible= (UNKNOWN, 60.2s, phys valid=) | bound= (trivial) | CP-SAT beats heuristics by % | greedy % LNS % certified % | raw V2 valid=yes
+n=14 seed=20260723: best feasible=369.76 (FEASIBLE, 60.17s, phys valid=yes) | bound=0.0 (trivial) | CP-SAT beats heuristics by 7.5% | greedy 8.22% LNS 8.11% certified % | raw V2 valid=yes
+n=14 seed=20260724: best feasible=374.24 (FEASIBLE, 60.15s, phys valid=yes) | bound=0.0 (trivial) | CP-SAT beats heuristics by 26.95% | greedy 38.62% LNS 36.89% certified % | raw V2 valid=yes
+n=16 seed=20260720: best feasible=440.02 (FEASIBLE, 60.25s, phys valid=yes) | bound=0.0 (trivial) | CP-SAT beats heuristics by 11.83% | greedy 70.19% LNS 13.42% certified % | raw V2 valid=yes
+n=16 seed=20260721: best feasible=404.89 (FEASIBLE, 60.15s, phys valid=yes) | bound=0.0 (trivial) | CP-SAT beats heuristics by 10.56% | greedy 31.75% LNS 11.81% certified % | raw V2 valid=yes
+n=16 seed=20260722: best feasible= (UNKNOWN, 60.18s, phys valid=) | bound= (trivial) | CP-SAT beats heuristics by % | greedy % LNS % certified % | raw V2 valid=yes
+n=16 seed=20260723: best feasible=435.08 (FEASIBLE, 60.24s, phys valid=yes) | bound=0.0 (trivial) | CP-SAT beats heuristics by 6.55% | greedy 7.01% LNS 7.01% certified % | raw V2 valid=yes
+n=16 seed=20260724: best feasible=426.99 (FEASIBLE, 60.48s, phys valid=yes) | bound=0.0 (trivial) | CP-SAT beats heuristics by 6.41% | greedy 12.64% LNS 6.85% certified % | raw V2 valid=yes
 ==============================================================================
-Exact optimality gap on small instances (CP-SAT)
+Exact optimality gap on small instances (CP-SAT, warm-started)
 ==============================================================================
-sizes=[8, 10, 12] seeds=5 base 20260720 max_cust=2 time_limit=180s
+sizes=[8, 10, 12, 14, 16] seeds=5 base 20260720 max_cust=2 workers=8
+per-size time limit (s): n=8:120, n=10:60, n=12:60, n=14:60, n=16:60
   hardware: Intel64 Family 6 Model 183 Stepping 1, GenuineIntel | 20 logical cores | RAM 31.8GB
   env: python 3.13.14 | Windows-11-10.0.26200-SP0
 
-gap = (heuristic - optimum) / optimum; the optimum is the physical
-FSTSP model optimum (no overlapping sorties). Where the run is not
-proven optimal the value is an upper bound on the optimum, so the
-gap is a lower bound on the true gap.
+The best plan my heuristics found is passed to CP-SAT both as an
+objective cut-off and as a hint, so the solver starts feasible and
+only has to prove optimality.
 
-  N= 8: proven 5/5 | greedy gap  31.24% | LNS gap  16.51% | proven-only: greedy 31.24%, LNS 16.51% | raw V2 plan valid 5/5
-  N=10: proven 0/5 | greedy gap  58.01% | LNS gap  26.43% | proven-only: greedy 0.00%, LNS 0.00% | raw V2 plan valid 5/5
-  N=12: proven 0/5 | greedy gap  49.12% | LNS gap  23.52% | proven-only: greedy 0.00%, LNS 0.00% | raw V2 plan valid 5/5
+gap = (heuristic - best feasible plan) / best feasible plan. Where
+optimality is not proved the best feasible plan is an upper bound on
+the optimum, so that gap is a LOWER bound on the true gap. The
+certified gap uses the dual bound instead (shifted by the 1/SC
+discretisation), so it is an UPPER bound on the true gap. In practice
+the dual bound stays far below the primal (e.g. 27.6 against an
+incumbent of 217 at n=10 in 300s), so the column documents how weak
+the relaxation still is rather than certifying a useful gap.
+cp_sat_improved_pct = how much the CP-SAT plan beats the best plan my
+heuristics found (0.00 means the heuristic plan was not improved on).
+
+  N= 8: proven 5/5 | feasible 5/5 | dual bound non-trivial 5/5 | greedy gap  31.24% | LNS gap  16.51% | certified LNS gap 16.56 | raw V2 plan valid 5/5
+  N=10: proven 0/5 | feasible 5/5 | dual bound non-trivial 0/5 | greedy gap  52.52% | LNS gap  21.84% | certified LNS gap  | raw V2 plan valid 5/5
+  N=12: proven 0/5 | feasible 5/5 | dual bound non-trivial 0/5 | greedy gap  44.73% | LNS gap  20.11% | certified LNS gap  | raw V2 plan valid 5/5
+  N=14: proven 0/5 | feasible 4/5 | dual bound non-trivial 0/5 | greedy gap  40.12% | LNS gap  20.99% | certified LNS gap  | raw V2 plan valid 5/5
+  N=16: proven 0/5 | feasible 4/5 | dual bound non-trivial 0/5 | greedy gap  30.40% | LNS gap   9.77% | certified LNS gap  | raw V2 plan valid 5/5
 
 [raw -> E:\FURP-EVRP\roselr333-pixel-FURP-2026-GuannanWang-EVRP\src\results\week08_exact_gap_raw.csv]
 [summary -> E:\FURP-EVRP\roselr333-pixel-FURP-2026-GuannanWang-EVRP\src\results\week08_exact_gap_summary.csv]

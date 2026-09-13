@@ -45,6 +45,19 @@ step per arc and per sortie, about 0.03-0.05 on these instances); the self-test
 compares against that bound rather than a fixed `1e-6`, which it used to do and
 which failed whenever the optimum did not sit exactly on the grid.
 
+**Warm start.** `solve_exact` takes two optional warm-start arguments:
+`upper_bound` pins the objective at or below a known feasible makespan, and
+`hint` feeds a known plan `(route, trips)` to CP-SAT with `AddHint` (route arcs,
+MTZ positions, the truck/drone assignment and the selected sorties; the solver
+completes the rest by propagation). The runner passes the better of the clean
+greedy and the LNS plan to both, so the search starts from a feasible plan and only
+has to prove optimality. The effect is real but not a guarantee: started cold at
+n=12 the solver can return `UNKNOWN` with no solution at all inside the budget,
+while the warm-started run reaches a feasible plan there; at n=14 one instance
+still came back `UNKNOWN` in 60 s. What the warm start reliably changes is the
+quantity the solver has to close -- the gap between its incumbent and the
+relaxation.
+
 **Two independent checks** (`tests/test_cpsat_exact.py`):
 
 - setting the drone range to zero must reduce the model to a plain truck TSP —
@@ -57,36 +70,64 @@ One bug was found while modelling: writing the truck time as an equality
 every sortie that needed waiting was excluded and the optimum came out too high
 (4-13% above the brute-force value at n=5). With an inequality both checks pass.
 
-## 4. Results (5 seeds per size, n=8/10/12)
+## 4. Results (5 seeds per size, n=8/10/12/14/16)
 
-gap = (heuristic − optimum) / optimum.
+gap = (best plan CP-SAT found − heuristic) / that plan. At n=8 that plan is the
+proven optimum; from n=10 on it is the best **feasible** plan found, so those gaps
+are lower bounds on the true gap.
 
-| size | optimality proven | greedy gap (mean) | LNS gap (mean) | greedy range | LNS range | original V2 plan valid |
+| size | optimum proved | feasible plan found | greedy gap (mean) | LNS gap (mean) | CP-SAT beats my best heuristic | dual bound non-trivial |
 |---|---:|---:|---:|---:|---:|---:|
-| n=8 | **5/5** | **31.2%** | **16.5%** | 0.04 – 51.5% | 0.04 – 30.8% | 5/5 |
-| n=10 | 0/5 | 58.0% | 26.4% | 43.4 – 78.6% | 16.6 – 45.7% | 5/5 |
-| n=12 | 0/5 | 49.1% | 23.5% | 31.2 – 69.9% | 14.3 – 32.1% | 5/5 |
+| n=8 | **5/5** | 5/5 | **31.2%** | **16.5%** | 13.4% | 5/5 |
+| n=10 | 0/5 | 5/5 | 52.5% | 21.8% | 17.5% | 0/5 |
+| n=12 | 0/5 | 5/5 | 44.7% | 20.1% | 16.3% | 0/5 |
+| n=14 | 0/5 | 4/5 | 40.1% | 21.0% | 16.7% | 0/5 |
+| n=16 | 0/5 | 4/5 | 30.4% | 9.8% | 8.8% | 0/5 |
+
+Per-size budgets: 120 s at n=8, 60 s from n=10 on, 8 workers. "feasible plan
+found" counts the instances where CP-SAT returned a plan at all inside the budget;
+the gap means cover those instances. The original V2 plan is physically valid on
+5/5 instances at every size (the FC-7 fix holds up to n=16).
 
 ## 5. What it shows and where it stops
 
-- **The "optimality is not quantified" item is now closed.** On small instances
-  my greedy is about 31% above the optimum (n=8, proven) and above 50% at larger
-  sizes; **the LNS roughly halves the gap** (16.5% / 25-27%), which quantifies the
-  value of the improvement phase for the first time.
-- Limits: at n≥10 the optimum was **not proved within 180s**, so the value
-  reported is an **upper bound** on the optimum and the gap there is a **lower
-  bound** on the true gap — the real gap is at least as large. Because the 180 s
-  budget truncates the search, those unproved rows also move between runs (about
-  ±1-2 pp on the greedy/LNS gaps at n=10/12); the proved n=8 row is stable.
-  CP-SAT still cannot prove optimality at n≥12; the model is weak in the number of
-  candidate sorties and in the time relaxation, which is the natural next
-  improvement.
-- The n=8 gaps vary widely (0.04% to 51.5%): on one instance the greedy happened
-  to hit the optimum, on most it is far off. This matches the qualitative point
-  that the greedy has no improvement phase.
-- A correctness side-finding: the project's original V2/LNS plans are mostly not
-  physically valid. Reporting feasible solutions requires a physical-feasibility
-  constraint; `fstsp_makespan_clean` and `clean_greedy` provide a clean alternative.
+1. **The warm start keeps the proven boundary and repairs the primal.** The n=8
+   row is unchanged against the committed cold run — same five optima (158.49,
+   204.21, 173.38, 211.88, 218.77), same 31.2% / 16.5% gaps — so the hint does not
+   disturb the model; and where the cold search at n=12 could return `UNKNOWN` with
+   no plan at all, the warm-started run returns a plan on 23 of 25 instances (4/5
+   at n=14 and n=16).
+2. **From n=10 on, the exact model is the better heuristic.** On the instances it
+   solved, CP-SAT's plan is **8.8%–17.5% below the best plan my greedy and LNS
+   found** (mean over sizes), so the earlier gap numbers were not an artefact of the
+   proof: my LNS really is ~20% above a plan that a general-purpose model produces
+   in a minute. That points at the search (a stronger metaheuristic) rather than at
+   more exact-solver time.
+3. **The boundary is on the dual side, not on the clock.** The certified lower
+   bound is trivial at every size from n=10 on — `0.0` on all 20 instances — and a
+   separate 300 s / 16-worker probe managed only 27.6 against an incumbent of 217
+   at n=10 and 0 at n=12. Extra CP-SAT time therefore proves nothing there; the
+   relaxation (one binary per candidate sortie plus the airborne-state chain) is
+   what has to change, e.g. by a column-generation or Lagrangian bound over the
+   sortie set.
+4. **What the earlier numbers were.** The committed cold run (180 s per instance)
+   reported n=10/12 LNS gaps of 26.4% / 23.5% against its own weaker incumbent;
+   with the better incumbent the same heuristic is 21.8% / 20.1% away. The
+   difference is the denominator, not the heuristic — worth keeping in mind when
+   reading any unproved gap row.
+5. **Caveats.** Unproved incumbents move between runs, so the n≥10 gap columns do
+   too: at n=10 seed 20260724 the incumbent went from 252.2 (cold, 180 s) to 270.5
+   (warm, 60 s) and the reported LNS gap moved from 16.6% to 8.7% on the same plan.
+   The n=8 row is stable (proved), and the certified-gap column is only non-empty
+   there. The n=8 gaps themselves still vary widely (0.04%–51.5%): on one instance
+   the greedy happened to hit the optimum, on most it is far off.
+
+## 5b. Correctness side-finding
+
+The project's original V2/LNS plans were mostly not physically valid before the
+evaluator fix; `fstsp_makespan_clean` and `clean_greedy` provide the clean
+alternative and the validity column above tracks it. See FC-7-4 in
+`docs/reference/failure_cases_master.md`.
 
 ## 6. Artifacts
 
