@@ -181,6 +181,8 @@
 19. ~~**仅单架无人机**~~ ✅ **已交付**：`src/experiments/week08_multidrone.py` 支持 K 架并行串行无人机（K=1 与单架评估器数值一致），K=1/2/3 对比 60 算例：相对 truck-only 的收益 N=50 从 28.1% 升到 36.0%、N=8 从 45.5% 升到 69.6%，也抬高规模衰减曲线；LNS 在各 K 下仍 +5%~+14%（Wilcoxon K=3 vs K=1 整体 p=1.67×10⁻¹¹）。图 `figures/multidrone.png`。
 20. ~~**算例是随机几何 + K≤3 + 简单调度**~~ ✅ **已交付**：`src/experiments/week08_multidrone_std.py` 用官方 Solomon 拓扑（C101/C201/R101/RC101）构造 16 个标准实例，K 扩到 5（K=5 时收益 48.6%~71.4%）；`src/experiments/drone_scheduling.py` 把"架次→无人机"分配当显式调度（greedy / local / 精确最优），实测 naive 规则相对精确最优平均只 +0.081%（max 3.2%）、局部搜索仅 +0.001%，即简单规则已接近最优。图 `figures/multidrone_std.png`。
 
+21. ~~**无人机没有能耗/载荷模型**~~ ✅ **已交付**：`drone_energy.py` 给无人机加了载荷上限与随载重增长的能耗预算（`BETA` 扫 0 → 0.04）；`drone_energy_ablation.py` 在能耗模型下重跑核心消融（多顾客增益 +10.4 → +6.1pp，而不感知能耗的已发表启发式只有 42–48% 可行），`drone_energy_mainline.py` 再把同一套闸门装到 V3 与 W8 评估器上——收益依然成立（V3 K=1 为 33.5–53.0%、K=3 达 72.4%），代价是 makespan 多 1.5–8.1%。两个评估器默认仍是仅航程模型，所以此前的数字不变。
+
 ### 3.4 工程与交付
 
 12. **所有新文件尚未 git commit / push**：目前只存在本地，可复现包要先提交才能算数。

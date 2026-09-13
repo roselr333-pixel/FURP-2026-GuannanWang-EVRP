@@ -53,9 +53,11 @@ truck-only rising with K).
 
 ## 5. Limitations
 
-- Still the **FSTSP completion-time evaluator (no time windows or energy)**; only
-  the "single drone" limitation is broken here. Re-adding battery/charging and
-  time windows is a separate next step.
+- Still the **FSTSP completion-time evaluator (no time windows)**; only the
+  "single drone" limitation is broken here. Re-adding battery/charging and time
+  windows is a separate next step. The drone's payload/energy gates are off in
+  the committed numbers; `drone_energy_mainline.py` switches them on both here
+  (K = 1/2/3) and on the V3 evaluator.
 - Instances are still random-geometry synthetic ones; K is only tested up to 3.
 - The multi-drone rendezvous/scheduling is a simple rule (earliest-available
   drone), not an optimal schedule.

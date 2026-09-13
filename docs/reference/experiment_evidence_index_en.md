@@ -139,6 +139,19 @@ Every W6 number above comes from random geometry. `std_evrp_instances.make_evrp`
 
 ---
 
+## 5d. Drone energy / payload gates on the main line (V3 and W8)
+
+Source: `src/results/drone_energy_mainline_summary.csv` (from `drone_energy_mainline.py`), figure `figures/drone_energy_mainline.png`.
+
+`drone_energy.py` gives the drone a payload capacity `P_MAX` and an energy budget `E_D` that grows with the load still on board, and the same four parameters (`alpha`/`beta`/`ed`/`p_max`) now sit on the V3 evaluator (`v3_ev_collab.ev_collab_k`) and on the W7/W8 FSTSP evaluator (`week07_fstsp_repro.fstsp_simulate[_multi]`), with `beta = 0`, `ed = R_D` and no payload cap as the default. Running both at `beta = 0.02` with `E_D = 160` and `P_MAX = 30` (4 sizes x 10 seeds x K = 1/2/3):
+
+| Model | BETA = 0.00 (greedy / K=1 / K=2 / K=3) | BETA = 0.02 | Feasible at 0.02 |
+|---|---:|---:|---:|
+| V3 (EV + TW) | 643 / 513 / 413 / 361 | 664 / 521 / 444 / 390 | 100% |
+| W8 (FSTSP) | 497 / 407 / 318 / 276 | 508 / 407 / 334 / 295 | 100% |
+
+The gates cost a few percent of makespan and leave the gains in place (V3 K=1 goes 52.4% -> 53.0% at N=8 and 33.5% -> 34.5% at N=20; W8 K=3 goes 69.6% -> 70.6% and 54.0% -> 51.2%), but they eat into the marginal value of extra drones: K=1 -> K=3 goes from 42.1/42.2/27.2/22.3% to 41.3/42.4/18.6/17.1% at N=8/12/16/20 (W8: 46.6/40.8/32.6/21.2% to 49.4/39.1/23.0/15.9%), i.e. 5-10 pp less at N >= 16. Every returned plan is feasible under the gate, against 42-48% feasibility for the energy-unaware published heuristic in §4. Detail: `docs/weekly/drone_energy_note_en.md` §4b.
+
 ## 6. Failure cases (13 entries, 1 strictly infeasible)
 
 Source: `docs/reference/failure_cases_master.md`. The most telling: on N=50 dense instances the **sync-feasibility rejection reaches ~4.5 million**, showing the synchronous rendezvous constraint is the main bottleneck at large scale — corroborating the "benefit dilutes with scale" finding in §2/§5 and jointly bounding the method's applicability.
@@ -300,6 +313,8 @@ Grouped by nature; each item gives its "consequence + next step" so it reads as 
 | Drone scheduling | `drone_scheduling.py` | `week08_scheduling.csv` | — |
 | Original M&C benchmark | `week08_mc_benchmark.py` + `fstsp_mc.py` | `week08_mc_benchmark_raw.csv` | — |
 | V3 (electric + drone + TW) | `v3_ev_collab.py` | `v3_ev_collab_raw.csv` / `_summary.csv` | — |
+| Drone energy / payload ablation | `drone_energy_ablation.py` + `drone_energy.py` | `drone_energy_raw.csv` / `_summary.csv` | `drone_energy.png` |
+| Drone energy on the main line | `drone_energy_mainline.py` + `drone_energy.py` | `drone_energy_mainline_raw.csv` / `_summary.csv` | `drone_energy_mainline.png` |
 | Exact optimality gap (CP-SAT) | `week08_exact_gap.py` + `cpsat_fstsp.py` | `week08_exact_gap_raw.csv` / `_summary.csv` | — |
 | Significance tests | `stat_tests.py` | `stat_tests.csv` | — |
 | Schneider replication | `schneider_evrptw.py` + `schneider_bks_compare.py` + `plot_schneider_routes.py` | `schneider_evrptw_baseline.csv` / `schneider_evrptw_bks_comparison.csv` | `schneider_routes.png` / `schneider_vehcomp.png` |

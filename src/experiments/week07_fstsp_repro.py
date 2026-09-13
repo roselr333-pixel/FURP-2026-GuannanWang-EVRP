@@ -45,6 +45,7 @@ import csv
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import week06_ground_air_evrp_tw as w6   # reuse geometry + instance generator
+import drone_energy as DE                # drone energy/payload model
 
 V_T = w6.V_T          # truck speed
 V_D = w6.V_D          # drone speed
@@ -73,7 +74,8 @@ def _resolve(route, node, role):
     return route.index(node)
 
 
-def fstsp_simulate(inst, route, drone_trips):
+def fstsp_simulate(inst, route, drone_trips, alpha=DE.ALPHA, beta=0.0,
+                   ed=R_D, p_max=INF):
     """
     Truck arrival (+service) times along `route` (depot bookends), with the
     truck waiting at a recovery node if the drone has not yet landed, AND with
@@ -85,6 +87,12 @@ def fstsp_simulate(inst, route, drone_trips):
     otherwise the sortie would have to launch from a node the truck has already
     left, which no feasible plan realises. If any of these is violated the plan
     is infeasible and the function returns an all-inf array.
+
+    alpha/beta/ed/p_max are the drone energy/payload limits of drone_energy.py:
+    a sortie's energy is (alpha + beta x payload still on board) summed over its
+    legs and must fit the budget `ed`, and the demand carried in one sortie is
+    capped by `p_max`. The defaults (beta=0, ed=R_D, no payload cap) reduce the
+    energy budget to exactly the range limit, i.e. the original model.
 
     route        : [0, ...truck nodes..., 0]
     drone_trips  : (launch_node, cust_or_custs, recover_node)
@@ -113,6 +121,9 @@ def fstsp_simulate(inst, route, drone_trips):
                 for p in range(len(legs) - 1))
         if d > R_D + 1e-9:
             return [INF] * len(route)
+        if DE.sortie_energy(inst, ln, cl, rn, alpha, beta) > ed + 1e-9 \
+                or DE.sortie_load(inst, cl) > p_max + 1e-9:
+            return [INF] * len(route)
         # the drone must be back on the truck before the truck reaches i
         if drone_free > arr[i_pos] + 1e-9:
             return [INF] * len(route)
@@ -128,12 +139,13 @@ def fstsp_simulate(inst, route, drone_trips):
     return arr
 
 
-def fstsp_makespan(inst, route, drone_trips):
+def fstsp_makespan(inst, route, drone_trips, **kw):
     """FSTSP completion time = time the truck returns to depot with the drone."""
-    return fstsp_simulate(inst, route, drone_trips)[-1]
+    return fstsp_simulate(inst, route, drone_trips, **kw)[-1]
 
 
-def fstsp_simulate_multi(inst, route, drone_trips, n_drones):
+def fstsp_simulate_multi(inst, route, drone_trips, n_drones, alpha=DE.ALPHA,
+                         beta=0.0, ed=R_D, p_max=INF):
     """Same model as fstsp_simulate but with `n_drones` parallel serial drones
     carried by the truck (a multi-drone extension).
 
@@ -143,8 +155,10 @@ def fstsp_simulate_multi(inst, route, drone_trips, n_drones):
     landing there has arrived. n_drones=1 reproduces fstsp_simulate exactly.
 
     Physical validity is enforced as in `fstsp_simulate`: launch before recover,
-    flight within range, and at least one drone back on the truck when the truck
-    reaches the launch node. An infeasible sortie set yields an all-inf array."""
+    flight within range, the drone energy/payload limits (alpha/beta/ed/p_max,
+    same meaning as there), and at least one drone back on the truck when the
+    truck reaches the launch node. An infeasible sortie set yields an all-inf
+    array."""
     arr = [0.0] * len(route)
     for p in range(1, len(route)):
         arr[p] = arr[p - 1] + _tt(inst, route[p - 1], route[p]) \
@@ -165,6 +179,9 @@ def fstsp_simulate_multi(inst, route, drone_trips, n_drones):
                 for p in range(len(legs) - 1))
         if d > R_D + 1e-9:
             return [INF] * len(route)
+        if DE.sortie_energy(inst, ln, cl, rn, alpha, beta) > ed + 1e-9 \
+                or DE.sortie_load(inst, cl) > p_max + 1e-9:
+            return [INF] * len(route)
         flight = d / V_D + SERVICE * len(cl)
         starts = [max(arr[i_pos], avail[k]) for k in range(n_drones)]
         k = min(range(n_drones), key=lambda z: (starts[z], z))
@@ -182,9 +199,10 @@ def fstsp_simulate_multi(inst, route, drone_trips, n_drones):
     return arr
 
 
-def fstsp_makespan_multi(inst, route, drone_trips, n_drones):
-    """Completion time with `n_drones` parallel serial drones."""
-    return fstsp_simulate_multi(inst, route, drone_trips, n_drones)[-1]
+def fstsp_makespan_multi(inst, route, drone_trips, n_drones, **kw):
+    """Completion time with `n_drones` parallel serial drones. Keyword
+    arguments are the drone energy/payload limits (see fstsp_simulate)."""
+    return fstsp_simulate_multi(inst, route, drone_trips, n_drones, **kw)[-1]
 
 
 def _truck_travel(inst, route, a_pos, b_pos):

@@ -1,6 +1,6 @@
 # Drone energy and payload model (extension)
 
-> Written 2026-09-13. On the main line the drone's only limit is the range constant
+> Written 2026-09-13. On the main line the drone's only limit is, by default, the range constant
 > `R_D` (a sortie's flight distance must not exceed 160), which means the drone is
 > not electric while the project is about electric routing. This note adds the two
 > limits a real multi-rotor drone has -- a payload capacity and an energy budget
@@ -24,6 +24,12 @@
   serial drone (a sortie starts only after the previous one is recovered), the
   truck waits at the recovery node, infeasible plans return `inf`. Code:
   `src/experiments/drone_energy.py`.
+- **The same two gates sit on both main-line evaluators**: `v3_ev_collab.ev_collab_k`
+  (V3: battery, charging, time windows, K drones) and
+  `week07_fstsp_repro.fstsp_simulate[_multi]` (W7/W8) take the four parameters
+  `alpha`/`beta`/`ed`/`p_max`, defaulting to `beta = 0`, `ed = R_D` and no
+  payload cap — i.e. exactly the range model, so the committed numbers stand.
+  Section 4b reports what switching them on does there.
 
 ## 2. How
 
@@ -78,6 +84,52 @@ Figure: `figures/drone_energy.png`.
    what a multi-customer sortie is *worth*, not how many customers the drone can
    still take.
 
+## 4b. The same gates on the two main-line settings
+
+The gates are not special to the ablation runner above: `v3_ev_collab.ev_collab_k`
+(V3: electric truck, charging stations, time windows, K drones) and
+`week07_fstsp_repro.fstsp_simulate[_multi]` (the W7/W8 FSTSP evaluator) accept the
+same four parameters, so `src/experiments/drone_energy_mainline.py` switches them
+on in both. 4 sizes x 10 seeds x K = 1/2/3, `beta` = 0.00 (control) and 0.02, with
+`E_D = 160` and `P_MAX = 30`.
+
+| Model | Config | BETA = 0.00 | BETA = 0.02 | Change | Feasible at 0.02 |
+|---|---|---:|---:|---:|---:|
+| V3 (EV + TW) | greedy | 643 | 664 | +3.2% | 100% |
+| V3 | LNS K = 1 | 513 | 521 | +1.5% | 100% |
+| V3 | LNS K = 2 | 413 | 444 | +7.5% | 100% |
+| V3 | LNS K = 3 | 361 | 390 | +8.1% | 100% |
+| W8 (FSTSP) | greedy | 497 | 508 | +2.2% | 100% |
+| W8 | LNS K = 1 | 407 | 407 | +0.1% | 100% |
+| W8 | LNS K = 2 | 318 | 334 | +4.8% | 100% |
+| W8 | LNS K = 3 | 276 | 295 | +7.0% | 100% |
+
+Mean makespan over the four sizes (per-size values, the truck-only levels and the
+per-instance rows are in `src/results/drone_energy_mainline_{raw,summary}.csv`;
+figure `figures/drone_energy_mainline.png`). The `BETA = 0` column reproduces
+`v3_ev_collab_summary.csv` and `week08_multidrone_summary.csv` value for value, so
+it doubles as the control for the refactor that added the parameters.
+
+1. **The gates cost a few percent, not the result.** The gains over truck-only
+   barely move: V3 K = 1 goes 52.4% -> 53.0% at N=8 and 33.5% -> 34.5% at N=20,
+   V3 K = 3 goes 72.5% -> 72.4% and 48.3% -> 46.0%; on W8 K = 3 goes 69.6% ->
+   70.6% at N=8 and 54.0% -> 51.2% at N=20. The one clear loser is the single-drone
+   greedy on V3, 29.0% -> 21.6% at N=16: with no improvement phase it keeps
+   payload-heavy sorties whose energy it then has to pay for.
+2. **Extra drones lose part of their edge.** K = 1 -> K = 3 shortens the makespan by
+   42.1 / 42.2 / 27.2 / 22.3% at N = 8/12/16/20 under the range-only model, and by
+   41.3 / 42.4 / 18.6 / 17.1% once the gates are on (W8: 46.6 / 40.8 / 32.6 / 21.2%
+   -> 49.4 / 39.1 / 23.0 / 15.9%). The third drone is worth 5-10 pp less at
+   N >= 16, where the payload cap and the energy budget start to bind together.
+3. **Everything my solvers return stays feasible** (100% in all 16 size x config
+   cells, and zero payload or energy violations among the K = 1 plans), because the
+   gates are checked while candidates are built. That is the same awareness the
+   published heuristic lacks in section 3, where only 42-48% of its plans are
+   energy-feasible: being energy-aware is cheap, ignoring the battery is not.
+4. **The offloaded volume is unchanged** (V3: 5.8 customers per instance at K = 1
+   either way, 9.5 -> 9.4 at K = 3; W8: 8.5 -> 9.2 at K = 3). As in section 4, the
+   gates change what a sortie is worth, not how many customers the drone takes.
+
 ## 5. Limitations
 
 - The energy model is a linear surrogate (`alpha + beta x payload`): no aerodynamic
@@ -88,12 +140,14 @@ Figure: `figures/drone_energy.png`.
   instances where it is feasible, so the two sets of percentages are not directly
   comparable; it is evidence about model awareness, not a performance comparison.
 - The drone's charge is reset on recovery (battery-swap assumption), as on the main
-  line; still single-drone only.
+  line; the main-line run below covers K = 1/2/3 drones, but the model is not
+  fitted to a specific airframe or battery.
 
 ---
 
 *Data provenance:*
 - `src/results/drone_energy_raw.csv` / `_summary.csv` (88 instances x 3 BETA settings x 5 configs)
 - `src/experiments/drone_energy.py` (evaluator and greedy), `src/experiments/drone_energy_ablation.py` (runner)
+- §4b: `src/experiments/drone_energy_mainline.py` (V3 and W8), `src/results/drone_energy_mainline_raw.csv` / `_summary.csv`, `src/tools/gen_drone_energy_mainline_figure.py` -> `figures/drone_energy_mainline.png`
 - `src/tools/gen_drone_energy_figure.py` -> `figures/drone_energy.png`
 - control: `src/results/week07_ablation_summary.csv`, `week07_ablation_std_summary.csv`

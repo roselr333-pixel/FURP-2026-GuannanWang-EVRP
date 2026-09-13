@@ -87,6 +87,7 @@ Key documents:
 | Baselines | `week01_baseline`, `week03_experiment`, `week03_reproduce`, `benchmark_*`, `baseline_consolidated`, `baseline_pyvrp_vrptw`, `baseline_ga_vrptw` |
 | EVRP-TW core model | `week04_evrp_tw`, `week06_ground_air_evrp_tw`, `std_evrp_instances` (Schneider adapter), `week06_standard_instances` |
 | Truck–drone | `week05_truck_drone(_v2)`, `week07_fstsp_repro`, `week07_improvement_ablation` |
+| Drone energy | `drone_energy`, `drone_energy_ablation`, `drone_energy_mainline` |
 | W8 improvements | `week08_lns`, `week08_multidrone`, `week08_multidrone_std`, `drone_scheduling`, `fstsp_instances`, `week08_mc_benchmark`, `fstsp_mc`, `v3_ev_collab` |
 | Analysis | `week06_sensitivity`, `week06_multi_objective`, `week06_largeN`, `week06_capacity_study`, `stat_tests` |
 | Schneider replication | `schneider_evrptw`, `schneider_bks_compare` |
@@ -109,6 +110,7 @@ Key documents:
 | Drone scheduling | naive rule provably optimal on 64/64 configs |
 | V3 (EV + TW + drone) | vs truck-only EV: K=1 33.5–52.4% shorter, K=3 up to 72.5% |
 | Truck capacity (CAP=1000, now enforced) | free for N≤50; binds on 1/5 of the N=100 instances, where one serial drone cannot repair the overload |
+| Drone energy/payload gates on the main line | at BETA=0.02 the gains survive (V3 K=1 33.5–53.0%, K=3 up to 72.4%); the gates cost 1.5–8.1% makespan and 5–10 pp of the K=1→3 edge at N≥16, and every plan stays feasible |
 | Same model on standard data (Schneider 2014) | collaboration gain 41.0–54.8% (synthetic reference: 24.8–34.5%), so the synthetic result is conservative |
 
 Full numbers and their caveats: `docs/reference/experiment_evidence_index_zh.md`.
@@ -149,6 +151,7 @@ experiments that produce their CSVs. Numbers, sources and caveats for all of the
 | `figures/ablation_std.png` | Does the ablation survive on official Solomon topologies? | multi-customer +7.2–8.9 pp (synthetic set: +8.6–12.1 pp) — same main driver | `src/tools/gen_ablation_std_figure.py` |
 | `figures/v3_ablation.png` | Which factor drives the gain under EV + time windows? | multi-customer +8.5–12.5 pp, stop reuse +1.9–5.3 pp; extra take-offs not significant (p=0.139) | `src/tools/gen_v3_ablation_figure.py` |
 | `figures/drone_energy.png` | What changes once the drone has a payload-aware energy budget? | multi-customer gain +10.4→+6.1 pp (synthetic) and +6.6→+5.4 pp (standard); the published heuristic's plans are only 42%/48% energy-feasible at β=0.04, mine 100% | `src/tools/gen_drone_energy_figure.py` |
+| `figures/drone_energy_mainline.png` | What do the payload/energy gates do to V3 and to the K-drone runs? | V3 K=1 gain 52.4%→53.0% (N=8) and 33.5%→34.5% (N=20); the K=1→3 edge drops from 27.2% to 18.6% at N=16; all returned plans feasible | `src/tools/gen_drone_energy_mainline_figure.py` |
 | `figures/lns_vs_greedy.png` | Does the improvement phase pay off? | +12.5–21.3% over the greedy (paired Wilcoxon p=1.7×10⁻¹⁰) | `src/tools/plot_lns.py` |
 | `figures/multidrone.png` | How much do extra drones help (synthetic instances)? | N=50: 29.5% (K=1) → 38.1% (K=3) | `src/tools/plot_multidrone.py` |
 | `figures/multidrone_std.png` | Same question on standard instances, plus the scheduler | K=1→5 raises the gain to 46.8–71.4%; naive scheduler optimal on 64/64 configs | `src/tools/plot_multidrone_std.py` |
@@ -168,7 +171,7 @@ python -m venv venv
 venv/Scripts/python -m pip install -r requirements.txt
 
 python run_all.py                 # rerun every experiment and every figure
-python -m pytest tests/ -q        # 95 regression tests, about 15 s
+python -m pytest tests/ -q        # 149 regression tests, about 16 s
 ```
 
 See `REPRODUCE.md` for the conclusion → script → artifact map. The experiment

@@ -41,7 +41,7 @@ separately, not translated from each other.
 | `weekly/week08_mc_benchmark_note_en.md` / `_zh.md` | the paper's original Murray & Chu test instances |
 | `weekly/v3_ev_collab_note_en.md` / `_zh.md` | V3: electric truck + drone + charging stations + time windows |
 | `weekly/v3_ablation_note_en.md` / `_zh.md` | the same core ablation under EV + time windows |
-| `weekly/drone_energy_note_en.md` / `_zh.md` | drone energy and payload model (extension) and what it does to the ablation |
+| `weekly/drone_energy_note_en.md` / `_zh.md` | drone energy and payload model (extension): what it does to the ablation, and what it does to V3 and the K-drone W8 runs |
 
 ## Baselines and replications
 

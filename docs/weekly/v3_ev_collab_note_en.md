@@ -18,7 +18,8 @@ multiple drones (K=1/2/3).
   energy-infeasible.
 - **Time windows**: arriving early means waiting; arriving late counts as a
   violation.
-- **Drones (K homogeneous)**: still range-limited and still recovered by the
+- **Drones (K homogeneous)**: still range-limited (optionally also payload- and
+  energy-limited, see `drone_energy_note_en.md` §4b) and still recovered by the
   truck at a later node. Each drone executes its own sorties in launch order,
   and **a sortie launches when the truck reaches its launch node**: if the drone
   assigned to it is not back on the truck by then the whole plan is infeasible
@@ -119,7 +120,9 @@ affected by this defect.
 - Limitations: time windows are a penalty in the search rather than a hard
   constraint (so a few violations can remain, and the count is reported);
   recharging is the simplified "full recharge at a station", not partial
-  charging; V3 is tested with up to K=3 drones and not larger K.
+  charging; V3 is tested with up to K=3 drones and not larger K; the drone's
+  payload/energy gates are off in the committed numbers (the run that switches
+  them on is `drone_energy_mainline.py`).
 
 ## 7. Artifacts
 

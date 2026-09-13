@@ -27,7 +27,7 @@ python src/experiments/week06_sensitivity.py
 
 ## 2b. 运行回归测试
 
-`tests/` 下是用 pytest 写的回归测试，覆盖模型的关键不变量：K=1 无人机评估器等于单架、更多无人机不会更差、V3 解服务到每一位顾客、调度恒有 `greedy ≥ local ≥ optimal` 且下界合法、消融的 `abl_cap1` 精确复现已发表基线、W5/M&C 评估器的物理性与跨模块一致性。本机约 15 秒跑完（95 个用例，其中 `tests/test_cpsat_exact.py` 的 CP-SAT 校验占大头）：
+`tests/` 下是用 pytest 写的回归测试，覆盖模型的关键不变量：K=1 无人机评估器等于单架、更多无人机不会更差、V3 解服务到每一位顾客、调度恒有 `greedy ≥ local ≥ optimal` 且下界合法、消融的 `abl_cap1` 精确复现已发表基线、W5/M&C 评估器的物理性与跨模块一致性。本机约 16 秒跑完（149 个用例，其中 `tests/test_cpsat_exact.py` 的 CP-SAT 校验占大头）：
 
 ```bash
 python -m pytest tests/ -q
@@ -45,6 +45,7 @@ python -m pytest tests/ -q
 | 受控消融（多顾客能力为主增益 +8.6~12.1pp；sanity check 通过） | `week07_improvement_ablation.py` | 40 算例 | `src/results/week07_ablation_summary.csv` |
 | 核心消融搬到标准算例（多顾客能力 +7.2~8.9pp，与合成一致） | `week07_ablation_std.py`（+ `fstsp_instances.py`） | 48 个标准实例；确定性 | `src/results/week07_ablation_std_summary.csv`、`figures/ablation_std.png` |
 | V3（电动+时间窗）上的核心消融（多顾客 +8.5~12.5pp 是主增益；N=20 转为 −2.8pp） | `v3_ablation.py`（+ `v3_ev_collab.py`） | 40 算例（10 种子 × N=8/12/16/20） | `src/results/v3_ablation_summary.csv`、`figures/v3_ablation.png` |
+| 无人机能耗/载荷闸门装到主线（V3 K=1 收益 33.5~53.0%、K=3 达 72.4%；代价是 1.5~8.1% 的 makespan；N≥16 时 K=1→3 的边际价值少 5~10pp，返回的计划全部可行） | `drone_energy_mainline.py`（+ `drone_energy.py`） | 4 规模 × 10 种子 × K=1/2/3 × BETA ∈ {0, 0.02}；确定性 | `src/results/drone_energy_mainline_raw.csv` / `_summary.csv`、`figures/drone_energy_mainline.png` |
 | 无人机能耗/载荷模型下的消融（多顾客增益 +10.4→+6.1pp；不感知能耗的基线计划大量不可行） | `drone_energy_ablation.py`（+ `drone_energy.py`） | 88 实例 × BETA ∈ {0, 0.02, 0.04} | `src/results/drone_energy_summary.csv`、`figures/drone_energy.png` |
 | FSTSP 复现（V2 比 M&C 2015 短 10.2–14.2%） | `week07_fstsp_repro.py` | 40 算例 | `src/results/week07_fstsp_*.csv` |
 | 规模衰减（N=50 收益 3.4%、单机调度拒绝 101 万） | `week06_largeN.py` | 5 种子 | `src/results/week06_largeN_summary.csv` |
@@ -72,6 +73,7 @@ python -m pytest tests/ -q
 | `ablation_std.png` | 核心消融在标准算例上是否成立 | `src/tools/gen_ablation_std_figure.py` | `week07_ablation_std_summary.csv` |
 | `v3_ablation.png` | 电动 + 时间窗下增益来自哪一项 | `src/tools/gen_v3_ablation_figure.py` | `v3_ablation_summary.csv` |
 | `drone_energy.png` | 加入能耗/载荷模型后结论怎么变 | `src/tools/gen_drone_energy_figure.py` | `drone_energy_summary.csv` |
+| `drone_energy_mainline.png` | 把闸门开到 V3 与多无人机主线上，结论是否还成立 | `src/tools/gen_drone_energy_mainline_figure.py` | `drone_energy_mainline_summary.csv` |
 | `lns_vs_greedy.png` | 改进阶段（LNS）是否值得 | `src/tools/plot_lns.py` | `week08_lns_summary.csv` |
 | `multidrone.png` | 多无人机（合成算例）的收益 | `src/tools/plot_multidrone.py` | `week08_multidrone_summary.csv` |
 | `multidrone_std.png` | 标准算例 + 调度器的结果 | `src/tools/plot_multidrone_std.py` | `week08_multidrone_std_summary.csv`、`week08_scheduling.csv` |

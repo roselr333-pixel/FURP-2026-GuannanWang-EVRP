@@ -20,6 +20,10 @@
 | `RECHARGE` | 40.0 | 充电站满充时间 | 同上 |
 | `RHO` | 1.0 | 卡车单位距离耗电 | 同上 |
 | `R_D` | 160.0 | 无人机单架次航程上限（**所有脚本都是这个值**，FSTSP 模式同样取 `w6.R_D`） | 同上 |
+| `ALPHA` | 1.0 | 无人机空载时的单位距离能耗 | `drone_energy.py` |
+| `BETA` | 0.02 | 每（单位距离 × 机上剩余需求）的额外能耗；两个主线评估器默认取 0（= 仅航程） | 同上 |
+| `E_D` | 160.0 | 无人机单架次能耗预算；默认等于 `R_D`，即退化为航程约束 | 同上 |
+| `P_MAX` | 30.0 | 单架次承载需求上限；两个主线评估器默认不限 | 同上 |
 | `Q_DEFAULT` | 250 | 卡车电池容量 | 同上 |
 | `CAP` | 1000 | 卡车单路线载重上限（**已启用**：路线需求之和超过即判不可行；见 §5） | 同上 |
 
@@ -29,6 +33,11 @@
 架次航程不超限；违反任一条返回 `inf`。这条口径在 2026-09-13 统一到
 `week07_fstsp_repro.fstsp_simulate` 与 `week06_ground_air_evrp_tw.simulate` 两处，
 新旧对照见 `docs/analysis/evaluator_physical_fix_note_zh.md`。
+
+**能耗/载荷闸门**：`v3_ev_collab.ev_collab_k` 与 `week07_fstsp_repro.fstsp_simulate[_multi]`
+都接受 `alpha` / `beta` / `ed` / `p_max` 四个参数；默认 `beta=0, ed=R_D, p_max=∞`
+与原来的航程模型逐位一致，所以已提交的数字不受影响。打开后架次还要满足载荷上限与
+能耗预算，见 §4 的能耗实验行与 §5。
 
 ## 2. 算例来源
 
@@ -88,6 +97,8 @@
 | PyVRP | 版本 | 0.14.0（`baseline_pyvrp_vrptw.py`） | 与官方 `.sol` BKS 对照 |
 | CP-SAT | 时间上限 / workers | 180 s / 8 | `week08_exact_gap.py`、`cpsat_fstsp.solve_exact` |
 | Schneider 局部搜索 | `improve` / `improve_moves` / `improve_budget` | True / 400 步 / 60 s | `schneider_evrptw.py` → `schneider_improve.improve_solution` |
+| 无人机能耗（主线） | `beta` / `ed` / `p_max` | 0.00、0.02 / 160 / 30 | `drone_energy_mainline.py`（V3 与 W8，K=1/2/3） |
+| 无人机能耗（消融） | `beta` | 0.00 / 0.02 / 0.04 | `drone_energy_ablation.py` |
 
 PyVRP 固定了 seed，重复运行结果一致；OR-Tools 用 `GUIDED_LOCAL_SEARCH` + 10 s 时间预算，该版本的 routing 参数不暴露随机种子，所以同一算例的搜索结果逐次有小幅浮动——56 实例的均值 gap 我实测在 7.2%~8.1% 之间，本仓库报单次结果并给出这个区间。GA 是唯一需要多种子的基线，报 5 种子均值 ± 标准差。
 
@@ -98,8 +109,11 @@ PyVRP 固定了 seed，重复运行结果一致；OR-Tools 用 `GUIDED_LOCAL_SEA
   在生成的需求下 `CAP=1000` 对 N≤50 不 binding，N=100 有 1/5 算例 binding；单架串行无人机
   最多只能卸下约 10–20% 的需求，所以更紧的 cap 仍会不可行（研究见 `week06_capacity_study.py`、
   `figures/capacity_binding.png`）。
-- **无人机没有能耗模型**：唯一的无人机约束是单架次航程 `R_D`；回收即视为换电池，
-  航程逐架次复位。载荷对续航的影响没有建模。
+- **无人机的能耗/载荷闸门默认关闭**：主线评估器只限制单架次航程 `R_D`；载荷上限
+  `P_MAX` 与能耗预算 `E_D`（`drone_energy.py`）是可选约束，`v3_ev_collab.ev_collab_k`
+  与 `week07_fstsp_repro.fstsp_simulate[_multi]` 都接受。回收仍视为换电池、逐架次复位。
+  `drone_energy_mainline.py` 在 `beta=0.02` 下把闸门打开重跑 V3 与 W8，`beta=0` 一行
+  用于复现原来的数字（图 `figures/drone_energy_mainline.png`）。
 - **时间窗是罚项不是硬约束**：V1/V2/V3 报 `tw_viol` 计数，但不因超窗拒绝解。
 - **充电策略是贪心**：电量不足时绕到最近的充电站满充，不优化选哪个站。
 

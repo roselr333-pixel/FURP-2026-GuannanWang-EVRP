@@ -1,0 +1,68 @@
+==============================================================================
+Drone energy and payload on the main line (V3 and W8)
+==============================================================================
+models: V3 = EV + charging + time windows (K=1/2/3); W8 = FSTSP K parallel serial drones
+BETA = [0.0, 0.02]   ALPHA=1.0  E_D=160.0  P_MAX=30.0   (BETA=0 with E_D=R_D=160.0 is the range-only control)
+sizes=[8, 12, 16, 20]  seeds=10 (base 20260720)  drones K=[1, 2, 3]
+  hardware: Intel64 Family 6 Model 183 Stepping 1, GenuineIntel | 20 logical cores | RAM 31.8GB
+  env: python 3.13.14 | Windows-11-10.0.26200-SP0
+
+--- V3: electric truck + charging + time windows ---
+  V3 done in 4882.7s
+--- W8: K parallel serial drones on the FSTSP evaluator ---
+  W8 done in 683.7s
+
+==============================================================================
+V3 -- electric truck + drone + charging + TW
+==============================================================================
+  BETA  N   truck |    greedy        K1            K2            K3
+   0.00  8   485.8 |    293.6  39.2%    230.6  52.4%    170.8  64.6%    133.4  72.5%
+   0.00 12   694.7 |    517.4  25.4%    382.3  45.0%    267.5  61.4%    220.9  68.1%
+   0.00 16   975.9 |    693.9  29.0%    590.4  39.3%    505.6  47.9%    429.8  55.6%
+   0.00 20  1283.6 |   1069.0  16.3%    850.5  33.5%    707.1  44.5%    661.0  48.3%
+   0.02  8   485.8 |    298.1  38.3%    227.7  53.0%    171.3  64.6%    133.6  72.4%
+   0.02 12   694.7 |    522.3  24.8%    402.1  42.1%    288.8  58.5%    231.7  66.6%
+   0.02 16   975.9 |    764.7  21.6%    616.5  36.5%    569.9  41.3%    501.5  48.1%
+   0.02 20  1283.6 |   1071.5  16.5%    838.5  34.5%    744.3  41.3%    694.9  46.0%
+
+==============================================================================
+W8 -- K parallel serial drones (FSTSP)
+==============================================================================
+  BETA  N   truck |    greedy        K1            K2            K3
+   0.00  8   391.3 |    256.0  34.5%    222.2  43.1%    156.0  60.1%    118.6  69.6%
+   0.00 12   579.4 |    412.1  29.0%    338.5  41.3%    249.8  56.6%    200.3  65.3%
+   0.00 16   774.8 |    554.4  28.7%    471.0  39.0%    370.9  51.8%    317.3  58.9%
+   0.00 20  1022.3 |    767.2  24.8%    594.4  41.6%    496.8  51.2%    468.3  54.0%
+   0.02  8   391.3 |    272.5  30.8%    227.5  41.9%    159.3  59.1%    115.2  70.6%
+   0.02 12   579.4 |    418.4  27.6%    338.3  41.4%    254.4  55.9%    206.0  64.2%
+   0.02 16   774.8 |    552.2  29.0%    471.7  38.9%    400.2  48.2%    363.1  52.9%
+   0.02 20  1022.3 |    790.7  23.0%    591.0  42.0%    520.7  48.9%    497.1  51.2%
+
+==============================================================================
+EFFECT OF THE ENERGY/PAYLOAD GATES (mean over sizes)
+==============================================================================
+  model | config | BETA=0.00 makespan | BETA=0.02 makespan | delta | feasible at 0.02
+  V3    | greedy |               643.5 |               664.1 |   +3.2% | 1.00
+  V3    | K1     |               513.5 |               521.2 |   +1.5% | 1.00
+  V3    | K2     |               412.8 |               443.6 |   +7.5% | 1.00
+  V3    | K3     |               361.3 |               390.4 |   +8.1% | 1.00
+  W8    | greedy |               497.4 |               508.5 |   +2.2% | 1.00
+  W8    | K1     |               406.5 |               407.1 |   +0.1% | 1.00
+  W8    | K2     |               318.4 |               333.7 |   +4.8% | 1.00
+  W8    | K3     |               276.1 |               295.4 |   +7.0% | 1.00
+
+  infeasible plans under BETA = 0.02 (instances with makespan inf):
+    V3: greedy 0/40  K1 0/40  K2 0/40  K3 0/40   (K1 payload-cap violations: 0)
+    W8: greedy 0/40  K1 0/40  K2 0/40  K3 0/40
+
+
+==============================================================================
+CONTROL: BETA = 0.00 against the committed range-only runs
+==============================================================================
+  V3: greedy max|diff|=0.000  K1 max|diff|=0.000  K2 max|diff|=0.000  K3 max|diff|=0.000
+  W8: greedy max|diff|=0.000  K1 max|diff|=0.000  K2 max|diff|=0.000  K3 max|diff|=0.000
+
+total wall-clock: 5566.4s
+[raw -> E:\FURP-EVRP\roselr333-pixel-FURP-2026-GuannanWang-EVRP\src\results\drone_energy_mainline_raw.csv]
+[summary -> E:\FURP-EVRP\roselr333-pixel-FURP-2026-GuannanWang-EVRP\src\results\drone_energy_mainline_summary.csv]
+[log -> E:\FURP-EVRP\roselr333-pixel-FURP-2026-GuannanWang-EVRP\src\results\drone_energy_mainline_log.txt]

@@ -121,12 +121,20 @@ conclusion and together with it delimits where the method works.
   service needs heavier search.
 - **Drone count**: all results use a single truck; the W8 extension tests "single drone" up to
   K=1/2/3 (K=1→3 lifts the N=50 benefit from 29.5% to 38.1%), but still on the FSTSP evaluator
-  (no time windows or energy).
+  (no time windows; the drone's payload/energy gates can be switched on there, see the next
+  bullet).
 - **Truck capacity is now enforced, and it is the binding limit at N=100**: with `CAP=1000`
   the constraint is free for N≤50 but one of the five N=100 instances (demand 1081) becomes
   infeasible for all three variants; with a cap below the total demand the single-drone greedy
   cannot repair the overload — it leaves 64.7% (N=8) to 97.2% (N=100) of the demand on the
   truck (`week06_capacity_study.py`, figure `figures/capacity_binding.png`).
+- **The drone's payload/energy gates are a controlled choice and they cost little**: switching on the
+  payload capacity and the payload-dependent energy budget (`drone_energy.py`, BETA=0.02, E_D=160,
+  P_MAX=30) on both main-line evaluators leaves the gains standing — V3 K=1 33.5–53.0%, K=3 up to
+  72.4%, W8 K=3 51.2–70.6% — for 1.5–8.1% more makespan; what it does erode is the marginal value
+  of extra drones (K=1→3 at N≥16 shrinks by 5–10 pp), because the payload cap and the energy budget
+  start to bind together there (`drone_energy_mainline.py`, figure
+  `figures/drone_energy_mainline.png`).
 - **Synthetic instances extended to 100, but the effective window narrows to N ≤ 30**: I did not adopt
   the field's standard large-scale benchmark sets (e.g., the Solomon-derived FSTSP instances of
   Murray & Chu 2015 — which this project reproduced within their parameter range in W7; or the
@@ -151,7 +159,7 @@ conclusions together:
 > axes → three baselines place V2's collaborative increment → failure cases corroborate
 > the rendezvous constraint → the W8 LNS adds an improvement phase (+12.5~21.3%, offsetting the scaling
 > decay) → multiple drones (K=1/2/3, N=50 benefit 29.5%→38.1%) → limitations stated plainly
-> (scale boundary / synthetic instances / no TW-energy).
+> (scale boundary / synthetic instances / no time windows in the FSTSP setting).
 
 Every conclusion traces back to an experiment rather than to "I think
 so"; the final report will follow that order.

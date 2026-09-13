@@ -40,12 +40,13 @@ N_SEEDS = 10
 SEED_BASE = 20260720
 
 
-def greedy_multi(inst, n_drones, max_cust=2, rd=R_D):
+def greedy_multi(inst, n_drones, max_cust=2, rd=R_D, **kw):
     """Greedy V2 constructor for `n_drones` parallel serial drones. Same
     selection loop as week07_improvement_ablation.my_v2_param, but every move is
-    validated with the K-drone evaluator."""
+    validated with the K-drone evaluator. Keyword arguments are forwarded to the
+    evaluator (drone energy/payload limits; defaults = range-only)."""
     def ev(route, trips):
-        return f7.fstsp_makespan_multi(inst, route, trips, n_drones)
+        return f7.fstsp_makespan_multi(inst, route, trips, n_drones, **kw)
 
     all_c = list(inst["customers"].keys())
     route = [0] + w6.nn_order(inst, all_c) + [0]

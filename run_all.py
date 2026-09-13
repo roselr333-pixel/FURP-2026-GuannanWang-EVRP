@@ -10,8 +10,9 @@ Usage:
 Each script writes its own CSV / log under src/results/ and figures under
 figures/ (repo root). Scripts are ordered so that dependents are produced first:
 the figure tools run last, after the experiments that write their input CSVs.
-A full run takes roughly 1.5-2 hours on this machine; the self-written GA
-baseline (70-90 min for its 5 seeds) is the slow one, the figures seconds each.
+A full run takes roughly 2-2.5 hours on this machine; the self-written GA
+baseline (70-90 min for its 5 seeds) and the two energy sweeps (~30 min) are the
+slow ones, the figures seconds each.
 """
 import subprocess
 import sys
@@ -41,6 +42,7 @@ STEPS = [
     ("V3 ablation (4 configs, EV+TW)",      "v3_ablation.py",                 "40 instances, same seeds as V3"),
     ("Std-instance ablation (W7 ext)",      "week07_ablation_std.py",         "48 standard instances, deterministic"),
     ("Drone energy/payload sweep",           "drone_energy_ablation.py",       "88 instances x BETA in {0, 0.02, 0.04}"),
+    ("Drone energy on the main line",        "drone_energy_mainline.py",       "V3 EV+TW and W8 K drones x BETA in {0, 0.02}"),
     ("Exact optimality gap (CP-SAT)",       "week08_exact_gap.py",            "small n; exact optimum + heuristic gaps"),
     ("Paired significance tests",           "stat_tests.py",                  "Wilcoxon; reads W6/W7/W8 CSVs"),
     ("Capacity study (is CAP binding?)",    "week06_capacity_study.py",       "declared CAP=1000 and 600/400 vs total demand"),
@@ -63,6 +65,7 @@ STEPS = [
     ("Figure: standard-instance ablation",  "src/tools/gen_ablation_std_figure.py", "reads week07_ablation_std_summary.csv"),
     ("Figure: V3 ablation",                 "src/tools/gen_v3_ablation_figure.py",  "reads v3_ablation_summary.csv"),
     ("Figure: drone energy",                "src/tools/gen_drone_energy_figure.py", "reads drone_energy_summary.csv"),
+    ("Figure: drone energy (main line)",    "src/tools/gen_drone_energy_mainline_figure.py", "reads drone_energy_mainline_summary.csv"),
     ("Figure: LNS vs greedy",               "src/tools/plot_lns.py",                "reads week08_lns_summary.csv"),
     ("Figure: multi-drone",                 "src/tools/plot_multidrone.py",         "reads week08_multidrone_summary.csv"),
     ("Figure: multi-drone (standard)",      "src/tools/plot_multidrone_std.py",     "reads week08_multidrone_std_summary.csv"),

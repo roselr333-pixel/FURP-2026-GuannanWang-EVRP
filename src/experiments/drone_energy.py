@@ -27,6 +27,7 @@ set returns inf.
 
 Contents
 --------
+  sortie_load(inst, custs)                      demand carried in one sortie
   sortie_energy(inst, ln, custs, rn, ...)       energy of one sortie
   simulate(inst, route, trips, ...)             physical evaluator (ok, arr)
   makespan(inst, route, trips, ...)             completion time, inf if invalid
@@ -60,16 +61,31 @@ def _as_list(custs):
     return list(custs) if isinstance(custs, (list, tuple)) else [custs]
 
 
+def sortie_load(inst, custs):
+    """Demand carried in one sortie.
+
+    FSTSP-only instances (e.g. the M&C 2015 time-matrix ones) have no demand
+    field; there the payload is taken as zero, so the energy budget degenerates
+    to the range constraint.
+    """
+    cl = _as_list(custs)
+    dem = inst.get("demand")
+    if not dem:
+        return 0.0
+    return sum(dem.get(c, 0.0) for c in cl)
+
+
 def sortie_energy(inst, ln, custs, rn, alpha=ALPHA, beta=BETA):
     """Energy of one sortie, with consumption growing with the load on board."""
     cl = _as_list(custs)
     legs = [ln] + cl + [rn]
-    remaining = sum(inst["demand"][c] for c in cl)
+    dem = inst.get("demand") or {}
+    remaining = sum(dem.get(c, 0.0) for c in cl)
     e = 0.0
     for k in range(len(legs) - 1):
         e += (alpha + beta * remaining) * w6.dist(inst, legs[k], legs[k + 1])
         if k < len(cl):
-            remaining -= inst["demand"][legs[k + 1]]
+            remaining -= dem.get(legs[k + 1], 0.0)
     return e
 
 
@@ -100,7 +116,7 @@ def simulate(inst, route, trips, alpha=ALPHA, beta=BETA, ed=E_D, p_max=P_MAX):
         j_pos = len(route) - 1 if rn == 0 else route.index(rn)
         if i_pos >= j_pos:
             return False, None
-        if sum(inst["demand"][c] for c in cl) > p_max + 1e-9:
+        if sortie_load(inst, cl) > p_max + 1e-9:
             return False, None
         if sortie_energy(inst, ln, cl, rn, alpha, beta) > ed + 1e-9:
             return False, None

@@ -139,6 +139,19 @@ N=50 时 V1（电池+充电）代价 ≈ 5670 vs V0（无电池）≈ 3094——
 
 ---
 
+## 5d. 无人机能耗/载荷闸门装到主线（V3 与 W8）
+
+出处：`src/results/drone_energy_mainline_summary.csv`（`drone_energy_mainline.py`），图 `figures/drone_energy_mainline.png`。
+
+`drone_energy.py` 给无人机加了载荷上限 `P_MAX` 与随机上剩余载重增长的能耗预算 `E_D`；同一套四个参数（`alpha`/`beta`/`ed`/`p_max`）现在同时装在 V3 评估器（`v3_ev_collab.ev_collab_k`）与第 7/8 周的 FSTSP 评估器（`week07_fstsp_repro.fstsp_simulate[_multi]`）上，默认 `beta = 0`、`ed = R_D`、不限载荷（= 原来的航程模型）。两边都在 `beta = 0.02`、`E_D = 160`、`P_MAX = 30` 下重跑（4 规模 × 10 种子 × K=1/2/3）：
+
+| 模型 | BETA = 0.00（greedy / K=1 / K=2 / K=3） | BETA = 0.02 | 0.02 下可行率 |
+|---|---:|---:|---:|
+| V3（电动 + 时间窗） | 643 / 513 / 413 / 361 | 664 / 521 / 444 / 390 | 100% |
+| W8（FSTSP） | 497 / 407 / 318 / 276 | 508 / 407 / 334 / 295 | 100% |
+
+闸门的代价是几个百分点的 makespan，收益本身仍在（V3 K=1 在 N=8 从 52.4% → 53.0%、N=20 从 33.5% → 34.5%；W8 K=3 从 69.6% → 70.6%、54.0% → 51.2%），但它吃掉了"多一架无人机"的边际价值：K=1 → K=3 在 N=8/12/16/20 上从 42.1/42.2/27.2/22.3% 变成 41.3/42.4/18.6/17.1%（W8：46.6/40.8/32.6/21.2% → 49.4/39.1/23.0/15.9%），也就是 N ≥ 16 时少赚 5–10pp。所有返回的计划在闸门下都可行，而第 4 节里不感知能耗的已发表启发式只有 42–48% 可行。详见 `docs/weekly/drone_energy_note_zh.md` 第 4b 节。
+
 ## 6. 失败案例（13 条，1 条严格不可行）
 
 出处：`docs/reference/failure_cases_master.md`。最明显的一条：N=50 密集算例上**单机调度拒绝约 101 万次**，说明同步会合约束在大规模是主要瓶颈，与第 2、5 节的"规模越大收益越稀释"指向同一个边界。
@@ -294,6 +307,8 @@ K 从 1 增到 3 全面提升（N=50：29.5%→38.1%），并抬高规模衰减�
 | 无人机调度 | `drone_scheduling.py` | `week08_scheduling.csv` | — |
 | 原始 M&C 算例基准 | `week08_mc_benchmark.py` + `fstsp_mc.py` | `week08_mc_benchmark_raw.csv` | — |
 | V3（电动+无人机+TW） | `v3_ev_collab.py` | `v3_ev_collab_raw.csv` / `_summary.csv` | — |
+| 无人机能耗/载荷消融 | `drone_energy_ablation.py` + `drone_energy.py` | `drone_energy_raw.csv` / `_summary.csv` | `drone_energy.png` |
+| 主线上开能耗/载荷闸门 | `drone_energy_mainline.py` + `drone_energy.py` | `drone_energy_mainline_raw.csv` / `_summary.csv` | `drone_energy_mainline.png` |
 | 精确最优性 gap（CP-SAT） | `week08_exact_gap.py` + `cpsat_fstsp.py` | `week08_exact_gap_raw.csv` / `_summary.csv` | — |
 | 显著性检验 | `stat_tests.py` | `stat_tests.csv` | — |
 | Schneider 复现 | `schneider_evrptw.py` + `schneider_bks_compare.py` + `plot_schneider_routes.py` | `schneider_evrptw_baseline.csv` / `schneider_evrptw_bks_comparison.csv` | `schneider_routes.png` / `schneider_vehcomp.png` |

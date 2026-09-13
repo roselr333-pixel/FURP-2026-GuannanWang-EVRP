@@ -10,7 +10,12 @@ the collaborative model back onto the week06 EVRP-TW setting:
     may detour to a charging station for a full recharge (RECHARGE time units);
   - customers have time windows; arriving early means waiting, arriving late is
     counted as a violation;
-  - the drone still has a range limit and must be recovered by the truck.
+  - the drone keeps its range limit, and (with the energy/payload gates of
+    `drone_energy.py` switched on) also a payload capacity `P_MAX` and an
+    energy budget `E_D` whose consumption grows with the load still on board;
+    the truck must still recover the drone before the truck leaves the node.
+    The defaults `beta = 0`, `ed = R_D`, `p_max = inf` make the energy budget
+    exactly the old range limit, so the committed range-only run reproduces.
 
 The evaluator takes a truck route that lists CUSTOMERS ONLY (plus the depot
 bookends) and inserts the charging-station detours itself, so the same
@@ -34,6 +39,7 @@ import itertools
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import week06_ground_air_evrp_tw as w6
 import week08_lns as L
+import drone_energy as DE
 import sysinfo as SI
 
 V_T = w6.V_T
@@ -43,6 +49,14 @@ RECHARGE = w6.RECHARGE
 RHO = w6.RHO
 R_D = w6.R_D
 dist = w6.dist
+
+# Drone electric limits (see drone_energy.py). The defaults reproduce the
+# range-only model of the committed runs: ALPHA=1 with BETA=0 gives
+# energy = flight distance, which is compared against E_D = R_D.
+ALPHA = DE.ALPHA
+BETA = 0.0
+E_D = R_D
+P_MAX = float("inf")
 
 
 def _trip_flight(inst, ln, custs, rn):
@@ -110,7 +124,8 @@ def _greedy_assign(inst, path, arr, ts, K):
     return assign
 
 
-def ev_collab_k(inst, route, trips, K, assign=None, q=None):
+def ev_collab_k(inst, route, trips, K, assign=None, q=None,
+                alpha=ALPHA, beta=BETA, ed=E_D, p_max=P_MAX):
     """K-drone extension of ev_collab.
 
     A fixed truck route (customers only; charging detours inserted internally)
@@ -118,8 +133,14 @@ def ev_collab_k(inst, route, trips, K, assign=None, q=None):
     Every drone flies its own sorties in launch order; if a drone recovers after
     the truck reaches its recovery node, the truck waits.
 
+    alpha/beta/ed/p_max are the drone's energy model: a sortie's energy is
+    (alpha + beta x payload still on board) summed over its legs, and it must
+    stay within `ed`; `p_max` caps the demand carried in one sortie. The
+    defaults leave the energy budget equal to the range constant R_D and the
+    payload unrestricted, i.e. the range-only model.
+
     Returns dict(makespan, truck_makespan, drone_makespan, tw_viol, energy_inf,
-                 recharges, total_dist, assignment, offloaded)."""
+                 payload_inf, recharges, total_dist, assignment, offloaded)."""
     path, arr, recharges, truck_tw, energy_inf = _truck_timeline(inst, route, q)
     ts = sorted(trips, key=lambda tr: 0 if tr[0] == 0 else path.index(tr[0]))
     if assign is None:
@@ -128,13 +149,22 @@ def ev_collab_k(inst, route, trips, K, assign=None, q=None):
     drone_free = 0.0
     tw_viol = truck_tw
     offloaded = 0
+    payload_inf = False
     schedule_inf = False
     for idx, (ln, custs, rn) in enumerate(ts):
         d = assign[idx]
         i_pos = 0 if ln == 0 else path.index(ln)
         j_pos = len(path) - 1 if rn == 0 else path.index(rn)
         flight, fsum = _trip_flight(inst, ln, custs, rn)
+        cl = list(custs) if isinstance(custs, (list, tuple)) else [custs]
+        # the range constant is always a hard limit; the energy budget and the
+        # payload cap are the drone-electricity extension
         if fsum > R_D:
+            energy_inf = True
+        if DE.sortie_load(inst, cl) > p_max + 1e-9:
+            payload_inf = True
+            energy_inf = True
+        if DE.sortie_energy(inst, ln, cl, rn, alpha, beta) > ed + 1e-9:
             energy_inf = True
         # the launch node comes before the recovery node, and the drone assigned
         # to this sortie has to be back on the truck when it reaches the launch
@@ -170,6 +200,7 @@ def ev_collab_k(inst, route, trips, K, assign=None, q=None):
         "drone_makespan": drone_free,
         "tw_viol": tw_viol,
         "energy_inf": energy_inf,
+        "payload_inf": payload_inf,
         "schedule_inf": schedule_inf,
         "recharges": recharges,
         "total_dist": sum(dist(inst, path[k], path[k + 1])
@@ -179,37 +210,40 @@ def ev_collab_k(inst, route, trips, K, assign=None, q=None):
     }
 
 
-def ev_collab(inst, route, drone_trips, q=None):
+def ev_collab(inst, route, drone_trips, q=None, **kw):
     """Single-drone special case of ev_collab_k (backwards compatible)."""
-    return ev_collab_k(inst, route, drone_trips, 1, q=q)
+    return ev_collab_k(inst, route, drone_trips, 1, q=q, **kw)
 
 
 TW_PENALTY = 1000.0
 
 
-def ev_lns(inst, route, drone_trips):
+def ev_lns(inst, route, drone_trips, **kw):
     """Scalar objective for the LNS (single-drone): makespan, with
     energy-infeasible solutions rejected outright and time-window violations
     heavily penalised."""
-    r = ev_collab(inst, route, drone_trips)
+    r = ev_collab(inst, route, drone_trips, **kw)
     if r["energy_inf"] or r["schedule_inf"]:
         return float("inf")
     return r["makespan"] + TW_PENALTY * r["tw_viol"]
 
 
-def ev_lns_k(inst, route, trips, K, q=None):
+def ev_lns_k(inst, route, trips, K, q=None, **kw):
     """Scalar objective for the LNS on the K-drone model."""
-    r = ev_collab_k(inst, route, trips, K, q=q)
+    r = ev_collab_k(inst, route, trips, K, q=q, **kw)
     if r["energy_inf"] or r["schedule_inf"]:
         return float("inf")
     return r["makespan"] + TW_PENALTY * r["tw_viol"]
 
 
-def v3_greedy(inst, max_cust=2, rd=R_D, multi_takeoff=True):
+def v3_greedy(inst, max_cust=2, rd=R_D, multi_takeoff=True, **kw):
     """Route-and-reassign greedy on the EV + TW + drone model.
 
     max_cust      : customers per sortie (1-3)
     multi_takeoff : when False, a truck stop may serve at most one sortie
+    kw            : energy-model parameters forwarded to the evaluator
+                    (alpha/beta/ed/p_max), so the greedy only accepts sorties
+                    that satisfy the payload and energy limits it is run under
     """
     all_c = list(inst["customers"].keys())
     route = [0] + w6.nn_order(inst, all_c) + [0]
@@ -217,7 +251,7 @@ def v3_greedy(inst, max_cust=2, rd=R_D, multi_takeoff=True):
     offloaded = set()
     protected = set()     # launch/recovery nodes; may not be offloaded later
     blocked = set()       # only used when multi_takeoff is off
-    cur_obj = ev_lns(inst, route, trips)   # penalised objective (TW + energy)
+    cur_obj = ev_lns(inst, route, trips, **kw)   # penalised objective (TW + energy)
 
     def usable(node):
         return multi_takeoff or node not in blocked
@@ -270,7 +304,7 @@ def v3_greedy(inst, max_cust=2, rd=R_D, multi_takeoff=True):
                 for custs in subsets:
                     new_route = [x for x in route if x not in custs]
                     new_trips = trips + [(ln, custs, rn)]
-                    obj = ev_lns(inst, new_route, new_trips)
+                    obj = ev_lns(inst, new_route, new_trips, **kw)
                     if obj == float("inf"):
                         continue
                     gain = cur_obj - obj
@@ -287,7 +321,7 @@ def v3_greedy(inst, max_cust=2, rd=R_D, multi_takeoff=True):
         if not multi_takeoff:
             blocked.add(ln)
             blocked.add(rn)
-        cur_obj = ev_lns(inst, route, trips)
+        cur_obj = ev_lns(inst, route, trips, **kw)
     return route, trips, offloaded
 
 

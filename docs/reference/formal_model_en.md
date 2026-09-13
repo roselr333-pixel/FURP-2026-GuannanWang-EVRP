@@ -57,6 +57,10 @@ customer radius).
 | $\rho$ | truck energy per distance unit | 1.0 |
 | $Q$ | truck battery capacity | 250 |
 | $R$ | drone range per sortie | 160 |
+| $\alpha$ | drone energy per distance unit with no payload | 1.0 |
+| $\beta$ | extra drone energy per (distance unit x demand still on board) | 0 (range-only) / 0.02 (energy sweep) |
+| $E_D$ | drone energy budget per sortie | 160 |
+| $P_{\max}$ | demand carried in one sortie | unlimited (range-only) / 30 (energy sweep) |
 | $m$ | maximum customers per sortie | 1-3 (1-2 on the main line) |
 | $K$ | number of drones | 1 (main line); 1-5 (week-8 extension) |
 | $[e_i, l_i]$ | customer time window | width 220 synthetic, 35 for the tight-window cases |
@@ -143,8 +147,14 @@ cover the next leg, a **greedy charging policy** applies:
    $\text{energy\_inf} = \text{true}$ and treat the solution as infeasible.
 
 This repairs feasibility; it does not optimise which station to use. On the drone
-side only the per-sortie range is limited, and recovery resets it (battery-swap
-assumption).
+side the per-sortie range is limited, and recovery resets it (battery-swap
+assumption). With the energy/payload gates switched on (`drone_energy.py`; the
+`alpha`/`beta`/`ed`/`p_max` arguments of `v3_ev_collab.ev_collab_k` and
+`week07_fstsp_repro.fstsp_simulate[_multi]`), a sortie must additionally keep its
+payload within $P_{\max}$ and its energy
+$\sum_{\ell} (\alpha + \beta \cdot \text{payload on board}) \cdot d_{\ell}$
+within $E_D$; $\beta = 0$ with $E_D = R$ is exactly the range constraint, which is
+why that setting is the control row of the sweep.
 
 ### 6.4 Multi-objective extension
 
@@ -168,6 +178,8 @@ Implemented and reflected in the results:
 - per-sortie drone range, per-customer service time, rendezvous with truck waiting;
 - a single serial drone (no overlapping sorties), and explicit scheduling for $K$ drones;
 - multi-customer sorties (1-3 customers) and reuse of one stop for several sorties;
+- a payload capacity and a payload-dependent energy budget for the drone, as
+  optional gates on both the main-line (V3) and the K-drone (week-8) evaluators;
 - exact optima on small instances (CP-SAT, up to $n = 12$).
 
 Not modelled, or simplified:
@@ -179,7 +191,10 @@ Not modelled, or simplified:
   because one serial drone can only take ~10-20% of the demand off the truck, a
   much tighter cap stays infeasible (study: `week06_capacity_study.py`,
   `figures/capacity_binding.png`);
-- **no drone energy or payload model**: only the range $R$ limits a flight;
+- **the drone's energy/payload limits are off by default**: the committed main-line
+  numbers limit a sortie by the range $R$ only, and the payload cap / energy
+  budget are optional gates that the V3 and FSTSP evaluators accept
+  (`drone_energy_mainline.py` runs them at $\beta = 0.02$);
 - **recharging is not optimised**: the policy is fixed at "nearest station, full charge";
 - **time windows are not hard**: both the main line and V3 count violations;
 - **stations appear only in the week-6 and V3 instances**: FSTSP-mode instances have
