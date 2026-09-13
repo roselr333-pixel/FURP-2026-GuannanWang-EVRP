@@ -38,7 +38,7 @@
 | 官方 Solomon VRPTW | `src/instances/official_solomon/*.vrp` + `.sol`（BKS） | 56 个实例 | 三基线对比 |
 | 标准 Solomon 派生的 FSTSP 算例 | `fstsp_instances.make_solomon_fstsp(name, n, start)` | 4 族 × n = 10/20/30/50（W8）；4 族 × 3 顾客窗口 × n = 8/12/16/20（W7 消融） | 标准拓扑上的协同实验 |
 | Murray & Chu (2015) 原始 FSTSP 算例 | `src/instances/murray_chu_2015/` | 36 个 10 顾客实例（11 个带文献 OFV） | 论文原始算例对比 |
-| Schneider (2014) E-VRPTW | `src/instances/schneider_evrptw/`、`schneider_evrptw_original/` | 92 个实例（18 个有 BKS 可对照） | 侧线复现 |
+| Schneider (2014) E-VRPTW | `src/instances/schneider_evrptw/`、`schneider_evrptw_original/` | 92 个实例（18 个有 BKS 可对照） | 侧线复现；求解器 = 构造式贪心 + 局部搜索（`schneider_improve.py`） |
 
 合成算例的构造（`make_instance`）：仓库固定在原点 `(0,0)`；客户取极坐标，
 半径 `r ~ U[15, 30+4n]`、角度 `U[0, 2π)`；4 个充电站固定在 `(±45, 0)`、`(0, ±45)`；
@@ -87,6 +87,7 @@
 | GA | 种子 | 5 个：20260717 / 20260801 / 20260815 / 20260901 / 20261001，报表取均值 | 同上 |
 | PyVRP | 版本 | 0.14.0（`baseline_pyvrp_vrptw.py`） | 与官方 `.sol` BKS 对照 |
 | CP-SAT | 时间上限 / workers | 180 s / 8 | `week08_exact_gap.py`、`cpsat_fstsp.solve_exact` |
+| Schneider 局部搜索 | `improve` / `improve_moves` / `improve_budget` | True / 400 步 / 60 s | `schneider_evrptw.py` → `schneider_improve.improve_solution` |
 
 PyVRP 固定了 seed，重复运行结果一致；OR-Tools 用 `GUIDED_LOCAL_SEARCH` + 10 s 时间预算，该版本的 routing 参数不暴露随机种子，所以同一算例的搜索结果逐次有小幅浮动——56 实例的均值 gap 我实测在 7.2%~8.1% 之间，本仓库报单次结果并给出这个区间。GA 是唯一需要多种子的基线，报 5 种子均值 ± 标准差。
 

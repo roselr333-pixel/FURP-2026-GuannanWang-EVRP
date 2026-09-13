@@ -61,7 +61,7 @@ Every experiment I run speaks to this question.
 | Requirement | My status | Reading |
 |---|---|---|
 | Explain the four problem classes | CVRP / VRPTW / EVRP-TW / truck-drone all coded | met |
-| Reproduce a baseline | OR-Tools on Solomon 56 (56/56 feasible, avg gap 7.2%) + self-written GA (5-seed check, avg gap 36.6%±15.8%) + **reproduced Murray & Chu 2015 FSTSP heuristic** | met; Schneider 2014 still pending |
+| Reproduce a baseline | OR-Tools on Solomon 56 (56/56 feasible, avg gap 7.2%) + self-written GA (5-seed check, avg gap 36.6%±15.8%) + **reproduced Murray & Chu 2015 FSTSP heuristic** + **reproduced Schneider 2014 E-VRPTW** (18 BKS instances, mean distance gap down to +21.3%) | met; only the Schneider reading note is still pending |
 | Report objective/feasibility/violations/time | all scripts emit these fields | met; GA now has a 5-seed check |
 | Diagnose infeasibility/inefficiency | FC1–FC4 constraint-level failure table | met |
 | One focused improvement | truck-drone multi-customer extension (V2), 8.5–22.3% shorter than published baseline | met |
@@ -96,7 +96,7 @@ Ordered by grading impact and by how readily each can be closed, in four groups.
 ### 3.1 Highest impact, do first
 
 1. **W8 deliverables are entirely missing (30% of grade)**: final report, 5–8 minute demo video, slides, and reproducibility package are not started. This is the single largest gap; I should build the skeleton now rather than wait for week 8.
-2. **Schneider 2014 (E-VRPTW) reproduction still pending**: I currently have only one published baseline (M&C 2015, truck-drone). Adding Schneider 2014 would stand up a published baseline on the EV-TW axis too, making the "improvement vs baseline" story hold on both sides.
+2. ~~**Schneider 2014 (E-VRPTW) reproduction still pending**~~ ✅ **Delivered**: `schneider_evrptw.py` (+ `schneider_improve.py`) solves the 92 original instances with a constructive greedy plus local search and compares 18 of them against the published BKS — mean distance gap **+21.3%** (was +52.7% for the construction alone), vehicles 3.28 vs 2.06. Details in `docs/baselines/schneider_evrptw_replication_en.md`. Only the reading note (no PDF access) is still missing.
 
 ### 3.2 Metric and rigor gaps
 
@@ -190,7 +190,7 @@ Notes:
 ## 4. What I will do next, in priority order
 
 - **P0 (this week)**: ① build the W8 skeleton — final-report framework + slide outline + demo-video script (even if empty at first); ② git commit/push the current files.
-- **P1**: reproduce Schneider 2014 (E-VRPTW) as a second published baseline (the GA multi-seed check is done, see §3.2-supplement).
+- **P1** ✅: reproduced Schneider 2014 (E-VRPTW) as a second published baseline — 92 instances, 18 with published BKS, mean distance gap +21.3% after the local search.
 - **P2**: write a centralized config/parameters document; assemble the EVRP-TW charging breakdown and the W3/W4 weak results into one failure table; add a "reproducible by others" README.
 - **P3**: scale instance sizes (medium/large) + add local search or MILP bounds; raise the per-flight customer cap.
 
@@ -198,6 +198,6 @@ Notes:
 
 ## 5. Summary
 
-As of 2026-07-24, the main line (Ground-air collaborative EVRP-TW) has come together end to end: from baselines (pure-truck EV, OR-Tools, the published FSTSP heuristic) to the improvement (multi-customer + multi-takeoff V2) to a controlled ablation — the evidence chain is complete and reproducible. The two things still genuinely missing are **packaging the work into W8 deliverables** and **adding a second published baseline on the EV-TW side (Schneider 2014)**. Once those are closed, the four grading dimensions can each rest on a concrete deliverable.
+The main line (Ground-air collaborative EVRP-TW) has come together end to end: from baselines (pure-truck EV, OR-Tools, the published FSTSP heuristic) to the improvement (multi-customer + multi-takeoff V2) to a controlled ablation — the evidence chain is complete and reproducible. The two things still genuinely missing are **packaging the work into W8 deliverables** and **finishing the Schneider (2014) reading note** (the reproduction itself is now in place). Once those are closed, the four grading dimensions can each rest on a concrete deliverable.
 
 Related files: `src/experiments/` (weekly scripts), `src/results/` (per-instance and aggregated CSVs), `docs/` (weekly reports and notes), `learning_guide/papers/` (reading notes).

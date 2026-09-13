@@ -33,14 +33,14 @@
   instances are public data and the model is fully defined by the parameters at the bottom of each
   file, so replication does not depend on the PDF.
 
-## 3. Method (own constructive greedy + multi-trip fleet)
+## 3. Method (constructive greedy + local search)
 
 `src/experiments/schneider_evrptw.py`: a homogeneous fleet is modelled with **multi-trip** — one truck
 may serve several routes, returning to the depot to reload and (if needed) fully recharge between trips,
 matching Schneider (2014)'s fleet setting. Each trip greedily inserts the **nearest feasible customer**
 in earliest-deadline order (capacity / time-window / battery all feasible; if the battery is low it
 detours via the nearest station for a full recharge). Objective follows Schneider's hierarchy: minimise
-vehicles first, then total distance.
+vehicles first, then total distance. When `improve=True` (the default) the construction is then refined by `schneider_improve.py`: every trip is re-checked and repaired with the cheapest feasible station, whole trips may move between vehicles or merge, and customers may be relocated or swapped — a move is accepted only when the hierarchical objective improves.
 
 **Note:** multi-trip is switched on in the model, but the constructive greedy still **cannot
 assign customers to multi-trip vehicles globally** — later trips depart too late and miss early time
@@ -58,49 +58,64 @@ the **heuristic itself**, not a modeling omission.
     in jmanzolli/E-VRPTW;
   - `_21` large instances (100 customers): taken from Adachi et al. (2022, IEICE NOLTA), who cite
     Schneider (2014) for the BKS table.
-- **Solve time:** < 0.02 s per instance (slowest rc201_21 ≈ 0.01 s) on a 20-core machine. The
-  constructive heuristic's compute cost is negligible; the gap is algorithmic quality, not compute.
+- **Solve time:** the construction is < 0.02 s per instance; the added local search costs ~7-16 s
+  on the 100-customer instances (it converges; a per-instance budget caps it), so a full 92-instance
+  run takes ~14 min. The gap is algorithmic quality, not compute.
 
 ## 5. Gap to BKS (attribution)
 
-Across the 18 comparison instances (all fully served) the mean distance gap is **+50.7%** (absolute
-mean; signed mean +50.1%). The solver is deterministic as of 2026-09-10 (unassigned customers iterated
-in sorted ID order), so these numbers reproduce exactly on re-run. Breakdown:
+**Headline: mean distance gap +21.3%** across the 18 comparison instances (all fully served;
+vehicles 3.28 vs 2.06 BKS), down from **+52.7%** for the construction alone. Three instances
+(`c208C5`, `r105C5`, `rc208C5`) now match the BKS exactly.
+
+| stage | mean abs distance gap | mean vehicles (BKS 2.06) |
+|---|---:|---:|
+| constructive greedy (depot horizon enforced) | +52.7% | 5.44 |
+| + local search (trip move/merge, relocate/swap, 2-opt) | **+21.3%** | **3.28** |
+
+The solver is deterministic (the unassigned-customer set is iterated in sorted ID order), so every
+number here reproduces exactly on re-run. Remaining breakdown:
 
 | Set | Distance gap (mean) | Vehicles (mine vs BKS) |
 |---|---|---|
-| C5 small (5 customers) | **≈ +21%** (range −4.4% ~ +45.8%) | 0–2 more |
-| `_21` large (100 customers) | **+54% ~ +239%** | 5–12 more |
+| C5 small (5 customers) | **+10.1%** (range 0.0% to +27.1%) | 0-1 more |
+| `_21` large (100 customers) | **+43.6%** (range +15.5% to +97.2%) | 2-4 more |
 
-Why the gap exists (stated plainly, no overclaiming):
+Why the remaining gap exists (stated plainly, no overclaiming):
 
-1. **Vehicle count not minimized (dominant).** Schneider's primary objective is minimizing vehicles,
-   and its vehicles may run **multiple trips** (one dispatch, several routes); the constructive greedy
-   cannot arrange multi-trips globally, so it uses many more vehicles, which directly inflates total
-   distance. E.g. `c201_21`: mine 16 vs BKS 4; `rc201_21`: 15 vs 4; `r201_21`: 14 vs 3.
-   Most of the large-instance distance gap comes from here, not from route geometry.
-2. **Simple heuristic.** Nearest-feasible insertion; route geometry is suboptimal, assignment fragmented.
-3. **Distance metric.** I use raw Euclidean distance; the paper may truncate to 1 decimal — difference
-   < 0.1%, negligible.
-4. **On `c103C5` my distance being slightly below BKS:** not a different instance (verified identical),
-   but under Schneider's hierarchical objective the BKS chooses **fewer vehicles (m=1) and accepts a
-   slightly higher distance (176.05)**; my 2-vehicle solution is 175.4 (slightly shorter) but uses more
-   vehicles, so by the paper's objective mine is worse — as expected.
+1. **Fleet packing is still the dominant residual.** Schneider minimises vehicles first and its
+   vehicles run several trips. My construction opens one vehicle per trip; the local search takes the
+   large instances from 14-16 vehicles down to 5-9, but the BKS uses 3-4, and every extra vehicle adds
+   a depot round-trip (`c201_21`: 6 vs 4; `c206_21`: 8 vs 4; `r201_21`: 9 vs 3).
+2. **The local search is a hill climber.** Trip move/merge plus customer relocate/swap plus 2-opt with
+   a strict acceptance rule; a ruin-and-recreate (ALNS) layer is the natural next step.
+3. **The charging policy is still "nearest station, full charge".** Partial recharging buys *time*,
+   which is what limits how many trips a vehicle can chain; it is the natural next lever for the
+   residual vehicle gap (it does not change distance directly).
+
+**A modelling bug found on the way.** The depot's own closing time was checked only when a trip was
+appended to an existing vehicle, never for the first trip of a new vehicle, so 3 of the 18 instances
+(`c103C5`, `r201_21`, `rc201_21`) returned to the depot after it had closed. The horizon is now
+enforced for every trip: `build_trip` rejects any customer whose return would break it. That made the
+constructive baseline slightly worse (+50.7% to +52.7%) but physically valid; the local search then
+recovers far more than it lost.
 
 ## 6. Limitations and planned tasks
 
-- RC1 tight time windows leave 1 customer unserved; closing that would need heavier insertion search or ALNS.
-- **Multi-trip is modelled, but global vehicle-count minimization (assigning customers to a multi-trip
-  fleet) is not implemented** — the key lever for closing the gap to BKS; I have left it as a later extension (this is
-  exactly what peers Ziqi / Frank do with ALNS / metaheuristics).
-- Constructive heuristic only; no exact lower bound (MILP). Computing one is a separate contribution,
-  outside this project's scope.
+- **All comparison instances are fully served** (18/18 here, and no unserved customers in the
+  92-instance baseline run) after the horizon fix.
+- **Global fleet packing is still not solved**: the local search merges and moves trips, but the
+  construction decides the initial fleet, so the 100-customer instances keep 2-4 vehicles more than
+  the BKS. The next levers are (i) partial recharging (it buys time, not distance) and (ii) an ALNS /
+  ruin-and-recreate layer over a trip pool.
+- No exact lower bound (MILP); computing one is a separate contribution, outside this project's scope.
 
 ## 7. Artifacts
 
-- `src/experiments/schneider_evrptw.py` — instance parser + constructive solver
-- `src/results/schneider_evrptw_baseline.csv` — 92-instance baseline (vehicles / distance / unserved)
-- `src/experiments/schneider_bks_compare.py` — BKS comparison script
+- `src/experiments/schneider_evrptw.py` — instance parser + constructive solver + the call into the local search
+- `src/experiments/schneider_improve.py` — local search: station repair, trip move/merge, customer relocate/swap, 2-opt
+- `src/results/schneider_evrptw_baseline.csv` — 92-instance baseline (vehicles / distance / unserved, plus the constructive stage for the before/after)
+- `src/experiments/schneider_bks_compare.py` — BKS comparison script (reports both stages)
 - `src/results/schneider_evrptw_bks_comparison.csv` — 18-instance benchmark table
 - `instances/schneider_evrptw/` — instances (public mirror)
 - `instances/schneider_evrptw_original/` — instances used to verify against jmanzolli originals

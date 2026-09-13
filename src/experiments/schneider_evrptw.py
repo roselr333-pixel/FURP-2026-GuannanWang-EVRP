@@ -16,8 +16,11 @@ Provenance notes (verified 2026-09-10):
 - Recharge-time convention: time to recharge from soc to full = (Q - soc) * g (mirror parameter `g`).
 """
 import os, re, glob, csv, math, time
+import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, HERE)
+import schneider_improve as SI   # local search on top of the constructive route
 INST_DIR = os.path.join(HERE, "..", "..", "instances", "schneider_evrptw")
 
 def parse_instance(path):
@@ -54,12 +57,17 @@ def parse_instance(path):
 def dist(a, b):
     return math.hypot(a["x"] - b["x"], a["y"] - b["y"])
 
-def solve(inst, seed=0, multitrip=True, trip_cap=8, max_cust=None):
-    """Constructive greedy for E-VRPTW.
+def solve(inst, seed=0, multitrip=True, trip_cap=8, max_cust=None,
+          improve=True, improve_moves=400, improve_budget=60.0):
+    """Constructive greedy for E-VRPTW, followed by local search.
 
     multitrip=True  -> homogeneous fleet, multi-trip vehicles, MIN vehicles then MIN distance.
     multitrip=False -> legacy single-trip-per-vehicle mode (one route == one vehicle).
-    Feasibility: capacity, time windows (waiting allowed), battery with full recharge at stations.
+    improve=True    -> `schneider_improve.improve_solution` then moves whole trips
+                       between vehicles, merges trips, relocates/swaps customers and
+                       applies 2-opt, under the same hierarchical objective.
+    Feasibility: capacity, time windows (waiting allowed), battery with full recharge
+    at stations, and the depot closing time (the horizon).
     """
     P = inst["params"]
     C = P.get("C", 200.0)          # load capacity
@@ -90,8 +98,14 @@ def solve(inst, seed=0, multitrip=True, trip_cap=8, max_cust=None):
                 return Q - dw * r, t2 + dw / v, st
         return None
 
-    def build_trip(unassigned, depart_t, max_cust=None):
-        """Build one closed route from depot at given departure time. Return (route_ids, served_ids, duration)."""
+    def build_trip(unassigned, depart_t, max_cust=None, horizon=None):
+        """Build one closed route from depot at given departure time.
+
+        When `horizon` (the depot closing time) is given, no customer is added if
+        the trip would return to the depot after it — otherwise a vehicle could
+        be sent out on a trip that violates the depot's own time window.
+        Return (route_ids, served_ids, duration).
+        """
         route = [depot["id"]]
         load = 0.0; soc = Q; t = depart_t; cur = depot
         served = []
@@ -113,6 +127,8 @@ def solve(inst, seed=0, multitrip=True, trip_cap=8, max_cust=None):
                 t_after = start + c["serv"]
                 back = leg_ok(c, depot, nsoc, t_after)
                 if back is None:
+                    continue
+                if horizon is not None and back[1] > horizon + 1e-9:
                     continue
                 key = dist(cur, c)
                 if best is None or key < best_key:
@@ -141,7 +157,8 @@ def solve(inst, seed=0, multitrip=True, trip_cap=8, max_cust=None):
             for veh in vehicles:
                 if len(veh["trips"]) >= trip_cap:
                     continue
-                route, served, dur = build_trip(unassigned, veh["clock"], max_cust)
+                route, served, dur = build_trip(unassigned, veh["clock"],
+                                                max_cust, horizon)
                 if served and veh["clock"] + dur <= horizon + 1e-9:
                     candidates.append((veh, route, served, dur))
             if candidates:
@@ -153,7 +170,7 @@ def solve(inst, seed=0, multitrip=True, trip_cap=8, max_cust=None):
                     unassigned.discard(cid)
                 placed = True
         if not placed:
-            route, served, dur = build_trip(unassigned, 0.0, max_cust)
+            route, served, dur = build_trip(unassigned, 0.0, max_cust, horizon)
             if not served:
                 unserved = len(unassigned)
                 break
@@ -174,9 +191,32 @@ def solve(inst, seed=0, multitrip=True, trip_cap=8, max_cust=None):
             for i in range(len(rt) - 1):
                 total += dist(node_by_id[rt[i]], node_by_id[rt[i + 1]])
     vehicle_routes = [list(v["trips"]) for v in vehicles]
-    return dict(vehicles=len(vehicles), trips=n_trips, distance=round(total, 2),
-                n_customers=len(custs), n_stations=len(stations), unserved=unserved,
-                routes=vehicle_routes, node_by_id=node_by_id)
+    cons_vehicles, cons_trips, cons_distance = len(vehicles), n_trips, total
+
+    if improve and vehicle_routes:
+        veh = [{"clock": 0.0, "trips": [list(rt) for rt in v]}
+               for v in vehicle_routes]
+        veh, info = SI.improve_solution(inst, veh, max_moves=improve_moves,
+                                        time_budget=improve_budget)
+        if info["after"] is not None and info["after"] < (cons_vehicles,
+                                                          cons_distance):
+            vehicle_routes = [list(v["trips"]) for v in veh]
+            total = 0.0
+            n_trips = 0
+            for rt in [t for v in vehicle_routes for t in v]:
+                n_trips += 1
+                for i in range(len(rt) - 1):
+                    total += dist(node_by_id[rt[i]], node_by_id[rt[i + 1]])
+
+    return dict(vehicles=len(vehicle_routes), trips=n_trips,
+                distance=round(total, 2),
+                n_customers=len(custs), n_stations=len(stations),
+                unserved=unserved, routes=vehicle_routes,
+                node_by_id=node_by_id,
+                constructive_vehicles=cons_vehicles,
+                constructive_trips=cons_trips,
+                constructive_distance=round(cons_distance, 2),
+                improved=bool(improve))
 
 def main():
     files = sorted(glob.glob(os.path.join(INST_DIR, "*.txt")))
@@ -196,14 +236,18 @@ def main():
             continue
         rows.append([inst["name"], res["n_customers"], res["n_stations"],
                      res["vehicles"], res["trips"], res["distance"],
-                     round(elapsed, 3), res.get("unserved", 0)])
+                     round(elapsed, 3), res.get("unserved", 0),
+                     res.get("constructive_vehicles", res["vehicles"]),
+                     res.get("constructive_distance", res["distance"])])
         print(f"{inst['name']:12s} cust={res['n_customers']:3d} stn={res['n_stations']:2d} "
-              f"veh={res['vehicles']:3d} trips={res['trips']:3d} dist={res['distance']:8.1f} "
-              f"t={elapsed:5.2f}s unserved={res.get('unserved',0)}")
+              f"veh={res['vehicles']:3d} (was {res.get('constructive_vehicles', 0):3d}) "
+              f"dist={res['distance']:8.1f} (was {res.get('constructive_distance', 0):8.1f}) "
+              f"t={elapsed:6.2f}s unserved={res.get('unserved',0)}")
     with open(out, "w", newline="", encoding="utf-8") as f:
         w = csv.writer(f)
         w.writerow(["instance", "n_customers", "n_stations", "vehicles", "trips",
-                    "total_distance", "solve_time_s", "unserved"])
+                    "total_distance", "solve_time_s", "unserved",
+                    "constructive_vehicles", "constructive_distance"])
         w.writerows(rows)
     print(f"\nwrote {out} ({len(rows)} rows)")
 

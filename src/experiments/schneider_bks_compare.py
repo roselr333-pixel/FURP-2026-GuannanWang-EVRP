@@ -38,25 +38,40 @@ with open(BASE, encoding="utf-8") as f:
         my_v = int(row["vehicles"]); my_d = float(row["total_distance"])
         my_t = int(row["trips"]); uns = int(row["unserved"])
         my_time = float(row.get("solve_time_s", 0.0))
+        cons_v = int(row.get("constructive_vehicles", my_v) or my_v)
+        cons_d = float(row.get("constructive_distance", my_d) or my_d)
         bk_v, bk_d = BKS[name]
         dgap = 100 * (my_d - bk_d) / bk_d
+        cons_gap = 100 * (cons_d - bk_d) / bk_d
         rows.append([name, row["n_customers"], row["n_stations"], my_v, my_t,
                      round(my_d, 2), round(my_time, 3), bk_v, bk_d, round(dgap, 1),
-                     my_v - bk_v, uns, SRC[name]])
+                     my_v - bk_v, uns, SRC[name], cons_v, round(cons_d, 2),
+                     round(cons_gap, 1)])
 
 with open(OUT, "w", newline="", encoding="utf-8") as f:
     w = csv.writer(f)
-    w.writerow(["instance", "n_customers", "n_stations", "my_vehicles", "my_trips",
-                "my_distance", "my_solve_time_s", "bks_vehicles", "bks_distance",
-                "dist_gap_pct", "vehicle_gap", "unserved", "bks_source"])
+    w.writerow(["instance", "n_customers", "n_stations", "my_vehicles",
+                "my_trips", "my_distance", "my_solve_time_s", "bks_vehicles",
+                "bks_distance", "dist_gap_pct", "vehicle_gap", "unserved",
+                "bks_source", "constructive_vehicles", "constructive_distance",
+                "constructive_gap_pct"])
     w.writerows(rows)
 
 served = [r for r in rows if r[11] == 0]
 print(f"wrote {OUT} ({len(rows)} rows; fully served {len(served)}/{len(rows)})")
 if served:
     gaps = [r[9] for r in served]
+    cons_gaps = [r[15] for r in served]
     print(f"mean |dist gap| % (fully served): {round(statistics.mean(abs(g) for g in gaps),1)}")
     print(f"mean  dist gap % (fully served): {round(statistics.mean(gaps),1)}")
+    print(f"constructive baseline  |gap| = "
+          f"{round(statistics.mean(abs(g) for g in cons_gaps),1)}%  "
+          f"(vehicles {round(statistics.mean(r[13] for r in served),2)} vs "
+          f"{round(statistics.mean(r[7] for r in served),2)} BKS)")
+    print(f"after local search     |gap| = "
+          f"{round(statistics.mean(abs(g) for g in gaps),1)}%  "
+          f"(vehicles {round(statistics.mean(r[3] for r in served),2)} vs "
+          f"{round(statistics.mean(r[7] for r in served),2)} BKS)")
 for r in rows:
     print(f"{r[0]:10s} my({r[3]:2d}v/{r[4]:2d}t,{r[5]:7.1f},t={r[6]:.2f}s) "
           f"bks({r[7]}v,{r[8]:7.1f}) dgap={r[9]:+5.1f}% vgap={r[10]:+d} uns={r[11]}")

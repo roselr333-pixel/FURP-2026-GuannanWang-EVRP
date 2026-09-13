@@ -104,7 +104,7 @@ Key documents:
 | LNS vs greedy V2 | +12.5–21.3%, paired Wilcoxon p = 1.7×10⁻¹⁰ |
 | Distance from the exact optimum (CP-SAT, small n) | n=8 proven optimal: greedy +31.2%, LNS +16.5% |
 | Murray & Chu (2015) replication | V2 10.2–14.2% shorter; c1K1 LNS / published OFV = 0.924 |
-| Schneider (2014) replication | distance +50.7% vs BKS, mean vehicles 5.4 vs 2.1 |
+| Schneider (2014) replication | distance +21.3% vs BKS after local search (+52.7% constructive), mean vehicles 3.3 vs 2.1 |
 | Multi-drone (standard instances) | K=1→5 raises the gain to 46.8–71.4% |
 | Drone scheduling | naive rule provably optimal on 64/64 configs |
 | V3 (EV + TW + drone) | vs truck-only EV: K=1 33.5–52.4% shorter, K=3 up to 72.5% |
@@ -155,7 +155,7 @@ experiments that produce their CSVs. Numbers, sources and caveats for all of the
 | `figures/exact_gap.png` | How far is the heuristic from the exact optimum? | n=8 (proven optimal): greedy +31.2%, LNS +16.5% | `src/tools/plot_exact_gap.py` |
 | `figures/std_instances.png` | Do the synthetic conclusions transfer to standard instances? | Schneider (2014) data: gain 41.0–54.8% vs 24.8–34.5% synthetic, late customers 17.0→7.7 at N=20; the paper's own C=200 binds the single truck from N=12 | `src/tools/gen_std_instances_figure.py` |
 | `figures/capacity_binding.png` | Is the declared truck capacity binding? | free for N≤50 at CAP=1000; binds on 1/5 of the N=100 instances, where V0/V1/V2 all become infeasible | `src/tools/gen_capacity_figure.py` |
-| `figures/schneider_routes.png`, `figures/schneider_vehcomp.png` | How close is my EVRP-TW to Schneider (2014)? | 18/18 fully served, distance +50.7%, 5.4 vs 2.1 vehicles (multi-trip is why) | `src/tools/plot_schneider_routes.py` |
+| `figures/schneider_routes.png`, `figures/schneider_vehcomp.png` | How close is my EVRP-TW to Schneider (2014)? | 18/18 fully served, distance +21.3% after local search (was +52.7% constructive), 3.3 vs 2.1 vehicles | `src/tools/plot_schneider_routes.py` |
 | `src/results/week01_routes.png` | Week-1 smoke test | 5-customer VRPTW, both phases feasible | `week01_baseline.py` |
 | `src/results/week03_route_n20_vrptw_improved.png` | Week-3 fair comparison | 2-opt: 682→616 (−9.7%) at n=40 | `week03_experiment.py` |
 

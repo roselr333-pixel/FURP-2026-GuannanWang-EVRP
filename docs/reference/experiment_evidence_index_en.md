@@ -145,14 +145,14 @@ Source: `docs/reference/failure_cases_master.md`. The most telling: on N=50 dens
 
 ---
 
-## 7. Schneider (2014) E-VRPTW replication (my constructive-greedy vs BKS)
+## 7. Schneider (2014) E-VRPTW replication (constructive greedy + local search vs BKS)
 
 Source: `src/results/schneider_evrptw_baseline.csv` (my solver, 92 instances) and
 `src/results/schneider_evrptw_bks_comparison.csv` (18 instances with BKS: 5-customer C5 set from
 jmanzolli/E-VRPTW citing Schneider 2014; 100-customer _21 set from Adachi et al. 2022 citing
 Schneider 2014). My solver is a constructive greedy with a homogeneous multi-trip fleet
 (MIN vehicles then MIN distance), feasibility-checked on capacity + time windows (waiting allowed)
-+ full recharge at stations. Figures: `figures/schneider_routes.png` (route maps for 4
++ full recharge at stations; the construction is then refined by `schneider_improve.py` (cheapest-station repair, trip move/merge, customer relocate/swap, 2-opt) under the same hierarchy. Figures: `figures/schneider_routes.png` (route maps for 4
 representative instances with BKS distance & vehicle gap annotated per panel),
 `figures/schneider_vehcomp.png` (vehicle count, mine vs BKS across 18 instances).
 
@@ -165,12 +165,14 @@ is iterated in sorted ID order, removing Python's per-process hash randomisation
 below reproduces exactly on re-run.
 
 Aggregate (18 instances with BKS):
-- Mean distance gap vs BKS: **+50.7%** (absolute mean; signed mean +50.1%; my constructive greedy
-  vs Schneider/Adachi BKS).
-- Mean vehicle count: mine **5.4** vs BKS **2.1** (gap **+3.4**; the gap is largest on the
-  100-customer _21 set — max vehicle gap +12 on c201_21 — where ALNS-grade methods are needed to
-  consolidate customers into BKS's few vehicles; my greedy cannot globally assign customers to
-  multi-trip vehicles because later trips depart too late to catch early time windows).
+- Mean distance gap vs BKS: **+21.3%** (absolute mean) after the local search, down from **+52.7%**
+  for the construction alone; three instances (c208C5, r105C5, rc208C5) match the BKS exactly.
+- Mean vehicle count: mine **3.28** vs BKS **2.06** (was 5.44). The residual gap is concentrated on
+  the 100-customer _21 set (mean +43.6%, max +97.2% on c201_21 with 6 vs 4 vehicles): fleet packing,
+  not route geometry, is what is left.
+- A modelling bug found while adding the search: the depot closing time was unchecked for the first
+  trip of a new vehicle (3 of the 18 instances returned after the depot closed). It is now enforced
+  for every trip, which moved the constructive baseline from +50.7% to +52.7%.
 - A few C5 wins: c103C5 −0.4%, r105C5 −4.4% (my greedy is competitive on a couple of
   small/loose-time-window instances; the heavy losses are on 100-customer + tight-TW instances).
 
