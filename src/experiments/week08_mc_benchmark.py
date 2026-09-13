@@ -54,7 +54,7 @@ def main():
                 gr, gt = M.mc_greedy(inst, K=K, max_cust=mc)
                 g = M.mc_simulate(inst, gr, gt, inst["tau"],
                                   inst["tauprime"], K)
-                lr, lt, l = M.mc_lns(inst, K=K, max_cust=mc, iters=ITERS,
+                _lr, lt, l = M.mc_lns(inst, K=K, max_cust=mc, iters=ITERS,
                                      seed=SEED)
                 tag = f"c{mc}K{K}"
                 row[f"{tag}_greedy"] = round(g, 2)

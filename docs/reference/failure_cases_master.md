@@ -207,7 +207,7 @@
 | 可行 | 否（物理上）——但评估器返回有限 makespan |
 | 违反约束 | **物理**：与 FC-7-3/7-4 同一类缺陷但成因不同。`ev_collab_k` 已经按 `avail[d]` 串行分配，却**不检查发射时分配到的无人机是否已经回到卡车**：`launch = max(arr[i_pos], avail[d])` 把发射推迟到无人机空闲，而卡车早已离开那个节点；同时贪心的候选枚举也不要求架次区间互不重叠 |
 | 从哪一步开始不可行 | 评估与搜索：发射时刻被推迟而不是判不可行；候选接受时也不检查区间重叠 |
-| 下一步怎么修 | **已修**：`ev_collab_k` 在 `avail[d] > arr[i_pos]`（或回收点早于发射点）时返回 `schedule_inf` 并把 makespan 置为 `inf`，`ev_lns` / `ev_lns_k` 把不可行解当 `inf` 拒绝；`v3_greedy` 增加架次区间不重叠的预筛。`week05_truck_drone_v2.simulate`、`fstsp_mc.mc_simulate`、`drone_scheduling.simulate` 也补上了同一条检查。V3 主实验与 V3 消融已重跑（单架 LNS 降幅 33.5%~52.4%，V3g 16.3%~39.2%）。回归测试见 `tests/test_evaluators.py::test_v3_rejects_overlapping_sorties` 与 `::test_v3_greedy_produces_a_feasible_schedule`。 |
+| 下一步怎么修 | **已修**：`ev_collab_k` 在 `avail[d] > arr[i_pos]`（或回收点早于发射点）时返回 `schedule_inf` 并把 makespan 置为 `inf`，`ev_lns` / `ev_lns_k` 把不可行解当 `inf` 拒绝；`v3_greedy` 增加架次区间不重叠的预筛。`week05_truck_drone_v2.simulate`、`fstsp_mc.mc_simulate`、`drone_scheduling.simulate` 也补上了同一条检查。V3 主实验与 V3 消融已重跑（单架 LNS 降幅 33.5%~52.4%，V3g 16.3%~39.2%）。回归测试见 `tests/test_evaluators.py::test_v3_rejects_overlapping_sorties` 与 `::test_v3_greedy_produces_a_feasible_schedule`；W5 与 M&C 的对应测试在 `tests/test_truck_drone.py`（架次重叠、晚到等待、v1/v2 基线一致、矩阵评估器与坐标评估器逐计划一致）。 |
 
 ---
 

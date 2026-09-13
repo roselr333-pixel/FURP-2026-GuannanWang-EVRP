@@ -166,6 +166,6 @@ at N=20).
 - Round 2 regression tests: `tests/test_evaluators.py::test_w6_evaluator_rejects_overlapping_sorties`, `::test_w6_evaluator_rejects_out_of_range_sortie`, `::test_w6_truck_waits_for_a_late_drone`, `::test_w6_evaluator_matches_shared_fstsp_evaluator`, `::test_w6_collaborative_plan_is_physically_executable`
 - Round 2 re-run logs and CSVs: `src/results/week06_ground_air_*`, `week06_largeN_*`, `stat_tests*`
 - Round 3 change: `src/experiments/v3_ev_collab.py` (`schedule_inf` in `ev_collab_k` + the interval pre-filter in `v3_greedy`), `week05_truck_drone_v2.py`, `fstsp_mc.py`, `drone_scheduling.py`
-- Round 3 regression tests: `tests/test_evaluators.py::test_v3_rejects_overlapping_sorties`, `::test_v3_greedy_produces_a_feasible_schedule`
+- Round 3 regression tests: `tests/test_evaluators.py::test_v3_rejects_overlapping_sorties`, `::test_v3_greedy_produces_a_feasible_schedule`, plus `tests/test_truck_drone.py` for the W5 and M&C evaluators (`::test_v2_rejects_sortie_that_launches_while_drone_is_airborne`, `::test_v2_truck_waits_for_a_late_drone`, `::test_mc_rejects_sortie_that_launches_while_drone_is_airborne`, `::test_mc_evaluator_matches_shared_fstsp_evaluator_on_random_plans`, `::test_depot_only_baseline_agrees_across_week05_scripts`)
 - Failure case: FC-7-5 in `docs/reference/failure_cases_master.md`
 - Round 3 re-run logs and CSVs: `src/results/v3_ev_collab_*`, `v3_ablation_*`, `week05_truck_drone_v2_output.txt`

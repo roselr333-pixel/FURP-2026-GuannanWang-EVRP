@@ -23,7 +23,7 @@ PY = os.environ.get("PYTHON", sys.executable)
 
 # (label, script filename, note)
 STEPS = [
-    ("OR-Tools vs BKS (56 Solomon)",        "benchmark_official_solomon.py",  "7.2% mean gap; deterministic"),
+    ("OR-Tools vs BKS (56 Solomon)",        "benchmark_official_solomon.py",  "7.2-8.1% mean gap; time-budgeted GLS search"),
     ("PyVRP vs BKS (56 Solomon)",           "baseline_pyvrp_vrptw.py",        "-3.0% mean gap; deterministic"),
     ("Self-written GA vs BKS (56)",         "baseline_ga_vrptw.py",           "LONG ~70-90 min, 5 seeds"),
     ("3-baseline consolidation",            "baseline_consolidated.py",       "reads the 3 CSVs above"),

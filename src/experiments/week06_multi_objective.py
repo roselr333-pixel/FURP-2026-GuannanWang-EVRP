@@ -160,7 +160,7 @@ def main():
         rows.append((s, "V1_truck", None, round(d1, 1), round(m1, 1),
                      round(e1, 1), 0))
         for w in WS:
-            route, trips, off = my_v2_weighted(inst, w)
+            route, trips, _off = my_v2_weighted(inst, w)
             d, m, e, nt = metrics(inst, route, trips)
             v2_cloud.append((d, m))
             rows.append((s, "V2_weighted", w, round(d, 1), round(m, 1),

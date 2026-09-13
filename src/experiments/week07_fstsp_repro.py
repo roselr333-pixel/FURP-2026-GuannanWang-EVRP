@@ -443,7 +443,7 @@ def main():
 
             # --- 2-opt post-processor on top of V2 (§3.3-②) ---
             t0 = time.perf_counter()
-            my2_route, my2_trips, my2_off, mk_my_ls, n_ls_improves = \
+            _my2_route, _my2_trips, my2_off, mk_my_ls, n_ls_improves = \
                 my_v2_fstsp_with_2opt(inst)
             rt_my_ls = time.perf_counter() - t0
 

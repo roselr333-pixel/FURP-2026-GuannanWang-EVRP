@@ -34,7 +34,6 @@ with open(RES, newline="", encoding="utf-8") as f:
 
 fig, axes = plt.subplots(1, 3, figsize=(13.0, 4.3))
 labels = [f"N={n}" for n in sizes]
-colors = ["#2c7fb8", "#7fcdbb", "#fdae6b", "#d7301f"]
 
 
 def panel(ax, y, title, ylabel, fmt, note):

@@ -10,296 +10,296 @@ geometry: official Solomon coordinates, rescaled to the synthetic cloud radius
   env: python 3.13.14 | Windows-11-10.0.26200-SP0
 
 === C101 N=8 window=0 (truck-only 206.2) ===
-  [published     ] mk=  167.7 ( 18.7%) off=2/8 0.002s
+  [published     ] mk=  167.7 ( 18.7%) off=2/8 0.001s
   [v2            ] mk=  159.8 ( 22.5%) off=2/8 0.006s
   [abl_cap1      ] mk=  167.7 ( 18.7%) off=2/8 0.002s
-  [abl_notakeoff ] mk=  159.8 ( 22.5%) off=2/8 0.004s
-  [imp_cap3      ] mk=  143.3 ( 30.5%) off=3/8 0.018s
+  [abl_notakeoff ] mk=  159.8 ( 22.5%) off=2/8 0.005s
+  [imp_cap3      ] mk=  143.3 ( 30.5%) off=3/8 0.022s
 === C101 N=8 window=1 (truck-only 200.7) ===
   [published     ] mk=  171.2 ( 14.7%) off=2/8 0.003s
-  [v2            ] mk=  171.2 ( 14.7%) off=2/8 0.011s
-  [abl_cap1      ] mk=  171.2 ( 14.7%) off=2/8 0.004s
-  [abl_notakeoff ] mk=  171.2 ( 14.7%) off=2/8 0.013s
-  [imp_cap3      ] mk=  155.1 ( 22.7%) off=3/8 0.039s
+  [v2            ] mk=  171.2 ( 14.7%) off=2/8 0.012s
+  [abl_cap1      ] mk=  171.2 ( 14.7%) off=2/8 0.003s
+  [abl_notakeoff ] mk=  171.2 ( 14.7%) off=2/8 0.008s
+  [imp_cap3      ] mk=  155.1 ( 22.7%) off=3/8 0.040s
 === C101 N=8 window=2 (truck-only 242.6) ===
   [published     ] mk=  191.9 ( 20.9%) off=2/8 0.003s
   [v2            ] mk=  191.9 ( 20.9%) off=2/8 0.011s
-  [abl_cap1      ] mk=  191.9 ( 20.9%) off=2/8 0.003s
+  [abl_cap1      ] mk=  191.9 ( 20.9%) off=2/8 0.004s
   [abl_notakeoff ] mk=  191.9 ( 20.9%) off=2/8 0.009s
-  [imp_cap3      ] mk=  114.2 ( 52.9%) off=3/8 0.035s
+  [imp_cap3      ] mk=  114.2 ( 52.9%) off=3/8 0.036s
 === C101 N=12 window=0 (truck-only 378.4) ===
-  [published     ] mk=  265.1 ( 29.9%) off=1/12 0.009s
-  [v2            ] mk=  219.1 ( 42.1%) off=4/12 0.063s
-  [abl_cap1      ] mk=  265.1 ( 29.9%) off=1/12 0.010s
-  [abl_notakeoff ] mk=  220.7 ( 41.7%) off=4/12 0.045s
-  [imp_cap3      ] mk=  228.8 ( 39.5%) off=3/12 0.303s
+  [published     ] mk=  265.1 ( 29.9%) off=1/12 0.010s
+  [v2            ] mk=  219.1 ( 42.1%) off=4/12 0.105s
+  [abl_cap1      ] mk=  265.1 ( 29.9%) off=1/12 0.028s
+  [abl_notakeoff ] mk=  220.7 ( 41.7%) off=4/12 0.113s
+  [imp_cap3      ] mk=  228.8 ( 39.5%) off=3/12 0.608s
 === C101 N=12 window=1 (truck-only 312.1) ===
-  [published     ] mk=  256.8 ( 17.7%) off=3/12 0.013s
-  [v2            ] mk=  231.8 ( 25.7%) off=4/12 0.062s
-  [abl_cap1      ] mk=  256.8 ( 17.7%) off=3/12 0.015s
+  [published     ] mk=  256.8 ( 17.7%) off=3/12 0.015s
+  [v2            ] mk=  231.8 ( 25.7%) off=4/12 0.064s
+  [abl_cap1      ] mk=  256.8 ( 17.7%) off=3/12 0.017s
   [abl_notakeoff ] mk=  269.6 ( 13.6%) off=2/12 0.043s
-  [imp_cap3      ] mk=  246.9 ( 20.9%) off=3/12 0.281s
+  [imp_cap3      ] mk=  246.9 ( 20.9%) off=3/12 0.425s
 === C101 N=12 window=2 (truck-only 310.7) ===
   [published     ] mk=  283.2 (  8.8%) off=1/12 0.009s
-  [v2            ] mk=  260.5 ( 16.1%) off=2/12 0.062s
-  [abl_cap1      ] mk=  283.2 (  8.8%) off=1/12 0.011s
-  [abl_notakeoff ] mk=  260.5 ( 16.1%) off=2/12 0.048s
-  [imp_cap3      ] mk=  243.2 ( 21.7%) off=3/12 0.319s
+  [v2            ] mk=  260.5 ( 16.1%) off=2/12 0.100s
+  [abl_cap1      ] mk=  283.2 (  8.8%) off=1/12 0.015s
+  [abl_notakeoff ] mk=  260.5 ( 16.1%) off=2/12 0.062s
+  [imp_cap3      ] mk=  243.2 ( 21.7%) off=3/12 0.505s
 === C101 N=16 window=0 (truck-only 447.4) ===
-  [published     ] mk=  382.4 ( 14.5%) off=4/16 0.042s
-  [v2            ] mk=  350.6 ( 21.6%) off=4/16 0.224s
-  [abl_cap1      ] mk=  382.4 ( 14.5%) off=4/16 0.047s
-  [abl_notakeoff ] mk=  356.7 ( 20.3%) off=4/16 0.155s
-  [imp_cap3      ] mk=  300.8 ( 32.8%) off=6/16 1.217s
+  [published     ] mk=  382.4 ( 14.5%) off=4/16 0.051s
+  [v2            ] mk=  350.6 ( 21.6%) off=4/16 0.433s
+  [abl_cap1      ] mk=  382.4 ( 14.5%) off=4/16 0.101s
+  [abl_notakeoff ] mk=  356.7 ( 20.3%) off=4/16 0.317s
+  [imp_cap3      ] mk=  300.8 ( 32.8%) off=6/16 1.714s
 === C101 N=16 window=1 (truck-only 541.3) ===
-  [published     ] mk=  424.1 ( 21.7%) off=5/16 0.052s
-  [v2            ] mk=  412.9 ( 23.7%) off=2/16 0.166s
-  [abl_cap1      ] mk=  424.1 ( 21.7%) off=5/16 0.053s
-  [abl_notakeoff ] mk=  412.9 ( 23.7%) off=2/16 0.135s
-  [imp_cap3      ] mk=  395.5 ( 26.9%) off=3/16 1.036s
+  [published     ] mk=  424.1 ( 21.7%) off=5/16 0.076s
+  [v2            ] mk=  412.9 ( 23.7%) off=2/16 0.286s
+  [abl_cap1      ] mk=  424.1 ( 21.7%) off=5/16 0.115s
+  [abl_notakeoff ] mk=  412.9 ( 23.7%) off=2/16 0.257s
+  [imp_cap3      ] mk=  395.5 ( 26.9%) off=3/16 1.767s
 === C101 N=16 window=2 (truck-only 410.6) ===
-  [published     ] mk=  391.2 (  4.7%) off=1/16 0.025s
-  [v2            ] mk=  374.3 (  8.9%) off=2/16 0.183s
-  [abl_cap1      ] mk=  391.2 (  4.7%) off=1/16 0.029s
-  [abl_notakeoff ] mk=  374.3 (  8.9%) off=2/16 0.155s
-  [imp_cap3      ] mk=  317.3 ( 22.7%) off=6/16 0.993s
+  [published     ] mk=  391.2 (  4.7%) off=1/16 0.032s
+  [v2            ] mk=  374.3 (  8.9%) off=2/16 0.440s
+  [abl_cap1      ] mk=  391.2 (  4.7%) off=1/16 0.055s
+  [abl_notakeoff ] mk=  374.3 (  8.9%) off=2/16 0.168s
+  [imp_cap3      ] mk=  317.3 ( 22.7%) off=6/16 1.865s
 === C101 N=20 window=0 (truck-only 556.9) ===
-  [published     ] mk=  471.2 ( 15.4%) off=4/20 0.121s
-  [v2            ] mk=  435.2 ( 21.9%) off=6/20 0.612s
-  [abl_cap1      ] mk=  471.2 ( 15.4%) off=4/20 0.134s
-  [abl_notakeoff ] mk=  453.6 ( 18.5%) off=5/20 0.474s
-  [imp_cap3      ] mk=  413.6 ( 25.7%) off=6/20 3.920s
+  [published     ] mk=  471.2 ( 15.4%) off=4/20 0.115s
+  [v2            ] mk=  435.2 ( 21.9%) off=6/20 1.075s
+  [abl_cap1      ] mk=  471.2 ( 15.4%) off=4/20 0.118s
+  [abl_notakeoff ] mk=  453.6 ( 18.5%) off=5/20 0.701s
+  [imp_cap3      ] mk=  413.6 ( 25.7%) off=6/20 5.327s
 === C101 N=20 window=1 (truck-only 541.3) ===
-  [published     ] mk=  491.5 (  9.2%) off=1/20 0.058s
-  [v2            ] mk=  466.5 ( 13.8%) off=2/20 0.490s
-  [abl_cap1      ] mk=  491.5 (  9.2%) off=1/20 0.065s
-  [abl_notakeoff ] mk=  466.5 ( 13.8%) off=2/20 0.441s
-  [imp_cap3      ] mk=  446.5 ( 17.5%) off=3/20 3.733s
+  [published     ] mk=  491.5 (  9.2%) off=1/20 0.054s
+  [v2            ] mk=  466.5 ( 13.8%) off=2/20 0.644s
+  [abl_cap1      ] mk=  491.5 (  9.2%) off=1/20 0.055s
+  [abl_notakeoff ] mk=  466.5 ( 13.8%) off=2/20 0.617s
+  [imp_cap3      ] mk=  446.5 ( 17.5%) off=3/20 4.801s
 === C101 N=20 window=2 (truck-only 490.4) ===
-  [published     ] mk=  454.3 (  7.4%) off=2/20 0.096s
-  [v2            ] mk=  390.3 ( 20.4%) off=6/20 0.760s
-  [abl_cap1      ] mk=  454.3 (  7.4%) off=2/20 0.088s
-  [abl_notakeoff ] mk=  422.2 ( 13.9%) off=4/20 0.526s
-  [imp_cap3      ] mk=  407.7 ( 16.9%) off=5/20 5.238s
+  [published     ] mk=  454.3 (  7.4%) off=2/20 0.092s
+  [v2            ] mk=  390.3 ( 20.4%) off=6/20 0.939s
+  [abl_cap1      ] mk=  454.3 (  7.4%) off=2/20 0.084s
+  [abl_notakeoff ] mk=  422.2 ( 13.9%) off=4/20 0.600s
+  [imp_cap3      ] mk=  407.7 ( 16.9%) off=5/20 7.368s
 
 === C201 N=8 window=0 (truck-only 299.6) ===
-  [published     ] mk=  203.1 ( 32.2%) off=1/8 0.002s
-  [v2            ] mk=  182.8 ( 39.0%) off=2/8 0.011s
-  [abl_cap1      ] mk=  203.1 ( 32.2%) off=1/8 0.003s
-  [abl_notakeoff ] mk=  182.8 ( 39.0%) off=2/8 0.009s
-  [imp_cap3      ] mk=  172.2 ( 42.5%) off=3/8 0.030s
+  [published     ] mk=  203.1 ( 32.2%) off=1/8 0.006s
+  [v2            ] mk=  182.8 ( 39.0%) off=2/8 0.029s
+  [abl_cap1      ] mk=  203.1 ( 32.2%) off=1/8 0.012s
+  [abl_notakeoff ] mk=  182.8 ( 39.0%) off=2/8 0.019s
+  [imp_cap3      ] mk=  172.2 ( 42.5%) off=3/8 0.141s
 === C201 N=8 window=1 (truck-only 193.1) ===
-  [published     ] mk=  168.4 ( 12.8%) off=2/8 0.003s
-  [v2            ] mk=  168.4 ( 12.8%) off=2/8 0.012s
-  [abl_cap1      ] mk=  168.4 ( 12.8%) off=2/8 0.004s
-  [abl_notakeoff ] mk=  168.4 ( 12.8%) off=2/8 0.010s
-  [imp_cap3      ] mk=  147.7 ( 23.5%) off=3/8 0.041s
+  [published     ] mk=  168.4 ( 12.8%) off=2/8 0.013s
+  [v2            ] mk=  168.4 ( 12.8%) off=2/8 0.031s
+  [abl_cap1      ] mk=  168.4 ( 12.8%) off=2/8 0.005s
+  [abl_notakeoff ] mk=  168.4 ( 12.8%) off=2/8 0.009s
+  [imp_cap3      ] mk=  147.7 ( 23.5%) off=3/8 0.048s
 === C201 N=8 window=2 (truck-only 236.8) ===
   [published     ] mk=  208.7 ( 11.9%) off=1/8 0.003s
-  [v2            ] mk=  187.3 ( 20.9%) off=2/8 0.017s
-  [abl_cap1      ] mk=  208.7 ( 11.9%) off=1/8 0.004s
-  [abl_notakeoff ] mk=  187.3 ( 20.9%) off=2/8 0.019s
-  [imp_cap3      ] mk=  165.4 ( 30.1%) off=3/8 0.048s
+  [v2            ] mk=  187.3 ( 20.9%) off=2/8 0.016s
+  [abl_cap1      ] mk=  208.7 ( 11.9%) off=1/8 0.007s
+  [abl_notakeoff ] mk=  187.3 ( 20.9%) off=2/8 0.026s
+  [imp_cap3      ] mk=  165.4 ( 30.1%) off=3/8 0.074s
 === C201 N=12 window=0 (truck-only 493.4) ===
-  [published     ] mk=  414.3 ( 16.0%) off=1/12 0.014s
-  [v2            ] mk=  375.8 ( 23.8%) off=2/12 0.068s
-  [abl_cap1      ] mk=  414.3 ( 16.0%) off=1/12 0.014s
-  [abl_notakeoff ] mk=  375.8 ( 23.8%) off=2/12 0.055s
-  [imp_cap3      ] mk=  357.6 ( 27.5%) off=3/12 0.240s
+  [published     ] mk=  414.3 ( 16.0%) off=1/12 0.012s
+  [v2            ] mk=  375.8 ( 23.8%) off=2/12 0.079s
+  [abl_cap1      ] mk=  414.3 ( 16.0%) off=1/12 0.032s
+  [abl_notakeoff ] mk=  375.8 ( 23.8%) off=2/12 0.096s
+  [imp_cap3      ] mk=  357.6 ( 27.5%) off=3/12 0.355s
 === C201 N=12 window=1 (truck-only 318.0) ===
-  [published     ] mk=  294.2 (  7.5%) off=1/12 0.009s
-  [v2            ] mk=  272.1 ( 14.4%) off=2/12 0.061s
-  [abl_cap1      ] mk=  294.2 (  7.5%) off=1/12 0.014s
-  [abl_notakeoff ] mk=  272.1 ( 14.4%) off=2/12 0.057s
-  [imp_cap3      ] mk=  255.5 ( 19.6%) off=3/12 0.362s
+  [published     ] mk=  294.2 (  7.5%) off=1/12 0.029s
+  [v2            ] mk=  272.1 ( 14.4%) off=2/12 0.105s
+  [abl_cap1      ] mk=  294.2 (  7.5%) off=1/12 0.019s
+  [abl_notakeoff ] mk=  272.1 ( 14.4%) off=2/12 0.060s
+  [imp_cap3      ] mk=  255.5 ( 19.6%) off=3/12 0.420s
 === C201 N=12 window=2 (truck-only 328.8) ===
-  [published     ] mk=  273.8 ( 16.7%) off=2/12 0.016s
-  [v2            ] mk=  273.8 ( 16.7%) off=2/12 0.068s
-  [abl_cap1      ] mk=  273.8 ( 16.7%) off=2/12 0.018s
-  [abl_notakeoff ] mk=  273.8 ( 16.7%) off=2/12 0.071s
-  [imp_cap3      ] mk=  252.5 ( 23.2%) off=3/12 0.404s
+  [published     ] mk=  273.8 ( 16.7%) off=2/12 0.012s
+  [v2            ] mk=  273.8 ( 16.7%) off=2/12 0.065s
+  [abl_cap1      ] mk=  273.8 ( 16.7%) off=2/12 0.017s
+  [abl_notakeoff ] mk=  273.8 ( 16.7%) off=2/12 0.072s
+  [imp_cap3      ] mk=  252.5 ( 23.2%) off=3/12 0.419s
 === C201 N=16 window=0 (truck-only 555.0) ===
-  [published     ] mk=  439.8 ( 20.8%) off=1/16 0.024s
-  [v2            ] mk=  405.7 ( 26.9%) off=2/16 0.173s
-  [abl_cap1      ] mk=  439.8 ( 20.8%) off=1/16 0.034s
-  [abl_notakeoff ] mk=  405.7 ( 26.9%) off=2/16 0.161s
-  [imp_cap3      ] mk=  379.4 ( 31.6%) off=4/16 1.032s
+  [published     ] mk=  439.8 ( 20.8%) off=1/16 0.029s
+  [v2            ] mk=  405.7 ( 26.9%) off=2/16 0.202s
+  [abl_cap1      ] mk=  439.8 ( 20.8%) off=1/16 0.037s
+  [abl_notakeoff ] mk=  405.7 ( 26.9%) off=2/16 0.333s
+  [imp_cap3      ] mk=  379.4 ( 31.6%) off=4/16 1.404s
 === C201 N=16 window=1 (truck-only 559.9) ===
-  [published     ] mk=  489.2 ( 12.6%) off=2/16 0.033s
-  [v2            ] mk=  455.6 ( 18.6%) off=2/16 0.245s
-  [abl_cap1      ] mk=  489.2 ( 12.6%) off=2/16 0.053s
-  [abl_notakeoff ] mk=  455.6 ( 18.6%) off=2/16 0.176s
-  [imp_cap3      ] mk=  363.2 ( 35.1%) off=5/16 1.386s
+  [published     ] mk=  489.2 ( 12.6%) off=2/16 0.063s
+  [v2            ] mk=  455.6 ( 18.6%) off=2/16 0.283s
+  [abl_cap1      ] mk=  489.2 ( 12.6%) off=2/16 0.077s
+  [abl_notakeoff ] mk=  455.6 ( 18.6%) off=2/16 0.341s
+  [imp_cap3      ] mk=  363.2 ( 35.1%) off=5/16 1.983s
 === C201 N=16 window=2 (truck-only 462.1) ===
-  [published     ] mk=  380.0 ( 17.8%) off=4/16 0.041s
-  [v2            ] mk=  373.8 ( 19.1%) off=4/16 0.213s
-  [abl_cap1      ] mk=  380.0 ( 17.8%) off=4/16 0.050s
-  [abl_notakeoff ] mk=  373.8 ( 19.1%) off=4/16 0.172s
-  [imp_cap3      ] mk=  309.5 ( 33.0%) off=6/16 1.034s
+  [published     ] mk=  380.0 ( 17.8%) off=4/16 0.084s
+  [v2            ] mk=  373.8 ( 19.1%) off=4/16 0.338s
+  [abl_cap1      ] mk=  380.0 ( 17.8%) off=4/16 0.091s
+  [abl_notakeoff ] mk=  373.8 ( 19.1%) off=4/16 0.186s
+  [imp_cap3      ] mk=  309.5 ( 33.0%) off=6/16 1.499s
 === C201 N=20 window=0 (truck-only 693.6) ===
-  [published     ] mk=  565.2 ( 18.5%) off=1/20 0.066s
-  [v2            ] mk=  528.2 ( 23.8%) off=2/20 0.361s
-  [abl_cap1      ] mk=  565.2 ( 18.5%) off=1/20 0.051s
-  [abl_notakeoff ] mk=  528.2 ( 23.8%) off=2/20 0.283s
-  [imp_cap3      ] mk=  518.0 ( 25.3%) off=3/20 2.161s
+  [published     ] mk=  565.2 ( 18.5%) off=1/20 0.122s
+  [v2            ] mk=  528.2 ( 23.8%) off=2/20 0.631s
+  [abl_cap1      ] mk=  565.2 ( 18.5%) off=1/20 0.093s
+  [abl_notakeoff ] mk=  528.2 ( 23.8%) off=2/20 0.745s
+  [imp_cap3      ] mk=  518.0 ( 25.3%) off=3/20 3.320s
 === C201 N=20 window=1 (truck-only 616.5) ===
-  [published     ] mk=  523.7 ( 15.1%) off=1/20 0.053s
-  [v2            ] mk=  429.8 ( 30.3%) off=6/20 0.615s
-  [abl_cap1      ] mk=  523.7 ( 15.1%) off=1/20 0.060s
-  [abl_notakeoff ] mk=  444.0 ( 28.0%) off=5/20 0.460s
-  [imp_cap3      ] mk=  392.8 ( 36.3%) off=8/20 3.407s
+  [published     ] mk=  523.7 ( 15.1%) off=1/20 0.110s
+  [v2            ] mk=  429.8 ( 30.3%) off=6/20 1.226s
+  [abl_cap1      ] mk=  523.7 ( 15.1%) off=1/20 0.131s
+  [abl_notakeoff ] mk=  444.0 ( 28.0%) off=5/20 0.698s
+  [imp_cap3      ] mk=  392.8 ( 36.3%) off=8/20 6.007s
 === C201 N=20 window=2 (truck-only 531.8) ===
-  [published     ] mk=  493.0 (  7.3%) off=1/20 0.067s
-  [v2            ] mk=  465.4 ( 12.5%) off=2/20 0.529s
-  [abl_cap1      ] mk=  493.0 (  7.3%) off=1/20 0.066s
-  [abl_notakeoff ] mk=  465.4 ( 12.5%) off=2/20 0.452s
-  [imp_cap3      ] mk=  446.2 ( 16.1%) off=3/20 4.353s
+  [published     ] mk=  493.0 (  7.3%) off=1/20 0.149s
+  [v2            ] mk=  465.4 ( 12.5%) off=2/20 0.866s
+  [abl_cap1      ] mk=  493.0 (  7.3%) off=1/20 0.093s
+  [abl_notakeoff ] mk=  465.4 ( 12.5%) off=2/20 0.568s
+  [imp_cap3      ] mk=  446.2 ( 16.1%) off=3/20 5.728s
 
 === R101 N=8 window=0 (truck-only 370.6) ===
   [published     ] mk=  334.3 (  9.8%) off=1/8 0.003s
   [v2            ] mk=  269.4 ( 27.3%) off=2/8 0.009s
-  [abl_cap1      ] mk=  334.3 (  9.8%) off=1/8 0.003s
-  [abl_notakeoff ] mk=  269.4 ( 27.3%) off=2/8 0.008s
-  [imp_cap3      ] mk=  251.2 ( 32.2%) off=3/8 0.015s
+  [abl_cap1      ] mk=  334.3 (  9.8%) off=1/8 0.006s
+  [abl_notakeoff ] mk=  269.4 ( 27.3%) off=2/8 0.017s
+  [imp_cap3      ] mk=  251.2 ( 32.2%) off=3/8 0.051s
 === R101 N=8 window=1 (truck-only 373.5) ===
-  [published     ] mk=  334.8 ( 10.4%) off=1/8 0.003s
-  [v2            ] mk=  247.5 ( 33.7%) off=3/8 0.010s
-  [abl_cap1      ] mk=  334.8 ( 10.4%) off=1/8 0.005s
-  [abl_notakeoff ] mk=  281.0 ( 24.8%) off=2/8 0.007s
-  [imp_cap3      ] mk=  223.5 ( 40.2%) off=3/8 0.022s
+  [published     ] mk=  334.8 ( 10.4%) off=1/8 0.010s
+  [v2            ] mk=  247.5 ( 33.7%) off=3/8 0.031s
+  [abl_cap1      ] mk=  334.8 ( 10.4%) off=1/8 0.015s
+  [abl_notakeoff ] mk=  281.0 ( 24.8%) off=2/8 0.030s
+  [imp_cap3      ] mk=  223.5 ( 40.2%) off=3/8 0.017s
 === R101 N=8 window=2 (truck-only 387.9) ===
   [published     ] mk=  297.0 ( 23.4%) off=2/8 0.003s
   [v2            ] mk=  297.0 ( 23.4%) off=2/8 0.009s
-  [abl_cap1      ] mk=  297.0 ( 23.4%) off=2/8 0.006s
-  [abl_notakeoff ] mk=  297.0 ( 23.4%) off=2/8 0.006s
-  [imp_cap3      ] mk=  259.8 ( 33.0%) off=3/8 0.020s
+  [abl_cap1      ] mk=  297.0 ( 23.4%) off=2/8 0.004s
+  [abl_notakeoff ] mk=  297.0 ( 23.4%) off=2/8 0.008s
+  [imp_cap3      ] mk=  259.8 ( 33.0%) off=3/8 0.014s
 === R101 N=12 window=0 (truck-only 639.6) ===
-  [published     ] mk=  496.8 ( 22.3%) off=1/12 0.010s
+  [published     ] mk=  496.8 ( 22.3%) off=1/12 0.008s
   [v2            ] mk=  410.9 ( 35.8%) off=4/12 0.039s
-  [abl_cap1      ] mk=  496.8 ( 22.3%) off=1/12 0.012s
-  [abl_notakeoff ] mk=  445.6 ( 30.3%) off=3/12 0.027s
-  [imp_cap3      ] mk=  437.4 ( 31.6%) off=3/12 0.101s
+  [abl_cap1      ] mk=  496.8 ( 22.3%) off=1/12 0.010s
+  [abl_notakeoff ] mk=  445.6 ( 30.3%) off=3/12 0.026s
+  [imp_cap3      ] mk=  437.4 ( 31.6%) off=3/12 0.222s
 === R101 N=12 window=1 (truck-only 560.3) ===
-  [published     ] mk=  488.7 ( 12.8%) off=1/12 0.009s
-  [v2            ] mk=  416.3 ( 25.7%) off=3/12 0.054s
-  [abl_cap1      ] mk=  488.7 ( 12.8%) off=1/12 0.019s
-  [abl_notakeoff ] mk=  442.4 ( 21.0%) off=2/12 0.034s
-  [imp_cap3      ] mk=  398.1 ( 28.9%) off=4/12 0.184s
+  [published     ] mk=  488.7 ( 12.8%) off=1/12 0.020s
+  [v2            ] mk=  416.3 ( 25.7%) off=3/12 0.099s
+  [abl_cap1      ] mk=  488.7 ( 12.8%) off=1/12 0.015s
+  [abl_notakeoff ] mk=  442.4 ( 21.0%) off=2/12 0.030s
+  [imp_cap3      ] mk=  398.1 ( 28.9%) off=4/12 0.197s
 === R101 N=12 window=2 (truck-only 504.8) ===
-  [published     ] mk=  399.6 ( 20.8%) off=1/12 0.014s
-  [v2            ] mk=  380.1 ( 24.7%) off=2/12 0.053s
-  [abl_cap1      ] mk=  399.6 ( 20.8%) off=1/12 0.013s
-  [abl_notakeoff ] mk=  380.1 ( 24.7%) off=2/12 0.046s
-  [imp_cap3      ] mk=  368.5 ( 27.0%) off=3/12 0.172s
+  [published     ] mk=  399.6 ( 20.8%) off=1/12 0.037s
+  [v2            ] mk=  380.1 ( 24.7%) off=2/12 0.111s
+  [abl_cap1      ] mk=  399.6 ( 20.8%) off=1/12 0.040s
+  [abl_notakeoff ] mk=  380.1 ( 24.7%) off=2/12 0.069s
+  [imp_cap3      ] mk=  368.5 ( 27.0%) off=3/12 0.290s
 === R101 N=16 window=0 (truck-only 821.6) ===
-  [published     ] mk=  696.5 ( 15.2%) off=1/16 0.027s
-  [v2            ] mk=  563.3 ( 31.4%) off=6/16 0.113s
-  [abl_cap1      ] mk=  696.5 ( 15.2%) off=1/16 0.024s
-  [abl_notakeoff ] mk=  568.6 ( 30.8%) off=6/16 0.063s
-  [imp_cap3      ] mk=  591.9 ( 28.0%) off=5/16 0.376s
+  [published     ] mk=  696.5 ( 15.2%) off=1/16 0.020s
+  [v2            ] mk=  563.3 ( 31.4%) off=6/16 0.191s
+  [abl_cap1      ] mk=  696.5 ( 15.2%) off=1/16 0.023s
+  [abl_notakeoff ] mk=  568.6 ( 30.8%) off=6/16 0.064s
+  [imp_cap3      ] mk=  591.9 ( 28.0%) off=5/16 0.569s
 === R101 N=16 window=1 (truck-only 737.7) ===
-  [published     ] mk=  652.0 ( 11.6%) off=1/16 0.020s
-  [v2            ] mk=  516.4 ( 30.0%) off=6/16 0.119s
-  [abl_cap1      ] mk=  652.0 ( 11.6%) off=1/16 0.022s
-  [abl_notakeoff ] mk=  542.5 ( 26.5%) off=4/16 0.072s
-  [imp_cap3      ] mk=  586.0 ( 20.6%) off=3/16 0.357s
+  [published     ] mk=  652.0 ( 11.6%) off=1/16 0.018s
+  [v2            ] mk=  516.4 ( 30.0%) off=6/16 0.127s
+  [abl_cap1      ] mk=  652.0 ( 11.6%) off=1/16 0.061s
+  [abl_notakeoff ] mk=  542.5 ( 26.5%) off=4/16 0.176s
+  [imp_cap3      ] mk=  586.0 ( 20.6%) off=3/16 0.609s
 === R101 N=16 window=2 (truck-only 761.6) ===
-  [published     ] mk=  629.1 ( 17.4%) off=2/16 0.029s
-  [v2            ] mk=  468.5 ( 38.5%) off=6/16 0.107s
-  [abl_cap1      ] mk=  629.1 ( 17.4%) off=2/16 0.029s
-  [abl_notakeoff ] mk=  468.5 ( 38.5%) off=6/16 0.068s
-  [imp_cap3      ] mk=  431.9 ( 43.3%) off=8/16 0.391s
+  [published     ] mk=  629.1 ( 17.4%) off=2/16 0.035s
+  [v2            ] mk=  468.5 ( 38.5%) off=6/16 0.137s
+  [abl_cap1      ] mk=  629.1 ( 17.4%) off=2/16 0.032s
+  [abl_notakeoff ] mk=  468.5 ( 38.5%) off=6/16 0.114s
+  [imp_cap3      ] mk=  431.9 ( 43.3%) off=8/16 0.667s
 === R101 N=20 window=0 (truck-only 998.1) ===
-  [published     ] mk=  905.4 (  9.3%) off=1/20 0.033s
-  [v2            ] mk=  662.8 ( 33.6%) off=7/20 0.220s
-  [abl_cap1      ] mk=  905.4 (  9.3%) off=1/20 0.039s
-  [abl_notakeoff ] mk=  675.5 ( 32.3%) off=6/20 0.160s
-  [imp_cap3      ] mk=  612.5 ( 38.6%) off=8/20 1.376s
+  [published     ] mk=  905.4 (  9.3%) off=1/20 0.070s
+  [v2            ] mk=  662.8 ( 33.6%) off=7/20 0.356s
+  [abl_cap1      ] mk=  905.4 (  9.3%) off=1/20 0.043s
+  [abl_notakeoff ] mk=  675.5 ( 32.3%) off=6/20 0.211s
+  [imp_cap3      ] mk=  612.5 ( 38.6%) off=8/20 2.011s
 === R101 N=20 window=1 (truck-only 951.7) ===
-  [published     ] mk=  828.4 ( 13.0%) off=2/20 0.061s
-  [v2            ] mk=  711.1 ( 25.3%) off=7/20 0.279s
-  [abl_cap1      ] mk=  828.4 ( 13.0%) off=2/20 0.051s
-  [abl_notakeoff ] mk=  724.0 ( 23.9%) off=6/20 0.184s
-  [imp_cap3      ] mk=  666.4 ( 30.0%) off=9/20 1.350s
+  [published     ] mk=  828.4 ( 13.0%) off=2/20 0.070s
+  [v2            ] mk=  711.1 ( 25.3%) off=7/20 0.660s
+  [abl_cap1      ] mk=  828.4 ( 13.0%) off=2/20 0.055s
+  [abl_notakeoff ] mk=  724.0 ( 23.9%) off=6/20 0.341s
+  [imp_cap3      ] mk=  666.4 ( 30.0%) off=9/20 2.070s
 === R101 N=20 window=2 (truck-only 1090.5) ===
-  [published     ] mk=  783.7 ( 28.1%) off=4/20 0.086s
-  [v2            ] mk=  713.8 ( 34.5%) off=6/20 0.214s
-  [abl_cap1      ] mk=  783.7 ( 28.1%) off=4/20 0.075s
-  [abl_notakeoff ] mk=  741.0 ( 32.1%) off=5/20 0.127s
-  [imp_cap3      ] mk=  671.4 ( 38.4%) off=9/20 0.974s
+  [published     ] mk=  783.7 ( 28.1%) off=4/20 0.142s
+  [v2            ] mk=  713.8 ( 34.5%) off=6/20 0.377s
+  [abl_cap1      ] mk=  783.7 ( 28.1%) off=4/20 0.179s
+  [abl_notakeoff ] mk=  741.0 ( 32.1%) off=5/20 0.225s
+  [imp_cap3      ] mk=  671.4 ( 38.4%) off=9/20 1.741s
 
 === RC101 N=8 window=0 (truck-only 186.7) ===
-  [published     ] mk=  161.6 ( 13.5%) off=2/8 0.005s
-  [v2            ] mk=  134.5 ( 27.9%) off=4/8 0.011s
-  [abl_cap1      ] mk=  161.6 ( 13.5%) off=2/8 0.004s
-  [abl_notakeoff ] mk=  148.3 ( 20.6%) off=3/8 0.009s
+  [published     ] mk=  161.6 ( 13.5%) off=2/8 0.004s
+  [v2            ] mk=  134.5 ( 27.9%) off=4/8 0.012s
+  [abl_cap1      ] mk=  161.6 ( 13.5%) off=2/8 0.003s
+  [abl_notakeoff ] mk=  148.3 ( 20.6%) off=3/8 0.008s
   [imp_cap3      ] mk=  143.4 ( 23.2%) off=3/8 0.042s
 === RC101 N=8 window=1 (truck-only 188.5) ===
   [published     ] mk=  164.2 ( 12.9%) off=2/8 0.003s
-  [v2            ] mk=  134.2 ( 28.8%) off=4/8 0.023s
-  [abl_cap1      ] mk=  164.2 ( 12.9%) off=2/8 0.007s
-  [abl_notakeoff ] mk=  148.5 ( 21.2%) off=3/8 0.012s
-  [imp_cap3      ] mk=  135.3 ( 28.2%) off=4/8 0.044s
+  [v2            ] mk=  134.2 ( 28.8%) off=4/8 0.017s
+  [abl_cap1      ] mk=  164.2 ( 12.9%) off=2/8 0.014s
+  [abl_notakeoff ] mk=  148.5 ( 21.2%) off=3/8 0.026s
+  [imp_cap3      ] mk=  135.3 ( 28.2%) off=4/8 0.055s
 === RC101 N=8 window=2 (truck-only 236.2) ===
   [published     ] mk=  175.1 ( 25.9%) off=1/8 0.003s
   [v2            ] mk=  159.6 ( 32.4%) off=2/8 0.012s
-  [abl_cap1      ] mk=  175.1 ( 25.9%) off=1/8 0.009s
+  [abl_cap1      ] mk=  175.1 ( 25.9%) off=1/8 0.003s
   [abl_notakeoff ] mk=  159.6 ( 32.4%) off=2/8 0.011s
-  [imp_cap3      ] mk=  145.6 ( 38.4%) off=3/8 0.042s
+  [imp_cap3      ] mk=  145.6 ( 38.4%) off=3/8 0.056s
 === RC101 N=12 window=0 (truck-only 327.0) ===
-  [published     ] mk=  307.2 (  6.0%) off=1/12 0.011s
-  [v2            ] mk=  291.4 ( 10.9%) off=2/12 0.058s
-  [abl_cap1      ] mk=  307.2 (  6.0%) off=1/12 0.017s
-  [abl_notakeoff ] mk=  291.4 ( 10.9%) off=2/12 0.049s
-  [imp_cap3      ] mk=  241.6 ( 26.1%) off=6/12 0.250s
+  [published     ] mk=  307.2 (  6.0%) off=1/12 0.013s
+  [v2            ] mk=  291.4 ( 10.9%) off=2/12 0.134s
+  [abl_cap1      ] mk=  307.2 (  6.0%) off=1/12 0.014s
+  [abl_notakeoff ] mk=  291.4 ( 10.9%) off=2/12 0.101s
+  [imp_cap3      ] mk=  241.6 ( 26.1%) off=6/12 0.271s
 === RC101 N=12 window=1 (truck-only 316.7) ===
-  [published     ] mk=  271.2 ( 14.4%) off=3/12 0.014s
-  [v2            ] mk=  257.2 ( 18.8%) off=4/12 0.060s
-  [abl_cap1      ] mk=  271.2 ( 14.4%) off=3/12 0.016s
-  [abl_notakeoff ] mk=  257.2 ( 18.8%) off=4/12 0.045s
-  [imp_cap3      ] mk=  271.2 ( 14.4%) off=3/12 0.215s
+  [published     ] mk=  271.2 ( 14.4%) off=3/12 0.036s
+  [v2            ] mk=  257.2 ( 18.8%) off=4/12 0.112s
+  [abl_cap1      ] mk=  271.2 ( 14.4%) off=3/12 0.015s
+  [abl_notakeoff ] mk=  257.2 ( 18.8%) off=4/12 0.039s
+  [imp_cap3      ] mk=  271.2 ( 14.4%) off=3/12 0.247s
 === RC101 N=12 window=2 (truck-only 341.3) ===
-  [published     ] mk=  284.6 ( 16.6%) off=1/12 0.014s
-  [v2            ] mk=  268.9 ( 21.2%) off=2/12 0.063s
-  [abl_cap1      ] mk=  284.6 ( 16.6%) off=1/12 0.011s
-  [abl_notakeoff ] mk=  268.9 ( 21.2%) off=2/12 0.056s
-  [imp_cap3      ] mk=  197.9 ( 42.0%) off=5/12 0.310s
+  [published     ] mk=  284.6 ( 16.6%) off=1/12 0.020s
+  [v2            ] mk=  268.9 ( 21.2%) off=2/12 0.128s
+  [abl_cap1      ] mk=  284.6 ( 16.6%) off=1/12 0.012s
+  [abl_notakeoff ] mk=  268.9 ( 21.2%) off=2/12 0.062s
+  [imp_cap3      ] mk=  197.9 ( 42.0%) off=5/12 0.543s
 === RC101 N=16 window=0 (truck-only 439.1) ===
-  [published     ] mk=  406.0 (  7.5%) off=2/16 0.035s
-  [v2            ] mk=  401.2 (  8.6%) off=2/16 0.205s
-  [abl_cap1      ] mk=  406.0 (  7.5%) off=2/16 0.046s
-  [abl_notakeoff ] mk=  401.2 (  8.6%) off=2/16 0.168s
-  [imp_cap3      ] mk=  375.7 ( 14.5%) off=3/16 1.018s
+  [published     ] mk=  406.0 (  7.5%) off=2/16 0.069s
+  [v2            ] mk=  401.2 (  8.6%) off=2/16 0.293s
+  [abl_cap1      ] mk=  406.0 (  7.5%) off=2/16 0.074s
+  [abl_notakeoff ] mk=  401.2 (  8.6%) off=2/16 0.363s
+  [imp_cap3      ] mk=  375.7 ( 14.5%) off=3/16 1.797s
 === RC101 N=16 window=1 (truck-only 503.5) ===
-  [published     ] mk=  388.3 ( 22.9%) off=1/16 0.027s
-  [v2            ] mk=  371.2 ( 26.3%) off=2/16 0.196s
-  [abl_cap1      ] mk=  388.3 ( 22.9%) off=1/16 0.032s
-  [abl_notakeoff ] mk=  371.2 ( 26.3%) off=2/16 0.158s
-  [imp_cap3      ] mk=  354.4 ( 29.6%) off=3/16 0.978s
+  [published     ] mk=  388.3 ( 22.9%) off=1/16 0.024s
+  [v2            ] mk=  371.2 ( 26.3%) off=2/16 0.369s
+  [abl_cap1      ] mk=  388.3 ( 22.9%) off=1/16 0.061s
+  [abl_notakeoff ] mk=  371.2 ( 26.3%) off=2/16 0.268s
+  [imp_cap3      ] mk=  354.4 ( 29.6%) off=3/16 1.440s
 === RC101 N=16 window=2 (truck-only 604.2) ===
-  [published     ] mk=  548.0 (  9.3%) off=2/16 0.029s
-  [v2            ] mk=  424.4 ( 29.8%) off=8/16 0.230s
-  [abl_cap1      ] mk=  548.0 (  9.3%) off=2/16 0.047s
-  [abl_notakeoff ] mk=  488.1 ( 19.2%) off=4/16 0.137s
-  [imp_cap3      ] mk=  472.2 ( 21.9%) off=5/16 1.215s
+  [published     ] mk=  548.0 (  9.3%) off=2/16 0.038s
+  [v2            ] mk=  424.4 ( 29.8%) off=8/16 0.276s
+  [abl_cap1      ] mk=  548.0 (  9.3%) off=2/16 0.084s
+  [abl_notakeoff ] mk=  488.1 ( 19.2%) off=4/16 0.189s
+  [imp_cap3      ] mk=  472.2 ( 21.9%) off=5/16 1.829s
 === RC101 N=20 window=0 (truck-only 626.8) ===
-  [published     ] mk=  563.3 ( 10.1%) off=3/20 0.085s
-  [v2            ] mk=  534.5 ( 14.7%) off=4/20 0.518s
-  [abl_cap1      ] mk=  563.3 ( 10.1%) off=3/20 0.106s
-  [abl_notakeoff ] mk=  541.2 ( 13.6%) off=4/20 0.357s
-  [imp_cap3      ] mk=  458.9 ( 26.8%) off=8/20 2.379s
+  [published     ] mk=  563.3 ( 10.1%) off=3/20 0.136s
+  [v2            ] mk=  534.5 ( 14.7%) off=4/20 0.729s
+  [abl_cap1      ] mk=  563.3 ( 10.1%) off=3/20 0.142s
+  [abl_notakeoff ] mk=  541.2 ( 13.6%) off=4/20 0.416s
+  [imp_cap3      ] mk=  458.9 ( 26.8%) off=8/20 3.045s
 === RC101 N=20 window=1 (truck-only 558.3) ===
-  [published     ] mk=  506.1 (  9.3%) off=3/20 0.081s
-  [v2            ] mk=  495.2 ( 11.3%) off=4/20 0.413s
-  [abl_cap1      ] mk=  506.1 (  9.3%) off=3/20 0.102s
-  [abl_notakeoff ] mk=  509.9 (  8.7%) off=3/20 0.411s
-  [imp_cap3      ] mk=  402.0 ( 28.0%) off=9/20 2.383s
+  [published     ] mk=  506.1 (  9.3%) off=3/20 0.152s
+  [v2            ] mk=  495.2 ( 11.3%) off=4/20 0.663s
+  [abl_cap1      ] mk=  506.1 (  9.3%) off=3/20 0.097s
+  [abl_notakeoff ] mk=  509.9 (  8.7%) off=3/20 0.358s
+  [imp_cap3      ] mk=  402.0 ( 28.0%) off=9/20 3.250s
 === RC101 N=20 window=2 (truck-only 907.9) ===
-  [published     ] mk=  812.1 ( 10.6%) off=3/20 0.068s
-  [v2            ] mk=  812.1 ( 10.6%) off=2/20 0.187s
-  [abl_cap1      ] mk=  812.1 ( 10.6%) off=3/20 0.063s
-  [abl_notakeoff ] mk=  812.1 ( 10.6%) off=2/20 0.132s
-  [imp_cap3      ] mk=  776.8 ( 14.4%) off=3/20 0.987s
+  [published     ] mk=  812.1 ( 10.6%) off=3/20 0.120s
+  [v2            ] mk=  812.1 ( 10.6%) off=2/20 0.326s
+  [abl_cap1      ] mk=  812.1 ( 10.6%) off=3/20 0.133s
+  [abl_notakeoff ] mk=  812.1 ( 10.6%) off=2/20 0.159s
+  [imp_cap3      ] mk=  776.8 ( 14.4%) off=3/20 1.368s
 
 ==============================================================================
 AGGREGATE (mean over 12 standard instances per size)

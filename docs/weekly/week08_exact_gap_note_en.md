@@ -38,6 +38,13 @@ length ≤ `R_D`) are enumerated explicitly; time variables allow the truck to w
 balance (a 0/1 "airborne when leaving each truck node" state) enforces the single
 serial drone.
 
+The model works in integer time units of `1/SC` with `SC = 100`, so every arc
+and sortie flight is rounded to 0.01. A reconstructed plan therefore
+re-evaluates to the objective only up to that discretisation (at most half a
+step per arc and per sortie, about 0.03-0.05 on these instances); the self-test
+compares against that bound rather than a fixed `1e-6`, which it used to do and
+which failed whenever the optimum did not sit exactly on the grid.
+
 **Two independent checks** (`tests/test_cpsat_exact.py`):
 
 - setting the drone range to zero must reduce the model to a plain truck TSP —
@@ -68,9 +75,12 @@ gap = (heuristic − optimum) / optimum.
   value of the improvement phase for the first time.
 - Limits: at n≥10 the optimum was **not proved within 180s**, so the value
   reported is an **upper bound** on the optimum and the gap there is a **lower
-  bound** on the true gap — the real gap is at least as large. CP-SAT still cannot
-  prove optimality at n≥12; the model is weak in the number of candidate sorties
-  and in the time relaxation, which is the natural next improvement.
+  bound** on the true gap — the real gap is at least as large. Because the 180 s
+  budget truncates the search, those unproved rows also move between runs (about
+  ±1-2 pp on the greedy/LNS gaps at n=10/12); the proved n=8 row is stable.
+  CP-SAT still cannot prove optimality at n≥12; the model is weak in the number of
+  candidate sorties and in the time relaxation, which is the natural next
+  improvement.
 - The n=8 gaps vary widely (0.04% to 51.5%): on one instance the greedy happened
   to hit the optimum, on most it is far off. This matches the qualitative point
   that the greedy has no improvement phase.

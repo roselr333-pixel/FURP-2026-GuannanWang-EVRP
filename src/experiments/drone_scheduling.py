@@ -197,12 +197,12 @@ def main():
     for name in fi.FAMILIES:
         for n in [10, 20]:
             inst = fi.make_solomon_fstsp(name, n)
-            route, trips, off = ab.my_v2_param(inst, max_cust=2,
+            route, trips, _off = ab.my_v2_param(inst, max_cust=2,
                                                multi_takeoff=True)
             for K in [1, 2, 3]:
-                g_assign, g = schedule_greedy(inst, route, trips, K)
-                l_assign, l = schedule_local(inst, route, trips, K)
-                o_assign, o, proven = schedule_optimal(inst, route, trips, K)
+                _g_assign, g = schedule_greedy(inst, route, trips, K)
+                _l_assign, l = schedule_local(inst, route, trips, K)
+                _o_assign, o, proven = schedule_optimal(inst, route, trips, K)
                 ref = f7.fstsp_makespan_multi(inst, route, trips, K)
                 ok = abs(g - ref) < 1e-9 and l <= g + 1e-9 and o <= l + 1e-9
                 print(f"  {name} n={n} K={K}: greedy={g:8.2f} local={l:8.2f} "

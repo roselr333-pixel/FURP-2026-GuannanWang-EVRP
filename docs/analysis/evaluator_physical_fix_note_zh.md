@@ -101,6 +101,6 @@ W5 那一行还牵出两个相关问题：`depot_only_drone` 用卡车速度给�
 - 第二轮回归测试：`tests/test_evaluators.py::test_w6_evaluator_rejects_overlapping_sorties`、`::test_w6_evaluator_rejects_out_of_range_sortie`、`::test_w6_truck_waits_for_a_late_drone`、`::test_w6_evaluator_matches_shared_fstsp_evaluator`、`::test_w6_collaborative_plan_is_physically_executable`
 - 第二轮重跑的日志与 CSV：`src/results/week06_ground_air_*`、`week06_largeN_*`、`stat_tests*`
 - 第三轮改动：`src/experiments/v3_ev_collab.py`（`ev_collab_k` 的 `schedule_inf` + `v3_greedy` 的区间预筛）、`week05_truck_drone_v2.py`、`fstsp_mc.py`、`drone_scheduling.py`
-- 第三轮回归测试：`tests/test_evaluators.py::test_v3_rejects_overlapping_sorties`、`::test_v3_greedy_produces_a_feasible_schedule`
+- 第三轮回归测试：`tests/test_evaluators.py::test_v3_rejects_overlapping_sorties`、`::test_v3_greedy_produces_a_feasible_schedule`；W5 与 M&C 评估器的回归测试在 `tests/test_truck_drone.py`（`::test_v2_rejects_sortie_that_launches_while_drone_is_airborne`、`::test_v2_truck_waits_for_a_late_drone`、`::test_mc_rejects_sortie_that_launches_while_drone_is_airborne`、`::test_mc_evaluator_matches_shared_fstsp_evaluator_on_random_plans`、`::test_depot_only_baseline_agrees_across_week05_scripts`）
 - 失败案例：`docs/reference/failure_cases_master.md` 的 FC-7-5
 - 第三轮重跑的日志与 CSV：`src/results/v3_ev_collab_*`、`v3_ablation_*`、`week05_truck_drone_v2_output.txt`

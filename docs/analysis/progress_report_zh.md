@@ -109,18 +109,18 @@
 
 #### 3.2-补充：哪些基线真的需要多种子
 
-> 需要说明的是，W1–W5 的 5 个 baseline 中只有 GA 是真正随机、必须多种子的——其余 4 个要么是 OR-Tools 决定性求解，要么是固定小算例演示，多种子无信息量。
+> 需要说明的是，W1–W5 的 5 个 baseline 中只有 GA 是真正随机、必须多种子的——其余 4 个要么是 OR-Tools（它的逐次差异是没有可控种子的搜索噪声，不是可做统计的随机变量），要么是固定小算例演示，多种子无信息量。
 
 | W | 脚本 | 是否随机 | 是否需要多种子 | 现状 |
 |---|---|---|---|---|
 | W1 | `week01_baseline.py` | 否（固定 6 客户手算） | 不需要 | OK |
 | W2 | （无 W2 脚本） | — | — | — |
-| W3 | `week03_experiment.py` / `benchmark_solomon_vrptw.py` | OR-Tools 决定性 | 不需要 | OK |
-| W4 | `week04_evrp_tw.py` / `benchmark_evrptw.py` | OR-Tools 决定性 | 不需要 | OK |
+| W3 | `week03_experiment.py` / `benchmark_solomon_vrptw.py` | OR-Tools（无可控种子，只有逐次搜索噪声） | 不需要 | OK |
+| W4 | `week04_evrp_tw.py` / `benchmark_evrptw.py` | OR-Tools（无可控种子，只有逐次搜索噪声） | 不需要 | OK |
 | W5 | `week05_truck_drone.py` / `_v2.py` | 固定 6 客户手算/启发式 | 不需要（无可比随机源） | OK |
 | W3-W5 | `baseline_ga_vrptw.py` | **GA 随机** | **是** | **已用 5 种子重跑：见 `baseline_ga_vrptw_results.csv` 多出的 `ga_dist_mean` / `ga_gap_mean_pct` / `ga_gap_std_pct` 列** |
 
-**结论**：所谓"W1–W5 多种子"实际只需要给 GA 这一条加。其他四个本身就是 OR-Tools 或固定算例，给它们加多种子没有意义，因此只对 GA 做了多种子复核。
+**结论**：所谓"W1–W5 多种子"实际只需要给 GA 这一条加。其他四个是 OR-Tools 或固定算例，重复跑只会量到搜索噪声；OR-Tools 是时间预算而非逐位可复现，但这不构成多种子统计。因此只对 GA 做了多种子复核。
 
 ##### GA 5-seed 复核（已完成）
 

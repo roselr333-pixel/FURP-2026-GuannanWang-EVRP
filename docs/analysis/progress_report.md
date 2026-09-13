@@ -107,18 +107,18 @@ Ordered by grading impact and by how readily each can be closed, in four groups.
 
 #### 3.2-supplement: distinguishing which baselines really need multi-seed
 
-This is the addendum to item 6 above. I re-walked the W1–W5 baselines — **only one is truly stochastic and demands multi-seed**; the other four are either OR-Tools (deterministic) or fixed-instance demos with no comparable random source.
+This is the addendum to item 6 above. I re-walked the W1–W5 baselines — **only one is truly stochastic and demands multi-seed**; the other four are either OR-Tools runs (whose spread is search noise with no controllable seed) or fixed-instance demos with no comparable random source.
 
 | W | Script | Stochastic? | Needs multi-seed? | Status |
 |---|---|---|---|---|
 | W1 | `week01_baseline.py` | no (fixed 6-customer hand route) | no | OK |
 | W2 | (no W2 script) | — | — | — |
-| W3 | `week03_experiment.py` / `benchmark_solomon_vrptw.py` | OR-Tools deterministic | no | OK |
-| W4 | `week04_evrp_tw.py` / `benchmark_evrptw.py` | OR-Tools deterministic | no | OK |
+| W3 | `week03_experiment.py` / `benchmark_solomon_vrptw.py` | OR-Tools (no controllable seed; run-to-run search noise) | no | OK |
+| W4 | `week04_evrp_tw.py` / `benchmark_evrptw.py` | OR-Tools (no controllable seed; run-to-run search noise) | no | OK |
 | W5 | `week05_truck_drone.py` / `_v2.py` | fixed 6-customer hand/heuristic | no (no comparable random source) | OK |
 | W3-W5 | `baseline_ga_vrptw.py` | **GA stochastic** | **yes** | **Done — re-run with 5 seeds; columns `ga_dist_mean / ga_dist_best / ga_veh_best / ga_gap_mean_pct / ga_gap_std_pct / n_seeds` added to `baseline_ga_vrptw_results.csv`** |
 
-**Conclusion**: the "multi-seed W1–W5" gap is really only GA. The other four are OR-Tools or fixed demos and have no information in multiple seeds; fabricating a "fake multi-seed" for them adds no information.
+**Conclusion**: the "multi-seed W1–W5" gap is really only GA. The other four are OR-Tools runs or fixed demos with no controllable random variable; OR-Tools is time-budgeted rather than bit-reproducible, but repeating it would only measure search noise, so only the GA was re-run with seeds.
 
 ##### GA 5-seed check (done)
 

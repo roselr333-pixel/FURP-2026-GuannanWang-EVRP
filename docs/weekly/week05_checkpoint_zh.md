@@ -95,6 +95,8 @@
 
 我从 PyVRP/Instances 下载了**标准的 56 个 Solomon 100-顾客 VRPTW 实例**（每个都带官方 `.sol` 最优解 BKS），用 OR-Tools 求解（PARALLEL_CHEAPEST_INSERTION 初解 + GUIDED_LOCAL_SEARCH，每实例 10 秒，距离放大 ×10）。这是**逐实例**直接和文献 BKS 对比，而不是生成的替代算例。实例缓存于 `src/instances/official_solomon/`；完整结果：`src/results/benchmark_official_solomon_results.csv`。
 
+这个搜索是时间预算的（每实例 10 秒），而该版本的 OR-Tools 不暴露 routing 搜索的随机种子，因此结果不是逐位可复现的：同一批 56 个实例我实测的均值 gap 分别是 7.2%、7.3%、8.1%（逐实例波动更大，宽时间窗的 R/RC 族尤其明显）。下表是其中一次运行的结果；PyVRP 基线固定了 seed，没有这个问题。
+
 代表性实例：
 
 | 实例 | BKS 距离 | BKS 车 | 我的距离 | 我的车 | 差距% |

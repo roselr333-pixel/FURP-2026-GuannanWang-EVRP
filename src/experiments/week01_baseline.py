@@ -216,7 +216,7 @@ def plot_routes(routes, plot_path):
         plt.text(pos[i][0], pos[i][1], str(i), ha="center", va="center",
                  color="white" if i == DEPOT else "black", fontsize=9, zorder=4)
     cmap = matplotlib.colormaps["tab10"]
-    for k, (v, r) in enumerate(routes):
+    for v, r in routes:
         for a, b in zip(r, r[1:]):
             x = [pos[a][0], pos[b][0]]
             y = [pos[a][1], pos[b][1]]

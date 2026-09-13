@@ -24,7 +24,7 @@ import os
 import math
 
 # instance: depot + customers (coordinates, Euclidean distances)
-DEPOSIT = (0, 0)
+DEPOT = (0, 0)
 CUSTOMERS = {
     1: (30, 40),
     2: (60, 20),
@@ -46,7 +46,7 @@ def nearest_neighbour_tour(points):
     """Return (route, travel_distance) starting/ending at depot (points excludes depot)."""
     remaining = list(points)
     route = []
-    cur = DEPOSIT
+    cur = DEPOT
     total = 0.0
     while remaining:
         nxt = min(remaining, key=lambda p: dist(cur, points[p]))
@@ -54,7 +54,7 @@ def nearest_neighbour_tour(points):
         route.append(nxt)
         cur = points[nxt]
         remaining.remove(nxt)
-    total += dist(cur, DEPOSIT)  # return to depot
+    total += dist(cur, DEPOT)  # return to depot
     return route, total
 
 
@@ -88,7 +88,7 @@ def main():
 
     # assign customers to drone vs truck: drone takes the farthest-from-depot
     # customers (it is faster and good for long legs).
-    order = sorted(CUSTOMERS, key=lambda c: -dist(DEPOSIT, CUSTOMERS[c]))
+    order = sorted(CUSTOMERS, key=lambda c: -dist(DEPOT, CUSTOMERS[c]))
     drone_set = set(order[: len(order) // 2])
     truck_set = set(order[len(order) // 2:])
     drone_pts = {c: CUSTOMERS[c] for c in drone_set}

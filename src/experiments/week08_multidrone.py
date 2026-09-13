@@ -162,7 +162,7 @@ def main():
                 t0 = time.perf_counter()
                 g_route, g_trips, g_off = greedy_multi(inst, K)
                 mk_g = ev(inst, g_route, g_trips)
-                l_route, l_trips, mk_l, _ = L.lns(
+                _l_route, l_trips, mk_l, _ = L.lns(
                     inst, n, seed=seed, eval_fn=ev,
                     greedy_fn=lambda inst, K=K: greedy_multi(inst, K))
                 rt = time.perf_counter() - t0

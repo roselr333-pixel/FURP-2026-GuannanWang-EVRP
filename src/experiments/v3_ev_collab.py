@@ -320,7 +320,7 @@ def main():
             v1 = w6.truck_ev_route(inst, list(inst["customers"].keys()),
                                    allow_recharge=True)
             # V3 greedy (single drone)
-            gr, gt, go = v3_greedy(inst)
+            gr, gt, _go = v3_greedy(inst)
             g = ev_collab(inst, gr, gt)
 
             row = {

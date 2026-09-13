@@ -168,24 +168,6 @@ def mc_simulate(inst, route, trips, truck_m, drone_m, K=1, service=0.0):
     return arr[-1]
 
 
-def mc_tsp(inst, truck_m, service=0.0):
-    """Truck-only tour time using a nearest-neighbour order (cheap reference)."""
-    remaining = list(inst["customers"])
-    order, cur = [], 0
-    while remaining:
-        nxt = min(remaining, key=lambda c: truck_m[cur][c])
-        order.append(nxt)
-        cur = nxt
-        remaining.remove(nxt)
-    t = 0.0
-    cur = 0
-    for c in order:
-        t += truck_m[cur][c] + service
-        cur = c
-    t += truck_m[cur][inst["end"]]
-    return t
-
-
 # ---------------------------------------------------------------------------
 # exact truck-only tour (Held-Karp; these instances have 10 customers)
 # ---------------------------------------------------------------------------

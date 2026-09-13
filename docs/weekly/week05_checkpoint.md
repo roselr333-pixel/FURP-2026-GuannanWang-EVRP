@@ -95,6 +95,13 @@
 
 I downloaded the **canonical 56 Solomon 100-customer VRPTW instances** (each with its official `.sol` best-known solution) from PyVRP/Instances and solved them with OR-Tools (PARALLEL_CHEAPEST_INSERTION first solution + GUIDED_LOCAL_SEARCH, 10 s per instance, distance scaled ×10). This is now a direct, instance-by-instance comparison against literature BKS — not a generated stand-in. Cached instances: `src/instances/official_solomon/`; full results: `src/results/benchmark_official_solomon_results.csv`.
 
+The search is time-budgeted (10 s per instance) and this OR-Tools version does
+not expose a random seed for the routing search, so the result is not
+bit-reproducible: on the same 56 instances I measured mean gaps of 7.2%, 7.3%
+and 8.1% across runs (per-instance values move more, especially in the
+wide-window R/RC families). The table below is one run; the PyVRP baseline is
+seeded and does not have this problem.
+
 Representative instances:
 
 | Instance | BKS dist | BKS veh | My dist | My veh | Gap% |

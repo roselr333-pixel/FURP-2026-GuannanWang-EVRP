@@ -209,7 +209,7 @@ def main():
 
     # baselines (nearest-neighbour truck tour, exactly as week05_truck_drone.py,
     # so the two scripts report the same truck-only reference)
-    truck_mk, truck_travel = truck_makespan(nn_tour(CUSTOMERS))
+    truck_mk, _truck_travel = truck_makespan(nn_tour(CUSTOMERS))
     depot_mk, drone_set, truck_set = depot_only_drone()
 
     # v2

@@ -237,7 +237,7 @@ def lns(inst, size, seed=0, rd=R_D, max_cust=2, iters=None, q_max=None,
         feasible = True
         while pending:
             c = pending.pop(0)
-            mk_new, kind, data = _best_reinsertion(
+            _mk_new, kind, data = _best_reinsertion(
                 inst, r2, t2, c, pending, rd, max_cust, eval_fn)
             if kind is None:
                 feasible = False
@@ -320,9 +320,9 @@ def main():
                 inst, max_cust=2, multi_takeoff=True)
             mk_greedy = makespan(inst, g_route, g_trips)
 
-            o_route, o_trips, mk_opt2, o_moves = two_opt(inst, g_route, g_trips)
+            _o_route, _o_trips, mk_opt2, o_moves = two_opt(inst, g_route, g_trips)
 
-            l_route, l_trips, mk_lns, iters = lns(inst, n, seed=seed)
+            _l_route, l_trips, mk_lns, iters = lns(inst, n, seed=seed)
             rt = time.perf_counter() - t0
 
             row = {

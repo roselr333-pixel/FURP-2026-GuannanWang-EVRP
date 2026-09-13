@@ -9,6 +9,7 @@ Two independent checks:
     sorties), which validates the drone timing and the single-drone constraint.
 """
 
+import math
 from itertools import permutations
 
 import pytest
@@ -104,3 +105,16 @@ def test_exact_is_below_clean_greedy(n):
     # (or the best value found) cannot be above it
     assert res["makespan"] is not None
     assert res["makespan"] <= X.fstsp_makespan_clean(inst, gr, gt) + 1e-6
+
+def test_objective_matches_physical_re_evaluation():
+    """The CP-SAT objective is rounded to 1/SC, so the reconstructed plan must
+    re-evaluate to it within the discretisation bound. The self-test in
+    cpsat_fstsp._main used to compare with a fixed 1e-6 and failed whenever the
+    optimum did not sit exactly on the 0.01 grid."""
+    inst = w6.make_instance(6, seed=20260720)
+    res = X.solve_exact(inst, max_cust=2, time_limit=60, num_workers=8)
+    assert res["route"] is not None
+    chk = X.fstsp_makespan_clean(inst, res["route"], res["trips"])
+    assert math.isfinite(chk)
+    assert abs(chk - res["makespan"]) <= X._rounding_tolerance(
+        res["route"], res["trips"])

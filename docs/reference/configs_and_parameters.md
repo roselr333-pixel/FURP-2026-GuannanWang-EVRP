@@ -74,7 +74,7 @@
 
 | 求解器 | 参数 | 值 | 出处 |
 |---|---|---|---|
-| OR-Tools | `first_solution_strategy` | `PATH_CHEAPEST_ARC` | `benchmark_official_solomon.py` |
+| OR-Tools | `first_solution_strategy` | `PARALLEL_CHEAPEST_INSERTION`（紧时间窗下 `PATH_CHEAPEST_ARC` 找不到可行初解） | `benchmark_official_solomon.py` |
 | OR-Tools | `local_search_metaheuristic` | `GUIDED_LOCAL_SEARCH` | 同上 |
 | OR-Tools | 每实例时间上限 | 10 s | 同上 |
 | OR-Tools | 距离标度 | ×10 取整（Solomon 原坐标为整数） | 同上（`DIST_SCALE = 10`） |
@@ -86,8 +86,7 @@
 | PyVRP | 版本 | 0.14.0（`baseline_pyvrp_vrptw.py`） | 与官方 `.sol` BKS 对照 |
 | CP-SAT | 时间上限 / workers | 180 s / 8 | `week08_exact_gap.py`、`cpsat_fstsp.solve_exact` |
 
-OR-Tools 与 PyVRP 是决定性求解，重复运行没有统计意义，所以只报单次结果；
-GA 是唯一带随机性的基线，因此报 5 种子均值 ± 标准差。
+PyVRP 固定了 seed，重复运行结果一致；OR-Tools 用 `GUIDED_LOCAL_SEARCH` + 10 s 时间预算，该版本的 routing 参数不暴露随机种子，所以同一算例的搜索结果逐次有小幅浮动——56 实例的均值 gap 我实测在 7.2%~8.1% 之间，本仓库报单次结果并给出这个区间。GA 是唯一需要多种子的基线，报 5 种子均值 ± 标准差。
 
 ## 5. 已声明但未启用的项（写报告时要如实说明）
 

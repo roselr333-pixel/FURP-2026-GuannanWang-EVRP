@@ -45,6 +45,11 @@ R_D = w6.R_D
 
 INF = float("inf")
 
+# The model works in integer time units of 1/SC: every arc and sortie flight is
+# rounded onto that grid. A reconstructed plan therefore re-evaluates to the
+# objective only up to the accumulated rounding (see _rounding_tolerance).
+SC = 100
+
 
 # ---------------------------------------------------------------------------
 # physical (clean) evaluator
@@ -213,7 +218,6 @@ def solve_exact(inst, max_cust=2, rd=R_D, time_limit=120.0, num_workers=8,
     n = inst["n"]
     C = list(inst["customers"].keys())
     end = n + 1
-    SC = 100
 
     def D(a, b):
         aa = 0 if a == end else a
@@ -334,9 +338,16 @@ def solve_exact(inst, max_cust=2, rd=R_D, time_limit=120.0, num_workers=8,
             "n_sorties": len(sorties)}
 
 
+def _rounding_tolerance(route, trips, sc=SC):
+    """How far the discrete objective may differ from the physical value of the
+    same plan: half a time step per truck arc and per sortie flight."""
+    return 0.5 / sc * (len(route) - 1 + len(trips)) + 1e-6
+
+
 def _main():
     """Self-test: exact optimum must be <= every heuristic and the CP-SAT
-    solution must re-evaluate (physically) to its own objective."""
+    solution must re-evaluate (physically) to its own objective, up to the
+    model's 1/SC time discretisation."""
     import week06_ground_air_evrp_tw as _w6
     for n in (8, 10):
         for seed in (20260720, 20260721):
@@ -348,14 +359,22 @@ def _main():
             g1k = fstsp_makespan_clean(inst, gc1, gt1)
             chk = (fstsp_makespan_clean(inst, res["route"], res["trips"])
                    if res["route"] else None)
-            print(f"n={n} seed={seed}: OPT={res['makespan']} "
+            tol = (0.0 if res["route"] is None
+                   else _rounding_tolerance(res["route"], res["trips"]))
+            print(f"n={n} seed={seed}: OPT={res['makespan']:.4f} "
                   f"({res['status']}, {res['wall_s']}s, "
                   f"{res['n_sorties']} cand) | clean_cap2={gk:.1f} "
-                  f"clean_cap1={g1k:.1f} | cross-check={chk}")
-            assert res["route"] is None or abs(chk - res["makespan"]) < 1e-6, \
+                  f"clean_cap1={g1k:.1f} | cross-check={chk:.4f} "
+                  f"(tol={tol:.3f})")
+            assert res["route"] is None or (chk < INF and
+                                            abs(chk - res["makespan"]) <= tol), \
                 "CP-SAT solution does not re-evaluate to its objective"
-            assert res["makespan"] <= gk + 1e-6, "OPT > cap2 heuristic!"
-            assert res["makespan"] <= g1k + 1e-6, "OPT > cap1 heuristic!"
+            # the model evaluates the heuristic plans on the 1/SC grid, so it
+            # may be a rounding step above their exact physical value
+            assert res["makespan"] <= gk + _rounding_tolerance(gr, gt), \
+                "OPT > cap2 heuristic!"
+            assert res["makespan"] <= g1k + _rounding_tolerance(gc1, gt1), \
+                "OPT > cap1 heuristic!"
 
 
 if __name__ == "__main__":

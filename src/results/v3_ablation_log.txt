@@ -10,50 +10,50 @@ truck_speed=1.0  drone_speed=2.0  drone_range=160.0  battery=250  recharge=40  s
 === size N=8 ===
   seed 20260720: V1=   497.9  cap1=   344.6  v2=   290.2  notakeoff=   290.2  cap3=   167.0  off(v2)=2/8  t=0.01s
   seed 20260721: V1=   460.0  cap1=   381.8  v2=   383.1  notakeoff=   383.1  cap3=   291.2  off(v2)=2/8  t=0.01s
-  seed 20260722: V1=   488.6  cap1=   299.1  v2=   235.9  notakeoff=   294.2  cap3=   238.2  off(v2)=4/8  t=0.01s
-  seed 20260723: V1=   549.1  cap1=   251.7  v2=   265.1  notakeoff=   309.8  cap3=   261.5  off(v2)=3/8  t=0.01s
-  seed 20260724: V1=   519.4  cap1=   425.5  v2=   278.6  notakeoff=   382.4  cap3=   368.7  off(v2)=5/8  t=0.01s
-  seed 20260725: V1=   463.2  cap1=   295.7  v2=   295.7  notakeoff=   295.7  cap3=   223.8  off(v2)=2/8  t=0.01s
+  seed 20260722: V1=   488.6  cap1=   299.1  v2=   235.9  notakeoff=   294.2  cap3=   238.2  off(v2)=4/8  t=0.03s
+  seed 20260723: V1=   549.1  cap1=   251.7  v2=   265.1  notakeoff=   309.8  cap3=   261.5  off(v2)=3/8  t=0.02s
+  seed 20260724: V1=   519.4  cap1=   425.5  v2=   278.6  notakeoff=   382.4  cap3=   368.7  off(v2)=5/8  t=0.03s
+  seed 20260725: V1=   463.2  cap1=   295.7  v2=   295.7  notakeoff=   295.7  cap3=   223.8  off(v2)=2/8  t=0.03s
   seed 20260726: V1=   541.5  cap1=   430.7  v2=   427.7  notakeoff=   427.7  cap3=   329.2  off(v2)=2/8  t=0.01s
-  seed 20260727: V1=   387.9  cap1=   325.2  v2=   271.2  notakeoff=   271.2  cap3=   230.0  off(v2)=2/8  t=0.01s
-  seed 20260728: V1=   454.2  cap1=   404.7  v2=   256.4  notakeoff=   277.8  cap3=   267.4  off(v2)=4/8  t=0.01s
+  seed 20260727: V1=   387.9  cap1=   325.2  v2=   271.2  notakeoff=   271.2  cap3=   230.0  off(v2)=2/8  t=0.02s
+  seed 20260728: V1=   454.2  cap1=   404.7  v2=   256.4  notakeoff=   277.8  cap3=   267.4  off(v2)=4/8  t=0.02s
   seed 20260729: V1=   496.6  cap1=   373.4  v2=   231.7  notakeoff=   259.0  cap3=   257.9  off(v2)=4/8  t=0.01s
 
 === size N=12 ===
-  seed 20260720: V1=   673.5  cap1=   597.4  v2=   513.4  notakeoff=   514.6  cap3=   492.3  off(v2)=4/12  t=0.07s
-  seed 20260721: V1=   652.6  cap1=   529.5  v2=   571.4  notakeoff=   571.4  cap3=   551.3  off(v2)=2/12  t=0.06s
-  seed 20260722: V1=   625.9  cap1=   551.3  v2=   445.1  notakeoff=   445.1  cap3=   305.8  off(v2)=4/12  t=0.07s
-  seed 20260723: V1=   799.5  cap1=   598.3  v2=   567.7  notakeoff=   567.7  cap3=   606.7  off(v2)=2/12  t=0.07s
-  seed 20260724: V1=   736.2  cap1=   651.8  v2=   486.0  notakeoff=   525.3  cap3=   486.0  off(v2)=3/12  t=0.07s
+  seed 20260720: V1=   673.5  cap1=   597.4  v2=   513.4  notakeoff=   514.6  cap3=   492.3  off(v2)=4/12  t=0.08s
+  seed 20260721: V1=   652.6  cap1=   529.5  v2=   571.4  notakeoff=   571.4  cap3=   551.3  off(v2)=2/12  t=0.15s
+  seed 20260722: V1=   625.9  cap1=   551.3  v2=   445.1  notakeoff=   445.1  cap3=   305.8  off(v2)=4/12  t=0.08s
+  seed 20260723: V1=   799.5  cap1=   598.3  v2=   567.7  notakeoff=   567.7  cap3=   606.7  off(v2)=2/12  t=0.13s
+  seed 20260724: V1=   736.2  cap1=   651.8  v2=   486.0  notakeoff=   525.3  cap3=   486.0  off(v2)=3/12  t=0.09s
   seed 20260725: V1=   718.6  cap1=   633.7  v2=   487.6  notakeoff=   577.8  cap3=   456.9  off(v2)=4/12  t=0.07s
-  seed 20260726: V1=   788.2  cap1=   606.3  v2=   621.6  notakeoff=   638.7  cap3=   621.6  off(v2)=3/12  t=0.07s
-  seed 20260727: V1=   545.9  cap1=   424.3  v2=   424.3  notakeoff=   424.3  cap3=   358.0  off(v2)=2/12  t=0.06s
-  seed 20260728: V1=   732.5  cap1=   617.0  v2=   559.3  notakeoff=   559.3  cap3=   470.9  off(v2)=2/12  t=0.07s
-  seed 20260729: V1=   674.0  cap1=   559.2  v2=   497.2  notakeoff=   497.2  cap3=   454.5  off(v2)=2/12  t=0.06s
+  seed 20260726: V1=   788.2  cap1=   606.3  v2=   621.6  notakeoff=   638.7  cap3=   621.6  off(v2)=3/12  t=0.11s
+  seed 20260727: V1=   545.9  cap1=   424.3  v2=   424.3  notakeoff=   424.3  cap3=   358.0  off(v2)=2/12  t=0.08s
+  seed 20260728: V1=   732.5  cap1=   617.0  v2=   559.3  notakeoff=   559.3  cap3=   470.9  off(v2)=2/12  t=0.11s
+  seed 20260729: V1=   674.0  cap1=   559.2  v2=   497.2  notakeoff=   497.2  cap3=   454.5  off(v2)=2/12  t=0.11s
 
 === size N=16 ===
-  seed 20260720: V1=  1121.4  cap1=   920.7  v2=   997.9  notakeoff=   997.9  cap3=   921.9  off(v2)=2/16  t=0.24s
-  seed 20260721: V1=   950.5  cap1=   706.1  v2=   557.1  notakeoff=   577.5  cap3=   779.8  off(v2)=6/16  t=0.24s
-  seed 20260722: V1=   944.2  cap1=   788.1  v2=   711.7  notakeoff=   711.7  cap3=   690.2  off(v2)=2/16  t=0.23s
-  seed 20260723: V1=   926.6  cap1=   731.6  v2=   741.7  notakeoff=   716.0  cap3=   746.7  off(v2)=4/16  t=0.35s
-  seed 20260724: V1=   956.1  cap1=   708.3  v2=   676.4  notakeoff=   834.5  cap3=   827.5  off(v2)=5/16  t=0.23s
-  seed 20260725: V1=   974.0  cap1=   854.9  v2=   523.0  notakeoff=   645.5  cap3=   533.4  off(v2)=8/16  t=0.25s
-  seed 20260726: V1=   926.3  cap1=   763.3  v2=   751.0  notakeoff=   877.1  cap3=   852.2  off(v2)=3/16  t=0.23s
-  seed 20260727: V1=  1011.0  cap1=   833.8  v2=   778.4  notakeoff=   778.4  cap3=   833.5  off(v2)=2/16  t=0.23s
-  seed 20260728: V1=   909.5  cap1=   778.8  v2=   647.7  notakeoff=   668.1  cap3=   828.9  off(v2)=7/16  t=0.33s
-  seed 20260729: V1=  1039.5  cap1=   911.9  v2=   554.2  notakeoff=   640.1  cap3=   540.2  off(v2)=8/16  t=0.34s
+  seed 20260720: V1=  1121.4  cap1=   920.7  v2=   997.9  notakeoff=   997.9  cap3=   921.9  off(v2)=2/16  t=0.28s
+  seed 20260721: V1=   950.5  cap1=   706.1  v2=   557.1  notakeoff=   577.5  cap3=   779.8  off(v2)=6/16  t=0.29s
+  seed 20260722: V1=   944.2  cap1=   788.1  v2=   711.7  notakeoff=   711.7  cap3=   690.2  off(v2)=2/16  t=0.33s
+  seed 20260723: V1=   926.6  cap1=   731.6  v2=   741.7  notakeoff=   716.0  cap3=   746.7  off(v2)=4/16  t=0.69s
+  seed 20260724: V1=   956.1  cap1=   708.3  v2=   676.4  notakeoff=   834.5  cap3=   827.5  off(v2)=5/16  t=0.41s
+  seed 20260725: V1=   974.0  cap1=   854.9  v2=   523.0  notakeoff=   645.5  cap3=   533.4  off(v2)=8/16  t=0.30s
+  seed 20260726: V1=   926.3  cap1=   763.3  v2=   751.0  notakeoff=   877.1  cap3=   852.2  off(v2)=3/16  t=0.30s
+  seed 20260727: V1=  1011.0  cap1=   833.8  v2=   778.4  notakeoff=   778.4  cap3=   833.5  off(v2)=2/16  t=0.48s
+  seed 20260728: V1=   909.5  cap1=   778.8  v2=   647.7  notakeoff=   668.1  cap3=   828.9  off(v2)=7/16  t=0.47s
+  seed 20260729: V1=  1039.5  cap1=   911.9  v2=   554.2  notakeoff=   640.1  cap3=   540.2  off(v2)=8/16  t=0.54s
 
 === size N=20 ===
-  seed 20260720: V1=  1232.0  cap1=   931.0  v2=  1052.7  notakeoff=  1052.7  cap3=  1069.0  off(v2)=2/20  t=0.61s
-  seed 20260721: V1=  1000.7  cap1=   822.8  v2=   938.3  notakeoff=   938.3  cap3=   852.8  off(v2)=2/20  t=0.61s
-  seed 20260722: V1=  1397.9  cap1=  1035.3  v2=   942.2  notakeoff=   988.4  cap3=   975.1  off(v2)=6/20  t=0.72s
-  seed 20260723: V1=  1407.5  cap1=  1249.8  v2=  1135.6  notakeoff=  1206.3  cap3=  1192.9  off(v2)=3/20  t=0.74s
-  seed 20260724: V1=  1325.3  cap1=  1149.3  v2=  1119.2  notakeoff=  1150.2  cap3=  1068.1  off(v2)=7/20  t=0.76s
-  seed 20260725: V1=  1297.4  cap1=  1010.6  v2=  1125.5  notakeoff=  1125.5  cap3=   920.9  off(v2)=2/20  t=0.64s
-  seed 20260726: V1=  1372.5  cap1=  1031.6  v2=  1049.4  notakeoff=  1162.4  cap3=  1026.6  off(v2)=6/20  t=0.96s
-  seed 20260727: V1=  1255.4  cap1=  1154.3  v2=  1078.3  notakeoff=  1078.3  cap3=   850.8  off(v2)=2/20  t=0.65s
-  seed 20260728: V1=  1321.9  cap1=  1002.3  v2=  1257.1  notakeoff=  1257.1  cap3=  1098.6  off(v2)=2/20  t=0.64s
-  seed 20260729: V1=  1225.2  cap1=   992.0  v2=   992.0  notakeoff=   992.0  cap3=   977.6  off(v2)=2/20  t=0.64s
+  seed 20260720: V1=  1232.0  cap1=   931.0  v2=  1052.7  notakeoff=  1052.7  cap3=  1069.0  off(v2)=2/20  t=0.90s
+  seed 20260721: V1=  1000.7  cap1=   822.8  v2=   938.3  notakeoff=   938.3  cap3=   852.8  off(v2)=2/20  t=0.97s
+  seed 20260722: V1=  1397.9  cap1=  1035.3  v2=   942.2  notakeoff=   988.4  cap3=   975.1  off(v2)=6/20  t=0.93s
+  seed 20260723: V1=  1407.5  cap1=  1249.8  v2=  1135.6  notakeoff=  1206.3  cap3=  1192.9  off(v2)=3/20  t=1.16s
+  seed 20260724: V1=  1325.3  cap1=  1149.3  v2=  1119.2  notakeoff=  1150.2  cap3=  1068.1  off(v2)=7/20  t=1.25s
+  seed 20260725: V1=  1297.4  cap1=  1010.6  v2=  1125.5  notakeoff=  1125.5  cap3=   920.9  off(v2)=2/20  t=0.87s
+  seed 20260726: V1=  1372.5  cap1=  1031.6  v2=  1049.4  notakeoff=  1162.4  cap3=  1026.6  off(v2)=6/20  t=1.52s
+  seed 20260727: V1=  1255.4  cap1=  1154.3  v2=  1078.3  notakeoff=  1078.3  cap3=   850.8  off(v2)=2/20  t=1.25s
+  seed 20260728: V1=  1321.9  cap1=  1002.3  v2=  1257.1  notakeoff=  1257.1  cap3=  1098.6  off(v2)=2/20  t=0.96s
+  seed 20260729: V1=  1225.2  cap1=   992.0  v2=   992.0  notakeoff=   992.0  cap3=   977.6  off(v2)=2/20  t=1.18s
 
 ==============================================================================
 AGGREGATE (mean over seeds per size)

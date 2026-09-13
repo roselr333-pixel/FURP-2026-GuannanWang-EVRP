@@ -11,8 +11,8 @@ solution (the `.sol` file, whose `Cost` line is the BKS distance).
 For every instance I:
   1. download & cache the official `.vrp` (instance) and `.sol` (BKS) files,
   2. parse the `.vrp` with `vrplib` (TSPLIB-style VRPTW format),
-  3. solve it with my OR-Tools VRPTW engine (PATH_CHEAPEST_ARC + Guided Local
-     Search, with a per-instance time limit),
+  3. solve it with my OR-Tools VRPTW engine (PARALLEL_CHEAPEST_INSERTION +
+     Guided Local Search, with a per-instance time limit),
   4. read the official BKS distance and vehicle count from the `.sol`,
   5. report my distance / vehicles and the gap to BKS.
 
@@ -190,7 +190,7 @@ def main():
     emit("OFFICIAL SOLOMON VRPTW BENCHMARK  (OR-Tools vs published BKS)")
     emit(f"source: {BASE_URL}")
     emit(f"instances: {len(ALL_INSTANCES)} (classic 100-customer set)")
-    emit(f"solver: PATH_CHEAPEST_ARC + GUIDED_LOCAL_SEARCH, "
+    emit(f"solver: PARALLEL_CHEAPEST_INSERTION + GUIDED_LOCAL_SEARCH, "
          f"{TIME_LIMIT_S}s/instance, dist scale x{DIST_SCALE}")
     emit("=" * 78)
     emit(f"{'instance':<9}{'BKS_dist':>10}{'BKS_veh':>8}"

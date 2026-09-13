@@ -209,7 +209,7 @@ def failure_cases(out):
     out.append("\n=== FAILURE CASES (constraint-level diagnosis) ===\n")
 
     # 1) CVRP with too few vehicles -> capacity infeasible
-    coords, demand, tw = generate_instance(20, SEED_BASE + 20)
+    coords, demand, _tw = generate_instance(20, SEED_BASE + 20)
     # drastically reduce capacity via a tiny global cap by re-solving with 1 vehicle
     mgr = pywrapcp.RoutingIndexManager(21, 1, 0)
     rt = pywrapcp.RoutingModel(mgr)
