@@ -107,9 +107,53 @@ Key documents:
 | Schneider (2014) replication | distance +50.7% vs BKS, mean vehicles 5.4 vs 2.1 |
 | Multi-drone (standard instances) | K=1→5 raises the gain to 46.8–71.4% |
 | Drone scheduling | naive rule provably optimal on 64/64 configs |
-| V3 (EV + TW + drone) | K=1 −34.7–53.4%, K=3 up to −72.8% vs truck-only EV |
+| V3 (EV + TW + drone) | vs truck-only EV: K=1 33.5–52.4% shorter, K=3 up to 72.5% |
 
 Full numbers and their caveats: `docs/reference/experiment_evidence_index_zh.md`.
+
+---
+
+## Five-minute tour
+
+If you only have five minutes, read these four things in this order:
+
+1. **`figures/baseline_consolidated.png`** — the three baselines on the *same* 56
+   official Solomon instances: PyVRP −3.0%, OR-Tools +7.2%, my GA +36.6%. (OR-Tools
+   is a 10 s time-budgeted search: 7.2–8.1% across runs; PyVRP is seeded and stable.)
+2. **`figures/v3_ablation.png`** — what actually buys the collaborative gain:
+   multi-customer sorties, not extra take-offs or extra truck stops. At N=20 the
+   multi-customer term even turns slightly negative, which is the honest boundary
+   of the idea.
+3. **`figures/lns_vs_greedy.png` + `figures/multidrone_std.png`** — the improvement
+   phase (+12.5–21.3% over the greedy) and the drone-count sweep, including the
+   scheduling certificate (the naive rule is provably optimal on 64/64 configs).
+4. **`docs/reference/failure_cases_master.md`** — the 13 diagnosed failure cases
+   (which instance, which constraint failed, what I would change next). This is the
+   boundary section of the project.
+
+### Which figure answers which question
+
+Every figure below is a step in `run_all.py`; the figure tools run last, after the
+experiments that produce their CSVs. Numbers, sources and caveats for all of them:
+`docs/reference/experiment_evidence_index_en.md`.
+
+| Figure | Question it answers | Headline number | Produced by |
+|---|---|---|---|
+| `figures/baseline_consolidated.png` | How do the three baselines compare with the published BKS on the same instances? | PyVRP −3.0% · OR-Tools +7.2% (7.2–8.1% across runs) · my GA +36.6% ± 15.8% | `baseline_consolidated.py` |
+| `figures/pyvrp_family_gap.png` | Is PyVRP below BKS on every family? | yes — all six family means are negative | `baseline_pyvrp_vrptw.py` |
+| `figures/sensitivity_panels.png` | Which design variable moves the gain most? | battery Q 120→500: 41.2%→29.7%; range R 60→160: 15.4%→34.4% (then flat); customers/sortie 1→3: 20.5%→37.1% | `week06_sensitivity.py` |
+| `figures/mo_scatter.png`, `figures/mo_tradeoff.png` | Is there a distance / completion-time trade-off? | the weighted sum reaches −32% distance and −34% makespan | `week06_multi_objective.py` |
+| `figures/largen_scale_decay.png` | At what size does collaboration stop paying? | V2 vs V1: 8.6% (N=30) → 3.4% (N=50) → 0.5% (N=100) | `src/tools/gen_largen_figure.py` |
+| `figures/ablation_std.png` | Does the ablation survive on official Solomon topologies? | multi-customer +7.2–8.9 pp (synthetic set: +8.6–12.1 pp) — same main driver | `src/tools/gen_ablation_std_figure.py` |
+| `figures/v3_ablation.png` | Which factor drives the gain under EV + time windows? | multi-customer +8.5–12.5 pp, stop reuse +1.9–5.3 pp; extra take-offs not significant (p=0.139) | `src/tools/gen_v3_ablation_figure.py` |
+| `figures/drone_energy.png` | What changes once the drone has a payload-aware energy budget? | multi-customer gain +10.4→+6.1 pp (synthetic) and +6.6→+5.4 pp (standard); the published heuristic's plans are only 42%/48% energy-feasible at β=0.04, mine 100% | `src/tools/gen_drone_energy_figure.py` |
+| `figures/lns_vs_greedy.png` | Does the improvement phase pay off? | +12.5–21.3% over the greedy (paired Wilcoxon p=1.7×10⁻¹⁰) | `src/tools/plot_lns.py` |
+| `figures/multidrone.png` | How much do extra drones help (synthetic instances)? | N=50: 29.5% (K=1) → 38.1% (K=3) | `src/tools/plot_multidrone.py` |
+| `figures/multidrone_std.png` | Same question on standard instances, plus the scheduler | K=1→5 raises the gain to 46.8–71.4%; naive scheduler optimal on 64/64 configs | `src/tools/plot_multidrone_std.py` |
+| `figures/exact_gap.png` | How far is the heuristic from the exact optimum? | n=8 (proven optimal): greedy +31.2%, LNS +16.5% | `src/tools/plot_exact_gap.py` |
+| `figures/schneider_routes.png`, `figures/schneider_vehcomp.png` | How close is my EVRP-TW to Schneider (2014)? | 18/18 fully served, distance +50.7%, 5.4 vs 2.1 vehicles (multi-trip is why) | `src/tools/plot_schneider_routes.py` |
+| `src/results/week01_routes.png` | Week-1 smoke test | 5-customer VRPTW, both phases feasible | `week01_baseline.py` |
+| `src/results/week03_route_n20_vrptw_improved.png` | Week-3 fair comparison | 2-opt: 682→616 (−9.7%) at n=40 | `week03_experiment.py` |
 
 ---
 
@@ -119,14 +163,18 @@ Full numbers and their caveats: `docs/reference/experiment_evidence_index_zh.md`
 python -m venv venv
 venv/Scripts/python -m pip install -r requirements.txt
 
-python run_all.py                 # rerun every headline experiment
-python -m pytest tests/ -q        # regression tests (about one second)
+python run_all.py                 # rerun every experiment and every figure
+python -m pytest tests/ -q        # 95 regression tests, about 15 s
 ```
 
 See `REPRODUCE.md` for the conclusion → script → artifact map. The experiment
 scripts print their machine/environment in the log header and record per-instance
 runtime (`runtime_s`) in their CSV; the baseline scripts report wall-clock time in
 their logs instead.
+
+To regenerate one specific figure without rerunning everything, run its script
+directly, e.g. `python src/tools/plot_lns.py` (it reads the CSV the corresponding
+experiment produced).
 
 ---
 

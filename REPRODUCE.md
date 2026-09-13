@@ -17,7 +17,7 @@ venv/Scripts/python -m pip install -r requirements.txt
 python run_all.py
 ```
 
-脚本会按依赖顺序跑完所有 headline 实验，逐个打印 `OK / FAIL` 与耗时。GA 基线最慢（本机单跑约 70–90 分钟），整轮约 1.5–2 小时。也可以单独跑任意一个脚本，例如：
+脚本会按依赖顺序跑完仓库里的全部实验（headline + W1–W5）与 `figures/` 下的全部图：实验先跑，绘图工具最后跑（它们读实验写出的 CSV）。逐个打印 `OK / FAIL` 与耗时。GA 基线最慢（本机单跑约 70–90 分钟），整轮约 1.5–2 小时。也可以单独跑任意一个脚本，例如：
 
 ```bash
 python src/experiments/week06_sensitivity.py
@@ -27,7 +27,7 @@ python src/experiments/week06_sensitivity.py
 
 ## 2b. 运行回归测试
 
-`tests/` 下是用 pytest 写的回归测试，覆盖模型的关键不变量：K=1 无人机评估器等于单架、更多无人机不会更差、V3 解服务到每一位顾客、调度恒有 `greedy ≥ local ≥ optimal` 且下界合法、消融的 `abl_cap1` 精确复现已发表基线。约 1 秒跑完：
+`tests/` 下是用 pytest 写的回归测试，覆盖模型的关键不变量：K=1 无人机评估器等于单架、更多无人机不会更差、V3 解服务到每一位顾客、调度恒有 `greedy ≥ local ≥ optimal` 且下界合法、消融的 `abl_cap1` 精确复现已发表基线、W5/M&C 评估器的物理性与跨模块一致性。本机约 15 秒跑完（95 个用例，其中 `tests/test_cpsat_exact.py` 的 CP-SAT 校验占大头）：
 
 ```bash
 python -m pytest tests/ -q
@@ -55,6 +55,28 @@ python -m pytest tests/ -q
 | V3（电动卡车+无人机+充电+时间窗；相对纯电卡车 K=1 降 33.5%~52.4%、K=3 达 72.5%） | `v3_ev_collab.py` | 4 规模 × 10 种子 × K=1/2/3；确定性 | `src/results/v3_ev_collab_summary.csv`、`v3_ev_collab_raw.csv` |
 | 精确最优性 gap（CP-SAT 求小规模精确最优，对照我的贪心/LNS） | `week08_exact_gap.py` + `cpsat_fstsp.py` | n=8/10/12 × 5 种子；CP-SAT 上限 180s | `src/results/week08_exact_gap_raw.csv` / `_summary.csv` |
 | 配对显著性检验（Wilcoxon 符号秩） | `stat_tests.py` | 读 W6/W7/W8 的 CSV；numpy 手写、无新依赖 | `src/results/stat_tests.csv` |
+
+## 3b. 图（`figures/`）→ 生成脚本
+
+`figures/` 下的每张图都是 `run_all.py` 的一步，也可以单独重跑（只要对应的实验 CSV 已存在，单独跑绘图脚本即可，例如 `python src/tools/plot_lns.py`）：
+
+| 图 | 回答什么问题 | 生成脚本 | 依赖的 CSV |
+|---|---|---|---|
+| `baseline_consolidated.png` | 三条基线在同一批 56 个 Solomon 实例上各差 BKS 多少 | `baseline_consolidated.py` | 三个基线结果 CSV |
+| `pyvrp_family_gap.png` | PyVRP 是否在每个 family 都优于 BKS | `baseline_pyvrp_vrptw.py` | `baseline_pyvrp_vrptw_results.csv` |
+| `sensitivity_panels.png` | 哪个设计变量对协同收益影响最大 | `week06_sensitivity.py` | `week06_sensitivity.csv` |
+| `mo_scatter.png` / `mo_tradeoff.png` | 距离与完工时间之间是否存在权衡 | `week06_multi_objective.py` | `week06_multi_objective.csv` |
+| `largen_scale_decay.png` | 规模大到什么程度协同不再划算 | `src/tools/gen_largen_figure.py` | `week06_largeN_summary.csv` |
+| `ablation_std.png` | 核心消融在标准算例上是否成立 | `src/tools/gen_ablation_std_figure.py` | `week07_ablation_std_summary.csv` |
+| `v3_ablation.png` | 电动 + 时间窗下增益来自哪一项 | `src/tools/gen_v3_ablation_figure.py` | `v3_ablation_summary.csv` |
+| `drone_energy.png` | 加入能耗/载荷模型后结论怎么变 | `src/tools/gen_drone_energy_figure.py` | `drone_energy_summary.csv` |
+| `lns_vs_greedy.png` | 改进阶段（LNS）是否值得 | `src/tools/plot_lns.py` | `week08_lns_summary.csv` |
+| `multidrone.png` | 多无人机（合成算例）的收益 | `src/tools/plot_multidrone.py` | `week08_multidrone_summary.csv` |
+| `multidrone_std.png` | 标准算例 + 调度器的结果 | `src/tools/plot_multidrone_std.py` | `week08_multidrone_std_summary.csv`、`week08_scheduling.csv` |
+| `exact_gap.png` | 启发式离精确最优有多远 | `src/tools/plot_exact_gap.py` | `week08_exact_gap_summary.csv` |
+| `schneider_routes.png` / `schneider_vehcomp.png` | 与 Schneider (2014) 的差距 | `src/tools/plot_schneider_routes.py` | `schneider_evrptw_bks_comparison.csv` |
+| `src/results/week01_routes.png` | W1 冒烟测试的路线 | `week01_baseline.py` | — |
+| `src/results/week03_route_n20_vrptw_improved.png` | W3 公平对比里 2-opt 的路线 | `week03_experiment.py` | — |
 
 ## 4. 说明与边界
 
