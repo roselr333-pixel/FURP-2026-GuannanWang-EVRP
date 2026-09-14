@@ -12,6 +12,7 @@ PyVRP reads VRPLIB Solomon files directly; no model construction needed.
 
 Output:
   src/results/baseline_pyvrp_vrptw_results.csv   (per-instance)
+  src/results/baseline_pyvrp_run.log             (console transcript of the run)
   figures/pyvrp_family_gap.png        (family mean gap bar)
 """
 import os
@@ -27,6 +28,7 @@ RESULTS_DIR = bg.RESULTS_DIR
 INST_DIR = bg.INSTANCE_DIR
 REPO = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 CSV_PATH = os.path.join(RESULTS_DIR, "baseline_pyvrp_vrptw_results.csv")
+RUN_LOG = os.path.join(RESULTS_DIR, "baseline_pyvrp_run.log")
 FIG_PATH = os.path.join(REPO, "figures", "pyvrp_family_gap.png")
 FAMILIES = bg.FAMILIES
 ALL_INSTANCES = bg.ALL_INSTANCES
@@ -55,8 +57,16 @@ def solve_one(name):
 def main():
     rows = []
     fam_gaps = {}
-    print(f"{'inst':<9}{'BKS':>9}{'PyVRP':>9}{'gap%':>9}{'veh':>5}{'feas':>6}")
-    print("-" * 48)
+    log = []
+
+    def emit(line=""):
+        # everything the run prints is also kept, so the committed transcript
+        # (baseline_pyvrp_run.log) is produced by this script itself
+        print(line)
+        log.append(line)
+
+    emit(f"{'inst':<9}{'BKS':>9}{'PyVRP':>9}{'gap%':>9}{'veh':>5}{'feas':>6}")
+    emit("-" * 48)
     for name in ALL_INSTANCES:
         bks = bg.load_instance(name)["bks_cost"]
         t0 = time.time()
@@ -70,17 +80,17 @@ def main():
                      "pyvrp_vehicles": nr,
                      "pyvrp_feasible": feas,
                      "runtime_s": round(time.time() - t0, 3)})
-        print(f"{name:<9}{bks:>9.1f}{cost:>9.1f}{gap:>9.1f}"
-              f"{str(nr):>5}{str(feas):>6}")
+        emit(f"{name:<9}{bks:>9.1f}{cost:>9.1f}{gap:>9.1f}"
+             f"{str(nr):>5}{str(feas):>6}")
     # family + overall mean gap
     fam_mean = {f: sum(v) / len(v) for f, v in fam_gaps.items()}
     all_gaps = [g for v in fam_gaps.values() for g in v]
     overall = sum(all_gaps) / len(all_gaps)
-    print("-" * 48)
-    print("FAMILY MEAN GAP (PyVRP vs BKS):")
+    emit("-" * 48)
+    emit("FAMILY MEAN GAP (PyVRP vs BKS):")
     for f, gm in fam_mean.items():
-        print(f"  {f:<5} {gm:6.1f}%")
-    print(f"OVERALL mean gap = {overall:.1f}%  (n={len(all_gaps)})")
+        emit(f"  {f:<5} {gm:6.1f}%")
+    emit(f"OVERALL mean gap = {overall:.1f}%  (n={len(all_gaps)})")
 
     with open(CSV_PATH, "w", newline="", encoding="utf-8") as fh:
         w = csv.DictWriter(fh, fieldnames=["instance", "family", "bks_cost",
@@ -99,7 +109,7 @@ def main():
                         "pyvrp_cost": "", "pyvrp_gap_pct": round(gm, 2),
                         "pyvrp_vehicles": "", "pyvrp_feasible": "",
                         "runtime_s": ""})
-    print(f"wrote {CSV_PATH}")
+    emit(f"wrote {CSV_PATH}")
 
     # bar chart of family mean gaps
     try:
@@ -122,9 +132,13 @@ def main():
         fig.tight_layout()
         os.makedirs(os.path.dirname(FIG_PATH), exist_ok=True)
         fig.savefig(FIG_PATH, dpi=130)
-        print(f"wrote {FIG_PATH}")
+        emit(f"wrote {FIG_PATH}")
     except Exception as e:
-        print("figure skipped:", e)
+        emit("figure skipped: " + str(e))
+
+    with open(RUN_LOG, "w", encoding="utf-8") as fh:
+        fh.write("\n".join(log) + "\n")
+    print(f"wrote {RUN_LOG}")
 
 
 if __name__ == "__main__":

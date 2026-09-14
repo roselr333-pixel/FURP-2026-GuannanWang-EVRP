@@ -44,7 +44,9 @@ INSTANCE_DIR = os.path.join(REPO_ROOT, "src", "instances", "official_solomon")
 RESULTS_DIR = os.path.join(REPO_ROOT, "src", "results")
 CSV_PATH = os.path.join(RESULTS_DIR, "baseline_ga_vrptw_results.csv")
 CMP_PATH = os.path.join(RESULTS_DIR, "baseline_ga_vrptw_comparison.csv")
-LOG_PATH = os.path.join(RESULTS_DIR, "baseline_ga_vrptw_output.txt")
+# per-instance table written by the script; a single-seed run (GA_SEEDS below)
+# writes the _single_seed variants so the committed multi-seed artifacts stay
+OUT_PATH = os.path.join(RESULTS_DIR, "baseline_ga_vrptw_output.txt")
 ORT_PATH = os.path.join(RESULTS_DIR, "benchmark_official_solomon_results.csv")
 
 BASE_URL = "https://raw.githubusercontent.com/PyVRP/Instances/main/VRPTW/Solomon/"
@@ -54,9 +56,21 @@ N_ELITE = 6
 TOURNAMENT = 4
 MUT_RATE = 0.30
 TIME_LIMIT_S = 8           # per-instance search budget (≈ OR-Tools 10s)
-# 多种子：5 个，跨多年月份以减少"恰好随机到好结果"的运气
-SEEDS = [20260717, 20260801, 20260815, 20260901, 20261001]
-# SEEDS = [20260717]  # 旧单一种子对照
+# 多种子：5 个，跨多年月份以减少"恰好随机到好结果"的运气。
+# 用 GA_SEEDS=20260717 可以复现旧的单一种子对照（会改写 *_single_seed 产物并把
+# 控制台记录写到 baseline_ga_run.log）。
+SEEDS = [int(s) for s in os.environ.get(
+    "GA_SEEDS", "20260717,20260801,20260815,20260901,20261001").split(",")]
+SINGLE_SEED = len(SEEDS) == 1
+if SINGLE_SEED:
+    CSV_PATH = CSV_PATH.replace(".csv", "_single_seed.csv")
+    CMP_PATH = CMP_PATH.replace(".csv", "_single_seed.csv")
+    OUT_PATH = OUT_PATH.replace(".txt", "_single_seed.txt")
+# console transcript: baseline_ga_run.log for one seed, baseline_ga_multi_seed.log
+# (also read by src/tools/ga_monitor.py) for the multi-seed run
+RUN_LOG_PATH = os.path.join(RESULTS_DIR,
+                            "baseline_ga_run.log" if SINGLE_SEED
+                            else "baseline_ga_multi_seed.log")
 
 FAMILIES = {
     "C1":  [f"C10{i}" for i in range(1, 10)],
@@ -517,12 +531,17 @@ def main():
                             r["ga_gap_std_pct"],
                             round(r["ga_gap_mean_pct"] - float(o["gap_pct"]), 2)])
 
-    with open(LOG_PATH, "w", encoding="utf-8") as fh:
+    with open(OUT_PATH, "w", encoding="utf-8") as fh:
+        fh.write("\n".join(log) + "\n")
+    # the console transcript is written by the script itself, so every log in
+    # src/results/ has a producing command
+    with open(RUN_LOG_PATH, "w", encoding="utf-8") as fh:
         fh.write("\n".join(log) + "\n")
 
     print(f"\n[saved] {CSV_PATH}")
     print(f"[saved] {CMP_PATH}")
-    print(f"[saved] {LOG_PATH}")
+    print(f"[saved] {OUT_PATH}")
+    print(f"[saved] {RUN_LOG_PATH}")
 
 
 if __name__ == "__main__":

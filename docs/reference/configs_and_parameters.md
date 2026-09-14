@@ -129,6 +129,16 @@ PyVRP 固定了 seed，重复运行结果一致；OR-Tools 用 `GUIDED_LOCAL_SEA
 - **自学笔记**：`learning_guide/`（不进提交仓库）
 - **一键复现**：`run_all.py`；每个数字到脚本的对照见 `REPRODUCE.md`
 
+**日志来源**：`src/results/` 下的日志都由对应脚本自己写出，不依赖手工 tee：
+
+| 文件 | 谁写 | 说明 |
+|---|---|---|
+| `baseline_ga_vrptw_output.txt` | `baseline_ga_vrptw.py` | 多种子运行的逐实例表（脚本产物） |
+| `baseline_ga_multi_seed.log` | `baseline_ga_vrptw.py` | 同一次运行的控制台记录；`src/tools/ga_monitor.py` 也读它 |
+| `baseline_ga_run.log` | `baseline_ga_vrptw.py`（`GA_SEEDS=20260717`） | 单种子对照的控制台记录，产物写成 `*_single_seed.*`，不动多种子文件 |
+| `baseline_pyvrp_run.log` | `baseline_pyvrp_vrptw.py` | 该脚本的控制台记录（逐实例表 + 族均值） |
+| 其余 `*_log.txt` / `*_run.log` | 同名实验脚本 | 脚本内的日志，或 `run_all.py` 运行时写出的记录 |
+
 ---
 
 *这一页之后任何脚本改参数，都要回来更新对应行。*

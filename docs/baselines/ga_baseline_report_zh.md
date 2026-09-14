@@ -57,4 +57,4 @@
 
 GA 基线只是一次初步尝试。它明显弱于 OR-Tools，但让我在看待自己的结果时有了一个粗糙的参照。它不是论文复现，所以对我来说真正有意思的问题不是"我能不能用玩具 GA 打败 OR-Tools"，而是"已发表的 E-VRPTW 方法（Schneider 2014、Murray & Chu 2015）表现如何、我能不能复现它们？"——这正是我拿到这两篇 PDF 后就要开始的论文复现路线。
 
-产出文件：`src/results/baseline_ga_vrptw_results.csv`、`src/results/baseline_ga_vrptw_comparison.csv`（GA vs OR-Tools vs BKS）、`src/results/baseline_ga_vrptw_output.txt`。
+产出文件：`src/results/baseline_ga_vrptw_results.csv`、`src/results/baseline_ga_vrptw_comparison.csv`（GA vs OR-Tools vs BKS）、`src/results/baseline_ga_vrptw_output.txt`，以及同一次运行的控制台记录 `src/results/baseline_ga_multi_seed.log`（两者都由脚本自己写出）。更早的单种子记录 `src/results/baseline_ga_run.log` 可用 `GA_SEEDS=20260717 python src/experiments/baseline_ga_vrptw.py` 复现——它会改写 `*_single_seed.*` 产物，不动多种子文件。

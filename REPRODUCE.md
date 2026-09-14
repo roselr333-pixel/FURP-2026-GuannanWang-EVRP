@@ -27,7 +27,7 @@ python src/experiments/week06_sensitivity.py
 
 ## 2b. 运行回归测试
 
-`tests/` 下是用 pytest 写的回归测试，覆盖模型的关键不变量：K=1 无人机评估器等于单架、更多无人机不会更差、V3 解服务到每一位顾客、调度恒有 `greedy ≥ local ≥ optimal` 且下界合法、消融的 `abl_cap1` 精确复现已发表基线、W5/M&C 评估器的物理性与跨模块一致性。本机约 30 秒跑完（151 个用例，其中 `tests/test_cpsat_exact.py` 的 CP-SAT 校验占大头）：
+`tests/` 下是用 pytest 写的回归测试，覆盖模型的关键不变量：K=1 无人机评估器等于单架、更多无人机不会更差、V3 解服务到每一位顾客、调度恒有 `greedy ≥ local ≥ optimal` 且下界合法、消融的 `abl_cap1` 精确复现已发表基线、W5/M&C 评估器的物理性与跨模块一致性。本机约 35 秒跑完（167 个用例，其中 `tests/test_cpsat_exact.py` 的 CP-SAT 校验占大头）：
 
 ```bash
 python -m pytest tests/ -q
@@ -50,6 +50,7 @@ python -m pytest tests/ -q
 | FSTSP 复现（V2 比 M&C 2015 短 10.2–14.2%） | `week07_fstsp_repro.py` | 40 算例 | `src/results/week07_fstsp_*.csv` |
 | 规模衰减（N=50 收益 3.4%、单机调度拒绝 101 万） | `week06_largeN.py` | 5 种子 | `src/results/week06_largeN_summary.csv` |
 | LNS 改进（相对贪心 +12.5~21.3%，缓冲规模衰减） | `week08_lns.py` | 60 算例（10 种子 × N=8/12/16/20/30/50）；确定性 | `src/results/week08_lns_summary.csv`、`figures/lns_vs_greedy.png` |
+| ALNS 在物理 FSTSP 模型上比原 LNS 再短 2.7~12.2%（平均 +6.3%）；自适应权重不划算（冻结权重在 n=8/12/16 上一样好甚至更好） | `alns_fstsp.py`（+ `cpsat_fstsp.py`） | 5 规模 × 5 种子；迭代 = 100 × N，销毁规模 max(2, 0.35N)；确定性 | `src/results/week08_alns_raw.csv` / `_summary.csv`、`figures/alns_fstsp.png` |
 | 多无人机（K=1/2/3；K=1→3 时 N=50 收益 29.5%→38.1%） | `week08_multidrone.py` | 同 60 算例 × K=1/2/3；确定性 | `src/results/week08_multidrone_summary.csv`、`figures/multidrone.png` |
 | 标准算例 + K=1/2/3/5 + 最优调度 | `week08_multidrone_std.py`（+ `fstsp_instances.py`、`drone_scheduling.py`） | 16 个 Solomon 标准实例；确定性 | `src/results/week08_multidrone_std_summary.csv`、`week08_scheduling.csv`、`figures/multidrone_std.png` |
 | 论文原始算例（M&C 2015；c1K1 的 LNS/OFV=0.924） | `week08_mc_benchmark.py` + `fstsp_mc.py` | 36 个原始 10 顾客实例；确定性 | `src/results/week08_mc_benchmark_raw.csv` |
@@ -75,6 +76,7 @@ python -m pytest tests/ -q
 | `drone_energy.png` | 加入能耗/载荷模型后结论怎么变 | `src/tools/gen_drone_energy_figure.py` | `drone_energy_summary.csv` |
 | `drone_energy_mainline.png` | 把闸门开到 V3 与多无人机主线上，结论是否还成立 | `src/tools/gen_drone_energy_mainline_figure.py` | `drone_energy_mainline_summary.csv` |
 | `lns_vs_greedy.png` | 改进阶段（LNS）是否值得 | `src/tools/plot_lns.py` | `week08_lns_summary.csv` |
+| `alns_fstsp.png` | 搜索一侧还剩多少空间、自适应权重是否起作用 | `src/tools/gen_alns_figure.py` | `week08_alns_summary.csv` |
 | `multidrone.png` | 多无人机（合成算例）的收益 | `src/tools/plot_multidrone.py` | `week08_multidrone_summary.csv` |
 | `multidrone_std.png` | 标准算例 + 调度器的结果 | `src/tools/plot_multidrone_std.py` | `week08_multidrone_std_summary.csv`、`week08_scheduling.csv` |
 | `exact_gap.png` | 启发式离精确最优有多远、证明在哪里停住（primal vs dual） | `src/tools/plot_exact_gap.py` | `week08_exact_gap_summary.csv`、`week08_exact_gap_raw.csv` |
@@ -86,7 +88,7 @@ python -m pytest tests/ -q
 
 ## 4. 说明与边界
 
-- **CSV 按 `.gitignore` 设计不入库**：结果靠脚本 + 种子本地重跑生成；仓库保留的是脚本、日志（`.txt` / `.log`）与图（PNG）。
+- **CSV 按 `.gitignore` 设计不入库**：结果靠脚本 + 种子本地重跑生成；仓库保留的是脚本、日志（`.txt` / `.log`）与图（PNG）。`src/results/` 下的日志都由脚本自己写出：`baseline_ga_vrptw.py` 写 `baseline_ga_vrptw_output.txt` 与 `baseline_ga_multi_seed.log`（单种子对照用 `GA_SEEDS=20260717`，写 `baseline_ga_run.log` 与 `*_single_seed.*`），`baseline_pyvrp_vrptw.py` 写 `baseline_pyvrp_run.log`；逐文件对照见 `docs/reference/configs_and_parameters.md` §6。
 - **硬件**：Windows 11 / Python 3.13.14 / OR-Tools 9.15.6755 / Intel 20 逻辑核 / 32GB 内存（每个实验日志头部也会打印实测值；环境细节见 `docs/reference/env_record.md`）。
 - **续航 R 敏感性**在 2026-09-10 修复过一个 bug（之前 `mk_range` 未把续航传给模型，扫描恒为 50.5%）；修复后曲线见上方 §2。
 - **多目标为粗前沿**：加权和贪心，不是完整 NSGA-II / Pareto 求解器（见 `docs/reference/experiment_evidence_index_zh.md` §3）。
