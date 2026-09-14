@@ -102,7 +102,9 @@ the gap means cover those instances. The original V2 plan is physically valid on
    found** (mean over sizes), so the earlier gap numbers were not an artefact of the
    proof: my LNS really is ~20% above a plan that a general-purpose model produces
    in a minute. That points at the search (a stronger metaheuristic) rather than at
-   more exact-solver time.
+   more exact-solver time — and the ALNS in `docs/weekly/week08_alns_note_en.md`
+   takes that up: it takes 2.7–12.2% off the LNS and wins on some instances
+   (n=14 seed 20260723), while the CP-SAT plan stays ahead on average.
 3. **The boundary is on the dual side, not on the clock.** The certified lower
    bound is trivial at every size from n=10 on — `0.0` on all 20 instances — and a
    separate 300 s / 16-worker probe managed only 27.6 against an incumbent of 217

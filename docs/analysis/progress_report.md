@@ -184,6 +184,8 @@ Notes:
 
 22. ~~**"How far is the heuristic from the optimum" was only answered at n=8**~~ ✅ **Delivered**: `cpsat_fstsp.solve_exact` now takes a warm start (`upper_bound` + `AddHint`), and `week08_exact_gap.py` runs n=8/10/12/14/16 x 5 seeds. The n=8 optimum is reproduced exactly (greedy +31.2%, LNS +16.5%); the warm start returns a feasible plan on 23/25 instances where the cold search could return none; from n=10 on CP-SAT's own plan is **8.8-17.5% below my best heuristic plan**, while its certified dual bound stays at 0, so optimality is unprovable there without a stronger relaxation.
 
+23. ~~**The search side stayed weak after the exact study exposed it**~~ ✅ **Delivered**: `src/experiments/alns_fstsp.py` runs an ALNS on the same physical FSTSP model (5 destroy operators, greedy + regret-2 repair, destroy size `max(2, 0.35n)`, `100n` iterations, adaptive operator weights). It is **2.7–12.2% shorter than the existing LNS at every size (mean +6.3%)** and closes the n=8 gap to the proven optimum from 16.5% to 13.1%. The adaptivity ablation is negative — frozen weights are as good or better at n=8/12/16 — so the gain comes from the destroy size and the operator set; the CP-SAT primal is still ahead on average (4.8–13.4%), which is stated as such.
+
 ### 3.4 Engineering and delivery
 
 12. **No git commit / push yet**: everything is still local; the reproducibility package only counts once it is committed.

@@ -10,7 +10,9 @@ collapsing as N grows, which is what a greedy without an improvement operator
 looks like.
 
 This step adds a **destroy-and-repair LNS** on top of the same V2 solution and
-measures how much it helps. The evaluator is still the W7 FSTSP completion time
+measures how much it helps. (A later module, `alns_fstsp.py`, revisits the same
+search on the physical model with larger destroys and adaptive operator weights —
+see `docs/weekly/week08_alns_note_en.md`; it improves on this LNS by 5–15%.) The evaluator is still the W7 FSTSP completion time
 (single serial drone, rendezvous enforced), so the comparison against the greedy
 V2 and the published baseline stays apples-to-apples.
 

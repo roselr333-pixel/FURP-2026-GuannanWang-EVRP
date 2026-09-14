@@ -275,6 +275,8 @@ The run is warm-started (the best heuristic plan is passed both as an objective 
 
 **The LNS roughly halves the gap**, quantifying the improvement phase — and the warm start showed the sharper point: from n=10 on the CP-SAT plan is itself **8.8-17.5% below the best plan my greedy and LNS find**, so the gap is real and the lever is the search, not more solver time. Optimality is proved only at n=8; from n=10 on the certified dual bound is trivial (`0.0` on all 20 instances, and only 27.6 against an incumbent of 217 in a separate 300 s probe), which is exactly where the proof stops. The shared FSTSP evaluator has a physical defect: it does not check that the drone is back on the truck, so nested/crossing sorties are given a makespan although such a plan is infeasible — measured on 15 instances, the original V2 produces such an invalid plan in 14 of them (the FC-7-2/7-3 defect, on the FSTSP evaluator path). Source `week08_exact_gap.py` + `cpsat_fstsp.py` -> `week08_exact_gap_raw.csv` / `_summary.csv`. With the main evaluator physical and everything re-run, the V2 plans are now valid on 15/15 instances.
 
+**And the search side was then improved** (note `docs/weekly/week08_alns_note_en.md`): the destroy-and-repair LNS above destroys at most `min(8, n // 4)` customers — 2 of them at n=10 — so an ALNS with five destroy operators (random / worst / related / route segment / whole sorties), a regret-2 repair besides the greedy one, a destroy size of `max(2, 0.35 n)` and `100 n` iterations takes **2.7%-12.2% (mean +6.3%) off the LNS** at every size, and at n=8 the gap to the proven optimum falls from 16.5% to **13.1%**. What does *not* pay is the adaptivity itself: with the same budget and seed, freezing the operator weights is as good or better at n=8/12/16 (−0.95%, −0.53%, −2.13%) and only marginally worse at n=10/14, so the gain comes from the destroy size and the operator set. The CP-SAT primal is still ahead on average (the ALNS is 4.8%-13.4% above it) but the ALNS wins on individual instances, e.g. n=14 seed 20260723 (367.7 against 369.8). Source: `src/results/week08_alns_summary.csv` (`alns_fstsp.py`), figure `figures/alns_fstsp.png`.
+
 ---
 
 ## 9. Limitations
@@ -319,6 +321,7 @@ Grouped by nature; each item gives its "consequence + next step" so it reads as 
 | V3 (electric + drone + TW) | `v3_ev_collab.py` | `v3_ev_collab_raw.csv` / `_summary.csv` | — |
 | Drone energy / payload ablation | `drone_energy_ablation.py` + `drone_energy.py` | `drone_energy_raw.csv` / `_summary.csv` | `drone_energy.png` |
 | Drone energy on the main line | `drone_energy_mainline.py` + `drone_energy.py` | `drone_energy_mainline_raw.csv` / `_summary.csv` | `drone_energy_mainline.png` |
+| ALNS on the physical model | `alns_fstsp.py` + `cpsat_fstsp.py` | `week08_alns_raw.csv` / `_summary.csv` | `alns_fstsp.png` |
 | Exact optimality gap (CP-SAT) | `week08_exact_gap.py` + `cpsat_fstsp.py` | `week08_exact_gap_raw.csv` / `_summary.csv` | — |
 | Significance tests | `stat_tests.py` | `stat_tests.csv` | — |
 | Schneider replication | `schneider_evrptw.py` + `schneider_bks_compare.py` + `plot_schneider_routes.py` | `schneider_evrptw_baseline.csv` / `schneider_evrptw_bks_comparison.csv` | `schneider_routes.png` / `schneider_vehcomp.png` |

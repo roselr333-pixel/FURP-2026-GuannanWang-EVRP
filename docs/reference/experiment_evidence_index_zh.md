@@ -269,6 +269,8 @@ K 从 1 增到 3 全面提升（N=50：29.5%→38.1%），并抬高规模衰减�
 
 **LNS 把 gap 大致减半**，改进阶段的价值被定量——而热启动给出了更锋利的一点：从 n=10 起 CP-SAT 的计划本身就比我的贪心与 LNS 找到的最好计划**再低 8.8–17.5%**，所以这个 gap 是真实的，杠杆在搜索而不在多给求解器时间。最优性只证到 n=8；从 n=10 起认证对偶界全是平凡值（20 个实例全为 `0.0`，另做的 300 s 探针在 n=10 上也只有 27.6 而 incumbent 是 217），证明就停在这里。**共用的 FSTSP 评估器有一个物理缺陷**：它不检查无人机是否已回到卡车，嵌套/交叉架次会被赋予 makespan，而这样的计划不可实现——实测项目原始 V2 在 15 个实例里 14 个产出这种无效计划（FC-7-2/7-3 同类问题，出现在 FSTSP 评估器路径上）。出处 `week08_exact_gap.py` + `cpsat_fstsp.py` → `week08_exact_gap_raw.csv` / `_summary.csv`。主评估器物理化并全部重跑后，这 15 个实例的 V2 计划现在 **5/5 物理有效**。
 
+**搜索一侧随后被补上**（说明 `docs/weekly/week08_alns_note_zh.md`）：上面的 destroy-and-repair LNS 每次最多销毁 `min(8, n // 4)` 个顾客——n=10 时只有 2 个——于是改用 ALNS：5 个销毁算子（随机 / 最差 / 关联 / 路线片段 / 整个架次）+ regret-2 修复、销毁规模 `max(2, 0.35 n)`、`100 n` 次迭代，在每个规模上比原 LNS **再短 2.7%~12.2%（平均 +6.3%）**；n=8 上离已证明最优的差距从 16.5% 降到 **13.1%**。真正没起作用的是"自适应"本身：同样预算与种子下把权重冻住，在 n=8/12/16 上一样好甚至更好（−0.95%、−0.53%、−2.13%），只在 n=10/14 略差——增益来自销毁规模与算子集合。CP-SAT 的可行计划平均仍领先（ALNS 高 4.8%~13.4%），但个别实例上 ALNS 更快（如 n=14 seed 20260723：367.7 对 369.8）。出处：`src/results/week08_alns_summary.csv`（`alns_fstsp.py`），图 `figures/alns_fstsp.png`。
+
 ---
 
 ## 9. 局限
@@ -313,6 +315,7 @@ K 从 1 增到 3 全面提升（N=50：29.5%→38.1%），并抬高规模衰减�
 | V3（电动+无人机+TW） | `v3_ev_collab.py` | `v3_ev_collab_raw.csv` / `_summary.csv` | — |
 | 无人机能耗/载荷消融 | `drone_energy_ablation.py` + `drone_energy.py` | `drone_energy_raw.csv` / `_summary.csv` | `drone_energy.png` |
 | 主线上开能耗/载荷闸门 | `drone_energy_mainline.py` + `drone_energy.py` | `drone_energy_mainline_raw.csv` / `_summary.csv` | `drone_energy_mainline.png` |
+| 物理模型上的 ALNS | `alns_fstsp.py` + `cpsat_fstsp.py` | `week08_alns_raw.csv` / `_summary.csv` | `alns_fstsp.png` |
 | 精确最优性 gap（CP-SAT） | `week08_exact_gap.py` + `cpsat_fstsp.py` | `week08_exact_gap_raw.csv` / `_summary.csv` | — |
 | 显著性检验 | `stat_tests.py` | `stat_tests.csv` | — |
 | Schneider 复现 | `schneider_evrptw.py` + `schneider_bks_compare.py` + `plot_schneider_routes.py` | `schneider_evrptw_baseline.csv` / `schneider_evrptw_bks_comparison.csv` | `schneider_routes.png` / `schneider_vehcomp.png` |

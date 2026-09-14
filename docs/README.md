@@ -38,6 +38,7 @@ separately, not translated from each other.
 | `weekly/week08_multidrone_note_en.md` / `_zh.md` | K = 1/2/3 drones on the synthetic instances |
 | `weekly/week08_multidrone_std_note_en.md` / `_zh.md` | standard instances, K up to 5, explicit sortie scheduling |
 | `weekly/week08_exact_gap_note_en.md` / `_zh.md` | exact optimum by CP-SAT, the heuristic gaps, and what a warm start does to the primal/dual boundary |
+| `weekly/week08_alns_note_en.md` / `_zh.md` | ALNS on the physical FSTSP model: whether the search side closes the gap the exact study exposed |
 | `weekly/week08_mc_benchmark_note_en.md` / `_zh.md` | the paper's original Murray & Chu test instances |
 | `weekly/v3_ev_collab_note_en.md` / `_zh.md` | V3: electric truck + drone + charging stations + time windows |
 | `weekly/v3_ablation_note_en.md` / `_zh.md` | the same core ablation under EV + time windows |

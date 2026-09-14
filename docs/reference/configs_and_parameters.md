@@ -75,6 +75,7 @@
 | `week08_lns.py` | N = 8/12/16/20/30/50 | 10 个：20260720–20260729 | 迭代预算 `{8:300, 12:300, 16:300, 20:400, 30:250, 50:150}`；模拟退火初温 = 当前 makespan 的 5% |
 | `week08_multidrone.py` | 同 `week08_lns` 的 6 个规模 | 10 个：同上 | K = 1/2/3 |
 | `week08_multidrone_std.py` | 4 族 × N = 10/20/30/50 | 确定性（`LNS_SEED = 20260720`） | K = 1/2/3/5；精确调度只跑架次数 ≤ 14 的配置 |
+| `alns_fstsp.py` | N = 8/10/12/14/16 | 5 个：20260720–20260724 | 迭代 = 100 × N；销毁规模 = max(2, 0.35N)；5 个销毁算子（random / worst / related / segment / sortie）× 2 个修复算子（greedy / regret2），权重每 120 次迭代按得分自适应 |
 | `week08_exact_gap.py` | n = 8/10/12/14/16 | 5 个：20260720–20260724 | CP-SAT 每规模时间上限 30/60/90/90/120 s；把启发式最优解同时传成目标上界与 `AddHint` 热启动 |
 | `week08_mc_benchmark.py` | 36 个原始算例 | `SEED = 20260720` | K = 1/2/3，每架次顾客上限 1/2/3 |
 | `v3_ev_collab.py` | N = 8/12/16/20 | 10 个：20260720–20260729 | K = 1/2/3；greedy 与 greedy + LNS |
@@ -100,6 +101,7 @@
 | Schneider 局部搜索 | `improve` / `improve_moves` / `improve_budget` | True / 400 步 / 60 s | `schneider_evrptw.py` → `schneider_improve.improve_solution` |
 | 无人机能耗（主线） | `beta` / `ed` / `p_max` | 0.00、0.02 / 160 / 30 | `drone_energy_mainline.py`（V3 与 W8，K=1/2/3） |
 | 无人机能耗（消融） | `beta` | 0.00 / 0.02 / 0.04 | `drone_energy_ablation.py` |
+| ALNS | 迭代 / 销毁规模 / 自适应 | 100×N / max(2, 0.35N) / segment=120、rho=0.30、得分 12/6/2 | `alns_fstsp.py` |
 
 PyVRP 固定了 seed，重复运行结果一致；OR-Tools 用 `GUIDED_LOCAL_SEARCH` + 10 s 时间预算，该版本的 routing 参数不暴露随机种子，所以同一算例的搜索结果逐次有小幅浮动——56 实例的均值 gap 我实测在 7.2%~8.1% 之间，本仓库报单次结果并给出这个区间。GA 是唯一需要多种子的基线，报 5 种子均值 ± 标准差。
 

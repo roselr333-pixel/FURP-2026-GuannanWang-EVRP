@@ -1,0 +1,47 @@
+n=8 seed=20260720: greedy 232.8 | LNS 182.7 | ALNS 165.7 (+9.29%) | CP-SAT 158.5 (gap +4.6%) | 6.2s
+n=8 seed=20260721: greedy 204.3 | LNS 204.3 | ALNS 204.3 (+0.00%) | CP-SAT 204.2 (gap +0.0%) | 5.2s
+n=8 seed=20260722: greedy 262.7 | LNS 226.8 | ALNS 224.7 (+0.93%) | CP-SAT 173.4 (gap +29.6%) | 5.5s
+n=8 seed=20260723: greedy 236.0 | LNS 236.0 | ALNS 236.0 (+0.00%) | CP-SAT 211.9 (gap +11.4%) | 5.7s
+n=8 seed=20260724: greedy 320.1 | LNS 273.5 | ALNS 262.9 (+3.89%) | CP-SAT 218.8 (gap +20.2%) | 4.3s
+n=10 seed=20260720: greedy 387.9 | LNS 255.5 | ALNS 234.1 (+8.37%) | CP-SAT 222.4 (gap +5.2%) | 15.5s
+n=10 seed=20260721: greedy 374.6 | LNS 321.7 | ALNS 308.7 (+4.04%) | CP-SAT 250.7 (gap +23.1%) | 11.8s
+n=10 seed=20260722: greedy 322.0 | LNS 292.8 | ALNS 258.5 (+11.70%) | CP-SAT 218.8 (gap +18.2%) | 15.6s
+n=10 seed=20260723: greedy 374.3 | LNS 292.6 | ALNS 265.0 (+9.43%) | CP-SAT 237.0 (gap +11.8%) | 13.6s
+n=10 seed=20260724: greedy 361.7 | LNS 294.1 | ALNS 294.1 (+0.00%) | CP-SAT 270.5 (gap +8.7%) | 10.2s
+n=12 seed=20260720: greedy 436.7 | LNS 338.0 | ALNS 288.9 (+14.52%) | CP-SAT 295.3 (gap -2.1%) | 28.4s
+n=12 seed=20260721: greedy 397.0 | LNS 365.1 | ALNS 353.2 (+3.26%) | CP-SAT 314.1 (gap +12.5%) | 22.9s
+n=12 seed=20260722: greedy 402.0 | LNS 333.7 | ALNS 333.7 (+0.00%) | CP-SAT 280.6 (gap +18.9%) | 24.6s
+n=12 seed=20260723: greedy 499.4 | LNS 336.0 | ALNS 322.6 (+3.98%) | CP-SAT 295.9 (gap +9.1%) | 22.2s
+n=12 seed=20260724: greedy 419.6 | LNS 419.6 | ALNS 358.8 (+14.49%) | CP-SAT 305.6 (gap +17.4%) | 18.6s
+n=14 seed=20260720: greedy 651.9 | LNS 425.1 | ALNS 368.0 (+13.43%) | CP-SAT 366.2 (gap +0.5%) | 48.7s
+n=14 seed=20260721: greedy 489.2 | LNS 443.3 | ALNS 390.3 (+11.95%) | CP-SAT 360.7 (gap +8.2%) | 36.2s
+n=14 seed=20260722: greedy 491.5 | LNS 417.2 | ALNS 382.0 (+8.44%) | 44.9s
+n=14 seed=20260723: greedy 400.2 | LNS 399.8 | ALNS 367.7 (+8.03%) | CP-SAT 369.8 (gap -0.6%) | 54.1s
+n=14 seed=20260724: greedy 518.8 | LNS 512.3 | ALNS 415.3 (+18.93%) | CP-SAT 374.2 (gap +11.0%) | 44.2s
+n=16 seed=20260720: greedy 748.9 | LNS 499.1 | ALNS 466.5 (+6.52%) | CP-SAT 440.0 (gap +6.0%) | 74.4s
+n=16 seed=20260721: greedy 533.4 | LNS 452.7 | ALNS 452.7 (+0.00%) | CP-SAT 404.9 (gap +11.8%) | 66.0s
+n=16 seed=20260722: greedy 637.8 | LNS 437.3 | ALNS 425.7 (+2.65%) | 72.5s
+n=16 seed=20260723: greedy 465.6 | LNS 465.6 | ALNS 453.4 (+2.61%) | CP-SAT 435.1 (gap +4.2%) | 90.8s
+n=16 seed=20260724: greedy 481.0 | LNS 456.2 | ALNS 449.3 (+1.51%) | CP-SAT 427.0 (gap +5.2%) | 89.2s
+==============================================================================
+ALNS on the physical FSTSP model (vs the existing LNS and CP-SAT)
+==============================================================================
+sizes=[8, 10, 12, 14, 16] seeds=5 base 20260720 max_cust=2
+destroy operators=('random', 'worst', 'related', 'segment', 'sortie')
+repair operators=('greedy', 'regret2')
+destroy size = max(2, 0.35 * n); iterations = 100 * n
+adaptive run vs fixed-weight run (same budget, same seed): the ablation for the operator weights
+adaptive weights: segment=120, rho=0.3, scores=12.0/6.0/2.0
+  hardware: Intel64 Family 6 Model 183 Stepping 1, GenuineIntel | 20 logical cores | RAM 31.8GB
+  env: python 3.13.14 | Windows-11-10.0.26200-SP0
+
+
+  N= 8: greedy   251.2 | LNS   224.7 | ALNS   218.7 (+2.82% vs LNS, +0.00..+9.29) | fixed-weight   216.3 (adaptive -0.95%) | CP-SAT   193.3 (gap +13.15%)
+  N=10: greedy   364.1 | LNS   291.3 | ALNS   272.1 (+6.71% vs LNS, +0.00..+11.70) | fixed-weight   272.5 (adaptive +0.18%) | CP-SAT   239.9 (gap +13.42%)
+  N=12: greedy   430.9 | LNS   358.5 | ALNS   331.5 (+7.25% vs LNS, +0.00..+14.52) | fixed-weight   329.9 (adaptive -0.53%) | CP-SAT   298.3 (gap +11.14%)
+  N=14: greedy   510.3 | LNS   439.5 | ALNS   384.6 (+12.16% vs LNS, +8.03..+18.93) | fixed-weight   387.5 (adaptive +0.63%) | CP-SAT   367.7 (gap +4.78%)
+  N=16: greedy   573.3 | LNS   462.2 | ALNS   449.5 (+2.66% vs LNS, +0.00..+6.52) | fixed-weight   440.3 (adaptive -2.13%) | CP-SAT   426.8 (gap +6.82%)
+
+[raw -> E:\FURP-EVRP\roselr333-pixel-FURP-2026-GuannanWang-EVRP\src\results\week08_alns_raw.csv]
+[summary -> E:\FURP-EVRP\roselr333-pixel-FURP-2026-GuannanWang-EVRP\src\results\week08_alns_summary.csv]
+[log -> E:\FURP-EVRP\roselr333-pixel-FURP-2026-GuannanWang-EVRP\src\results\week08_alns_log.txt]

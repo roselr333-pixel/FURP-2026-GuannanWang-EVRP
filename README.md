@@ -88,7 +88,7 @@ Key documents:
 | EVRP-TW core model | `week04_evrp_tw`, `week06_ground_air_evrp_tw`, `std_evrp_instances` (Schneider adapter), `week06_standard_instances` |
 | Truck–drone | `week05_truck_drone(_v2)`, `week07_fstsp_repro`, `week07_improvement_ablation` |
 | Drone energy | `drone_energy`, `drone_energy_ablation`, `drone_energy_mainline` |
-| W8 improvements | `week08_lns`, `week08_multidrone`, `week08_multidrone_std`, `drone_scheduling`, `fstsp_instances`, `week08_mc_benchmark`, `fstsp_mc`, `v3_ev_collab` |
+| W8 improvements | `week08_lns`, `alns_fstsp`, `week08_multidrone`, `week08_multidrone_std`, `drone_scheduling`, `fstsp_instances`, `week08_mc_benchmark`, `fstsp_mc`, `v3_ev_collab` |
 | Analysis | `week06_sensitivity`, `week06_multi_objective`, `week06_largeN`, `week06_capacity_study`, `stat_tests` |
 | Schneider replication | `schneider_evrptw`, `schneider_bks_compare` |
 | Shared | `sysinfo` (hardware/env reporting) |
@@ -103,6 +103,7 @@ Key documents:
 | V2 (collaborative) vs truck-only EV | 24.8–34.5% lower completion time |
 | Ablation | multi-customer sorties +8.6–12.1 pp (main), stop reuse +2.2–4.4 pp |
 | LNS vs greedy V2 | +12.5–21.3%, paired Wilcoxon p = 1.7×10⁻¹⁰ |
+| ALNS vs the existing LNS (physical FSTSP model) | +2.7–12.2% shorter makespan (mean +6.3%); the adaptivity itself does not pay (frozen weights are equal or better at n=8/12/16) |
 | Distance from the exact optimum (CP-SAT, warm-started) | n=8 proven optimal: greedy +31.2%, LNS +16.5%; from n=10 the exact model's own plan beats my heuristics by 8.8–17.5%, but its dual bound collapses to 0, so the proof stops there |
 | Murray & Chu (2015) replication | V2 10.2–14.2% shorter; c1K1 LNS / published OFV = 0.924 |
 | Schneider (2014) replication | distance +21.3% vs BKS after local search (+52.7% constructive), mean vehicles 3.3 vs 2.1 |
@@ -152,6 +153,7 @@ experiments that produce their CSVs. Numbers, sources and caveats for all of the
 | `figures/v3_ablation.png` | Which factor drives the gain under EV + time windows? | multi-customer +8.5–12.5 pp, stop reuse +1.9–5.3 pp; extra take-offs not significant (p=0.139) | `src/tools/gen_v3_ablation_figure.py` |
 | `figures/drone_energy.png` | What changes once the drone has a payload-aware energy budget? | multi-customer gain +10.4→+6.1 pp (synthetic) and +6.6→+5.4 pp (standard); the published heuristic's plans are only 42%/48% energy-feasible at β=0.04, mine 100% | `src/tools/gen_drone_energy_figure.py` |
 | `figures/drone_energy_mainline.png` | What do the payload/energy gates do to V3 and to the K-drone runs? | V3 K=1 gain 52.4%→53.0% (N=8) and 33.5%→34.5% (N=20); the K=1→3 edge drops from 27.2% to 18.6% at N=16; all returned plans feasible | `src/tools/gen_drone_energy_mainline_figure.py` |
+| `figures/alns_fstsp.png` | How much is left on the search side, and does the adaptivity matter? | ALNS 2.7–12.2% below the existing LNS (mean +6.3%); frozen weights equally good, so the destroy size and operator set do the work | `src/tools/gen_alns_figure.py` |
 | `figures/lns_vs_greedy.png` | Does the improvement phase pay off? | +12.5–21.3% over the greedy (paired Wilcoxon p=1.7×10⁻¹⁰) | `src/tools/plot_lns.py` |
 | `figures/multidrone.png` | How much do extra drones help (synthetic instances)? | N=50: 29.5% (K=1) → 38.1% (K=3) | `src/tools/plot_multidrone.py` |
 | `figures/multidrone_std.png` | Same question on standard instances, plus the scheduler | K=1→5 raises the gain to 46.8–71.4%; naive scheduler optimal on 64/64 configs | `src/tools/plot_multidrone_std.py` |
@@ -171,7 +173,7 @@ python -m venv venv
 venv/Scripts/python -m pip install -r requirements.txt
 
 python run_all.py                 # rerun every experiment and every figure
-python -m pytest tests/ -q        # 151 regression tests, about 30 s
+python -m pytest tests/ -q        # 167 regression tests, about 35 s
 ```
 
 See `REPRODUCE.md` for the conclusion → script → artifact map. The experiment

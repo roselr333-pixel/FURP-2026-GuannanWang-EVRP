@@ -11,8 +11,8 @@ Each script writes its own CSV / log under src/results/ and figures under
 figures/ (repo root). Scripts are ordered so that dependents are produced first:
 the figure tools run last, after the experiments that write their input CSVs.
 A full run takes roughly 2-2.5 hours on this machine; the self-written GA
-baseline (70-90 min for its 5 seeds) and the two energy sweeps (~30 min) are the
-slow ones, the figures seconds each.
+baseline (70-90 min for its 5 seeds), the two energy sweeps (~30 min) and the
+ALNS sweep (~10 min) are the slow ones, the figures seconds each.
 """
 import subprocess
 import sys
@@ -43,6 +43,7 @@ STEPS = [
     ("Std-instance ablation (W7 ext)",      "week07_ablation_std.py",         "48 standard instances, deterministic"),
     ("Drone energy/payload sweep",           "drone_energy_ablation.py",       "88 instances x BETA in {0, 0.02, 0.04}"),
     ("Drone energy on the main line",        "drone_energy_mainline.py",       "V3 EV+TW and W8 K drones x BETA in {0, 0.02}"),
+    ("ALNS on the physical FSTSP model",    "alns_fstsp.py",                  "n=8-16 x 5 seeds; adaptive vs fixed operator weights"),
     ("Exact optimality gap (CP-SAT)",       "week08_exact_gap.py",            "warm-started; n=8-16, proof boundary + heuristic gaps"),
     ("Paired significance tests",           "stat_tests.py",                  "Wilcoxon; reads W6/W7/W8 CSVs"),
     ("Capacity study (is CAP binding?)",    "week06_capacity_study.py",       "declared CAP=1000 and 600/400 vs total demand"),
@@ -70,6 +71,7 @@ STEPS = [
     ("Figure: multi-drone",                 "src/tools/plot_multidrone.py",         "reads week08_multidrone_summary.csv"),
     ("Figure: multi-drone (standard)",      "src/tools/plot_multidrone_std.py",     "reads week08_multidrone_std_summary.csv"),
     ("Figure: exact optimality gap",        "src/tools/plot_exact_gap.py",          "reads week08_exact_gap_summary.csv + _raw.csv"),
+    ("Figure: ALNS vs LNS",                 "src/tools/gen_alns_figure.py",         "reads week08_alns_summary.csv"),
     ("Figure: capacity binding",            "src/tools/gen_capacity_figure.py",     "reads week06_capacity_summary.csv"),
     ("Figure: standard instances",          "src/tools/gen_std_instances_figure.py", "reads week06_std_evrp_summary.csv"),
     ("Figure: Schneider routes + vehicles", "src/tools/plot_schneider_routes.py",   "reads the Schneider comparison CSV"),
