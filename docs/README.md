@@ -4,13 +4,19 @@ Everything I wrote for this project, grouped by role. Every experiment exists as
 two independent documents, one English and one Chinese; they are written
 separately, not translated from each other.
 
+## Final report
+
+| Document | What it holds |
+|---|---|
+| `report/final_experimental_report_zh.md` | the final experimental report: problem definition, the two replicated papers, model, methods, experiment setup, results (baselines, main line, ablation, standard instances, scale, LNS/ALNS, multi-drone, V3, capacity, energy, exact optimum, Schneider), failure analysis, discussion, conclusions, and the four metric tables plus a route-output appendix |
+
 ## Reference
 
 | Document | What it holds |
 |---|---|
 | `reference/experiment_evidence_index_en.md` / `_zh.md` | every citable number with its source, plus the caveat that goes with it |
 | `reference/formal_model_zh.md` / `_en.md` | the model in standard notation: sets, parameters, variables, objective, hard vs soft constraints, what is not modelled, and where each part sits in the code |
-| `reference/failure_cases_master.md` | 17 constraint-level failure cases (FC-1 to FC-7-4) |
+| `reference/failure_cases_master.md` | 13 constraint-level failure cases (FC-S1 to FC-7-5) |
 | `reference/configs_and_parameters.md` | instances, solver settings, seeds, path conventions |
 | `reference/env_record.md` | hardware and software environment |
 
